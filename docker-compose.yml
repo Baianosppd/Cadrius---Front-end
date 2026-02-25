@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: cadrius_frontend
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      # Espelha a pasta src e public para permitir Hot-Reloading
+      - ./src:/app/src
+      - ./public:/app/public
+      # Isola a pasta node_modules do container (evita conflito com seu Windows/Linux)
+      - /app/node_modules
+    environment:
+      # Essencial para o Hot-Reload funcionar bem no Windows/Docker Desktop
+      - CHOKIDAR_USEPOLLING=true
+      # Se precisar apontar para o backend (mesmo estando em outro repo)
+      - REACT_APP_API_URL=http://localhost:8000
+    stdin_open: true # Necessário para bugs do react-scripts em containers
+    tty: true
