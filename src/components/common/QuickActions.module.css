@@ -1,0 +1,75 @@
+/* QuickActions.module.css */
+
+.actions_box {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+.main_title {
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 1rem;
+}
+
+.grid_container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.action_button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 100%;
+}
+
+/* --- Cores dos Botões (Mantidas do passo anterior) --- */
+.button_bg_blue {
+    background-color: #EFF6FF;
+    color: #2563EB;
+}
+.button_bg_blue:hover {
+    background-color: #DBEAFE;
+}
+.button_bg_green {
+    background-color: #ECFDF5;
+    color: #059669;
+}
+.button_bg_green:hover {
+    background-color: #D1FAE5;
+}
+.button_bg_purple {
+    background-color: #FAF5FF;
+    color: #7C3AED;
+}
+.button_bg_purple:hover {
+    background-color: #EDE9FE;
+}
+.button_bg_yellow {
+    background-color: #FFFBEB;
+    color: #F59E0B;
+}
+.button_bg_yellow:hover {
+    background-color: #FEF3C7;
+}
+
+.icon_style {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.button_text {
+    font-size: 0.75rem;
+    text-align: center;
+    font-weight: 500;
+}

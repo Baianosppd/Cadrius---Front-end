@@ -1,0 +1,118 @@
+/* src/components/layout/css/Footer.module.css */
+
+.footer {
+    background-color: #102C57; /* Azul escuro do tema (var(--blue-dark)) */
+    color: #E5E7EB; /* Cinza claro */
+    padding: 3rem 2rem 1rem;
+    margin-top: auto; /* Garante que fique no fundo se o conteúdo for curto */
+    font-size: 0.875rem;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr; /* Layout de 4 colunas */
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #1F4172; /* Linha divisória sutil */
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .social_list {
+        justify-content: center;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+}
+
+.tagline {
+    color: #9CA3AF; /* Texto secundário */
+    line-height: 1.5;
+    max-width: 300px;
+}
+
+.heading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.link_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.link_list li {
+    margin-bottom: 0.5rem;
+}
+
+.link_list a {
+    color: #D1D5DB;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.link_list a:hover {
+    color: #60A5FA; /* Azul claro no hover */
+}
+
+/* Redes Sociais */
+.social_list {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.social_list a {
+    color: #FFFFFF;
+    font-size: 1.25rem;
+    transition: transform 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.social_list a:hover {
+    color: #60A5FA;
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Barra Inferior (Copyright) */
+.bottom_bar {
+    padding-top: 1.5rem;
+    text-align: center;
+}
+
+.copy_right {
+    color: #6B7280;
+    font-size: 0.75rem;
+}

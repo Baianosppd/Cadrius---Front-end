@@ -1,0 +1,281 @@
+/* Processos.module.css */
+
+.processos_container {
+    padding-bottom: 2rem;
+}
+
+/* --- GRID PRINCIPAL (Tabela 3/4 vs Sidebar 1/4) --- */
+
+.main_grid_layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* 1 coluna em telas pequenas */
+    gap: 1.5rem;
+    /* gap-6 */
+}
+
+/* Layout 3/4 vs 1/4 para telas grandes */
+@media (min-width: 1024px) {
+    .main_grid_layout {
+        grid-template-columns: 3fr 1fr;
+    }
+}
+
+/*resolvendo os problemas de css dentro do html*/
+.empty_message {
+    padding: 2rem;
+    text-align: center;
+    color: #6B7280;
+}
+
+/*-----------------------------------------------*/
+
+
+
+
+
+/* --- 1. ESTILO DA TABELA (3/4) --- */
+
+.table_area {
+    /* Container que contém a busca e a tabela */
+    grid-column: 1 / -1;
+    /* Ocupa a largura total em telas pequenas */
+}
+
+@media (min-width: 1024px) {
+    .table_area {
+        grid-column: span 1;
+        /* Ocupa apenas 3/4 em telas grandes */
+    }
+}
+
+.process_table_container {
+    background-color: white;
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* shadow-sm */
+    padding: 1.5rem;
+    /* p-6 */
+}
+
+/* Controles */
+.controls_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.search_container {
+    position: relative;
+    width: 50%;
+}
+
+.search_input {
+    width: 100%;
+    background-color: #F9FAFB;
+    /* bg-gray-50 */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    padding: 0.5rem 0.75rem;
+    /* py-2 px-4 */
+    padding-left: 2.5rem;
+    /* pl-10 */
+    font-size: 0.875rem;
+    /* text-sm */
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.search_icon {
+    position: absolute;
+    left: 0.75rem;
+    /* left-3 */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1rem;
+    /* w-4 */
+    height: 1rem;
+    /* h-4 */
+    color: #6B7280;
+    /* text-gray-500 */
+}
+
+.filter_select {
+    background-color: #F9FAFB;
+    /* bg-gray-50 */
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+/* Tabela Base */
+.table_base {
+    width: 100%;
+    font-size: 0.875rem;
+    /* text-sm */
+    text-align: left;
+    color: #6B7280;
+    /* text-gray-500 */
+    border-collapse: collapse;
+    /* Remove espaçamento padrão da tabela */
+}
+
+.table_header {
+    font-size: 0.75rem;
+    /* text-xs */
+    color: #4B5563;
+    /* text-gray-700 */
+    text-transform: uppercase;
+    background-color: #F9FAFB;
+    /* bg-gray-50 */
+}
+
+.th {
+    padding: 0.75rem 1.5rem;
+    /* px-6 py-3 */
+}
+
+.table_row {
+    background-color: white;
+    border-bottom: 1px solid #E5E7EB;
+    transition: background-color 0.2s;
+}
+
+.table_row:hover {
+    background-color: #F9FAFB;
+    /* hover:bg-gray-50 */
+}
+
+.td,
+.td_num,
+.td_deadline,
+.td_actions {
+    padding: 1rem 1.5rem;
+    /* px-6 py-4 */
+}
+
+.td_num {
+    font-weight: 500;
+    /* font-medium */
+    color: #1F2937;
+    /* text-gray-900 */
+}
+
+.td_deadline {
+    color: #EF4444;
+    /* text-red-600 */
+    font-weight: 500;
+}
+
+/* Badge de Situação */
+.status_badge_active {
+    background-color: #D1FAE5;
+    /* bg-green-100 */
+    color: #059669;
+    /* text-green-800 */
+    font-size: 0.75rem;
+    /* text-xs */
+    font-weight: 500;
+    padding: 0.125rem 0.625rem;
+    /* px-2.5 py-0.5 */
+    border-radius: 9999px;
+    /* rounded-full */
+}
+
+/* Ações */
+.td_actions {
+    display: flex;
+    gap: 0.5rem;
+    /* space-x-2 */
+}
+
+.action_btn {
+    padding: 0.25rem;
+    /* p-1 */
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 9999px;
+    transition: background-color 0.2s;
+}
+
+.action_btn:hover {
+    background-color: #E5E7EB;
+    /* hover:bg-gray-200 */
+}
+
+.action_icon {
+    width: 1rem;
+    /* w-4 */
+    height: 1rem;
+    /* h-4 */
+    color: #6B7280;
+}
+
+
+/* --- 2. ESTILO DA SIDEBAR DE SUGESTÕES DA IA (1/4) --- */
+.ai_suggestions_box {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+
+    /* Posição Fixa para Sugestões (Complicado no React, mas pode ser feito com sticky) */
+    position: sticky;
+    /* Sticky top-24 */
+    top: 96px;
+    /* Altura da BarraSup + PADDING do Conteúdo */
+}
+
+.ai_title {
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 0.75rem;
+    /* mb-3 */
+}
+
+.suggestion_item {
+    background-color: #EFF6FF;
+    /* bg-blue-50 */
+    padding: 0.75rem;
+    /* p-3 */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    border: 1px solid #DBEAFE;
+    /* border border-blue-200 */
+    margin-bottom: 0.75rem;
+    /* space-y-3 */
+}
+
+.suggestion_text {
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 500;
+    /* font-medium */
+    color: #1F2937;
+    margin: 0;
+}
+
+.process_num {
+    font-weight: 700;
+    /* font-bold */
+}
+
+.suggestion_button {
+    font-size: 0.75rem;
+    /* text-xs */
+    color: #2563EB;
+    /* text-blue-600 */
+    font-weight: 600;
+    /* font-semibold */
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 0.25rem;
+    /* mt-1 */
+    padding: 0;
+}

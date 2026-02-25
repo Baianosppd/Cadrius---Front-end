@@ -1,0 +1,69 @@
+/* Dashboard.module.css */
+
+.dashboard_container {
+    padding-bottom: 2rem; /* Espaço no final da página */
+    /* Este container está dentro do .main_content_area (App.css) que já aplica margens. */
+}
+
+/* ------------------------------------- */
+/* --- Título e Introdução da Página --- */
+/* ------------------------------------- */
+
+.page_intro {
+    margin-bottom: 1.5rem;
+}
+
+.page_intro h2 {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    color: #1F2937; /* text-gray-800 */
+}
+
+.page_intro p {
+    color: #6B7280; /* text-gray-500 */
+}
+
+/* ------------------------------------------- */
+/* --- 1. Grid dos Cartões de Estatísticas --- */
+/* ------------------------------------------- */
+
+.stats_grid {
+    display: grid;
+    /* Padrão 1 coluna em telas pequenas */
+    grid-template-columns: repeat(1, 1fr); 
+    gap: 1.5rem; /* gap-6 */
+    margin-bottom: 2rem; /* mb-8 */
+}
+
+/* Media Query para telas médias (md:grid-cols-2) */
+@media (min-width: 768px) {
+    .stats_grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Media Query para telas grandes (lg:grid-cols-4) */
+@media (min-width: 1024px) {
+    .stats_grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* --------------------------------------------- */
+/* --- 2. Grid Principal (2/3 vs 1/3 Layout) --- */
+/* --------------------------------------------- */
+
+.main_grid_layout {
+    display: grid;
+    /* Padrão 1 coluna em telas pequenas (Atividades fica em cima, Ações Rápidas embaixo) */
+    grid-template-columns: 1fr; 
+    gap: 1.5rem; /* gap-6 */
+}
+
+/* Media Query para telas grandes (Layout 2/3 e 1/3) */
+@media (min-width: 1024px) {
+    .main_grid_layout {
+        /* Divide em 2/3 (para Atividades) e 1/3 (para Ações Rápidas) */
+        grid-template-columns: 2fr 1fr; 
+    }
+}

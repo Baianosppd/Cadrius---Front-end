@@ -1,0 +1,174 @@
+/* Variáveis de cores para facilitar a manutenção */
+:root {
+    --blue-dark: #102C57;
+    /* Fundo principal */
+    --blue-medium: #1F4172;
+    /* Hover/Ativo/Perfil */
+    --blue-light: #5272F2;
+    /* Borda de Ativo/Glow */
+    --text-inactive: #A0B3D9;
+    /* Azul claro para texto inativo */
+    --text-active: #FFFFFF;
+    /* Branco para texto ativo */
+}
+
+/* 1. Container Principal (A Barra) */
+.navbar {
+    position: fixed;
+    /* Fixa o menu na tela */
+    top: 0;
+    left: 0;
+    width: 100px;
+    /* Largura fixa como na imagem */
+    height: 100vh;
+    /* Ocupa toda a altura da tela */
+    background-color: var(--blue-dark);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    /* Garante que fique acima do conteúdo principal */
+
+    /* Layout interno: itens empilhados e perfil no final */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+/* 2. Área do Logo */
+.logo_area {
+    margin-bottom: 30px;
+    /* Espaço abaixo do logo */
+    padding-top: 10px;
+}
+
+.logo_box {
+    width: 60px;
+    height: 60px;
+    background-color: var(--blue-medium);
+    border-radius: 8px;
+    /* Cantos arredondados */
+    box-shadow: 0 0 10px rgba(82, 114, 242, 0.5);
+    /* Efeito glow/brilho */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo_box {
+    overflow: hidden;
+    /* impede a imagem de vazar */
+}
+
+.logo {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.logo_placeholder {
+    color: var(--text-active);
+    font-size: 0.8rem;
+}
+
+/* 3. Lista de Navegação */
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    flex-grow: 1;
+    /* Permite que a lista ocupe o espaço central */
+}
+
+.item {
+    margin: 1rem 0;
+}
+
+.item a {
+    /* Estilo do link */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px 0;
+    /* Padding interno para área de clique/hover */
+    color: var(--text-inactive);
+    border-left: 4px solid transparent;
+    /* Borda transparente por padrão */
+    transition: all 0.2s ease;
+}
+
+/* Efeito de Hover */
+.item a:hover {
+    color: var(--text-active);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Ícones e Texto */
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+.text {
+    font-size: 0.75rem;
+    /* Tamanho pequeno do texto */
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* 5. Área do Perfil no Rodapé */
+.profile_area {
+    margin-top: auto;
+    /* Empurra para o final do container */
+    margin-bottom: 20px;
+}
+
+.profile_area a {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--blue-medium);
+    /* Fundo do círculo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.profile_area a:hover {
+    box-shadow: 0 0 8px rgba(82, 114, 242, 0.7);
+}
+
+.profile_icon {
+    width: 20px;
+    height: 20px;
+    color: var(--text-active);
+}
+
+.active {
+    /* Garante que o item ativo se destaque no fundo */
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* O Link dentro do Item Ativo: Aplicamos a barra azul */
+.active a {
+    /* Aplica a cor branca ao texto e ícone */
+    color: var(--text-active) !important;
+
+    /* 👈 A BARRA AZUL VERTICAL: */
+    border-left: 4px solid var(--blue-light) !important;
+
+    /* Remove a cor de fundo do hover para manter a cor de destaque do .active */
+    background-color: transparent !important;
+}
+
+/* Força o ícone e o texto a ficarem brancos no item ativo */
+.active .icon,
+.active .text {
+    color: var(--text-active) !important;
+}
+
+/* ... Código anterior ... */

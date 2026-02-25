@@ -1,0 +1,21 @@
+.badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.small {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+}
+
+.active {
+    color: #059669;
+    background-color: #D1FAE5;
+}
+
+.failed {
+    color: #EF4444;
+    background-color: #FEE2E2;
+}

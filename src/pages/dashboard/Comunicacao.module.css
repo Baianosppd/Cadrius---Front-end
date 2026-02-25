@@ -1,0 +1,102 @@
+/* Comunicacao.module.css */
+
+.comunicacao_container {
+    padding-bottom: 2rem;
+}
+
+.main_box {
+    background-color: white; /* Fundo branco do painel */
+    border-radius: 0.75rem; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+    padding: 1.5rem; 
+}
+
+/* --- CABEÇALHO (Abas e Status) --- */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; 
+    border-bottom: 1px solid #E5E7EB; 
+    padding-bottom: 0.75rem; 
+    margin-bottom: 1rem; 
+}
+
+/* --- Abas de Navegação --- */
+
+.tabs {
+    display: flex;
+    gap: 1rem; 
+}
+
+.tab_button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding-bottom: 0.75rem; 
+    font-size: 0.875rem; 
+    font-weight: 600; 
+    transition: color 0.2s, border-bottom-color 0.2s;
+    white-space: nowrap;
+}
+
+.tab_active {
+    color: #2563EB; /* Texto azul na aba ativa */
+    border-bottom: 2px solid #2563EB; 
+}
+
+.tab_inactive {
+    color: #6B7280; /* Texto cinza na aba inativa */
+}
+
+/* ... (Status Indicators CSS omitted for brevity, but should be included) ... */
+
+
+/* --- LISTA DE ITENS (E-mail) --- */
+
+.tab_content {
+    max-height: 600px; 
+    overflow-y: auto;
+    padding-right: 1rem; 
+}
+
+.item_card {
+    padding: 1rem; 
+    border-radius: 0.5rem; 
+    border: 1px solid #E5E7EB; 
+    background-color: white; /* Garante que o item seja branco */
+    /* ... (Grid layout for item_card) ... */
+    display: grid;
+    grid-template-columns: 1fr auto; 
+    align-items: center;
+    position: relative;
+}
+
+/* --- Detalhes do Item --- */
+
+.item_header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; 
+}
+
+.icon_mail {
+    color: #9CA3AF; /* Ícone cinza */
+}
+
+.sender {
+    font-weight: 600; 
+    color: #1F2937; /* Texto escuro */
+}
+
+.subject {
+    font-size: 0.75rem; 
+    color: #6B7280; /* Texto cinza mais claro */
+}
+
+.time {
+    color: #9CA3AF; /* Texto de tempo cinza claro */
+    grid-column: 2; 
+}
+
+/* ... (Action Buttons CSS omitted for brevity, but should be included) ... */

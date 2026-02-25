@@ -1,0 +1,49 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  background-color: #f9fafb; 
+  height: 100%;
+}
+
+/* Largura da Navbar é 100px. Usamos 120px de margem total. */
+/* A altura da BarraSup é ~60px. Usamos 76px de padding superior. */
+.main_content_area {
+    /* Deslocamento Horizontal: Move o conteúdo para a direita da Navbar */
+    margin-left: 100px; /* Use exatamente a largura da Navbar para o deslocamento */
+    
+    /* Deslocamento Vertical: Espaço para a Barra Superior Fixa (60px de altura + 16px de padding/espaço) */
+    padding-top: 76px; 
+
+    /* Define a largura restante e garante a altura mínima */
+    width: calc(100% - 100px); 
+    min-height: 100vh;
+    
+    /* Adiciona padding horizontal para o conteúdo da página não grudar nas bordas */
+    padding-left: 20px;
+    padding-right: 20px;
+}
+/* App.css */
+
+/* 1. IMPORTAÇÃO DA FONTE (Se já não estiver em outro arquivo CSS importado globalmente) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* 2. APLICAÇÃO GLOBAL */
+* {
+    /* ... padding, margin, box-sizing ... */
+    font-family: 'Poppins', sans-serif; /* 👈 Adicione ou verifique esta linha aqui */
+}
+
+html,
+body,
+#root {
+    /* ... */
+    font-family: 'Poppins', sans-serif; /* 👈 Adicione ou verifique aqui também para garantir */
+}
+
+/* O restante do seu CSS... */

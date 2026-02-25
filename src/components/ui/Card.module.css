@@ -1,0 +1,218 @@
+/* --- ESTILO BASE DO CARTÃO --- */
+
+.card_base {
+    background-color: white;
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* shadow-sm */
+    padding: 1.5rem; /* p-6 */
+    
+    /* Configuração da borda lateral colorida */
+    border-left: 4px solid transparent; 
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+}
+
+.card_base:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.content_wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start; /* Alinha o topo do texto com o topo do ícone */
+    justify-content: space-between;
+}
+
+/* --- ESTILIZAÇÃO DO TEXTO --- */
+
+.title {
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: #6B7280; /* text-gray-500 */
+    margin-bottom: 0.25rem;
+}
+
+.number {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    color: #1F2937; /* text-gray-800 */
+    margin-top: 0;
+}
+
+.observation {
+    font-size: 0.75rem; /* text-xs */
+    color: #6B7280; /* Cor padrão cinza */
+    margin-top: 0.5rem;
+}
+
+.obs_green {
+    color: #10B981; /* Cor verde para '+X esta semana' ou '+X novos' */
+}
+
+/* Caso a cor não seja verde (como em '2 urgentes'), a cor padrão cinza ou vermelha será usada */
+.obs_default {
+    color: #9CA3AF; /* Padrão cinza */
+}
+.observation span.text_red {
+    color: #EF4444; /* Cor vermelha para 'urgentes' */
+}
+
+/* --- ESTILIZAÇÃO DOS ÍCONES (CONTAINER E COR) --- */
+
+.icon_container_blue {
+    background-color: #DBEAFE; /* bg-blue-100 */
+}
+.icon_container_blue .icon_style {
+    color: #2563EB; /* text-blue-600 */
+}
+
+.icon_container_green {
+    background-color: #D1FAE5; /* bg-green-100 */
+}
+.icon_container_green .icon_style {
+    color: #059669; /* text-green-600 */
+}
+
+.icon_container_purple {
+    background-color: #EDE9FE; /* bg-purple-100 */
+}
+.icon_container_purple .icon_style {
+    color: #7C3AED; /* text-purple-600 */
+}
+
+.icon_container_yellow {
+    background-color: #FEF3C7; /* bg-yellow-100 */
+}
+.icon_container_yellow .icon_style {
+    color: #F59E0B; /* text-yellow-600 */
+}
+
+.icon_container_blue, 
+.icon_container_green, 
+.icon_container_purple, 
+.icon_container_yellow {
+    padding: 0.75rem; /* p-3 */
+    border-radius: 0.5rem; /* rounded-lg */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon_style {
+    width: 1.5rem; /* w-6 */
+    height: 1.5rem; /* h-6 */
+}
+
+/* --- ESTILIZAÇÃO DAS BORDAS LATERAIS (border-l-4) --- */
+
+.border_blue {
+    border-left-color: #3B82F6; /* border-blue-500 */
+}
+.border_green {
+    border-left-color: #10B981; /* border-green-500 */
+}
+.border_purple {
+    border-left-color: #8B5CF6; /* border-purple-500 */
+}
+.border_yellow {
+    border-left-color: #F59E0B; /* border-yellow-500 */
+}
+/* Card.module.css (Trechos a serem adicionados) */
+
+/* --- Estilo Base para Card de Automação --- */
+.card_base_automacao {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 120px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card_base_automacao:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.header_automacao {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.title_automacao {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1F2937;
+    line-height: 1.2;
+}
+
+.description_automacao {
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin-top: 0.25rem;
+}
+
+.icon_wrapper_automacao {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-shrink: 0;
+}
+
+.icon_style_automacao {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* --- Cores dos Ícones (Reutilizando as cores do Dashboard) --- */
+/* Certifique-se que o CSS de cores (e.g., .icon_container_blue) do Dashboard está disponível */
+
+/* --- Footer e Status --- */
+.footer_automacao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.status_badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+}
+
+.secondary_info {
+    font-size: 0.75rem;
+    color: #9CA3AF;
+}
+
+/* --- Cores Específicas de Status --- */
+
+.status_ativa {
+    background-color: #D1FAE5; /* Verde claro */
+    color: #059669; /* Verde escuro */
+}
+
+.status_pausada {
+    background-color: #FEF3C7; /* Amarelo claro */
+    color: #F59E0B; /* Amarelo escuro */
+}
+
+.status_erro {
+    background-color: #FEE2E2; /* Vermelho claro */
+    color: #EF4444; /* Vermelho escuro */
+}

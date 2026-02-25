@@ -1,0 +1,120 @@
+/* InputPadrao.module.css (Organizado e Corrigido) */
+
+/* Definições de cores globais */
+:root {
+    --color-primary-dark: #1E3A8A; 
+    --color-accent: #00FFFF; /* Ciano brilhante */
+    --color-input-dark: #0f1c3f; /* Fundo do campo de input (mais escuro que o card) */
+    --color-text-light: #FFFFFF;
+}
+
+/* 1. CONTAINER PRINCIPAL E LABEL */
+
+.input_container {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.input_label {
+    /* CORREÇÃO: O label (Nome, E-mail) deve ser branco e ter fonte maior */
+    display: block;
+    font-size: 1.1rem; /* Aumenta a fonte para 1.1rem */
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--color-text-light); /* Branco puro */
+}
+
+/* 2. WRAPPER DO INPUT (CORREÇÃO DE CENTRALIZAÇÃO) */
+
+.input_wrapper {
+    position: relative;
+    display: flex; 
+    align-items: center; /* CENTRALIZA VERTICALMENTE o ícone e o input */
+    width: 100%;
+}
+
+/* 3. CAMPO DE INPUT (Estilo base) */
+
+.input_field {
+    width: 100%;
+    height: 48px; /* Altura fixa para referência de centralização */
+    
+    /* Padding inicial (será sobrescrito pelo .input_field_with_icon) */
+    padding: 12px 15px;
+    font-size: 1rem;
+    border-radius: 8px;
+    
+    /* Estilo Neon */
+    background-color: var(--color-input-dark); 
+    color: var(--color-text-light); 
+    border: 1px solid rgba(0, 255, 255, 0.2); 
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.1) inset;
+    outline: none;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.input_field:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.6); 
+}
+
+/* 4. ÍCONE ESQUERDO (Cadeado/E-mail) - Posição */
+
+.input_icon {
+    position: absolute;
+    left: 15px;
+    color: var(--color-accent); 
+    width: 18px;
+    height: 18px;
+    z-index: 10;
+    /* Centralizado verticalmente graças ao align-items: center do wrapper */
+}
+
+/* 5. ESPAÇAMENTO DO TEXTO PARA ÍCONE ESQUERDO */
+
+.input_field_with_icon {
+    /* Essencial: Empurra o texto para a direita */
+    padding-left: 50px; 
+}
+
+/* 6. TOGGLE DE SENHA (OLHO) */
+
+.password_toggle_icon_wrapper {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 10;
+    padding: 5px; /* Aumenta a área de clique */
+}
+
+.password_toggle_icon {
+    color: rgba(0, 255, 255, 0.7);
+    width: 18px;
+    height: 18px;
+    display: block; 
+}
+
+/* Espaçamento extra na direita para o ícone de olho */
+.input_field[type="password"] {
+    padding-right: 50px !important; 
+}
+
+/* 7. CHECKBOX */
+
+.checkbox_group {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+}
+
+.checkbox_input {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    accent-color: #FFC300; 
+    border: 1px solid #FFC300;
+}

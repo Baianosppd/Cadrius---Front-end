@@ -1,0 +1,83 @@
+/* BotaoPadrao.module.css */
+
+:root {
+    --color-accent: #00FFFF; /* Ciano puro */
+    --color-button-glow: #00b4b4; /* Ciano misturado com verde (cor sólida primária) */
+    --color-secondary-dark: #0f1c3f; /* Azul escuro do fundo do formulário */
+    --color-text-light: #FFFFFF;
+}
+
+/* --- ESTILO BASE COMUM --- */
+.button_primary,
+.button_secondary {
+    width: 100%;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    
+    /* Layout Flex para centralizar texto e ícone */
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- 1. BOTÃO PRIMÁRIO (Acessar Portal) --- */
+.button_primary {
+    padding: 15px;
+    font-size: 1rem;
+    border: none;
+    
+    /* Cores e brilho do botão principal (Ciano sólido) */
+    background-color: var(--color-button-glow); 
+    color: var(--color-secondary-dark); /* Texto escuro */
+    box-shadow: 0 0 10px var(--color-button-glow);
+    
+    /* Ajuste para ícone Feather (para centralização e espaçamento) */
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.1); /* Sombra sutil no texto */
+}
+
+.button_primary:hover {
+    filter: brightness(1.15); /* Fica mais claro no hover */
+    box-shadow: 0 0 18px var(--color-accent);
+}
+
+/* --- 2. BOTÃO SECUNDÁRIO (Criar nova conta) --- */
+.button_secondary {
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: none;
+    
+    /* Borda ciano brilhante (Contorno) */
+    border: 2px solid var(--color-accent);
+    color: var(--color-accent); /* Texto ciano */
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+.button_secondary:hover {
+    background-color: rgba(0, 255, 255, 0.1); /* Preenchimento sutil */
+    color: var(--color-text-light);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+}
+
+/* --- ÍCONE DENTRO DO BOTÃO --- */
+.button_icon {
+    margin-right: 8px;
+    width: 1.1rem;
+    height: 1.1rem;
+    /* A cor do ícone é herdada do texto (color) */
+}
+
+/* Ícone no Botão Primário (deve ser escuro) */
+.button_primary .button_icon {
+    color: var(--color-secondary-dark); 
+}
+/* Ícone no Botão Secundário (deve ser ciano) */
+.button_secondary .button_icon {
+    color: var(--color-accent);
+}
+.button_secondary:hover .button_icon {
+    color: var(--color-text-light);
+}

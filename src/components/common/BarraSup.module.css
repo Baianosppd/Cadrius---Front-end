@@ -1,0 +1,118 @@
+/* Variáveis de apoio para manter a largura consistente com a Navbar (100px) */
+:root {
+    --navbar-width: 100px; 
+    --header-height: 60px;
+}
+
+.barra_superior {
+    /* 1. POSICIONAMENTO FIXO E Z-INDEX */
+    position: fixed; /* O elemento flutua e permanece visível ao rolar */
+    top: 0;
+    z-index: 40; /* Garante que fique acima do conteúdo principal */
+    
+    /* 2. AJUSTE DE POSIÇÃO E LARGURA */
+    /* Força a barra a começar 100px da esquerda (após a Navbar) */
+    left: var(--navbar-width); 
+    /* Ocupa o restante da largura da tela */
+    width: calc(100% - var(--navbar-width)); 
+    height: var(--header-height);
+    
+    /* 3. ESTILIZAÇÃO VISUAL */
+    background-color: rgba(255, 255, 255, 0.9); /* Fundo branco levemente transparente */
+    backdrop-filter: blur(5px); /* Efeito de desfoque */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    
+    /* Padding interno: 20px de cada lado (ajustado para ser consistente com o .main_content_area) */
+    padding: 0 20px; 
+    
+    /* Layout Flex para alinhar Título e Controles */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Título da Página (Ex: Dashboard, Automações) */
+.page_title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #102C57; /* Azul escuro */
+}
+
+/* Área de Controles: Pesquisa e Perfil */
+.controls_area {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Espaçamento entre os elementos */
+}
+
+.icon_button {
+    padding: 8px;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6B7280; 
+    transition: background-color 0.2s;
+}
+
+.icon_button:hover {
+    background-color: #F3F4F6;
+}
+
+/* Campo de Pesquisa */
+.search_container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search_input {
+    background-color: #F3F4F6;
+    border-radius: 9999px; /* rounded-full */
+    padding: 8px 16px;
+    padding-left: 40px; /* Espaço para o ícone */
+    font-size: 0.875rem;
+    border: 1px solid transparent;
+    width: 256px; /* w-64 */
+    outline: none;
+    transition: all 0.2s;
+}
+
+.search_input:focus {
+    background-color: #FFFFFF;
+    border-color: #3B82F6; 
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.search_icon {
+    position: absolute;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    color: #9CA3AF;
+}
+
+/* Perfil do Usuário (JD) */
+.user_profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.user_avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #2563EB;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+}
+
+.user_name {
+    color: #1F2937;
+}

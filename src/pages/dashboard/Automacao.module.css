@@ -1,0 +1,106 @@
+/* Automacao.module.css */
+
+.automacao_container {
+    /* Garante que o container ocupe a altura necessária */
+    min-height: calc(100vh - 76px);
+    padding-bottom: 5rem;
+    /* Espaço para o botão flutuante no final */
+}
+
+/* --- Grid de Automações --- */
+
+.automacao_grid {
+    display: grid;
+    /* Padrão 1 coluna em telas pequenas */
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+    /* gap-6 */
+}
+
+/* Media Query para telas médias (md:grid-cols-2) */
+@media (min-width: 768px) {
+    .automacao_grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Media Query para telas grandes (lg:grid-cols-3) */
+@media (min-width: 1024px) {
+    .automacao_grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+/*concertando cagadas do CSS dentro do codigo*/
+.empty_state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #9CA3AF;
+}
+
+.floating_actions {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-end;
+
+    z-index: 10;
+}
+
+/* Variação roxa do botão (simulação) */
+.simulate_button {
+    background-color: #7C3AED;
+    margin-bottom: 0;
+}
+
+
+/*---------------------------------------------------------------------*/
+
+
+/* --- Botão Flutuante de Adicionar --- */
+
+.add_button {
+    position: fixed;
+    /* Fixa na tela, independente da rolagem */
+    bottom: 2rem;
+    /* bottom-8 */
+    right: 2rem;
+    /* right-8 */
+
+    /* Cores e Estilos */
+    background-color: #2563EB;
+    /* bg-blue-600 */
+    color: white;
+    padding: 1rem;
+    /* p-4 */
+    border-radius: 9999px;
+    /* rounded-full */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* shadow-lg */
+    border: none;
+    cursor: pointer;
+
+    /* Efeito de Hover */
+    transition: transform 0.3s, background-color 0.3s;
+    transform: scale(1.0);
+}
+
+.add_button:hover {
+    background-color: #1D4ED8;
+    /* hover:bg-blue-700 */
+    transform: scale(1.1);
+    /* Efeito de crescimento */
+}
+
+.add_icon {
+    width: 1.5rem;
+    /* w-6 */
+    height: 1.5rem;
+    /* h-6 */
+}

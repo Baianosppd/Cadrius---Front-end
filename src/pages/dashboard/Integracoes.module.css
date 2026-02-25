@@ -1,0 +1,185 @@
+/* Integracoes.module.css */
+
+.integracoes_container {
+    padding-bottom: 2rem;
+}
+
+/* --- Introdução --- */
+
+.intro_text {
+    text-align: center;
+    margin-bottom: 2rem;
+    /* mb-8 */
+}
+
+.intro_text p {
+    color: #4B5563;
+    /* text-gray-600 */
+    font-size: 1rem;
+}
+
+/* --- Grid de Integrações --- */
+
+.integracoes_grid {
+    display: grid;
+    /* Padrão 1 coluna em telas pequenas */
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+    /* gap-6 */
+}
+
+/* Media Query para telas médias (md:grid-cols-2) */
+@media (min-width: 768px) {
+    .integracoes_grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Media Query para telas grandes (lg:grid-cols-4) */
+@media (min-width: 1024px) {
+    .integracoes_grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/*resolvendo as cagadas de css*/
+
+.icon_settings {
+    color: #6B7280;
+}
+
+
+/**/
+
+
+
+
+
+/* --- Estilo do Cartão de Integração --- */
+
+.integration_card {
+    background-color: white;
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* shadow-sm */
+    padding: 1.5rem;
+    /* p-6 */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 250px;
+    /* Garante que todos tenham a mesma altura */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.integration_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Ícones --- */
+
+.icon_wrapper {
+    margin-bottom: 0.75rem;
+    /* mb-3 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3rem;
+    height: 3rem;
+}
+
+.icon_img {
+    width: 3rem;
+    /* w-12 */
+    height: 3rem;
+    /* h-12 */
+    object-fit: contain;
+}
+
+/* Placeholder para Projuris (div com ícone) */
+.icon_placeholder {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    background-color: #E5E7EB;
+    /* bg-gray-200 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon_briefcase {
+    width: 1.5rem;
+    /* w-6 */
+    height: 1.5rem;
+    /* h-6 */
+    color: #4B5563;
+    /* text-gray-600 */
+}
+
+/* --- Título e Informação --- */
+
+.name {
+    font-size: 1rem;
+    font-weight: 600;
+    /* font-semibold */
+    color: #1F2937;
+}
+
+.info {
+    font-size: 0.75rem;
+    /* text-xs */
+    color: #6B7280;
+    /* text-gray-500 */
+    margin-top: 0.25rem;
+    /* mt-1 */
+    margin-bottom: 0.75rem;
+    /* mb-3 */
+    height: 1.5rem;
+    /* Garante que o espaçamento seja mantido */
+}
+
+/* --- Botões de Status --- */
+
+.status_button {
+    width: 100%;
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 500;
+    padding: 0.5rem 0;
+    /* py-2 */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: auto;
+    /* Empurra o botão para a parte inferior */
+}
+
+/* Conectado (Verde) */
+.button_green {
+    background-color: #10B981;
+    /* bg-green-500 */
+}
+
+.button_green:hover {
+    background-color: #059669;
+    /* hover:bg-green-600 */
+}
+
+/* Desconectado/Conectar (Azul) */
+.button_blue {
+    background-color: #3B82F6;
+    /* bg-blue-500 */
+}
+
+.button_blue:hover {
+    background-color: #2563EB;
+    /* hover:bg-blue-600 */
+}
