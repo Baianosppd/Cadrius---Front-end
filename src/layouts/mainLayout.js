@@ -1,32 +1,23 @@
 import { Outlet } from "react-router-dom";
 
+import BarraSup from "../components/common/BarraSup";
+import NavBar from "../components/common/Navbar";
 
 export default function MainLayout() {
     return (
         <div>
+            <BarraSup />
+            <NavBar />
 
-            <aside>
-                <h2>Cadrius</h2>
-                <nav>
-                    <a href="/dashboard">Dashboard</a>
-                    <a href="/automacao">Automação</a>
-                    <a href="/processos">Processos</a>
-                    <a href="/comunicacao">Comunicação</a>
-                    <a href="/integracoes">Integrações</a>
-                    <a href="/perfil">Perfil</a>
-                </nav>
-            </aside>
-
-            <div>
-                <header>
-                    <span>Sistema de Automação Jurídica</span>
-                </header>
-
-                <main>
-                    <Outlet />
-                </main>
-            </div>
-
+            <main
+                style={{
+                    marginLeft: "100px", // largura da navbar
+                    marginTop: "70px",   // altura da barra superior
+                    padding: "20px",
+                }}
+            >
+                <Outlet />
+            </main>
         </div>
     );
 }
