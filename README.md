@@ -1,16 +1,5 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Nessa branch trata o inicio da troca de design e adição/remoção de algumas funcionalidades do codigo por conta da mudança de escopo conversada entre a equipe. Nesse commit foi feito a adequação da primeira tela (o login) para o novo design, além da reestruturação dos componentes e parte do código que estava bagunçada. 
+O que foi feito:
+foi alterado o design da tela de login inicial do projeto
+criado novos componentes genéricos para melhor adequação no projeto
+comentado a parte de conexão com o banco para tornar mais agil essa troca de design sem necessitar do banco toda hora, assim que a parte de design for concluida as linhas de codigo serão descomentadas e a verificação "manual" será retirada.
