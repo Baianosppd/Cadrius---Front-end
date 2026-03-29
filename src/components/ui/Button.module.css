@@ -1,0 +1,20 @@
+.btn_default {
+    width: 100%; 
+    padding: 14px;
+    background-color: #737373; 
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600; 
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn_default:hover {
+    background-color: #525252; 
+}
+
+.btn_default:active {
+    transform: scale(0.98); 
+}
