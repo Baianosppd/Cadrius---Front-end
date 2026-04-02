@@ -1,0 +1,39 @@
+/* Layout Principal - Ocupa a tela inteira */
+.layout_container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    /* Evita barras de rolagem duplicadas */
+    background-color: #f8f9fa;
+    /* Cor de fundo leve para o sistema */
+}
+
+/* Coluna da Esquerda (Navbar) */
+.sidebar_area {
+    width: 250px;
+    /* Largura da sua nova sidebar lateral */
+    height: 100%;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    flex-shrink: 0;
+    /* Não deixa a sidebar "espremer" */
+}
+
+/* Coluna da Direita (Barra Superior + Conteúdo) */
+.main_content {
+    display: flex;
+    flex-direction: column;
+    /* Um embaixo do outro (BarraSup e depois Main) */
+    flex-grow: 1;
+    /* Ocupa todo o espaço restante da direita */
+    height: 100%;
+}
+
+/* O corpo da página onde o Outlet renderiza */
+.page_body {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+    /* Se a página for longa, só essa área rola */
+}
