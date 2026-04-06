@@ -1,87 +1,85 @@
-// USE APENAS ESTA LINHA PARA IMPORTAR TUDO:
 import { Link, useLocation } from 'react-router-dom';
-import styles from './Navbar.module.css'
+import {
+    FiHome,
+    FiMail,
+    FiZap,
+    FiLayers,
+    FiSettings,
+    FiLogOut
+} from 'react-icons/fi'; // Importando ícones modernos
+import styles from './Navbar.module.css';
 
-import logo from '../../img/cadrius_sf.png'
+import Title from '../ui/Title';
 
 function Navbar() {
     const location = useLocation();
 
-    // Função auxiliar para verificar se o caminho do link é o caminho atual
     const isActive = (path) => {
-        return location.pathname.startsWith(path)
-            ? styles.active
-            : '';
+        return location.pathname.startsWith(path) ? styles.active : '';
     };
 
     return (
-        // O restante do seu JSX (nav, logo, lista, etc.)
-        <nav className={styles.navbar}>
-
-            {/* 1. Área do Logo no Topo */}
-            <div className={styles.logo_area}>
-                <div className={styles.logo_box}>
-                    <img
-                        src={logo}
-                        alt="Logo Cadrius"
-                        className={styles.logo}
-                    />
-                </div>
+        <nav className={styles.sidebar}>
+            {/* NOVO: Título Cadrius no topo da Sidebar */}
+            <div className={styles.logo_container}>
+                <Title as="h1" className={styles.sidebar_title}>
+                    Cadrius
+                </Title>
             </div>
 
-            {/* 2. Lista de Navegação (Links) */}
-            <ul className={styles.list}>
+            {/* 1. Lista de Navegação Principal */}
+            <ul className={styles.nav_list}>
 
                 {/* Dashboard */}
-                <li className={`${styles.item} ${isActive('/dashboard')}`}>
+                <li className={`${styles.nav_item} ${isActive('/dashboard')}`}>
                     <Link to="/dashboard">
-                        <i data-feather="home" className={styles.icon}></i>
-                        <span className={styles.text}>Dashboard</span>
+                        <FiHome className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Dashboard</span>
+                    </Link>
+                </li>
+
+                {/* Caixa de Entrada IA */}
+                <li className={`${styles.nav_item} ${isActive('/comunicacao')}`}>
+                    <Link to="/caixa-entrada">
+                        <FiMail className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Caixa de Entrada IA</span>
                     </Link>
                 </li>
 
                 {/* Automações */}
-                <li className={`${styles.item} ${isActive('/automacao')}`}>
+                <li className={`${styles.nav_item} ${isActive('/automacao')}`}>
                     <Link to="/automacao">
-                        <i data-feather="zap" className={styles.icon}></i>
-                        <span className={styles.text}>Automações</span>
-                    </Link>
-                </li>
-
-                {/* Processos */}
-                <li className={`${styles.item} ${isActive('/processos')}`}>
-                    <Link to="/processos">
-                        <i data-feather="activity" className={styles.icon}></i>
-                        <span className={styles.text}>Processos</span>
-                    </Link>
-                </li>
-
-                {/* Comunicação */}
-                <li className={`${styles.item} ${isActive('/comunicacao')}`}>
-                    <Link to="/comunicacao">
-                        <i data-feather="mail" className={styles.icon}></i>
-                        <span className={styles.text}>Comunicação</span>
+                        <FiZap className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Automações</span>
                     </Link>
                 </li>
 
                 {/* Integrações */}
-                <li className={`${styles.item} ${isActive('/integracoes')}`}>
+                <li className={`${styles.nav_item} ${isActive('/integracoes')}`}>
                     <Link to="/integracoes">
-                        <i data-feather="settings" className={styles.icon}></i>
-                        <span className={styles.text}>Integrações</span>
+                        <FiLayers className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Integrações</span>
+                    </Link>
+                </li>
+
+                {/* Configurações */}
+                <li className={`${styles.nav_item} ${isActive('/configuracoes')}`}>
+                    <Link to="/configuracoes">
+                        <FiSettings className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Configurações</span>
                     </Link>
                 </li>
             </ul>
 
-            {/* 3. Área do Perfil no Rodapé */}
-            <div className={styles.profile_area}>
-                <Link to="/perfil">
-                    <i data-feather="user" className={styles.profile_icon}></i>
+            {/* 2. Rodapé da Sidebar - Logout */}
+            <div className={styles.sidebar_footer}>
+                <Link to="/login" className={styles.logout_link}>
+                    <FiLogOut className={styles.nav_icon} />
+                    <span className={styles.nav_text}>Logout</span>
                 </Link>
             </div>
-
         </nav>
-    )
+    );
 }
 
-export default Navbar
+export default Navbar;

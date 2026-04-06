@@ -1,41 +1,41 @@
-// src/components/layout/BarraSup.js
-import React, { useEffect } from 'react';
+import React from 'react';
+import { FiBell, FiChevronDown } from 'react-icons/fi';
 import styles from './BarraSup.module.css';
 
-function BarraSup({ nome, titulo }) {
+import Title from '../ui/Title';
+import Button from '../ui/Button';
 
-    // Garante que os ícones Feather sejam carregados
-    useEffect(() => {
-        if (window.feather) window.feather.replace();
-    });
-
+function BarraSup({ nome, fotoUrl }) {
     return (
         <header className={styles.barra_superior}>
+            {/* Lado Esquerdo*/}
+            <div>
+            </div>
 
-            {/* Título da Página */}
-            <h1 className={styles.page_title}>{titulo || 'Cadrius AI'}</h1>
+            {/* Lado Direito:*/}
+            <div className={styles.actions_container}>
 
-            {/* Área de Controles */}
-            <div className={styles.controls_area}>
-
-                {/* Botão de Notificações */}
-                <button className={styles.icon_button}>
-                    <i data-feather="bell" className={styles.icon}></i>
+                {/* Notificações -*/}
+                <button className={styles.icon_button_notification} aria-label="Notificações">
+                    <FiBell size={20} />
+                    <span className={styles.badge}>4</span>
                 </button>
-
-                {/* Campo de Pesquisa */}
-                <div className={styles.search_container}>
-                    <input type="text" placeholder="Pesquisar..." className={styles.search_input} />
-                    <i data-feather="search" className={styles.search_icon}></i>
-                </div>
 
                 {/* Perfil do Usuário */}
                 <div className={styles.user_profile}>
-                    <div className={styles.user_avatar}>
-                        {/* Pega a primeira letra do nome ou mostra 'U' se estiver vazio */}
-                        {nome ? nome.charAt(0).toUpperCase() : 'U'}
+                    {/* Foto do usuário*/}
+                    <div className={styles.avatar_wrapper}>
+
+                        <img src={fotoUrl} alt="Perfil" className={styles.avatar_img} />
+
+                        <span className={styles.status_indicator}></span>
+
                     </div>
-                    <span className={styles.user_name}>{nome || 'Usuário'}</span>
+
+                    <div className={styles.user_info_trigger}>
+                        <span className={styles.user_name}>{nome || 'John Doe'}</span>
+                        <FiChevronDown className={styles.chevron} />
+                    </div>
                 </div>
             </div>
         </header>

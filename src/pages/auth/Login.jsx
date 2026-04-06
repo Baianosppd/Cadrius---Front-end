@@ -80,7 +80,7 @@ function Login() {
                                 checked={lembrar}
                                 onChange={(e) => setLembrar(e.target.checked)}
                             />
-                            <Link to="/recuperar-senha">Esqueceu a Senha?</Link>
+                            <Link to="/esqueceu-a-senha">Esqueceu a Senha?</Link>
                         </div>
 
                         <Button type="submit">Entrar</Button>
