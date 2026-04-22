@@ -11,12 +11,19 @@ import styles from './Navbar.module.css';
 
 import Title from '../ui/Title';
 
+import useAuth from '../../hooks/useAuth';
+
 function Navbar() {
+
+    const { logout } = useAuth();
+
     const location = useLocation();
 
     const isActive = (path) => {
         return location.pathname.startsWith(path) ? styles.active : '';
     };
+
+
 
     return (
         <nav className={styles.sidebar}>
@@ -73,7 +80,11 @@ function Navbar() {
 
             {/* 2. Rodapé da Sidebar - Logout */}
             <div className={styles.sidebar_footer}>
-                <Link to="/login" className={styles.logout_link}>
+                <Link
+                    to="/login"
+                    className={styles.logout_link}
+                    onClick={logout}
+                >
                     <FiLogOut className={styles.nav_icon} />
                     <span className={styles.nav_text}>Logout</span>
                 </Link>

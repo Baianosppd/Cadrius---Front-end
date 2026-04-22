@@ -11,7 +11,12 @@ import TasksDay from '../../components/ui/Cards/TasksDay.jsx';
 import RecentProcesses from '../../components/ui/Cards/RecentProcesses.jsx';
 
 
+import useAuth from '../../hooks/useAuth';
+
 function Dashboard() {
+
+    const { user } = useAuth();
+    console.log("USER NO DASH:", user);
 
     return (
         <div className={styles.dashboard_container}>

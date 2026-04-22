@@ -1,57 +1,56 @@
 /* Container principal */
 .main_wrapper {
     display: flex;
-    min-height: 100vh; 
-    width: 100%; 
-    background-color: #f3f4f6; 
-    overflow-x: hidden; 
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f3f4f6;
+    overflow-x: hidden;
 }
 
 /* Metade ESQUERDA */
 .side_image {
-    flex: 1; 
+    flex: 1;
     display: flex;
-    justify-content: flex-end; 
+    justify-content: flex-end;
     align-items: center;
-    padding-right: 60px; 
-    background-color: #f3f4f6; 
+    padding-right: 60px;
+    background-color: #f3f4f6;
 }
 
 
 .side_image img {
     width: 100%;
-    max-width: 550px; 
-    max-height: 80vh; 
+    max-width: 550px;
+    max-height: 80vh;
     object-fit: contain;
 }
 
 /* Metade DIREITA*/
 .side_form {
-    flex: 1; 
+    flex: 1;
     display: flex;
-    justify-content: flex-start; 
+    justify-content: flex-start;
     align-items: center;
-    padding-left: 60px; 
+    padding-left: 60px;
 }
-
 
 .row_options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px; 
+    margin-top: 15px;
     margin-bottom: 35px;
 }
 
 .row_options a {
-    color: #6b7280; 
-    font-size: 0.875rem; 
+    color: #6b7280;
+    font-size: 0.875rem;
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 .row_options a:hover {
-    color: #4b5563; 
+    color: #4b5563;
     text-decoration: underline;
 }
 
@@ -60,16 +59,28 @@
 */
 
 .side_form h1 {
-    font-size: 2.25rem; 
-    color: #374151; 
-    font-weight: 800; 
-    margin-bottom: 2.5rem; 
-    letter-spacing: -0.5px; 
+    font-size: 2.25rem;
+    color: #374151;
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.5px;
 }
 
 .side_form h2 {
-    font-size: 1.15rem; 
+    font-size: 1.15rem;
     color: #4b5563;
-    font-weight: 600; 
-    margin-bottom: 2rem; 
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.credentials_invalid {
+    color: #ff4d4d;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #ffcccc;
+    margin-top: 10px;
 }

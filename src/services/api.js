@@ -28,11 +28,14 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        // Verifica se é erro 401 e se ainda não tentou retry
+        // --- ALTERAÇÃO AQUI ---
+        // Verifica se é erro 401
+        // E certifica que NÃO é a rota de login (token)
         if (
             error.response &&
             error.response.status === 401 &&
-            !originalRequest._retry
+            !originalRequest._retry &&
+            !originalRequest.url.includes('/auth/token/') // Não tenta refresh se for login!
         ) {
             originalRequest._retry = true;
 
@@ -43,36 +46,28 @@ api.interceptors.response.use(
                     throw new Error("Refresh token não encontrado");
                 }
 
-                // Faz requisição para renovar o token
                 const response = await axios.post(
                     'http://127.0.0.1:8000/api/v1/auth/token/refresh/',
                     { refresh: refreshToken }
                 );
 
                 const newAccessToken = response.data.access;
-
-                // Salva novo access_token
                 localStorage.setItem('access_token', newAccessToken);
-
-                // Atualiza header da requisição original
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-                // Refaz a requisição original
                 return api(originalRequest);
 
             } catch (refreshError) {
                 console.warn("Refresh falhou. Fazendo logout...");
-
                 localStorage.clear();
-
                 if (window.location.pathname !== '/') {
                     window.location.href = '/';
                 }
-
                 return Promise.reject(refreshError);
             }
         }
 
+        // Se for erro de login (401 na rota /auth/token/), 
+        // ele vai cair direto aqui e o seu Login.jsx vai pegar no catch!
         return Promise.reject(error);
     }
 );
