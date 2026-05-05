@@ -16,20 +16,23 @@ import FormGroup from '../../components/ui/FormGroup';
 
 
 import styles from './Login.module.css';
+import ButtonLogin from '../../components/common/ButtonLogin';
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [lembrar, setLembrar] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState(null);
 
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
+        setError(null);
 
+        console.log("Username:", username);
+        console.log("Password:", password);
         try {
             await login(username, password);
             navigate('/dashboard');
@@ -59,7 +62,10 @@ function Login() {
                             <Input
                                 placeholder="User ID"
                                 value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                onChange={(e) => {
+                                    setUsername(e.target.value)
+                                    setError(null);
+                                }}
                             />
                         </FormGroup>
 
@@ -69,8 +75,12 @@ function Login() {
                                 type="password"
                                 placeholder="*******"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                    setError(null);
+                                }}
                             />
+
                         </FormGroup>
 
                         <div className={styles.row_options}>
@@ -83,8 +93,26 @@ function Login() {
                             <Link to="/esqueceu-a-senha">Esqueceu a Senha?</Link>
                         </div>
 
+
                         <Button type="submit">Entrar</Button>
+
+                        {error && (
+                            <div className={styles.credentials_invalid}>
+                                {error}
+                            </div>
+                        )}
                     </form>
+
+                    <div>
+                        <ButtonLogin
+                            tipo="google"
+                            msg="Logar com Google"
+                        />
+                        <ButtonLogin
+                            tipo="google"
+                            msg="Logar com Microsoft"
+                        />
+                    </div>
                 </ContainerCard>
             </div>
         </div>

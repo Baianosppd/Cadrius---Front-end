@@ -20,7 +20,7 @@ const DeadlineItem = ({ title, processNumber, date, timeLeft }) => (
 const UrgentDeadlines = () => {
     return (
         <div className={styles.container}>
-            <Title as="h2" className={styles.title}>Urgent Deadlines</Title>
+            <Title as="h2" className={styles.title}>Prazos urgentes</Title>
             <div className={styles.list}>
                 <DeadlineItem
                     title="Ordinary Appeal Filing"

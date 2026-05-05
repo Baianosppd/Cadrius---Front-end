@@ -14,7 +14,7 @@ const AutomationSummary = () => {
 
     return (
         <div className={styles.container}>
-            <Title as="h2"> className={styles.title}Automation Summary</Title>
+            <Title as="h2" className={styles.title}>Resumo das automações</Title>
             <div className={styles.stats_grid}>
                 {stats.map((item, index) => (
                     <div key={index} className={styles.stat_item}>

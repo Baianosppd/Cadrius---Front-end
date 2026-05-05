@@ -1,7 +1,7 @@
 // src/components/pages/Dashboard.js
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api.js';
-import styles from './Dashboard.module.css';
+import styles from './BoxIA.module.css';
 
 import AutomationActionCard from '../../components/ui/Cards/AutomationActionCard.jsx';
 import SearchFilterBar from '../../components/ui/SearchFilterBar.jsx';

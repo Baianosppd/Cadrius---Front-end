@@ -6,6 +6,9 @@ import Title from '../ui/Title';
 import Button from '../ui/Button';
 
 function BarraSup({ nome, fotoUrl }) {
+
+    console.log("User na barrasup:", nome);
+
     return (
         <header className={styles.barra_superior}>
             {/* Lado Esquerdo*/}
@@ -33,7 +36,7 @@ function BarraSup({ nome, fotoUrl }) {
                     </div>
 
                     <div className={styles.user_info_trigger}>
-                        <span className={styles.user_name}>{nome || 'John Doe'}</span>
+                        <span className={styles.user_name}>{nome}</span>
                         <FiChevronDown className={styles.chevron} />
                     </div>
                 </div>
