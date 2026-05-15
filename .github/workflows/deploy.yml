@@ -19,7 +19,7 @@ jobs:
           key: ${{ secrets.LOCAWEB_SSH_KEY }}
           script: |
             # Entra na pasta do Front-end no servidor
-            cd /opt/cadrius-frontend
+            cd /opt/cadrius---frontend
             
             # Atualiza o código
             git stash
