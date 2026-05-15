@@ -1,4 +1,4 @@
-name: CI/CD Pipeline Cadrius Front-end 
+name: CI/CD Pipeline Cadrius Front-end
 
 on:
   push:
@@ -18,8 +18,8 @@ jobs:
           username: ${{ secrets.LOCAWEB_USER }}
           key: ${{ secrets.LOCAWEB_SSH_KEY }}
           script: |
-            # Entra na pasta do Front-end no servidor
-            cd /opt/cadrius---frontend
+            # Entra na pasta do Front-end no servidor 
+            cd /opt/cadrius/Cadrius---Front-end
             
             # Atualiza o código
             git stash
