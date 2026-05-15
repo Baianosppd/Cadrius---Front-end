@@ -1,0 +1,33 @@
+name: CI/CD Pipeline Cadrius Front-end 
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy do React para a Locaweb
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Executando Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LOCAWEB_HOST }}
+          username: ${{ secrets.LOCAWEB_USER }}
+          key: ${{ secrets.LOCAWEB_SSH_KEY }}
+          script: |
+            # Entra na pasta do Front-end no servidor
+            cd /opt/cadrius-frontend
+            
+            # Atualiza o código
+            git stash
+            git pull origin main
+            
+            # Injeta a variável de ambiente para o Vite apontar para o Back-end real
+            echo "Gerando variáveis de Produção..."
+            echo "VITE_API_URL=https://api.cadrius.ia.br" > .env
+            
+            # Sobe o Nginx/React via Docker
+            sudo docker compose up -d --build
