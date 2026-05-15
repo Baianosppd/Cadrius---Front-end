@@ -18,7 +18,7 @@ jobs:
           username: ${{ secrets.LOCAWEB_USER }}
           key: ${{ secrets.LOCAWEB_SSH_KEY }}
           script: |
-            # Entra na pasta do Front-end no servidor
+            # Entra na pasta do Front-end no servidor 
             cd /opt/cadrius/Cadrius---Front-end
             
             # Atualiza o código

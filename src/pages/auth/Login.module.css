@@ -1,210 +1,86 @@
-/* Definições de cores e variáveis */
-:root {
-    --color-primary-dark: #1A2B47;
-    /* Novo Azul Muito Escuro (Fundo do Card) */
-    --color-secondary-dark: #0f1c3f;
-    /* Azul mais escuro ainda (Fundo do Input e Topo do Card) */
-    --color-accent: #00FFFF;
-    --color-button-glow: #00b4b4;
-    /* Ciano misturado com verde para botões */
-    --color-text-light: #FFFFFF;
-}
-
-/* ----------------------------------- */
-/* 1. LAYOUT GERAL E FUNDO DA TELA     */
-/* ----------------------------------- */
-
-.login_container {
- /* Centraliza o card de login no meio da tela */
-  display: flex;
-justify-content: center;
-     align-items: center;
+/* Container principal */
+.main_wrapper {
+    display: flex;
     min-height: 100vh;
-    /* Aplica o fundo escuro e sutilmente gradient, como na imagem */
-    background: linear-gradient(180deg, #1A2B47 0%, #102035 100%);
-                    overflow-y: auto;
-    /* Permite scroll se a tela for pequena */
-    padding: 20px;
-}
-
-/* ----------------------------------- */
-/* 2. CARD DE LOGIN (A CAIXA ESCURA)   */
-/* ----------------------------------- */
-
-.login_card {
     width: 100%;
-    /* 🚨 CORREÇÃO AQUI: Aumentar a largura máxima do card */
+    background-color: #f3f4f6;
+    overflow-x: hidden;
+}
+
+/* Metade ESQUERDA */
+.side_image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 60px;
+    background-color: #f3f4f6;
+}
+
+
+.side_image img {
+    width: 100%;
     max-width: 550px;
-
-    background: #050018;
-    border-radius: 20px;
-    padding: 0;
-
-    /* Efeito de brilho/glow sutil ao redor do card */
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5),
-        0 0 15px rgba(0, 255, 255, 0.3) inset;
-    border: 1px solid rgba(0, 255, 255, 0.3);
-
-    color: var(--color-text-light);
-    font-family: 'Poppins', sans-serif;
+    max-height: 80vh;
+    object-fit: contain;
 }
 
-/* ----------------------------------- */
-/* 3. CABEÇALHO (TOPO DO CARD)         */
-/* ----------------------------------- */
-
-.header_section {
-    background-color: var(--color-secondary-dark);
-    /* Borda superior arredondada */
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-
-    padding: 40px 40px 30px;
-    /* Topo: 40px, Lateral: 40px, Fundo: 30px */
-
-    text-align: center;
-    margin-bottom: 20px;
+/* Metade DIREITA*/
+.side_form {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 60px;
 }
 
-.logo_icon {
-    /* Estilo do ícone FaCog/Ícone Cadrius AI */
-    width: 60px;
-    height: 60px;
-    color: var(--color-accent);
-    /* Ciano brilhante */
-    margin: 0 auto 10px;
-    /* Efeito de brilho no ícone */
-    filter: drop-shadow(0 0 5px var(--color-accent));
-}
-
-.title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--color-text-light);
-    margin: 0;
-    letter-spacing: 1px;
-}
-
-.subtitle {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: 5px;
-}
-
-/* ----------------------------------- */
-/* 4. FORMULÁRIO E INPUTS              */
-/* ----------------------------------- */
-
-.form_area {
-    padding: 0 40px 30px;
-}
-
-/* Estiliza o Container dos Inputs (assumindo que InputPadrao gerencia o estilo interno) */
-.input_group {
-    margin-bottom: 15px;
-}
-
-/* Estilo para Labels (E-mail, Senha) */
-.input_label {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 5px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* Grupo Lembrar/Esqueceu a Senha */
-.options_group {
+.row_options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: -5px;
-    margin-bottom: 25px;
+    margin-top: 15px;
+    margin-bottom: 35px;
 }
 
-.checkbox_label {
-    display: flex;
-    align-items: center;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.forgot_password_link {
-    font-size: 0.85rem;
-    color: var(--color-accent);
+.row_options a {
+    color: #6b7280;
+    font-size: 0.875rem;
     text-decoration: none;
-    transition: filter 0.2s;
+    transition: color 0.2s ease;
 }
 
-.forgot_password_link:hover {
-    filter: brightness(1.2);
+.row_options a:hover {
+    color: #4b5563;
+    text-decoration: underline;
 }
 
-/* ----------------------------------- */
-/* 5. BOTÕES                           */
-/* ----------------------------------- */
+/*
+   ESTILOS ESPECÍFICOS PARA O TÍTULO 
+*/
 
-/* Estilo para o Botão Principal (Acessar Portal) */
-.button_primary {
-    width: 100%;
-    padding: 15px;
-    font-size: 1rem;
-    font-weight: 700;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-
-    /* Cores e brilho do botão principal */
-    background-color: var(--color-button-glow);
-    /* Ciano-verde */
-    color: var(--color-secondary-dark);
-    /* Texto escuro */
-    box-shadow: 0 0 10px var(--color-button-glow);
-    transition: background-color 0.2s, box-shadow 0.2s;
+.side_form h1 {
+    font-size: 2.25rem;
+    color: #374151;
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.5px;
 }
 
-.button_primary:hover {
-    background-color: #00e6e6;
-    /* Cor mais clara no hover */
-    box-shadow: 0 0 15px #00e6e6;
-}
-
-/* Separador "Novo no Cadrius?" */
-.separator {
-    text-align: center;
-    font-size: 0.9rem;
-    margin: 20px 0 15px;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-/* Estilo para o Botão Secundário (Criar Conta) */
-.button_secondary {
-    width: 100%;
-    padding: 12px;
-    font-size: 0.95rem;
+.side_form h2 {
+    font-size: 1.15rem;
+    color: #4b5563;
     font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    background: none;
-
-    /* Borda ciano brilhante */
-    border: 2px solid var(--color-accent);
-    color: var(--color-accent);
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
-    transition: background-color 0.2s, color 0.2s;
+    margin-bottom: 2rem;
 }
 
-.button_secondary:hover {
-    background-color: rgba(0, 255, 255, 0.1);
-}
-
-/* ----------------------------------- */
-/* 6. RODAPÉ (COPYRIGHT)               */
-/* ----------------------------------- */
-
-.footer {
+.credentials_invalid {
+    color: #ff4d4d;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
     text-align: center;
-    font-size: 0.75rem;
-    padding: 10px 40px 30px;
-    color: rgba(255, 255, 255, 0.4);
+    border: 1px solid #ffcccc;
+    margin-top: 10px;
 }

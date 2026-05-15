@@ -1,0 +1,5 @@
+.default_title {
+    margin: 0; /* Tira as margens padrão feias do navegador */
+    line-height: 1.2; /* Deixa as linhas de texto mais unidas */
+    font-family: inherit; /* Herda a fonte do site */
+}
