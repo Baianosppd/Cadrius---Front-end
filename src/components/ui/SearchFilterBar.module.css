@@ -1,0 +1,28 @@
+.bar_container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.bar_container > :first-child {
+    flex: 1; 
+    max-width: 1400px; 
+    border-radius: 20px; 
+}
+
+.filter_button {
+    padding: 12px 32px;
+    background-color: transparent;
+    border: 1px solid #d1d5db;
+    border-radius: 20px; 
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter_button:hover {
+    background-color: #f3f4f6;
+}

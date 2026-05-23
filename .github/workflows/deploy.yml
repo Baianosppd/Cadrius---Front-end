@@ -29,6 +29,7 @@ jobs:
           username: ${{ secrets.LOCAWEB_USER }}
           key: ${{ secrets.LOCAWEB_SSH_KEY }}
           script: |
+            # Entra na pasta do Front-end no servidor 
             cd /opt/cadrius/Cadrius---Front-end
             git stash
             git pull origin main

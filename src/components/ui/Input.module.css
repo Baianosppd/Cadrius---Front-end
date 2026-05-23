@@ -1,0 +1,15 @@
+.input_default {
+    width: 100%;
+    padding: 14px 16px; 
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #374151;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.input_default:focus {
+    border-color: #6b7280;
+}

@@ -1,0 +1,66 @@
+.container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid #ef4444; 
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.deadline_card {
+    background-color: #e5e7eb; 
+    padding: 16px 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info_side {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.deadline_title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.process_number {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.date_side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.date_text {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #ef4444; 
+}
+
+.time_badge {
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}

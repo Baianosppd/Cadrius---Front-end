@@ -1,20 +1,8 @@
-.container {
-    width: 1200px;
-    display: flex;
-    justify-content: space-between;
-    margin: 0 auto;
-    flex-wrap: wrap;
-}
-
-.min-height {
-    min-height: 75%;
-}
-
-.start {
-    justify-content: flex-start;
-}
-
-.column {
-    flex-direction: column;
-    justify-content: flex-start;
+.card {
+    background-color: #ffffff;
+    border-radius: 12px; 
+    padding: 40px; 
+    width: 100%;
+    max-width: 420px; 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); 
 }

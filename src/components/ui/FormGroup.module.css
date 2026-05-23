@@ -1,0 +1,7 @@
+/* src/components/ui/FormGroup.module.css */
+
+.FormGroup_container { /* 🚨 O nome idêntico ao do JSX! */
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px; /* Aquele espaço lindo entre um campo e outro */
+}

@@ -1,0 +1,103 @@
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 32px 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px); 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+
+.brand_icon {
+    font-size: 2.5rem;
+    color: #3b82f6; 
+}
+
+
+.active_badge {
+    background-color: #dcfce7; 
+    color: #166534; 
+    padding: 4px 12px;
+    border-radius: 20px; 
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.content {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+}
+
+.brand_name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 4px 0;
+}
+
+.brand_type {
+    font-size: 0.7rem;
+    color: #9ca3af;
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.description {
+    font-size: 0.875rem;
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.footer {
+    margin-top: 24px;
+}
+
+.btn_connect {
+    width: 100%;
+    background-color: #000080;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn_connect:hover {
+    background-color: #1e3a8a;
+}
+
+.btn_manage {
+    width: 100%;
+    background-color: transparent;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn_manage:hover {
+    background-color: #f3f4f6;
+}
