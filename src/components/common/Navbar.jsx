@@ -46,18 +46,35 @@ function Navbar() {
                 </li>
 
                 {/* Caixa de Entrada IA */}
-                <li className={`${styles.nav_item} ${isActive('/comunicacao')}`}>
-                    <Link to="/caixa-entrada">
+                <li className={`${styles.nav_item} ${isActive('/documents')}`}>
+                    <Link to="/documents">
                         <FiMail className={styles.nav_icon} />
-                        <span className={styles.nav_text}>Caixa de Entrada IA</span>
+                        <span className={styles.nav_text}>Documentos</span>
                     </Link>
                 </li>
 
                 {/* Automações */}
-                <li className={`${styles.nav_item} ${isActive('/automacao')}`}>
-                    <Link to="/automacao">
+                <li className={`${styles.nav_item} ${isActive('/underconstruction')}`}>
+                    <Link to="/underconstruction">
                         <FiZap className={styles.nav_icon} />
                         <span className={styles.nav_text}>Automações</span>
+                    </Link>
+                </li>
+
+
+                {/* Mensagens */}
+                <li className={`${styles.nav_item} ${isActive('/underconstruction')}`}>
+                    <Link to="/underconstruction">
+                        <FiSettings className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Mensagens</span>
+                    </Link>
+                </li>
+
+                {/* Equipe */}
+                <li className={`${styles.nav_item} ${isActive('/underconstruction')}`}>
+                    <Link to="/underconstruction">
+                        <FiSettings className={styles.nav_icon} />
+                        <span className={styles.nav_text}>equipe</span>
                     </Link>
                 </li>
 
@@ -70,12 +87,13 @@ function Navbar() {
                 </li>
 
                 {/* Configurações */}
-                <li className={`${styles.nav_item} ${isActive('/configuracoes')}`}>
-                    <Link to="/configuracoes">
+                <li className={`${styles.nav_item} ${isActive('/underconstruction')}`}>
+                    <Link to="/underconstruction">
                         <FiSettings className={styles.nav_icon} />
                         <span className={styles.nav_text}>Configurações</span>
                     </Link>
                 </li>
+
             </ul>
 
             {/* 2. Rodapé da Sidebar - Logout */}
@@ -86,7 +104,7 @@ function Navbar() {
                     onClick={logout}
                 >
                     <FiLogOut className={styles.nav_icon} />
-                    <span className={styles.nav_text}>Logout</span>
+                    <span className={styles.nav_text}>Sair</span>
                 </Link>
             </div>
         </nav>

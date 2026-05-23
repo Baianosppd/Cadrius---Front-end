@@ -15,7 +15,8 @@ import Processos from "../pages/dashboard/Processos";
 import Comunicacao from "../pages/dashboard/Comunicacao";
 import Integracoes from "../pages/dashboard/Integracoes";
 import Perfil from "../pages/dashboard/Perfil";
-import BoxIA from "../pages/dashboard/BoxIA";
+import Documents from "../pages/dashboard/Documents";
+import UnderConstruction from '../pages/dashboard/UnderConstruction';
 
 
 export default function AppRoutes() {
@@ -39,12 +40,13 @@ export default function AppRoutes() {
           element={signed ? <MainLayout /> : <Navigate to="/" />}
         >
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/caixa-entrada" element={<BoxIA />} />
+          <Route path="/documents" element={<Documents />} />
           <Route path="/automacao" element={<Automacao />} />
           <Route path="/processos" element={<Processos />} />
           <Route path="/comunicacao" element={<Comunicacao />} />
           <Route path="/integracoes" element={<Integracoes />} />
           <Route path="/perfil" element={<Perfil />} />
+          <Route path="/underconstruction" element={<UnderConstruction />} />
         </Route>
       </Routes>
     </BrowserRouter>
