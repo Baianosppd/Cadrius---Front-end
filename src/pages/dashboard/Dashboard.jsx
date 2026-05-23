@@ -16,7 +16,6 @@ import useAuth from '../../hooks/useAuth';
 function Dashboard() {
 
     const { user } = useAuth();
-    console.log("USER NO DASH:", user);
 
     return (
         <div className={styles.dashboard_container}>

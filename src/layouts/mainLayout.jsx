@@ -11,7 +11,6 @@ export default function MainLayout() {
 
     const nome = user?.first_name || user?.email
 
-    console.log("USER NO main layout:", user);
     return (
         <div className={styles.layout_container}>
             {/* Lado Esquerdo: Sidebar fixa */}

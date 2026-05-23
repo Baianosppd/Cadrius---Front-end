@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/v1/',
+    baseURL: import.meta.env.VITE_API_URL, //Pega a URL do localhost ou servidor
 });
 
 // =============================
@@ -47,7 +47,7 @@ api.interceptors.response.use(
                 }
 
                 const response = await axios.post(
-                    'http://127.0.0.1:8000/api/v1/auth/token/refresh/',
+                    `${import.meta.env.VITE_API_URL}auth/token/refresh/`,
                     { refresh: refreshToken }
                 );
 

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+//Imports
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom'; // <--- 1. Importação do Link adicionada
 import { FaCog } from "react-icons/fa";
 
@@ -18,6 +19,9 @@ import FormGroup from '../../components/ui/FormGroup';
 import styles from './Login.module.css';
 import ButtonLogin from '../../components/common/ButtonLogin';
 
+import { toast } from 'react-toastify'; //Import toast
+import 'react-toastify/dist/ReactToastify.css'; // adiciona essa linha
+
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -30,14 +34,17 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
-
-        console.log("Username:", username);
-        console.log("Password:", password);
         try {
             await login(username, password);
             navigate('/dashboard');
         } catch (err) {
-            console.error("Erro no login:", err);
+            console.error("Erro no login:", err.response?.data);
+
+            if (!err.response) {
+                toast.error("Falha de comunicação com o servidor. Tente novamente em instantes.");
+                return;
+            }
+
             setError('Falha no login. Verifique suas credenciais.');
         }
     };
@@ -49,6 +56,7 @@ function Login() {
             <div className={styles.side_image}>
                 <img src="/imagem.png" alt="Cadrius" />
             </div>
+
 
             {/* Coluna do Formulário */}
             <div className={styles.side_form}>
