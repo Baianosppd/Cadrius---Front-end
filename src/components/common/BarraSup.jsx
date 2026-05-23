@@ -6,9 +6,6 @@ import Title from '../ui/Title';
 import Button from '../ui/Button';
 
 function BarraSup({ nome, fotoUrl }) {
-
-    console.log("User na barrasup:", nome);
-
     return (
         <header className={styles.barra_superior}>
             {/* Lado Esquerdo*/}
