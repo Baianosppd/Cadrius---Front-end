@@ -14,8 +14,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm ci
-      - run: npm run lint # Se não tiver teste, o lint já garante qualidade sintática
+      - run: npm install
+      - run: npm run lint 
 
   deploy:
     name: Deploy para a Locaweb
