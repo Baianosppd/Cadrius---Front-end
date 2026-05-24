@@ -1,6 +1,4 @@
-version: '3.8'
-
-# Diz ao front-end para se ligar à rede do Traefik (que já existe no back-end)
+# Conecta o Front-end à mesma rede do Back-end
 networks:
   proxy_net:
     external: true
@@ -9,7 +7,7 @@ services:
   frontend:
     container_name: cadrius_frontend
     build: .
-    # Força a usar o script correto do Vite e expor a porta para a rede
+    # Força a usar o Vite e expor a porta corretamente
     command: npm run dev -- --host 0.0.0.0 --port 3000
     volumes:
       - ./src:/app/src
@@ -17,10 +15,8 @@ services:
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
-      - VITE_API_URL=https://api.cadrius.ia.br
     networks:
       - proxy_net
-    # A Magia do Roteamento: Diz ao Traefik que este contentor é o app.cadrius.ia.br
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy_net"
