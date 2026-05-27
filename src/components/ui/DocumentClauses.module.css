@@ -1,0 +1,92 @@
+.container {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon_wrapper {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background-color: #fef2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    color: #ef4444;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.clauses_list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.clause_item {
+    display: flex;
+    gap: 12px;
+}
+
+.clause_bar {
+    width: 4px;
+    border-radius: 4px;
+    background-color: #ef4444;
+    flex-shrink: 0;
+}
+
+.clause_content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.clause_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.clause_title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.priority_badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.clause_description {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+}

@@ -1,33 +1,38 @@
-// src/components/integrations/IntegrationCard.jsx
-import React from 'react';
 import styles from './IntegrationCard.module.css';
+import { FiSettings, FiCheckCircle } from 'react-icons/fi';
 
-const IntegrationCard = ({ name, type, description, status, Icon }) => {
-    const isActive = status === 'active';
+const IntegrationCard = ({ name, status, description, syncInfo, onAction, logo: Logo, logoColor, logoBg }) => {
+    const isConnected = status === 'conectado';
 
     return (
         <div className={styles.card}>
             <div className={styles.header}>
-                <div className={styles.icon_wrapper}>
-                    <Icon className={styles.brand_icon} />
+                <div className={styles.logo_wrapper} style={{ backgroundColor: logoBg || '#f3f4f6' }}>
+                    {typeof Logo === 'string' && Logo.length === 1 ? (
+    <span className={styles.logo_letter}>{Logo}</span>
+) : typeof Logo === 'string' ? (
+    <img src={Logo} alt={name} className={styles.logo_img} />
+) : (
+    <Logo className={styles.logo_icon} style={{ color: logoColor || '#374151' }} />
+)}
                 </div>
-                {isActive && <span className={styles.active_badge}>Active</span>}
+                <div>
+                    <h3 className={styles.name}>{name}</h3>
+                    <span className={`${styles.status} ${isConnected ? styles.status_connected : styles.status_disconnected}`}>
+                        {isConnected && <FiCheckCircle className={styles.status_icon} />}
+                        {isConnected ? 'Conectado' : 'Desconectado'}
+                    </span>
+                </div>
             </div>
 
-            <div className={styles.content}>
-                <h3 className={styles.brand_name}>{name}</h3>
-                <span className={styles.brand_type}>{type}</span>
-                <p className={styles.description}>{description}</p>
-            </div>
+            <p className={styles.description}>{description}</p>
 
-            <div className={styles.footer}>
-                <button
-                    variant={isActive ? 'outline' : 'primary'}
-                    className={isActive ? styles.btn_manage : styles.btn_connect}
-                >
-                    {isActive ? 'Manage Integration' : 'Connect'}
-                </button>
-            </div>
+            {syncInfo && <p className={styles.sync_info}>{syncInfo}</p>}
+
+            <button className={styles.action_button} onClick={onAction}>
+                <FiSettings className={styles.action_icon} />
+                {isConnected ? 'Configurar' : 'Conectar'}
+            </button>
         </div>
     );
 };

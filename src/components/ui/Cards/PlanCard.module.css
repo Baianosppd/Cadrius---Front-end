@@ -1,0 +1,156 @@
+.container {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.current_plan {
+    background-color: #f0f7ff;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.current_plan_header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.current_plan_name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.active_badge {
+    background-color: #111111;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.current_plan_price {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+}
+
+.price_value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.price_period {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.billing_date {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.features_list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.feature_item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.check_icon {
+    width: 16px;
+    height: 16px;
+    color: #16a34a;
+    flex-shrink: 0;
+}
+
+.other_title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+.other_plans_list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.other_plan {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.other_plan_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.other_plan_name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.other_plan_price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.other_plan_description {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.manage_button {
+    width: 100%;
+    background-color: #111111;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: auto;
+}
+
+.manage_button:hover {
+    opacity: 0.85;
+}
