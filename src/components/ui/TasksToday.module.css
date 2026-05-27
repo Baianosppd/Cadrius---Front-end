@@ -1,0 +1,137 @@
+.container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 24px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.header_left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.counter {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.add_button {
+    background-color: #111111;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.add_button:hover {
+    opacity: 0.85;
+}
+
+.task_list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.task_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.task_item:last-child {
+    border-bottom: none;
+}
+
+.task_left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #3730d4;
+}
+
+.task_text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.task_desc {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111111;
+    margin: 0;
+}
+
+.task_time {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.task_right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.priority_badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.alta {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.media {
+    background-color: #fef9c3;
+    color: #ca8a04;
+}
+
+.baixa {
+    background-color: #dbeafe;
+    color: #2563eb;
+}
+
+.details_link {
+    font-size: 14px;
+    color: #6b7280;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.details_link:hover {
+    color: #111111;
+}

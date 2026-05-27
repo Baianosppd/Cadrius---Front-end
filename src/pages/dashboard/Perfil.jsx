@@ -4,7 +4,10 @@ import api from '../../services/api.js';
 import { useNavigate } from 'react-router-dom';
 // Reutilizamos o CSS do Card para manter a consistência ou criamos um inline simples
 import styles from './Perfil.module.css';
-import TextoCarregando from '../../components/ui/TextoCarregando';
+
+import ProfileInfo from '../../components/ui/ProfileInfo.jsx';
+import ChangePassword from '../../components/ui/ChangePassword.jsx';
+import PlanCard from '../../components/ui/Cards/PlanCard.jsx';
 
 function Perfil() {
     const [user, setUser] = useState(null);
@@ -26,55 +29,56 @@ function Perfil() {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
 
-        // Redireciona para o Login usando a navegação do React (Correção aplicada aqui)
         navigate('/login');
     };
 
-    if (!user) return (
-        <TextoCarregando text={'Carregando Perfil...'}></TextoCarregando>
-    )
+    const plans = [
+    {
+        id: 'starter',
+        name: 'Starter',
+        price: 'Grátis',
+        description: 'Limite de 10 documentos/mês',
+        features: [],
+    },
+    {
+        id: 'professional',
+        name: 'Professional',
+        price: 'R$ 99',
+        billingDate: '23/06/2024',
+        description: '',
+        features: ['1.000 créditos', 'Gestão de Tarefas', 'Até 3 usuários', 'Integrações premium'],
+    },
+    {
+        id: 'enterprise',
+        name: 'Enterprise',
+        price: 'R$ 249',
+        description: 'Créditos ilimitados',
+        features: [],
+    },
+];
+
+const currentPlanId = 'professional';
+const currentPlan = plans.find(p => p.id === currentPlanId);
+const otherPlans = plans.filter(p => p.id !== currentPlanId);
 
     return (
         <div className={styles.perfil_container}>
 
-            <h2 className={styles.title}>
-                Meu Perfil
-            </h2>
-
-            {/* Card de Informações */}
-            <div className={styles.profile_card}>
-
-                {/* Avatar */}
-                <div className={styles.avatar}>
-                    {user.initials}
-                </div>
-
-                {/* Dados */}
-                <div className={styles.profile_data}>
-
-                    <h3 className={styles.name}>
-                        {user.first_name} {user.last_name}
-                    </h3>
-
-                    <p className={styles.email}>
-                        {user.email}
-                    </p>
-
-                    <span className={styles.status_badge}>
-                        Usuário Ativo
-                    </span>
-
-                </div>
-            </div>
-
-            {/* Botão de Logout */}
-            <button
-                onClick={handleLogout}
-                className={styles.logout_button}
-            >
-                Sair do Sistema
-            </button>
-
+            <ProfileInfo
+                user={{
+                nome: 'João da Silva',
+                email: 'joao@empresa.com',
+                telefone: '(11) 98765-4321',
+                oab: 'SP 123456',
+        }}
+            onSave={(data) => console.log(data)}
+        />
+    <ChangePassword onSave={(data) => console.log(data)} />
+    <PlanCard
+        currentPlan={currentPlan}
+        otherPlans={otherPlans}
+        onManage={() => {}}
+    />
         </div>
     );
 }

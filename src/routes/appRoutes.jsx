@@ -15,8 +15,11 @@ import Processos from "../pages/dashboard/Processos";
 import Comunicacao from "../pages/dashboard/Comunicacao";
 import Integracoes from "../pages/dashboard/Integracoes";
 import Perfil from "../pages/dashboard/Perfil";
-import BoxIA from "../pages/dashboard/BoxIA";
-
+import Documents from "../pages/dashboard/Documents";
+import UnderConstruction from '../pages/dashboard/UnderConstruction';
+import GestaoEquipe from "../pages/dashboard/GestaoEquipe";
+import Notificacoes from "../pages/dashboard/Notificacoes";
+import DocumentDetail from "../pages/dashboard/DocumentDetail";
 
 export default function AppRoutes() {
   const { signed, loading } = useAuth();
@@ -39,12 +42,21 @@ export default function AppRoutes() {
           element={signed ? <MainLayout /> : <Navigate to="/" />}
         >
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/caixa-entrada" element={<BoxIA />} />
+          <Route path="/documents" element={<Documents />} />
           <Route path="/automacao" element={<Automacao />} />
+
           <Route path="/processos" element={<Processos />} />
           <Route path="/comunicacao" element={<Comunicacao />} />
+
+
+          <Route path="/equipe" element={<GestaoEquipe />} />
           <Route path="/integracoes" element={<Integracoes />} />
+          <Route path="/notificacoes" element={<Notificacoes />} />
           <Route path="/perfil" element={<Perfil />} />
+          <Route path="/documentdetail" element={<DocumentDetail />} />
+
+
+          <Route path="/underconstruction" element={<UnderConstruction />} />
         </Route>
       </Routes>
     </BrowserRouter>
