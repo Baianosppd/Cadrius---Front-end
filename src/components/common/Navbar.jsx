@@ -62,14 +62,6 @@ function Navbar() {
                 </li>
 
 
-                {/* Mensagens */}
-                <li className={`${styles.nav_item} ${isActive('/underconstruction')}`}>
-                    <Link to="/underconstruction">
-                        <FiSettings className={styles.nav_icon} />
-                        <span className={styles.nav_text}>Mensagens</span>
-                    </Link>
-                </li>
-
                 {/* Equipe */}
                 <li className={`${styles.nav_item} ${isActive('/underconstruction')}`}>
                     <Link to="/underconstruction">
@@ -83,14 +75,6 @@ function Navbar() {
                     <Link to="/integracoes">
                         <FiLayers className={styles.nav_icon} />
                         <span className={styles.nav_text}>Integrações</span>
-                    </Link>
-                </li>
-
-                {/* Configurações */}
-                <li className={`${styles.nav_item} ${isActive('/underconstruction')}`}>
-                    <Link to="/underconstruction">
-                        <FiSettings className={styles.nav_icon} />
-                        <span className={styles.nav_text}>Configurações</span>
                     </Link>
                 </li>
 
