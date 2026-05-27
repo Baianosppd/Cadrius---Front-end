@@ -1,5 +1,5 @@
 # Usa uma imagem leve do Node.js (Versão 18 LTS)
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Define a pasta de trabalho dentro do container
 WORKDIR /app
