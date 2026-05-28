@@ -18,10 +18,22 @@ jobs:
           username: ${{ secrets.LOCAWEB_USER }}
           key: ${{ secrets.LOCAWEB_SSH_KEY }}
           script: |
+            # 1. Entra na pasta do Front-end no servidor 
             cd /opt/cadrius/Cadrius---Front-end
+            
+            # 2. Atualiza o código
             git stash
             git pull origin main
+            
+            # 3. Injeta a variável de ambiente correta (com o /api/v1/)
             echo "Gerando variáveis de Produção..."
             echo "VITE_API_URL=https://api.cadrius.ia.br/api/v1/" > .env
+            
+            # 4. Volta para a pasta raiz onde está o orquestrador principal
             cd /opt/cadrius
+            
+            # 5. Reconstrói e sobe o contêiner do Front-end atualizado
             sudo docker compose up -d --build frontend
+            
+            # 6. Garante que o Banco de Dados, Redis e Back-end também estão a rodar na Locaweb
+            sudo docker compose up -d db redis web
