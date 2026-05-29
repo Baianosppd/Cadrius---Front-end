@@ -64,7 +64,7 @@ function Dashboard() {
 
             <div className={styles.actions_row}>
                 <ActionButton icon={FiFileText} label="Nova Análise de Documento" variant="primary" onClick={() => navigate('/documents')} />
-                <ActionButton icon={FiZap} label="Criar Novo Fluxo de Automação" variant="secondary" onClick={() => navigate('/underconstruction')} />
+                <ActionButton icon={FiZap} label="Criar Novo Fluxo de Automação" variant="secondary" onClick={() => navigate('/automacao')} />
             </div>
 
             <SummaryGroup stats={stats} />

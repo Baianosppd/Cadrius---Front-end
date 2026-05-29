@@ -20,6 +20,7 @@ import UnderConstruction from '../pages/dashboard/UnderConstruction';
 import GestaoEquipe from "../pages/dashboard/GestaoEquipe";
 import Notificacoes from "../pages/dashboard/Notificacoes";
 import DocumentDetail from "../pages/dashboard/DocumentDetail";
+import NewTask from "../pages/dashboard/NewTask";
 
 export default function AppRoutes() {
   const { signed, loading } = useAuth();
@@ -35,15 +36,12 @@ export default function AppRoutes() {
           <Route path="/cadastro" element={<Register />} />
           <Route path="/esqueceu-a-senha" element={<Remember />} />
           <Route path="/google/callback" element={<GoogleCallback />} />
-        </Route>
 
-        {/* Rotas privadas */}
-        <Route
-          element={signed ? <MainLayout /> : <Navigate to="/" />}
-        >
+
+          <Route path="/automacao" element={<Automacao />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/documents" element={<Documents />} />
-          <Route path="/automacao" element={<Automacao />} />
+          
 
           <Route path="/processos" element={<Processos />} />
           <Route path="/comunicacao" element={<Comunicacao />} />
@@ -54,6 +52,15 @@ export default function AppRoutes() {
           <Route path="/notificacoes" element={<Notificacoes />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/documentdetail" element={<DocumentDetail />} />
+
+          <Route path="/newtask" element={<NewTask />} />
+        </Route>
+
+        {/* Rotas privadas */}
+        <Route
+          element={signed ? <MainLayout /> : <Navigate to="/" />}
+        >
+          
 
 
           <Route path="/underconstruction" element={<UnderConstruction />} />
