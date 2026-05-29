@@ -70,7 +70,11 @@ function Dashboard() {
             <SummaryGroup stats={stats} />
 
             <div className={styles.bottom_row}>
-                <TasksToday tasks={tasks} onToggleTask={handleToggle} onAddTask={() => { }} />
+                <TasksToday 
+                    tasks={tasks} 
+                    onToggleTask={handleToggle} 
+                    onAddTask={() => navigate('/newtask')} 
+                />
                 <SmartActivities activities={activities} />
             </div>
         </div>

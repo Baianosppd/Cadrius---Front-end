@@ -22,6 +22,10 @@ import Notificacoes from "../pages/dashboard/Notificacoes";
 import DocumentDetail from "../pages/dashboard/DocumentDetail";
 import NewTask from "../pages/dashboard/NewTask";
 
+import EditorLayout from '../layouts/EditorLayout';
+import FlowEditor from '../pages/dashboard/FlowEditor';
+
+
 export default function AppRoutes() {
   const { signed, loading } = useAuth();
 
@@ -36,8 +40,20 @@ export default function AppRoutes() {
           <Route path="/cadastro" element={<Register />} />
           <Route path="/esqueceu-a-senha" element={<Remember />} />
           <Route path="/google/callback" element={<GoogleCallback />} />
+        </Route>
+
+        <Route element={<EditorLayout />}>
+
+          <Route path="/editor" element={<FlowEditor />} />
+
+        </Route>
 
 
+        {/* Rotas privadas */}
+        <Route
+          element={signed ? <MainLayout /> : <Navigate to="/" />}
+        >
+          
           <Route path="/automacao" element={<Automacao />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/documents" element={<Documents />} />
@@ -54,17 +70,16 @@ export default function AppRoutes() {
           <Route path="/documentdetail" element={<DocumentDetail />} />
 
           <Route path="/newtask" element={<NewTask />} />
-        </Route>
-
-        {/* Rotas privadas */}
-        <Route
-          element={signed ? <MainLayout /> : <Navigate to="/" />}
-        >
-          
-
 
           <Route path="/underconstruction" element={<UnderConstruction />} />
         </Route>
+
+
+        {/* Editor */}
+        {/* <Route element={signed ? <EditorLayout /> : <Navigate to="/" />}>
+          <Route path="/editor" element={<FlowEditor />} />
+        </Route> */}
+
       </Routes>
     </BrowserRouter>
   );
