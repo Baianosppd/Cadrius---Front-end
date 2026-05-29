@@ -3,13 +3,6 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api.js';
 import styles from './Documents.module.css';
 
-import AutomationActionCard from '../../components/ui/Cards/AutomationActionCard.jsx';
-import SearchFilterBar from '../../components/ui/SearchFilterBar.jsx';
-import UrgentDeadlines from '../../components/ui/Cards/UrgentDeadlines.jsx';
-import AutomationSummary from '../../components/ui/Cards/AutomationSummary.jsx';
-import Title from '../../components/ui/Title.jsx';
-
-
 import PageHeader from '../../components/ui/PageHearder.jsx';
 import DropZone from '../../components/ui/DropZone.jsx';
 import DocumentList from '../../components/ui/DocumentList.jsx';

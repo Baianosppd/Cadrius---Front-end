@@ -152,3 +152,90 @@
     background-color: #fee2e2;
     color: #dc2626;
 }
+
+.sign_button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #111111;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.sign_button:hover {
+    opacity: 0.85;
+}
+
+.sign_icon {
+    width: 14px;
+    height: 14px;
+}
+
+.cell_actions {
+    padding: 16px;
+    vertical-align: middle;
+}
+
+.menu_wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.menu_button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.menu_button:hover {
+    background-color: #f3f4f6;
+    color: #111111;
+}
+
+.dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 4px;
+    z-index: 10;
+    min-width: 180px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown_item_danger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #dc2626;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown_item_danger:hover {
+    background-color: #fef2f2;
+}
+
+.dropdown_icon {
+    width: 15px;
+    height: 15px;
+}

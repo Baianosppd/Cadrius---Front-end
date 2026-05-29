@@ -1,0 +1,125 @@
+.container {
+    background: linear-gradient(135deg, #f5f3ff, #faf5ff);
+    border: 1px solid #e9d5ff;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.header_icon {
+    font-size: 20px;
+    color: #8b5cf6;
+    margin-top: 2px;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0 0 2px 0;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 200px;
+    max-height: 400px;
+}
+
+.message {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 90%;
+}
+
+.message_assistant {
+    background-color: #ffffff;
+    color: #374151;
+    align-self: flex-start;
+    border: 1px solid #e9d5ff;
+}
+
+.message_user {
+    background-color: #8b5cf6;
+    color: #ffffff;
+    align-self: flex-end;
+}
+
+.loading_dots {
+    color: #9ca3af;
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+.input_row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #111111;
+    outline: none;
+    background-color: #ffffff;
+}
+
+.input:focus {
+    border-color: #8b5cf6;
+}
+
+.input:disabled {
+    opacity: 0.6;
+}
+
+.send_button {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background-color: #8b5cf6;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.send_button:hover:not(:disabled) {
+    opacity: 0.85;
+}
+
+.send_button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.send_icon {
+    width: 18px;
+    height: 18px;
+    color: #ffffff;
+}

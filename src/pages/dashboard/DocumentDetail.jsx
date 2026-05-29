@@ -9,7 +9,7 @@ import DocumentSummary from '../../components/ui/DocumentSummary';
 import DocumentParties from '../../components/ui/DocumentParties';
 import DocumentDeadlines from '../../components/ui/DocumentDeadlines';
 import DocumentClauses from '../../components/ui/DocumentClauses';
-
+import BackButton from '../../components/common/BackButton';
 
 
 function DocumentDetail() {
@@ -36,10 +36,7 @@ function DocumentDetail() {
 
     return (
         <div className={styles.DocumentDetail_container}>
-            <button className={styles.back_button} onClick={() => navigate('/documentos')}>
-                <FiArrowLeft className={styles.back_icon} />
-                Voltar para Documentos
-            </button>
+            <BackButton label="Voltar para Dashboard" to="/dashboard" />
 
             <div className={styles.header}>
                 <div className={styles.header_left}>
