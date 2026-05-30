@@ -1,0 +1,22 @@
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+}

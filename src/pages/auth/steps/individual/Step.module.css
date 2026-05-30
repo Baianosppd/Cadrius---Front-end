@@ -1,0 +1,408 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 800px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.icon_wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background-color: #eff6ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    color: #3b82f6;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0 0 4px 0;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.social_buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.social_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+}
+
+.social_button:hover {
+    background-color: #f9fafb;
+}
+
+.social_icon {
+    width: 20px;
+    height: 20px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.divider_line {
+    flex: 1;
+    height: 1px;
+    background-color: #e5e7eb;
+}
+
+.divider_text {
+    font-size: 13px;
+    color: #9ca3af;
+    white-space: nowrap;
+}
+
+.fields_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field_full {
+    grid-column: 1 / -1;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.required {
+    font-size: 11px;
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.optional {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.input {
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #111111;
+    outline: none;
+    background-color: #ffffff;
+}
+
+.input:focus {
+    border-color: #3b82f6;
+}
+
+.select {
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #111111;
+    outline: none;
+    background-color: #ffffff;
+    cursor: pointer;
+    width: 100%;
+}
+
+.select:focus {
+    border-color: #3b82f6;
+}
+
+.info_box {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+.info_text {
+    font-size: 13px;
+    color: #1e40af;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Planos */
+.plans_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+}
+
+.plan_card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.plan_card:hover {
+    border-color: #3b82f6;
+}
+
+.plan_selected {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+}
+
+.popular_badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #3b82f6;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+}
+
+.plan_name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+.plan_price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.price_value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.price_period {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.plan_features {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.plan_feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.feature_check {
+    width: 14px;
+    height: 14px;
+    color: #16a34a;
+    flex-shrink: 0;
+}
+
+/* Pagamento */
+.payment_wrapper {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.card_form {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.section_title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.stripe_info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #16a34a;
+}
+
+.stripe_icon {
+    width: 16px;
+    height: 16px;
+}
+
+.summary {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.summary_row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #374151;
+}
+
+.discount {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.summary_total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111111;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.summary_note {
+    font-size: 12px;
+    color: #9ca3af;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Confirmação */
+.success_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    padding: 24px 0;
+}
+
+.success_icon_wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #dcfce7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.success_emoji {
+    font-size: 36px;
+}
+
+.success_title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.success_subtitle {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 0;
+    max-width: 500px;
+    line-height: 1.5;
+}
+
+.next_steps {
+    background-color: #f0f7ff;
+    border-radius: 12px;
+    padding: 24px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+}
+
+.next_steps_title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.next_step_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.next_step_icon {
+    width: 18px;
+    height: 18px;
+    color: #3b82f6;
+    flex-shrink: 0;
+}
