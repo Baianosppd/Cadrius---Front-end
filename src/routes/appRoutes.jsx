@@ -25,6 +25,12 @@ import NewTask from "../pages/dashboard/NewTask";
 import EditorLayout from '../layouts/EditorLayout';
 import FlowEditor from '../pages/dashboard/FlowEditor';
 
+import RegisterLayout from '../layouts/RegisterLayout';
+import SelectType from '../pages/auth/SelectType';
+import RegisterIndividual from '../pages/auth/RegisterIndividual';
+
+import RegisterEmpresa from '../pages/auth/RegisterEmpresa';
+
 
 export default function AppRoutes() {
   const { signed, loading } = useAuth();
@@ -42,22 +48,21 @@ export default function AppRoutes() {
           <Route path="/google/callback" element={<GoogleCallback />} />
         </Route>
 
-        <Route element={<EditorLayout />}>
-
-          <Route path="/editor" element={<FlowEditor />} />
-
+        <Route element={<RegisterLayout />}>
+          <Route path="/criar-conta" element={<SelectType />} />
+          <Route path="/cadastro/individual" element={<RegisterIndividual />} />
+          <Route path="/cadastro/empresa" element={<RegisterEmpresa />} />
         </Route>
-
 
         {/* Rotas privadas */}
         <Route
           element={signed ? <MainLayout /> : <Navigate to="/" />}
         >
-          
+
           <Route path="/automacao" element={<Automacao />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/documents" element={<Documents />} />
-          
+
 
           <Route path="/processos" element={<Processos />} />
           <Route path="/comunicacao" element={<Comunicacao />} />
@@ -76,9 +81,9 @@ export default function AppRoutes() {
 
 
         {/* Editor */}
-        {/* <Route element={signed ? <EditorLayout /> : <Navigate to="/" />}>
+        <Route element={signed ? <EditorLayout /> : <Navigate to="/" />}>
           <Route path="/editor" element={<FlowEditor />} />
-        </Route> */}
+        </Route>
 
       </Routes>
     </BrowserRouter>

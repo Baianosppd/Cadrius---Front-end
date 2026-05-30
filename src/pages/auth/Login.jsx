@@ -1,32 +1,26 @@
-//Imports
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // <--- 1. Importação do Link adicionada
-import { FaCog } from "react-icons/fa";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
 
 import useAuth from '../../hooks/useAuth';
-import InputPadrao from '../../components/ui/InputPadrao';
-import BotaoLogin from '../../components/ui/BotaoLogin';
-
-import Title from '../../components/ui/Title';
-import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Label from '../../components/ui/Label';
-import ContainerCard from '../../components/ui/ContainerCard';
+import Button from '../../components/ui/Button';
 import Checkbox from '../../components/ui/CheckBox';
 import FormGroup from '../../components/ui/FormGroup';
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import styles from './Login.module.css';
-import ButtonLogin from '../../components/common/ButtonLogin';
-
-import { toast } from 'react-toastify'; //Import toast
-import 'react-toastify/dist/ReactToastify.css'; // adiciona essa linha
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [lembrar, setLembrar] = useState(false);
     const [error, setError] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -39,68 +33,96 @@ function Login() {
             navigate('/dashboard');
         } catch (err) {
             console.error("Erro no login:", err.response?.data);
-
             if (!err.response) {
                 toast.error("Falha de comunicação com o servidor. Tente novamente em instantes.");
                 return;
             }
-
             setError('Falha no login. Verifique suas credenciais.');
         }
     };
 
+    const handleGoogle = () => {
+        window.location.href = `${import.meta.env.VITE_API_URL}auth/google/`;
+    };
+
+    const handleMicrosoft = () => {
+        window.location.href = `${import.meta.env.VITE_API_URL}auth/microsoft/`;
+    };
+
     return (
         <div className={styles.main_wrapper}>
-
-            {/* Coluna da Imagem */}
-            <div className={styles.side_image}>
-                <img src="/imagem.png" alt="Cadrius" />
+            {/* Lado esquerdo escuro */}
+            <div className={styles.side_dark}>
+                <h1 className={styles.dark_title}>Cadrius</h1>
+                <p className={styles.dark_subtitle}>Automação inteligente para escritórios jurídicos modernos</p>
             </div>
 
-
-            {/* Coluna do Formulário */}
+            {/* Lado direito com formulário */}
             <div className={styles.side_form}>
-                <ContainerCard>
-                    <Title as="h1">Cadrius</Title>
-                    <Title as="h2">Entre na sua conta</Title>
+                <div className={styles.form_container}>
+                    <h2 className={styles.form_title}>Entrar</h2>
+                    <p className={styles.form_subtitle}>Acesse sua conta para continuar</p>
 
+                    {/* Botões sociais */}
+                    <button className={styles.social_button} onClick={handleGoogle}>
+                        <FcGoogle className={styles.social_icon} />
+                        Continuar com Google
+                    </button>
+                    <button className={styles.social_button} onClick={handleMicrosoft}>
+                        <img src="/microsoft-icon.png" alt="Microsoft" className={styles.social_icon} />
+                        Continuar com Microsoft
+                    </button>
+
+                    {/* Separador */}
+                    <div className={styles.divider}>
+                        <span className={styles.divider_line} />
+                        <span className={styles.divider_text}>ou</span>
+                        <span className={styles.divider_line} />
+                    </div>
+
+                    {/* Formulário */}
                     <form onSubmit={handleSubmit}>
                         <FormGroup>
-                            <Label>Nome</Label>
+                            <Label>E-mail</Label>
                             <Input
-                                placeholder="User ID"
+                                type="email"
+                                placeholder="seu@email.com"
                                 value={username}
-                                onChange={(e) => {
-                                    setUsername(e.target.value)
-                                    setError(null);
-                                }}
+                                onChange={(e) => { setUsername(e.target.value); setError(null); }}
                             />
                         </FormGroup>
 
                         <FormGroup>
                             <Label>Senha</Label>
-                            <Input
-                                type="password"
-                                placeholder="*******"
-                                value={password}
-                                onChange={(e) => {
-                                    setPassword(e.target.value)
-                                    setError(null);
-                                }}
-                            />
-
+                            <div className={styles.password_wrapper}>
+                                <Input
+                                    type={showPassword ? 'text' : 'password'}
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => { setPassword(e.target.value); setError(null); }}
+                                    className={styles.password_input}
+                                />
+                                <button
+                                    type="button"
+                                    className={styles.eye_button}
+                                    onClick={() => setShowPassword(p => !p)}
+                                >
+                                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                                </button>
+                            </div>
                         </FormGroup>
 
                         <div className={styles.row_options}>
                             <Checkbox
-                                label="Lembre-me"
+                                label="Manter conectado"
                                 id="lembrar"
                                 checked={lembrar}
                                 onChange={(e) => setLembrar(e.target.checked)}
                             />
-                            <Link to="/esqueceu-a-senha">Esqueceu a Senha?</Link>
+                            <Link to="/esqueceu-a-senha" className={styles.forgot_link}>
+                                Esqueceu a senha?
+                            </Link>
                         </div>
-
 
                         <Button type="submit">Entrar</Button>
 
@@ -111,17 +133,10 @@ function Login() {
                         )}
                     </form>
 
-                    <div>
-                        <ButtonLogin
-                            tipo="google"
-                            msg="Logar com Google"
-                        />
-                        <ButtonLogin
-                            tipo="google"
-                            msg="Logar com Microsoft"
-                        />
-                    </div>
-                </ContainerCard>
+                    <p className={styles.register_link}>
+                        Não tem uma conta? <Link to="/criar-conta">Criar conta</Link>
+                    </p>
+                </div>
             </div>
         </div>
     );

@@ -1,0 +1,72 @@
+.footer {
+    height: 72px;
+    background-color: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    flex-shrink: 0;
+}
+
+.prev_button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+}
+
+.prev_button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.prev_button:hover:not(:disabled) {
+    background-color: #f9fafb;
+}
+
+.cancel_button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.cancel_button:hover {
+    color: #111111;
+}
+
+.next_button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #3b82f6;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.next_button:hover {
+    opacity: 0.85;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+}

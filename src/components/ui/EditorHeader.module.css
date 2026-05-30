@@ -1,0 +1,137 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    height: 64px;
+    flex-shrink: 0;
+    gap: 16px;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 200px;
+}
+
+.title_wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.status_active {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.status_inactive {
+    background-color: #f3f4f6;
+    color: #6b7280;
+}
+
+.status_dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.last_execution {
+    font-size: 12px;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+.counter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #374151;
+    font-weight: 500;
+}
+
+.counter_dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.button_secondary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+}
+
+.button_secondary:hover {
+    background-color: #f9fafb;
+}
+
+.button_primary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #3b82f6;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.button_primary:hover {
+    opacity: 0.85;
+}
+
+.button_icon {
+    width: 15px;
+    height: 15px;
+}

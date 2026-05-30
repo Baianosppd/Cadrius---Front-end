@@ -1,86 +1,185 @@
-/* Container principal */
 .main_wrapper {
     display: flex;
     min-height: 100vh;
     width: 100%;
-    background-color: #f3f4f6;
     overflow-x: hidden;
 }
 
-/* Metade ESQUERDA */
-.side_image {
+/* Lado esquerdo escuro */
+.side_dark {
     flex: 1;
+    background-color: #1a2035;
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-right: 60px;
-    background-color: #f3f4f6;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
 }
 
-
-.side_image img {
-    width: 100%;
-    max-width: 550px;
-    max-height: 80vh;
-    object-fit: contain;
+.dark_title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 12px 0;
 }
 
-/* Metade DIREITA*/
+.dark_subtitle {
+    font-size: 1rem;
+    color: #8892a4;
+    margin: 0;
+    line-height: 1.6;
+    max-width: 320px;
+}
+
+/* Lado direito */
 .side_form {
     flex: 1;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    padding-left: 60px;
+    background-color: #ffffff;
+    padding: 60px;
 }
 
+.form_container {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.form_title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111111;
+    margin: 0 0 8px 0;
+}
+
+.form_subtitle {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0 0 28px 0;
+}
+
+/* Botões sociais */
+.social_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: background-color 0.2s;
+}
+
+.social_button:hover {
+    background-color: #f9fafb;
+}
+
+.social_icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Separador */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 24px 0;
+}
+
+.divider_line {
+    flex: 1;
+    height: 1px;
+    background-color: #e5e7eb;
+}
+
+.divider_text {
+    font-size: 0.85rem;
+    color: #9ca3af;
+}
+
+/* Senha */
+.password_wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password_input {
+    padding-right: 44px !important;
+}
+
+.eye_button {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+.eye_button:hover {
+    color: #374151;
+}
+
+/* Opções */
 .row_options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
-    margin-bottom: 35px;
+    margin-bottom: 24px;
 }
 
-.row_options a {
-    color: #6b7280;
+.forgot_link {
     font-size: 0.875rem;
+    color: #6b7280;
     text-decoration: none;
-    transition: color 0.2s ease;
 }
 
-.row_options a:hover {
-    color: #4b5563;
+.forgot_link:hover {
+    color: #111111;
     text-decoration: underline;
 }
 
-/*
-   ESTILOS ESPECÍFICOS PARA O TÍTULO 
-*/
-
-.side_form h1 {
-    font-size: 2.25rem;
-    color: #374151;
-    font-weight: 800;
-    margin-bottom: 2.5rem;
-    letter-spacing: -0.5px;
-}
-
-.side_form h2 {
-    font-size: 1.15rem;
-    color: #4b5563;
-    font-weight: 600;
-    margin-bottom: 2rem;
-}
-
+/* Erro */
 .credentials_invalid {
-    color: #ff4d4d;
-    background-color: #ffe6e6;
+    color: #dc2626;
+    background-color: #fef2f2;
     padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 15px;
+    border-radius: 6px;
     font-size: 14px;
     text-align: center;
-    border: 1px solid #ffcccc;
-    margin-top: 10px;
+    border: 1px solid #fecaca;
+    margin-top: 12px;
+}
+
+/* Criar conta */
+.register_link {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 24px;
+}
+
+.register_link a {
+    font-weight: 700;
+    color: #111111;
+    text-decoration: none;
+}
+
+.register_link a:hover {
+    text-decoration: underline;
 }

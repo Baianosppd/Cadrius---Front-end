@@ -1,0 +1,85 @@
+.node {
+    width: 200px;
+    border-radius: 10px;
+    border: 2px solid;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    border-bottom: 1px solid;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.type_label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.delete_button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    color: #9ca3af;
+}
+
+.delete_button:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+    color: #ef4444;
+}
+
+.delete_icon {
+    width: 13px;
+    height: 13px;
+}
+
+.body {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+}
+
+.icon_wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.description {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.handle {
+    width: 10px;
+    height: 10px;
+    background-color: #9ca3af;
+    border: 2px solid #ffffff;
+}
