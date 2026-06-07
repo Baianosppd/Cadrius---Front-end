@@ -12,6 +12,9 @@ import StepSelecaoPlano from './steps/individual/StepSelecaoPlano';
 import StepPagamento from './steps/individual/StepPagamento';
 import StepConfirmacao from './steps/individual/StepConfirmacao';
 
+import api from '../../services/api.js';
+import { toast } from 'react-toastify';
+
 const steps = [
     { label: 'Dados Pessoais', sublabel: 'Informações básicas' },
     { label: 'Perfil Profissional', sublabel: 'OAB e área de atuação' },
@@ -35,15 +38,48 @@ function RegisterIndividual() {
 
     const updateForm = (data) => setFormData(prev => ({ ...prev, ...data }));
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (currentStep === 3 && formData.plano === 'starter') {
             setCurrentStep(5);
             return;
         }
+
+        if (currentStep === steps.length) {
+            try {
+                const nomeParts = (formData.nome || '').trim().split(' ');
+                const firstName = nomeParts[0] || '';
+                const lastName = nomeParts.slice(1).join(' ') || '';
+
+                await api.post('/auth/register/', {
+                    email: formData.email,
+                    password: formData.senha,
+                    first_name: firstName,
+                    last_name: lastName,
+                    cpf: formData.cpf || '',
+                    phone: formData.telefone || '',
+                    oab_number: formData.oab || '',
+                    oab_uf: formData.uf || '',
+                    practice_area: formData.area || '',
+                });
+
+                toast.success('Conta criada com sucesso!');
+                navigate('/dashboard');
+            } catch (err) {
+                console.error(err.response?.data);
+                const data = err.response?.data;
+                if (data?.cpf) {
+                    toast.error('Este CPF já está cadastrado.');
+                } else if (data?.email) {
+                    toast.error('Este e-mail já está cadastrado.');
+                } else {
+                    toast.error('Erro ao criar conta. Verifique os dados e tente novamente.');
+                }
+            }
+            return;
+        }
+
         if (currentStep < steps.length) {
             setCurrentStep(p => p + 1);
-        } else {
-            navigate('/dashboard');
         }
     };
 

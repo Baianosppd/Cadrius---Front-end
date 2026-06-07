@@ -54,8 +54,8 @@ function Navbar() {
                 </li>
 
                 {/* Automações */}
-                <li className={`${styles.nav_item} ${isActive('/underconstruction')}`}>
-                    <Link to="/underconstruction">
+                <li className={`${styles.nav_item} ${isActive('/automacao')}`}>
+                    <Link to="/automacao">
                         <FiZap className={styles.nav_icon} />
                         <span className={styles.nav_text}>Automações</span>
                     </Link>
@@ -63,8 +63,8 @@ function Navbar() {
 
 
                 {/* Equipe */}
-                <li className={`${styles.nav_item} ${isActive('/underconstruction')}`}>
-                    <Link to="/underconstruction">
+                <li className={`${styles.nav_item} ${isActive('/equipe')}`}>
+                    <Link to="/equipe">
                         <FiSettings className={styles.nav_icon} />
                         <span className={styles.nav_text}>equipe</span>
                     </Link>
