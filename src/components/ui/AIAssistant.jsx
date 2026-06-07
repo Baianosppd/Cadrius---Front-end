@@ -23,8 +23,8 @@ const AIAssistant = ({ onFillForm }) => {
         setLoading(true);
 
         try {
-            const response = await api.post('/ai/task-assistant/', {
-                message: input,
+            const response = await api.post('/api/workflows/generate/', {
+                prompt: input,
             });
 
             const data = response.data;

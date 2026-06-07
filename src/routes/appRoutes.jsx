@@ -58,7 +58,6 @@ export default function AppRoutes() {
         <Route
           element={signed ? <MainLayout /> : <Navigate to="/" />}
         >
-
           <Route path="/automacao" element={<Automacao />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/documents" element={<Documents />} />
@@ -76,9 +75,9 @@ export default function AppRoutes() {
 
           <Route path="/newtask" element={<NewTask />} />
 
+
           <Route path="/underconstruction" element={<UnderConstruction />} />
         </Route>
-
 
         {/* Editor */}
         <Route element={signed ? <EditorLayout /> : <Navigate to="/" />}>

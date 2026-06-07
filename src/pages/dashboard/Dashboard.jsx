@@ -1,43 +1,40 @@
-// src/components/pages/Dashboard.js
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api.js';
 import styles from './Dashboard.module.css';
 
-import Card from '../../components/ui/Card';
-import Atividades from '../../components/common/Atividades';
-import QuickActions from '../../components/common/QuickActions';
-
-import StatsCard from '../../components/ui/Cards/StatCard.jsx';
-import TasksDay from '../../components/ui/Cards/TasksDay.jsx';
-import RecentProcesses from '../../components/ui/Cards/RecentProcesses.jsx';
-
-//Adições dos componentes utilizados agora
 import PageHeader from '../../components/ui/PageHearder.jsx';
 import ActionButton from '../../components/ui/ActionButton';
 import SummaryGroup from '../../components/ui/Cards/SummaryGroup.jsx';
 import TasksToday from '../../components/ui/TasksToday';
 import SmartActivities from '../../components/ui/SmartActivities';
 
-//Import icones
 import { FiFileText, FiZap, FiMail } from 'react-icons/fi';
-
-
-import useAuth from '../../hooks/useAuth';
-
-
 import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
-
-    const { user } = useAuth();
-
     const navigate = useNavigate();
+    const [dashStats, setDashStats] = useState(null);
 
-    //Essa porrada de const é temporario só até puxar do banco depois
+
+    useEffect(() => {
+        api.get('/dashboard/stats/')
+            .then(res => {
+                console.log('Stats:', res.data);
+                setDashStats(res.data);
+            })
+            .catch(err => console.error('Erro ao carregar stats:', err));
+    }, []);
+
+    useEffect(() => {
+        api.get('/dashboard/stats/')
+            .then(res => setDashStats(res.data))
+            .catch(err => console.error('Erro ao carregar stats:', err));
+    }, []);
+
     const stats = [
-        { icon: FiFileText, iconColor: '#3b82f6', title: 'Total de Documentos', value: '1.234' },
-        { icon: FiZap, iconColor: '#f59e0b', title: 'Automações Rodadas', value: '856' },
-        { icon: FiMail, iconColor: '#10b981', title: 'Mensagens Enviadas', value: '3.421' },
+        { icon: FiFileText, iconColor: '#3b82f6', title: 'Total de Documentos', value: dashStats ? String(dashStats.total_documentos) : '—' },
+        { icon: FiZap, iconColor: '#f59e0b', title: 'Automações Rodadas', value: dashStats ? String(dashStats.automacoes_rodadas) : '—' },
+        { icon: FiMail, iconColor: '#10b981', title: 'Mensagens Enviadas', value: dashStats ? String(dashStats.mensagens_enviadas) : '—' },
     ];
 
     const [tasks, setTasks] = useState([
@@ -45,7 +42,7 @@ function Dashboard() {
         { id: 2, description: 'Revisar contrato - Cliente Oliveira', time: '11:30', priority: 'media', completed: false },
         { id: 3, description: 'Reunião com equipe - Caso XYZ', time: '14:00', priority: 'baixa', completed: false },
         { id: 4, description: 'Enviar documentação para cliente Santos', time: '16:30', priority: 'alta', completed: false },
-    ])
+    ]);
 
     const handleToggle = (id) => {
         setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
@@ -70,10 +67,10 @@ function Dashboard() {
             <SummaryGroup stats={stats} />
 
             <div className={styles.bottom_row}>
-                <TasksToday 
-                    tasks={tasks} 
-                    onToggleTask={handleToggle} 
-                    onAddTask={() => navigate('/newtask')} 
+                <TasksToday
+                    tasks={tasks}
+                    onToggleTask={handleToggle}
+                    onAddTask={() => navigate('/newtask')}
                 />
                 <SmartActivities activities={activities} />
             </div>
