@@ -7,7 +7,7 @@ import "./App.css";
 function App() {
   return (
     <AuthProvider>
-      <ToastContainer position="top-right" autoClose={4000} />
+      <ToastContainer position="top-right" autoClose={4000} style={{ zIndex: 99999 }} />
       <AppRoutes />
     </AuthProvider>
   );

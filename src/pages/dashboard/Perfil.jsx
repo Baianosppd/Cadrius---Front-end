@@ -10,17 +10,23 @@ import { toast } from 'react-toastify';
 
 function Perfil() {
     const [user, setUser] = useState(null);
+    const [plans, setPlans] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         api.get('auth/user/')
             .then(response => setUser(response.data))
             .catch(error => console.error("Erro ao carregar perfil:", error));
+
+        const billingBase = import.meta.env.VITE_API_URL.replace('api/v1/', '');
+        api.get(`${billingBase}api/billing/plans/`)
+            .then(res => setPlans(res.data))
+            .catch(err => console.error('Erro ao buscar planos:', err));
     }, []);
 
     const handleSave = async (data) => {
         try {
-            const response = await api.put('auth/user/', {
+            const response = await api.patch('auth/profile/', {
                 first_name: data.nome.split(' ')[0] || '',
                 last_name: data.nome.split(' ').slice(1).join(' ') || '',
                 phone: data.telefone,
@@ -38,7 +44,7 @@ function Perfil() {
         try {
             const formData = new FormData();
             formData.append('profile_picture', file);  // 👈 era foto
-            const response = await api.put('auth/user/', formData, {
+            const response = await api.patch('auth/profile/', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             setUser(response.data);
@@ -48,15 +54,10 @@ function Perfil() {
         }
     };
 
-    const plans = [
-        { id: 'starter', name: 'Starter', price: 'Grátis', description: 'Limite de 10 documentos/mês', features: [] },
-        { id: 'professional', name: 'Professional', price: 'R$ 99', billingDate: '23/06/2024', description: '', features: ['1.000 créditos', 'Gestão de Tarefas', 'Até 3 usuários', 'Integrações premium'] },
-        { id: 'enterprise', name: 'Enterprise', price: 'R$ 249', description: 'Créditos ilimitados', features: [] },
-    ];
-
-    const currentPlanId = 'professional';
-    const currentPlan = plans.find(p => p.id === currentPlanId);
-    const otherPlans = plans.filter(p => p.id !== currentPlanId);
+    // PRO é o único plano com features e description vazia (ver billing/plans.py no back)
+    const currentPlan = plans.find(p => p.features.length > 0 && p.description === '');
+    const currentPlanWithBilling = currentPlan ? { ...currentPlan, billingDate: '23/06/2024' } : null;
+    const otherPlans = plans.filter(p => !(p.features.length > 0 && p.description === ''));
 
     return (
         <div className={styles.perfil_container}>
@@ -77,11 +78,13 @@ function Perfil() {
                         onPhotoChange={handlePhotoChange}
                     />
                     <ChangePassword onSave={(data) => console.log(data)} />
-                    <PlanCard
-                        currentPlan={currentPlan}
-                        otherPlans={otherPlans}
-                        onManage={() => { }}
-                    />
+                    {currentPlanWithBilling && (
+                        <PlanCard
+                            currentPlan={currentPlanWithBilling}
+                            otherPlans={otherPlans}
+                            onManage={() => { }}
+                        />
+                    )}
                 </>
             )}
         </div>
