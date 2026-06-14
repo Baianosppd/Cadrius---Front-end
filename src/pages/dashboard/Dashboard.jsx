@@ -10,25 +10,21 @@ import SmartActivities from '../../components/ui/SmartActivities';
 
 import { FiFileText, FiZap, FiMail } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Dashboard() {
     const navigate = useNavigate();
     const [dashStats, setDashStats] = useState(null);
-
-
-    useEffect(() => {
-        api.get('/dashboard/stats/')
-            .then(res => {
-                console.log('Stats:', res.data);
-                setDashStats(res.data);
-            })
-            .catch(err => console.error('Erro ao carregar stats:', err));
-    }, []);
+    const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
         api.get('/dashboard/stats/')
             .then(res => setDashStats(res.data))
             .catch(err => console.error('Erro ao carregar stats:', err));
+
+        api.get('tasks/')
+            .then(res => setTasks(res.data))
+            .catch(err => console.error('Erro ao carregar tarefas:', err));
     }, []);
 
     const stats = [
@@ -37,15 +33,15 @@ function Dashboard() {
         { icon: FiMail, iconColor: '#10b981', title: 'Mensagens Enviadas', value: dashStats ? String(dashStats.mensagens_enviadas) : '—' },
     ];
 
-    const [tasks, setTasks] = useState([
-        { id: 1, description: 'Responder petição Silva vs ABC Corp', time: '09:00', priority: 'alta', completed: false },
-        { id: 2, description: 'Revisar contrato - Cliente Oliveira', time: '11:30', priority: 'media', completed: false },
-        { id: 3, description: 'Reunião com equipe - Caso XYZ', time: '14:00', priority: 'baixa', completed: false },
-        { id: 4, description: 'Enviar documentação para cliente Santos', time: '16:30', priority: 'alta', completed: false },
-    ]);
-
-    const handleToggle = (id) => {
-        setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+    const handleToggle = async (id) => {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+        try {
+            const response = await api.patch(`tasks/${id}/`, { completed: !task.completed });
+            setTasks(prev => prev.map(t => t.id === id ? response.data : t));
+        } catch (err) {
+            toast.error('Erro ao atualizar tarefa.');
+        }
     };
 
     const activities = [
