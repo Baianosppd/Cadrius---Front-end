@@ -96,7 +96,9 @@ function GestaoEquipe() {
             {activeTab === 'permissoes' && (
                 <PermissionGroups
                     groups={groups}
-                    onCreateGroup={() => { }}
+                    onCreateGroup={() =>
+                        toast.info('Criação de grupos de permissão em desenvolvimento.')
+                    }
                 />
             )}
         </div>

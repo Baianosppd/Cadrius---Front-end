@@ -1,5 +1,6 @@
 // src/components/layout/AIProfileModal.js
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import api from '../../services/api.js';
 import styles from './NewAutomationModal.module.css';
 
@@ -22,7 +23,7 @@ function AIProfileModal({ isOpen, onClose, onSuccess }) {
 
     const handleSave = async () => {
         if (!formData.name || !formData.system_prompt_template) {
-            alert("Preencha todos os campos.");
+            toast.warn("Preencha todos os campos.");
             return;
         }
 
@@ -30,12 +31,12 @@ function AIProfileModal({ isOpen, onClose, onSuccess }) {
         try {
             // Endpoint documentado no item 5.2
             await api.post('extraction-profiles/', formData);
-            alert('Perfil de IA criado com sucesso!');
+            toast.success('Perfil de IA criado com sucesso!');
             onSuccess();
             onClose();
         } catch (error) {
             console.error("Erro ao criar perfil:", error);
-            alert("Erro ao criar perfil de IA.");
+            toast.error("Erro ao criar perfil de IA.");
         } finally {
             setLoading(false);
         }

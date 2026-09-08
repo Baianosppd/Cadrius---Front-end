@@ -1,6 +1,7 @@
 import styles from './AutomationList.module.css';
 import { FiSettings, FiFileText } from 'react-icons/fi';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const successColor = (rate) => {
     if (rate >= 95) return '#16a34a';
@@ -79,8 +80,8 @@ const AutomationList = ({ automations = [], search = '' }) => {
                             key={index}
                             {...automation}
                             onToggle={() => handleToggle(index)}
-                            onSettings={() => {}}
-                            onLogs={() => {}}
+                            onSettings={() => toast.info('Configurações da automação em desenvolvimento.')}
+                            onLogs={() => toast.info('Visualização de logs em desenvolvimento.')}
                         />
                     ))}
                 </tbody>

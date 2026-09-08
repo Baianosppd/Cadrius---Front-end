@@ -26,16 +26,20 @@ function Automacao() {
         { icon: FiMail, iconColor: '#10b981', title: 'Tempo economizado', value: automationStats ? String(automationStats.tempo_economizado) : '—' },
     ];
 
+    // A listagem real de automações ainda não é puxada do backend.
     const automations = [
-        { name: 'Triagem Inicial de Processos', trigger: 'Novo PDF', active: true, successRate: 98, lastExecution: 'Há 5 min' },
-        { name: 'Extração de Prazos Processuais', trigger: 'Documento Analisado', active: true, successRate: 95, lastExecution: 'Há 2 horas' },
-        { name: 'Sincronização com Google Calendar', trigger: 'Prazo Identificado', active: false, successRate: 100, lastExecution: 'Há 1 dia' },
-        { name: 'Notificação de Intimações', trigger: 'E-mail Recebido', active: true, successRate: 92, lastExecution: 'Há 10 min' },
+        {
+            name: 'Listagem de automações em desenvolvimento',
+            trigger: 'aguardando integração com o backend',
+            active: false,
+            successRate: 0,
+            lastExecution: '—',
+        },
     ];
 
     return (
         <div className={styles.automacao_container}>
-            <PageHeader title="Automação de fluxo de trabalho" subtitle="Imagine um subtitulo aqui" />
+            <PageHeader title="Automação de fluxo de trabalho" subtitle="Crie e gerencie seus fluxos de trabalho automatizados" />
             <SummaryGroup stats={stats} />
             <AutomationToolbar
                 search={search}

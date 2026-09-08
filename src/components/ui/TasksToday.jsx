@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import styles from './TasksToday.module.css';
 
 const priorityLabels = {
@@ -24,7 +25,12 @@ const TaskItem = ({ description, time, priority, completed, onToggle }) => (
             <span className={`${styles.priority_badge} ${styles[priority]}`}>
                 {priorityLabels[priority]}
             </span>
-            <a className={styles.details_link}>Ver detalhes &gt;</a>
+            <a
+                className={styles.details_link}
+                onClick={() => toast.info('Detalhes da tarefa em desenvolvimento.')}
+            >
+                Ver detalhes &gt;
+            </a>
         </div>
     </div>
 );

@@ -1,5 +1,6 @@
 // src/components/layout/MailboxModal.js
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import api from '../../services/api.js';
 import styles from './NewAutomationModal.module.css'; // Reutilizando estilos
 
@@ -17,7 +18,7 @@ function MailboxModal({ isOpen, onClose, onSuccess }) {
 
     const handleSave = async () => {
         if (!formData.username || !formData.password || !formData.name) {
-            alert("Preencha os campos obrigatórios.");
+            toast.warn("Preencha os campos obrigatórios.");
             return;
         }
 
@@ -28,12 +29,12 @@ function MailboxModal({ isOpen, onClose, onSuccess }) {
                 ...formData,
                 is_active: true
             });
-            alert('Caixa de e-mail conectada com sucesso!');
+            toast.success('Caixa de e-mail conectada com sucesso!');
             onSuccess();
             onClose();
         } catch (error) {
             console.error("Erro ao salvar Mailbox:", error);
-            alert("Erro ao conectar. Verifique as credenciais e se o IMAP está habilitado.");
+            toast.error("Erro ao conectar. Verifique as credenciais e se o IMAP está habilitado.");
         } finally {
             setLoading(false);
         }

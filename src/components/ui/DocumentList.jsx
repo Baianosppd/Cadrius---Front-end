@@ -1,7 +1,7 @@
 import styles from './DocumentList.module.css';
 import { FiSearch, FiFilter, FiFile, FiMoreVertical, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { useState } from 'react';
-import SignatureModal from '../common/SignatureModal';
+import { toast } from 'react-toastify';
 
 const statusConfig = {
     concluido: { label: 'Concluído', className: 'status_concluido' },
@@ -62,7 +62,6 @@ const DocumentRow = ({ name, client, type, date, status, onSign, onDelete }) => 
 
 const DocumentList = ({ documents = [] }) => {
     const [search, setSearch] = useState('');
-    const [signingDoc, setSigningDoc] = useState(null);
 
     const filtered = documents.filter(d =>
         d.name.toLowerCase().includes(search.toLowerCase())
@@ -105,19 +104,12 @@ const DocumentList = ({ documents = [] }) => {
                         <DocumentRow
                             key={index}
                             {...doc}
-                            onSign={() => setSigningDoc(doc)}
-                            onDelete={() => console.log('excluir', doc.name)}
+                            onSign={() => toast.info('Validando requisito')}
+                            onDelete={() => toast.info('Exclusão de documento em desenvolvimento.')}
                         />
                     ))}
                 </tbody>
             </table>
-
-            {signingDoc && (
-                <SignatureModal
-                    document={signingDoc}
-                    onClose={() => setSigningDoc(null)}
-                />
-)}
         </div>
     );
 };

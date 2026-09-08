@@ -39,16 +39,19 @@ function Dashboard() {
         try {
             const response = await api.patch(`tasks/${id}/`, { completed: !task.completed });
             setTasks(prev => prev.map(t => t.id === id ? response.data : t));
-        } catch (err) {
+        } catch {
             toast.error('Erro ao atualizar tarefa.');
         }
     };
 
+    // O feed de atividades inteligentes ainda não é puxado do backend.
     const activities = [
-        { title: 'Documento analisado com sucesso', description: 'Petição Inicial - Caso Silva foi processada e os prazos foram extraídos.', time: 'Há 20 minutos', type: 'success' },
-        { title: 'Prazo próximo identificado', description: 'Contestação para o processo 1234.56.789 vence em 5 dias.', time: 'Há 2 horas', type: 'warning' },
-        { title: 'Nova automação concluída', description: 'Email enviado automaticamente para a cliente Maria Santos.', time: 'Há 3 horas', type: 'success' },
-        { title: 'Falha na sincronização', description: 'Não foi possível sincronizar com Google Drive. Tente reconectar.', time: 'Há 5 horas', type: 'error' },
+        {
+            title: 'Atividades inteligentes em desenvolvimento',
+            description: 'Este feed aparecerá aqui assim que a integração com o backend for concluída.',
+            time: '',
+            type: 'warning',
+        },
     ];
 
     return (

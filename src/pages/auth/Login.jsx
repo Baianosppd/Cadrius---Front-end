@@ -45,10 +45,6 @@ function Login() {
         window.location.href = `${import.meta.env.VITE_API_URL}auth/google/`;
     };
 
-    const handleMicrosoft = () => {
-        window.location.href = `${import.meta.env.VITE_API_URL}auth/microsoft/`;
-    };
-
     return (
         <div className={styles.main_wrapper}>
             {/* Lado esquerdo escuro */}
@@ -63,14 +59,10 @@ function Login() {
                     <h2 className={styles.form_title}>Entrar</h2>
                     <p className={styles.form_subtitle}>Acesse sua conta para continuar</p>
 
-                    {/* Botões sociais */}
+                    {/* Botão social */}
                     <button className={styles.social_button} onClick={handleGoogle}>
                         <FcGoogle className={styles.social_icon} />
                         Continuar com Google
-                    </button>
-                    <button className={styles.social_button} onClick={handleMicrosoft}>
-                        <img src="/microsoft-icon.png" alt="Microsoft" className={styles.social_icon} />
-                        Continuar com Microsoft
                     </button>
 
                     {/* Separador */}
