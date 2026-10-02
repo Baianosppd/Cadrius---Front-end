@@ -10,7 +10,8 @@ import { toast } from 'react-toastify';
 
 function Perfil() {
     const [user, setUser] = useState(null);
-    const [plans, setPlans] = useState([]);
+    const [currentPlan, setCurrentPlan] = useState(null);
+    const [otherPlans, setOtherPlans] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,9 +20,15 @@ function Perfil() {
             .catch(error => console.error("Erro ao carregar perfil:", error));
 
         const billingBase = import.meta.env.VITE_API_URL.replace('api/v1/', '');
-        api.get(`${billingBase}api/billing/plans/`)
-            .then(res => setPlans(res.data))
-            .catch(err => console.error('Erro ao buscar planos:', err));
+        api.get(`${billingBase}api/billing/plans/current/`)
+            .then(res => {
+                setCurrentPlan({
+                    ...res.data.plano,
+                    billingDate: res.data.proxima_cobranca || 'Sem data definida',
+                });
+                setOtherPlans(res.data.outros_planos);
+            })
+            .catch(err => console.error('Erro ao buscar plano atual:', err));
     }, []);
 
     const handleSave = async (data) => {
@@ -54,11 +61,6 @@ function Perfil() {
         }
     };
 
-    // PRO é o único plano com features e description vazia (ver billing/plans.py no back)
-    const currentPlan = plans.find(p => p.features.length > 0 && p.description === '');
-    const currentPlanWithBilling = currentPlan ? { ...currentPlan, billingDate: '23/06/2024' } : null;
-    const otherPlans = plans.filter(p => !(p.features.length > 0 && p.description === ''));
-
     return (
         <div className={styles.perfil_container}>
             {!user ? (
@@ -78,9 +80,9 @@ function Perfil() {
                         onPhotoChange={handlePhotoChange}
                     />
                     <ChangePassword onSave={(data) => console.log(data)} />
-                    {currentPlanWithBilling && (
+                    {currentPlan && (
                         <PlanCard
-                            currentPlan={currentPlanWithBilling}
+                            currentPlan={currentPlan}
                             otherPlans={otherPlans}
                             onManage={() => { }}
                         />

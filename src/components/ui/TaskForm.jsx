@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './TaskForm.module.css';
 
-const TaskForm = ({ onCancel, onSubmit, formData, onFormDataChange }) => {
+const TaskForm = ({ onCancel, onSubmit, formData, onFormDataChange, members = [] }) => {
     const handleChange = (field, value) => {
         onFormDataChange({ ...formData, [field]: value });
     };
@@ -61,10 +61,11 @@ const TaskForm = ({ onCancel, onSubmit, formData, onFormDataChange }) => {
                     value={formData.responsavel || ''}
                     onChange={(e) => handleChange('responsavel', e.target.value)}
                 >
-                    <option value="joao">João Silva</option>
-                    <option value="maria">Maria Santos</option>
-                    <option value="pedro">Pedro Costa</option>
-                    <option value="ana">Ana Oliveira</option>
+                    {members.map((member) => (
+                        <option key={member.user_id} value={member.user_id}>
+                            {member.name || member.email}
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -73,12 +74,13 @@ const TaskForm = ({ onCancel, onSubmit, formData, onFormDataChange }) => {
             <div className={styles.toggle_row}>
                 <div className={styles.toggle_info}>
                     <p className={styles.toggle_title}>Sincronizar com Calendário</p>
-                    <span className={styles.toggle_subtitle}>Vincule esta tarefa ao Google Calendar ou Outlook</span>
+                    <span className={styles.toggle_subtitle}>Em breve: vincule esta tarefa ao Google Calendar ou Outlook</span>
                 </div>
                 <button
                     className={`${styles.toggle} ${formData.sincronizar ? styles.toggle_active : styles.toggle_inactive}`}
                     onClick={() => handleChange('sincronizar', !formData.sincronizar)}
                     type="button"
+                    disabled
                 >
                     <span className={`${styles.toggle_thumb} ${formData.sincronizar ? styles.thumb_active : styles.thumb_inactive}`} />
                 </button>

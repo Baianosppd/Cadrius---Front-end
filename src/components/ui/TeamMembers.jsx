@@ -8,7 +8,18 @@ const Avatar = ({ initials }) => (
 );
 
 const CreditBar = ({ used, total }) => {
-    const percentage = Math.round((used / total) * 100);
+    if (total == null) {
+        return (
+            <div className={styles.credit_wrapper}>
+                <div className={styles.credit_info}>
+                    <span>{used} usados</span>
+                    <span>Sem limite</span>
+                </div>
+            </div>
+        );
+    }
+
+    const percentage = total > 0 ? Math.round((used / total) * 100) : 0;
     return (
         <div className={styles.credit_wrapper}>
             <div className={styles.credit_info}>

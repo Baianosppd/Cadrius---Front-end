@@ -113,6 +113,13 @@
     color: #374151;
 }
 
+.empty_cell {
+    padding: 32px 16px;
+    text-align: center;
+    font-size: 14px;
+    color: #9ca3af;
+}
+
 .file_icon {
     width: 18px;
     height: 18px;
@@ -146,6 +153,16 @@
 .status_processando {
     background-color: #dbeafe;
     color: #2563eb;
+}
+
+.status_aguardando {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.status_assinado {
+    background-color: #ede9fe;
+    color: #7c3aed;
 }
 
 .status_erro {

@@ -16,6 +16,8 @@ function Dashboard() {
     const navigate = useNavigate();
     const [dashStats, setDashStats] = useState(null);
     const [tasks, setTasks] = useState([]);
+    const [activities, setActivities] = useState([]);
+
 
     useEffect(() => {
         api.get('/dashboard/stats/')
@@ -25,6 +27,10 @@ function Dashboard() {
         api.get('tasks/')
             .then(res => setTasks(res.data))
             .catch(err => console.error('Erro ao carregar tarefas:', err));
+
+        api.get('activities/')
+            .then(res => setActivities(res.data))
+            .catch(err => console.error('Erro ao carregar atividades:', err));
     }, []);
 
     const stats = [
@@ -44,15 +50,6 @@ function Dashboard() {
         }
     };
 
-    // O feed de atividades inteligentes ainda não é puxado do backend.
-    const activities = [
-        {
-            title: 'Atividades inteligentes em desenvolvimento',
-            description: 'Este feed aparecerá aqui assim que a integração com o backend for concluída.',
-            time: '',
-            type: 'warning',
-        },
-    ];
 
     return (
         <div className={styles.dashboard_container}>

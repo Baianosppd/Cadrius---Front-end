@@ -263,28 +263,17 @@ window.location.href = res.data.checkout_url;
 
 ---
 
-### DOCS-01 — Listagem de Documentos
+### ~~DOCS-01~~ — RESOLVIDO (02/10/2026)
 
-**Rota sugerida:** `GET /api/v1/documents/`
+A rota nasceu como `GET /api/v1/documentos/` (não `/documents/` como a gente
+tinha sugerido), paginada, com campos em português (`nome, cliente, tipo,
+data, status`) — status aceita `processando`, `pronto`, `aguardando_assinatura`,
+`assinado`. `Documents.jsx` já foi atualizado pra chamar essa rota e traduzir
+os campos pro formato que `DocumentList.jsx` espera; `DocumentList.jsx` também
+foi atualizado com os 4 status novos. Listagem funcionando de ponta a ponta.
 
-**Contexto:** A página `Documents.jsx` exibe uma lista de documentos com nome, cliente,
-tipo, data e status. Hoje são 5 itens hardcoded. Também há um `DropZone` para upload
-que não está conectado a nenhuma API.
-
-**Resposta esperada:**
-```json
-[
-  {
-    "id": 1,
-    "name": "Petição Inicial - Caso Silva",
-    "client": "João Silva",
-    "type": "Petição",
-    "date": "2024-05-15",
-    "status": "concluido"
-  }
-]
-```
-`status` aceita: `"concluido"`, `"processando"`, `"erro"`.
+Segue faltando (ver DOCS-02/03 abaixo): ligar o upload (`DropZone`) e o botão
+de download.
 
 ---
 
@@ -332,6 +321,13 @@ via parâmetro de rota — a rota `/documentdetail` precisará virar `/documentd
 }
 ```
 
+**Atualização (27/09/2026):** corrigido um bug em `DocumentDetail.jsx` onde a
+variável usada pra ler esses campos se chamava `document`, colidindo com o
+objeto global `document` do navegador (a página HTML) — os campos nunca
+vinham de lugar nenhum, sempre caíam nos valores padrão em `||`. Renomeada
+para `documentData` (hoje um `useState({})` vazio). Segue faltando: o `:id`
+na rota e a chamada de fato à API, que dependem dessa rota existir.
+
 ---
 
 ### TEAM-01 — Convidar Funcionário
@@ -369,6 +365,38 @@ hardcoded (Admin, Advogado Pleno, Estagiário) com suas permissões.
   }
 ]
 ```
+
+---
+
+### TEAM-03 — Créditos por Usuário
+
+**Rota sugerida:** incluir novos campos na resposta de `GET /api/v1/teams/members/`
+(ver TEAM-01/TEAM-02 acima — mesma rota, não é uma rota nova).
+
+**Contexto:** A coluna "Créditos" em `GestaoEquipe.jsx` mostra um total geral e
+individual de créditos por funcionário. Hoje isso é fixo (`0/1000` pra todo
+mundo). Combinado com o usuário: o crédito deve virar um campo no model do
+usuário (`CustomUser`), a confirmar formato exato com o Thales.
+
+**Campos esperados na resposta** (nomes a confirmar, usados como sugestão):
+```json
+{
+  "id": "...",
+  "email": "...",
+  "first_name": "...",
+  "last_name": "...",
+  "role": "...",
+  "joined_at": "...",
+  "credits_used": 0,
+  "credits_total": 1000
+}
+```
+
+**Estado atual no frontend:** `GestaoEquipe.jsx` já lê `member.credits_used` e
+`member.credits_total` da resposta, com `?? 0` como valor padrão caso os
+campos ainda não existam — hoje aparece `0/0` (0%) pra todo mundo, sem quebrar
+nada. Assim que o backend expuser esses dois campos, a tela passa a mostrar
+os valores reais sem precisar de nenhuma mudança no frontend.
 
 ---
 

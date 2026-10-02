@@ -22,9 +22,13 @@ const SmartActivities = ({ activities = [] }) => {
         <div className={styles.container}>
             <h2 className={styles.title}>Atividades Inteligentes</h2>
             <div className={styles.activity_list}>
-                {activities.map((activity, index) => (
-                    <ActivityItem key={index} {...activity} />
-                ))}
+                {activities.length === 0
+                    ? <p>Ainda não há atividades disponiveis</p>
+                    :
+                    activities.map((activity, index) => (
+                        <ActivityItem key={index} {...activity} />
+                    ))
+                }
             </div>
         </div>
     );

@@ -20,8 +20,8 @@ const mapMember = (member) => {
         email: member.email,
         isAdmin: ['administrador', 'owner'].includes(member.role),
         permission: member.role,
-        creditsUsed: 0,
-        creditsTotal: 1000,
+        creditsUsed: member.creditos_usados ?? 0,
+        creditsTotal: member.creditos_limite,
     };
 };
 

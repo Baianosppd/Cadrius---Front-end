@@ -121,6 +121,11 @@
     flex-shrink: 0;
 }
 
+.toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 .toggle_active {
     background-color: #8b5cf6;
 }

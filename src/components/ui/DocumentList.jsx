@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const statusConfig = {
-    concluido: { label: 'Concluído', className: 'status_concluido' },
     processando: { label: 'Processando', className: 'status_processando' },
-    erro: { label: 'Erro', className: 'status_erro' },
+    pronto: { label: 'Pronto', className: 'status_concluido' },
+    aguardando_assinatura: { label: 'Aguardando Assinatura', className: 'status_aguardando' },
+    assinado: { label: 'Assinado', className: 'status_assinado' },
 };
 
 const DocumentRow = ({ name, client, type, date, status, onSign, onDelete }) => {
@@ -100,14 +101,22 @@ const DocumentList = ({ documents = [] }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filtered.map((doc, index) => (
-                        <DocumentRow
-                            key={index}
-                            {...doc}
-                            onSign={() => toast.info('Validando requisito')}
-                            onDelete={() => toast.info('Exclusão de documento em desenvolvimento.')}
-                        />
-                    ))}
+                    {filtered.length === 0 ? (
+                        <tr>
+                            <td colSpan={7} className={styles.empty_cell}>
+                                Nenhum documento disponível no momento.
+                            </td>
+                        </tr>
+                    ) : (
+                        filtered.map((doc, index) => (
+                            <DocumentRow
+                                key={index}
+                                {...doc}
+                                onSign={() => toast.info('Validando requisito')}
+                                onDelete={() => toast.info('Exclusão de documento em desenvolvimento.')}
+                            />
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

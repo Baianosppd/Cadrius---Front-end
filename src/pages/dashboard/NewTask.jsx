@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 function NewTask() {
     const navigate = useNavigate();
     const [userId, setUserId] = useState(null);
+    const [members, setMembers] = useState([]);
 
     const [formData, setFormData] = useState({
         titulo: '',
@@ -25,7 +26,17 @@ function NewTask() {
         api.get('auth/user/')
             .then(res => setUserId(res.data.id))
             .catch(err => console.error('Erro ao carregar usuário:', err));
+
+        api.get('funcionarios/')
+            .then(res => setMembers(res.data))
+            .catch(err => console.error('Erro ao carregar funcionários:', err));
     }, []);
+
+    useEffect(() => {
+        if (userId) {
+            setFormData(prev => ({ ...prev, responsavel: prev.responsavel || userId }));
+        }
+    }, [userId]);
 
     const handleSubmit = async (data) => {
         if (!data.titulo.trim()) {
@@ -42,7 +53,7 @@ function NewTask() {
                 descricao: data.descricao || '',
                 dataHorario: data.dataHorario,
                 prioridade: data.prioridade,
-                responsavel: userId,
+                responsavel: data.responsavel || userId,
                 sincronizar: data.sincronizar,
             });
             toast.success('Tarefa criada com sucesso!');
@@ -63,6 +74,7 @@ function NewTask() {
                         onFormDataChange={setFormData}
                         onCancel={() => navigate('/dashboard')}
                         onSubmit={handleSubmit}
+                        members={members}
                     />
                 </div>
                 <div className={styles.right}>

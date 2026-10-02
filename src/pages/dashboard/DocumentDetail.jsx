@@ -16,6 +16,8 @@ function DocumentDetail() {
 
     const navigate = useNavigate();
 
+    const [documentData, setDocumentData] = useState({});
+
     const summary = 'Este documento trata de uma ação de cobrança movida por João Silva contra a empresa ABC Corp, referente a valores não pagos de serviços prestados no período de janeiro a março de 2024.';
 
     const parties = [
@@ -40,13 +42,13 @@ function DocumentDetail() {
 
             <div className={styles.header}>
                 <div className={styles.header_left}>
-                    <h1 className={styles.title}>{document.name || 'Petição Inicial - Caso Silva'}</h1>
+                    <h1 className={styles.title}>{documentData.name || 'Petição Inicial - Caso Silva'}</h1>
                     <div className={styles.meta}>
-                        <span>{document.date || '15/05/2024'}</span>
+                        <span>{documentData.date || '15/05/2024'}</span>
                         <span className={styles.dot}>•</span>
-                        <span>{document.size || '2.4 MB'}</span>
+                        <span>{documentData.size || '2.4 MB'}</span>
                         <span className={styles.dot}>•</span>
-                        <span>{document.type || 'Petição'}</span>
+                        <span>{documentData.type || 'Petição'}</span>
                     </div>
                 </div>
                 <div className={styles.header_actions}>
@@ -63,7 +65,7 @@ function DocumentDetail() {
 
             <div className={styles.content}>
                 <div className={styles.left}>
-                    <DocumentViewer fileUrl={document.fileUrl || null} />
+                    <DocumentViewer fileUrl={documentData.fileUrl || null} />
                 </div>
                 <div className={styles.right}>
                     <DocumentSummary summary={summary} />
