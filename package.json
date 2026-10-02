@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
+    "@fontsource/poppins": "^5.3.0",
     "@react-oauth/google": "^0.13.5",
     "@xyflow/react": "^12.10.2",
     "axios": "^1.16.1",
