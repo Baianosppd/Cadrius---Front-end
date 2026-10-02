@@ -1,21 +1,32 @@
-version: '3.8'
-
+# Desenvolvimento local com hot reload:  docker compose up --build   →  http://localhost:5173
+# (o back-end roda no repositório do Cadrius: http://localhost:8000)
 services:
   frontend:
     container_name: cadrius_frontend
-    build: .
+    build:
+      context: .
+      target: dev
     ports:
-      - "3000:3000"
+      - "5173:5173"
     volumes:
-      # Espelha a pasta src e public para permitir Hot-Reloading
       - ./src:/app/src
       - ./public:/app/public
-      # Isola a pasta node_modules do container (evita conflito com seu Windows/Linux)
+      - ./index.html:/app/index.html
       - /app/node_modules
     environment:
-      # Essencial para o Hot-Reload funcionar bem no Windows/Docker Desktop
-      - CHOKIDAR_USEPOLLING=true
-      # Se precisar apontar para o backend (mesmo estando em outro repo)
-      - REACT_APP_API_URL=http://localhost:8000
-    stdin_open: true # Necessário para bugs do react-scripts em containers
-    tty: true
+      CHOKIDAR_USEPOLLING: "true"
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000/api/v1/}
+      VITE_ALLOWED_HOSTS: ${VITE_ALLOWED_HOSTS:-localhost}
+
+  # Imagem de produção (nginx) para testar localmente:  docker compose --profile prod up --build frontend-prod → http://localhost:8080
+  frontend-prod:
+    profiles: ["prod"]
+    build:
+      context: .
+      target: prod
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000/api/v1/}
+    environment:
+      API_ORIGIN: ${API_ORIGIN:-http://localhost:8000}
+    ports:
+      - "8080:8080"

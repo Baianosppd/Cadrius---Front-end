@@ -1,27 +1,26 @@
-name: Deploy de produção
+name: Deploy de teste (staging)
 
-# Push na main publica https://app.cadrius.ia.br (exige aprovação do environment "production").
-# O servidor puxa back e front, faz backup pré-deploy, valida a saúde e volta sozinho se falhar.
+# Push na branch Develop publica https://app-teste.cadrius.ia.br (back + front, base de teste).
 on:
   push:
-    branches: [main]
+    branches: [Develop]
 
 permissions:
   contents: read
 
 concurrency:
-  group: deploy-production
-  cancel-in-progress: false
+  group: deploy-staging
+  cancel-in-progress: true
 
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
 
   deploy:
-    name: Deploy em produção
+    name: Deploy em staging
     runs-on: ubuntu-latest
     needs: [ci]
-    environment: production
+    environment: staging
     steps:
       - name: Deploy via SSH (host verificado)
         env:
@@ -38,4 +37,4 @@ jobs:
           printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
           printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
           ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=yes "$VPS_USER@$VPS_HOST" \
-            "sudo /opt/cadrius/infra/deploy/scripts/deploy.sh prod $SHA"
+            "sudo /opt/cadrius/infra/deploy/scripts/deploy.sh staging $SHA"

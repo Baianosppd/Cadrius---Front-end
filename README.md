@@ -1,6 +1,24 @@
-Nessa branch trata o inicio da troca de design e adição/remoção de algumas funcionalidades do codigo por conta da mudança de escopo conversada entre a equipe. Nesse commit foi feito a adequação da primeira tela (o login) para o novo design, além da reestruturação dos componentes e parte do código que estava bagunçada. 
+# Cadrius — Front-end (React + Vite)
 
-O que foi feito:
-foi alterado o design da tela de login inicial do projeto
-criado novos componentes genéricos para melhor adequação no projeto
-comentado a parte de conexão com o banco para tornar mais agil essa troca de design sem necessitar do banco toda hora, assim que a parte de design for concluida as linhas de codigo serão descomentadas e a verificação "manual" será retirada.
+## Desenvolvimento
+```bash
+cp .env.example .env          # VITE_API_URL=http://127.0.0.1:8000/api/v1/
+npm ci && npm run dev         # http://localhost:5173
+# ou com Docker (hot reload):  docker compose up --build
+```
+Scripts: `npm run lint` · `npm run build` · `npm run preview`.
+
+## Produção / teste (servidor)
+Imagem `target: prod` (nginx sem privilégios, porta 8080, CSP e cabeçalhos de segurança, `/healthz`).
+A URL da API é gravada **no build** (`VITE_API_URL=https://api.cadrius.ia.br/api/v1/`) e o CSP usa `API_ORIGIN` em tempo de execução.
+O deploy é feito pelo kit do repositório do back (`deploy/README.md`):
+
+| Branch | Ambiente | URL |
+|---|---|---|
+| `Develop` | teste (base sintética) | https://app-teste.cadrius.ia.br |
+| `main` | produção (aprovação manual) | https://app.cadrius.ia.br |
+
+Segredos do GitHub Actions: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `VPS_KNOWN_HOSTS` (ver o README do back).
+**Nunca versione `.env`** (somente `.env.example`).
+
+Rotas esperadas do back: `ROTAS_PARA_O_BACKEND.md` e `docs/CONFORMIDADE_FRONT_BACK.md` (repo do back).

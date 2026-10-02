@@ -1,14 +1,18 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    host: '0.0.0.0',
-    port: 5173,
-    allowedHosts: [
-      'app.cadrius.ia.br'
-    ]
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+  // Domínios aceitos pelo servidor de desenvolvimento (VITE_ALLOWED_HOSTS=a.com,b.com)
+  const allowedHosts = (env.VITE_ALLOWED_HOSTS || 'localhost')
+    .split(',')
+    .map((h) => h.trim())
+    .filter(Boolean)
+
+  return {
+    plugins: [react()],
+    server: { host: '0.0.0.0', port: 5173, allowedHosts },
+    build: { chunkSizeWarningLimit: 1200 },
   }
 })
