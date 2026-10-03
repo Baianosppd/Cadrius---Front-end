@@ -10,7 +10,7 @@ const suggestions = [
     { label: 'Sincronizar E-mails', description: 'Anexos de e-mail → Google Drive', time: '~4 min' },
 ];
 
-const FlowAIChat = ({ onAddNodes }) => {
+const FlowAIChat = ({ onWorkflow }) => {
     const [messages, setMessages] = useState([
         {
             role: 'assistant',
@@ -29,26 +29,20 @@ const FlowAIChat = ({ onAddNodes }) => {
         setLoading(true);
 
         try {
-            const response = await api.post('/ai/flow-assistant/', {
-                message: input,
-            });
-
-            const data = response.data;
-
-            if (data.nodes) {
-                onAddNodes(data.nodes);
-                setMessages(prev => [...prev, {
-                    role: 'assistant',
-                    text: data.message || 'Adicionei os nós no canvas!'
-                }]);
-            } else {
-                setMessages(prev => [...prev, {
-                    role: 'assistant',
-                    text: data.message || 'Entendido! Como posso ajudar mais?'
-                }]);
-            }
+            // A IA gera a estrutura (gatilho + ações). Nada é salvo: você revisa no canvas e clica em Salvar.
+            const { data } = await api.post('workflows/generate-from-prompt/', { prompt: userMessage.text });
+            onWorkflow(data);
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                text: `Montei “${data.workflow_name}” no canvas. Revise os blocos, escolha a conexão do gatilho e salve.`,
+            }]);
         } catch (err) {
-            toast.error('Falha de comunicação com o assistente IA. Tente novamente em instantes.');
+            const code = err.response?.data?.code;
+            const msg = err.response?.status === 428 ? 'Aceite os termos atualizados para continuar.'
+                : err.response?.status === 422 ? 'Não consegui montar um fluxo válido. Descreva com mais detalhes (o que dispara e o que deve acontecer).'
+                : code === 'quota_exceeded' ? 'O limite de créditos de IA do plano foi atingido.'
+                : err.response?.data?.detail || 'Falha de comunicação com o assistente IA. Tente novamente em instantes.';
+            setMessages(prev => [...prev, { role: 'assistant', text: msg }]);
         } finally {
             setLoading(false);
         }

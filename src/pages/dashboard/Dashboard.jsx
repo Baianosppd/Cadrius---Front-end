@@ -16,11 +16,16 @@ function Dashboard() {
     const navigate = useNavigate();
     const [dashStats, setDashStats] = useState(null);
     const [tasks, setTasks] = useState([]);
+    const [activities, setActivities] = useState([]);
 
     useEffect(() => {
         api.get('/dashboard/stats/')
             .then(res => setDashStats(res.data))
             .catch(err => console.error('Erro ao carregar stats:', err));
+
+        api.get('activities/')
+            .then(res => setActivities(res.data))
+            .catch(err => console.error('Erro ao carregar atividades:', err));
 
         api.get('tasks/')
             .then(res => setTasks(res.data))
@@ -43,13 +48,6 @@ function Dashboard() {
             toast.error('Erro ao atualizar tarefa.');
         }
     };
-
-    const activities = [
-        { title: 'Documento analisado com sucesso', description: 'Petição Inicial - Caso Silva foi processada e os prazos foram extraídos.', time: 'Há 20 minutos', type: 'success' },
-        { title: 'Prazo próximo identificado', description: 'Contestação para o processo 1234.56.789 vence em 5 dias.', time: 'Há 2 horas', type: 'warning' },
-        { title: 'Nova automação concluída', description: 'Email enviado automaticamente para a cliente Maria Santos.', time: 'Há 3 horas', type: 'success' },
-        { title: 'Falha na sincronização', description: 'Não foi possível sincronizar com Google Drive. Tente reconectar.', time: 'Há 5 horas', type: 'error' },
-    ];
 
     return (
         <div className={styles.dashboard_container}>

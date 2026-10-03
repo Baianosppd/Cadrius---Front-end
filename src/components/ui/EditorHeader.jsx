@@ -1,23 +1,42 @@
 import styles from './EditorHeader.module.css';
-import { FiPlus, FiPlay, FiSave, FiUpload, FiLayout } from 'react-icons/fi';
+import { FiSave, FiUpload, FiLayout } from 'react-icons/fi';
 
 const EditorHeader = ({
     title,
     active,
     lastExecution,
     nodeCount,
-    onAdd,
-    onExecute,
     onSave,
     onImport,
     onAutoLayout,
+    onTitleChange,
+    onToggleActive,
+    saving,
 }) => {
     return (
         <div className={styles.header}>
             <div className={styles.left}>
                 <div className={styles.title_wrapper}>
-                    <h1 className={styles.title}>{title || 'Novo Fluxo'}</h1>
-                    <span className={`${styles.status} ${active ? styles.status_active : styles.status_inactive}`}>
+                    {onTitleChange ? (
+                        <input
+                            className={styles.title}
+                            style={{ border: '1px solid transparent', background: 'transparent', minWidth: 220 }}
+                            value={title}
+                            maxLength={255}
+                            aria-label="Nome do fluxo"
+                            onChange={(e) => onTitleChange(e.target.value)}
+                        />
+                    ) : (
+                        <h1 className={styles.title}>{title || 'Novo Fluxo'}</h1>
+                    )}
+                    <span
+                        className={`${styles.status} ${active ? styles.status_active : styles.status_inactive}`}
+                        role={onToggleActive ? 'button' : undefined}
+                        tabIndex={onToggleActive ? 0 : undefined}
+                        style={onToggleActive ? { cursor: 'pointer' } : undefined}
+                        onClick={onToggleActive}
+                        onKeyDown={(e) => onToggleActive && (e.key === 'Enter' || e.key === ' ') && onToggleActive()}
+                    >
                         <span className={styles.status_dot} />
                         {active ? 'Ativa' : 'Inativa'}
                     </span>
@@ -55,17 +74,9 @@ const EditorHeader = ({
                     <FiUpload className={styles.button_icon} />
                     Importar
                 </button>
-                <button className={styles.button_secondary} onClick={onAdd}>
-                    <FiPlus className={styles.button_icon} />
-                    Adicionar
-                </button>
-                <button className={styles.button_secondary} onClick={onExecute}>
-                    <FiPlay className={styles.button_icon} />
-                    Executar
-                </button>
-                <button className={styles.button_primary} onClick={onSave}>
+                <button className={styles.button_primary} onClick={onSave} disabled={saving}>
                     <FiSave className={styles.button_icon} />
-                    Salvar
+                    {saving ? 'Salvando…' : 'Salvar'}
                 </button>
             </div>
         </div>

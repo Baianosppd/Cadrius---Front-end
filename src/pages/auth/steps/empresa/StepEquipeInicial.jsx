@@ -1,8 +1,8 @@
 import styles from '../individual/Step.module.css';
 import empStyles from './StepEmpresa.module.css';
-import { FiUsers, FiUserPlus } from 'react-icons/fi';
+import { FiUsers } from 'react-icons/fi';
 
-const StepEquipeInicial = ({ formData, onChange }) => {
+const StepEquipeInicial = () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -19,10 +19,7 @@ const StepEquipeInicial = ({ formData, onChange }) => {
                 <FiUsers className={empStyles.empty_icon} />
                 <h3 className={empStyles.empty_title}>Adicione sua Equipe</h3>
                 <p className={empStyles.empty_subtitle}>Você pode fazer isso agora ou depois. Convide funcionários para colaborar no escritório.</p>
-                <button className={empStyles.invite_button}>
-                    <FiUserPlus className={empStyles.invite_icon} />
-                    Convidar Funcionário
-                </button>
+                <p className={empStyles.empty_subtitle}><strong>Dica:</strong> depois do cadastro, convide a equipe em <em>Equipe → Convidar</em>.</p>
             </div>
         </div>
     );

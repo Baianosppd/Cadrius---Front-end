@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './RegisterIndividual.module.css';
 import RegisterHeader from '../../components/common/RegisterHeader';
@@ -13,6 +13,8 @@ import StepPagamento from './steps/individual/StepPagamento';
 import StepConfirmacao from './steps/individual/StepConfirmacao';
 
 import api from '../../services/api.js';
+import useAuth from '../../hooks/useAuth';
+import { individualPayload, validateStep, registrationError, startCheckout } from '../../services/registration';
 import { toast } from 'react-toastify';
 
 const steps = [
@@ -33,58 +35,60 @@ const stepComponents = [
 
 function RegisterIndividual() {
     const navigate = useNavigate();
+    const { loginWithTokens } = useAuth();
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState({});
+    const [busy, setBusy] = useState(false);
 
-    const updateForm = (data) => setFormData(prev => ({ ...prev, ...data }));
+    // useCallback: o LegalAcceptance usa onChange em um efeito
+    const updateForm = useCallback((data) => setFormData(prev => ({ ...prev, ...data })), []);
 
-    const handleNext = async () => {
-        if (currentStep === 3 && formData.plano === 'starter') {
-            setCurrentStep(5);
-            return;
-        }
-
-        if (currentStep === steps.length) {
-            try {
-                const nomeParts = (formData.nome || '').trim().split(' ');
-                const firstName = nomeParts[0] || '';
-                const lastName = nomeParts.slice(1).join(' ') || '';
-
-                await api.post('/auth/register/', {
-                    email: formData.email,
-                    password: formData.senha,
-                    first_name: firstName,
-                    last_name: lastName,
-                    cpf: formData.cpf || '',
-                    phone: formData.telefone || '',
-                    oab_number: formData.oab || '',
-                    oab_uf: formData.uf || '',
-                    practice_area: formData.area || '',
-                });
-
-                toast.success('Conta criada com sucesso!');
-                navigate('/dashboard');
-            } catch (err) {
-                console.error(err.response?.data);
-                const data = err.response?.data;
-                if (data?.cpf) {
-                    toast.error('Este CPF já está cadastrado.');
-                } else if (data?.email) {
-                    toast.error('Este e-mail já está cadastrado.');
-                } else {
-                    toast.error('Erro ao criar conta. Verifique os dados e tente novamente.');
-                }
-            }
-            return;
-        }
-
-        if (currentStep < steps.length) {
-            setCurrentStep(p => p + 1);
+    // Cria a conta (o back já devolve access/refresh → o usuário entra logado)
+    const submit = async () => {
+        setBusy(true);
+        try {
+            const { data } = await api.post('auth/register/', individualPayload(formData));
+            await loginWithTokens(data.access, data.refresh);
+            return true;
+        } catch (err) {
+            console.error(err.response?.data);
+            toast.error(registrationError(err));
+            return false;
+        } finally {
+            setBusy(false);
         }
     };
 
+    const handleNext = async () => {
+        if (busy) return;
+        const problem = validateStep('individual', currentStep, formData);
+        if (problem) { toast.error(problem); return; }
+
+        // Plano gratuito: cria a conta e vai direto à confirmação (pula o pagamento)
+        if (currentStep === 3 && formData.planoGratis) {
+            if (await submit()) setCurrentStep(5);
+            return;
+        }
+        // Plano pago: cria a conta e abre o checkout do Stripe
+        if (currentStep === 4) {
+            if (!(await submit())) return;
+            try {
+                await startCheckout(formData.plano);
+            } catch {
+                toast.warn('Conta criada, mas não foi possível abrir o pagamento agora. Você pode assinar em Perfil → Plano.');
+                setCurrentStep(5);
+            }
+            return;
+        }
+        if (currentStep === steps.length) {
+            navigate('/dashboard');
+            return;
+        }
+        setCurrentStep(p => p + 1);
+    };
+
     const handlePrev = () => {
-        if (currentStep === 5 && formData.plano === 'starter') {
+        if (currentStep === 5 && formData.planoGratis) {
             setCurrentStep(3);
             return;
         }
@@ -113,7 +117,7 @@ function RegisterIndividual() {
                 onPrev={handlePrev}
                 onNext={handleNext}
                 onCancel={() => navigate('/criar-conta')}
-                isFirst={currentStep === 1}
+                isFirst={currentStep === 1 || currentStep === steps.length}
                 isLast={currentStep === steps.length}
             />
         </div>

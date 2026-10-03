@@ -1,11 +1,15 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     FiHome,
     FiMail,
     FiZap,
     FiLayers,
     FiSettings,
-    FiLogOut
+    FiLogOut,
+    FiShield,
+    FiCpu,
+    FiLock,
+    FiActivity
 } from 'react-icons/fi'; // Importando ícones modernos
 import styles from './Navbar.module.css';
 
@@ -15,7 +19,8 @@ import useAuth from '../../hooks/useAuth';
 
 function Navbar() {
 
-    const { logout } = useAuth();
+    const { logout, isOrgManager, isStaff } = useAuth();
+    const navigate = useNavigate();
 
     const location = useLocation();
 
@@ -78,18 +83,54 @@ function Navbar() {
                     </Link>
                 </li>
 
+                {/* Privacidade (todos) */}
+                <li className={`${styles.nav_item} ${isActive('/privacidade')}`}>
+                    <Link to="/privacidade">
+                        <FiLock className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Privacidade</span>
+                    </Link>
+                </li>
+
+                {/* IA segura (todos veem a política; donos/admins gerenciam) */}
+                <li className={`${styles.nav_item} ${isActive('/ia')}`}>
+                    <Link to="/ia">
+                        <FiCpu className={styles.nav_icon} />
+                        <span className={styles.nav_text}>IA segura</span>
+                    </Link>
+                </li>
+
+                {/* Auditoria do escritório (donos e administradores) */}
+                {isOrgManager && (
+                    <li className={`${styles.nav_item} ${isActive('/auditoria')}`}>
+                        <Link to="/auditoria">
+                            <FiActivity className={styles.nav_icon} />
+                            <span className={styles.nav_text}>Auditoria</span>
+                        </Link>
+                    </li>
+                )}
+
+                {/* Centro de Segurança (equipe Cadrius) */}
+                {isStaff && (
+                    <li className={`${styles.nav_item} ${isActive('/seguranca')}`}>
+                        <Link to="/seguranca">
+                            <FiShield className={styles.nav_icon} />
+                            <span className={styles.nav_text}>Centro de Segurança</span>
+                        </Link>
+                    </li>
+                )}
+
             </ul>
 
             {/* 2. Rodapé da Sidebar - Logout */}
             <div className={styles.sidebar_footer}>
-                <Link
-                    to="/login"
+                <button
+                    type="button"
                     className={styles.logout_link}
-                    onClick={logout}
+                    onClick={async () => { await logout(); navigate('/', { replace: true }); }}
                 >
                     <FiLogOut className={styles.nav_icon} />
                     <span className={styles.nav_text}>Sair</span>
-                </Link>
+                </button>
             </div>
         </nav>
     );

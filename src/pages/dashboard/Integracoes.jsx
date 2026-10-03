@@ -1,93 +1,74 @@
-// src/components/pages/Integracoes.js
-import React, { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { SiTelegram, SiTrello, SiWhatsapp, SiClickup, SiGooglesheets } from 'react-icons/si';
+import { FiLink, FiFileText } from 'react-icons/fi';
 import api from '../../services/api.js';
 import styles from './Integracoes.module.css';
-
-// Importação de todos os Modais de Configuração
-//import CredentialModal from '../../components/common/CredentialModal';
-//import MailboxModal from '../../components/common/MailboxModal';
-//import AIProfileModal from '../../components/common/AIProfileModal';
-
-import { SiOpenai, SiWhatsapp } from 'react-icons/si';
-import { FiMail, FiHardDrive } from 'react-icons/fi';
-
 import PageHeader from '../../components/ui/PageHearder.jsx';
 import IntegrationGrid from '../../components/ui/Cards/IntegrationGrid.jsx';
 import SyncHistory from '../../components/ui/SyncHistory.jsx';
+import ConnectionModal from '../../components/common/ConnectionModal.jsx';
+import { CONNECTION_APPS } from '../../services/connections';
+import { errorMessage } from '../../components/seguranca/ui';
+
+const LOGOS = {
+    WHATSAPP: [SiWhatsapp, '#25d366', '#f0fdf4'], TELEGRAM: [SiTelegram, '#229ed9', '#eff6ff'],
+    TRELLO: [SiTrello, '#0079bf', '#eff6ff'], CLICKUP: [SiClickup, '#7b68ee', '#f5f3ff'],
+    SHEETS: [SiGooglesheets, '#0f9d58', '#f0fdf4'], ASTREA: ['A', null, '#3b82f6'], WEBHOOK: [FiLink, '#374151', '#f3f4f6'],
+};
 
 function Integracoes() {
+    const [connections, setConnections] = useState([]);
+    const [history, setHistory] = useState([]);
+    const [modalApp, setModalApp] = useState(null);
 
-    //Retirar consts quando conectar com o banco
-const history = [
-    { name: 'OpenAI', description: 'Última sincronização bem sucedida - 45 documentos analisados', time: '3 min atrás', status: 'sucesso' },
-    { name: 'Gmail', description: '12 novos e-mails processados', time: '13 min atrás', status: 'sucesso' },
-    { name: 'WhatsApp', description: 'Falha na conexão - reconecte sua conta', time: '1 hora atrás', status: 'erro' },
-    { name: 'OpenAI', description: '45 documentos analisados', time: '2 horas atrás', status: 'sucesso' },
-];
+    const load = useCallback(() => {
+        api.get('connections/').then((r) => setConnections(r.data)).catch(() => setConnections([]));
+        api.get('sync-history/', { params: { page_size: 10 } })
+            .then((r) => setHistory((r.data.results ?? r.data).map((h) => ({
+                name: h.integration, description: h.description, time: h.time, status: h.status === 'sucesso' ? 'sucesso' : 'erro',
+            }))))
+            .catch(() => setHistory([]));
+    }, []);
+    useEffect(() => { load(); }, [load]);
 
-const integrations = [
-    {
-        name: 'OpenAI',
-        status: 'conectado',
-        description: 'Processamento de linguagem natural com GPT-4',
-        syncInfo: '3 min atrás - Última sincronização bem sucedida',
-        logo: SiOpenai,
-        logoColor: '#10a37f',
-        logoBg: '#f0fdf4',
-    },
-    {
-        name: 'Gmail',
-        status: 'conectado',
-        description: 'Sincronização de e-mails via IMAP',
-        syncInfo: '13 min atrás - 12 novos e-mails processados',
-        logo: FiMail,
-        logoColor: '#ea4335',
-        logoBg: '#fef2f2',
-    },
-    {
-        name: 'Google Drive',
-        status: 'desconectado',
-        description: 'Armazenamento e sincronização de documentos',
-        syncInfo: '13 min atrás - 12 novos e-mails processados',
-        logo: FiHardDrive,
-        logoColor: '#4285f4',
-        logoBg: '#eff6ff',
-    },
-    {
-        name: 'WhatsApp Business',
-        status: 'conectado',
-        description: 'Comunicação com clientes',
-        syncInfo: '5 min atrás - Última sincronização bem sucedida',
-        logo: SiWhatsapp,
-        logoColor: '#25d366',
-        logoBg: '#f0fdf4',
-    },
-    {
-        name: 'Astrea',
-        status: 'desconectado',
-        description: 'Consulta processual',
-        syncInfo: '13 min atrás - 12 novos e-mails processados',
-        logo: 'A', // Nao tenho logo
-        logoBg: '#3b82f6',
-    },
-    {
-        name: 'Projuris',
-        status: 'desconectado',
-        description: 'Gestão de processos jurídicos',
-        syncInfo: '13 min atrás - 12 novos e-mails processados',
-        logo: 'P', // Nao tenho logo
-        logoBg: '#8b5cf6',
-    },
-];
+    const remove = async (conn) => {
+        if (!window.confirm(`Remover a conexão "${conn.name}"? Automações que a usam deixarão de funcionar.`)) return;
+        try { await api.delete(`connections/${conn.id}/`); toast.success('Conexão removida.'); load(); }
+        catch (err) { toast.error(errorMessage(err)); }
+    };
+
+    const integrations = Object.entries(CONNECTION_APPS).map(([key, app]) => {
+        const mine = connections.filter((c) => c.app_name === key);
+        const [logo, logoColor, logoBg] = LOGOS[key] || [FiFileText, '#374151', '#f3f4f6'];
+        return {
+            name: app.label,
+            status: mine.length ? 'conectado' : 'desconectado',
+            description: app.description,
+            syncInfo: mine.length ? `${mine.length} conexão(ões): ${mine.map((c) => c.name).join(', ')}` : null,
+            logo, logoColor, logoBg,
+            onAction: () => (mine.length && !window.confirm(`Já existe conexão com ${app.label}. Adicionar outra? (Para remover, use o botão abaixo.)`) ? null : setModalApp(key)),
+        };
+    });
 
     return (
         <div className={styles.integracoes_container}>
-
-           <PageHeader title="Integrações" subtitle="Conecte suas ferramentas favoritas ao Cadrius" />
+            <PageHeader title="Integrações" subtitle="Conecte suas ferramentas favoritas ao Cadrius" />
             <IntegrationGrid integrations={integrations} />
+            {connections.length > 0 && (
+                <div style={{ margin: '16px 0' }}>
+                    <h2 style={{ fontSize: '1.05rem', fontWeight: 600, marginBottom: 8 }}>Suas conexões</h2>
+                    {connections.map((c) => (
+                        <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: 8, marginBottom: 6 }}>
+                            <span>{c.name} <small style={{ color: '#6b7280' }}>({c.app_label})</small></span>
+                            <button onClick={() => remove(c)} style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer' }}>Remover</button>
+                        </div>
+                    ))}
+                </div>
+            )}
             <SyncHistory history={history} />
+            {modalApp && <ConnectionModal appKey={modalApp} onClose={() => setModalApp(null)} onSaved={load} />}
         </div>
-
     );
 }
 

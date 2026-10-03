@@ -41,6 +41,9 @@ function Login() {
         }
     };
 
+    // Login social só aparece quando o back tem as rotas (VITE_SSO_ENABLED=true) — CAD-105
+    const ssoEnabled = import.meta.env.VITE_SSO_ENABLED === 'true';
+
     const handleGoogle = () => {
         window.location.href = `${import.meta.env.VITE_API_URL}auth/google/`;
     };
@@ -63,6 +66,8 @@ function Login() {
                     <h2 className={styles.form_title}>Entrar</h2>
                     <p className={styles.form_subtitle}>Acesse sua conta para continuar</p>
 
+                    {ssoEnabled && (
+                        <>
                     {/* Botões sociais */}
                     <button className={styles.social_button} onClick={handleGoogle}>
                         <FcGoogle className={styles.social_icon} />
@@ -79,6 +84,8 @@ function Login() {
                         <span className={styles.divider_text}>ou</span>
                         <span className={styles.divider_line} />
                     </div>
+                        </>
+                    )}
 
                     {/* Formulário */}
                     <form onSubmit={handleSubmit}>

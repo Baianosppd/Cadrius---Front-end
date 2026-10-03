@@ -1,49 +1,41 @@
-name: CI/CD Pipeline Cadrius Front-end
+name: Deploy de produção
 
+# Push na main publica https://app.cadrius.ia.br (exige aprovação do environment "production").
+# O servidor puxa back e front, faz backup pré-deploy, valida a saúde e volta sozinho se falhar.
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
 
 jobs:
-  test-frontend:
-    name: Testes e Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm install
-      #- run: npm run lint 
+  ci:
+    uses: ./.github/workflows/ci.yml
 
   deploy:
-    name: Deploy para a Locaweb
-    needs: [test-frontend] 
+    name: Deploy em produção
     runs-on: ubuntu-latest
+    needs: [ci]
+    environment: production
     steps:
-      - name: Executando Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.LOCAWEB_HOST }}
-          username: ${{ secrets.LOCAWEB_USER }}
-          key: ${{ secrets.LOCAWEB_SSH_KEY }}
-          script: |
-            # 1. Entra na pasta do Front-end no servidor 
-            cd /opt/cadrius/Cadrius---Front-end
-            
-            # 2. Atualiza o código
-            git stash
-            git pull origin main
-            
-            # 3. Injeta a variável de ambiente correta (com o /api/v1/)
-            echo "VITE_API_URL=https://api.cadrius.ia.br/api/v1/" > .env
-            
-            # 4. Volta para a pasta raiz onde está o orquestrador principal na Locaweb
-            cd /opt/cadrius
-            
-            # 5. Reconstrói e sobe o contêiner do Front-end atualizado
-            sudo docker compose up -d --build frontend
-            
-            # 6. Sobe o banco de dados, redis e backend na Locaweb
-            sudo docker compose up -d db redis web
+      - name: Deploy via SSH (host verificado)
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER || 'deploy' }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+          SHA: ${{ github.sha }}
+        run: |
+          for v in VPS_HOST VPS_SSH_KEY VPS_KNOWN_HOSTS; do
+            [ -n "${!v}" ] || { echo "::error::Secret $v não configurado"; exit 1; }
+          done
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=yes "$VPS_USER@$VPS_HOST" \
+            "sudo /opt/cadrius/infra/deploy/scripts/deploy.sh prod $SHA"

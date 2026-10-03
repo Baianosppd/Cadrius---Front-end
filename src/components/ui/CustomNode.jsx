@@ -1,5 +1,8 @@
 import { Handle, Position } from '@xyflow/react';
-import { FiX } from 'react-icons/fi';
+import {
+    FiX, FiMessageSquare, FiMail, FiCalendar, FiSend, FiFileText, FiPlusSquare, FiSmartphone,
+    FiHardDrive, FiSlack, FiGitBranch, FiClock, FiLink,
+} from 'react-icons/fi';
 import styles from './CustomNode.module.css';
 
 const typeConfig = {
@@ -8,8 +11,15 @@ const typeConfig = {
     condition: { label: 'CONDIÇÃO', borderColor: '#f59e0b', labelColor: '#f59e0b', bg: '#fffbeb' },
 };
 
+// O ícone não sobrevive à serialização do drag & drop (e vem do back sem ícone): resolve pelo subtipo.
+const ICONS = {
+    whatsapp: FiMessageSquare, email: FiMail, webhook_in: FiLink, projuris: FiFileText, agendamento: FiCalendar,
+    send_whatsapp: FiSend, webhook: FiLink, send_email: FiMail, criar_projuris: FiPlusSquare, send_sms: FiSmartphone,
+    google_drive: FiHardDrive, slack: FiSlack, condicao: FiGitBranch, aguardar: FiClock,
+};
+
 const CustomNode = ({ data }) => {
-    const Icon = data.icon;
+    const Icon = data.icon || ICONS[data.subtype];
     const config = typeConfig[data.type] || typeConfig.action;
 
     return (
@@ -30,9 +40,7 @@ const CustomNode = ({ data }) => {
 
             <div className={styles.body}>
                 <div className={styles.icon_wrapper} style={{ backgroundColor: data.bg }}>
-                    {data.icon && (
-                        <data.icon style={{ color: data.color, width: 18, height: 18 }} />
-                    )}
+                    {Icon && <Icon style={{ color: data.color, width: 18, height: 18 }} />}
                 </div>
                 <div className={styles.text}>
                     <p className={styles.label}>{data.label}</p>

@@ -66,7 +66,7 @@ function NewTask() {
                     />
                 </div>
                 <div className={styles.right}>
-                    <AIAssistant onFillForm={(data) => setFormData(prev => ({ ...prev, ...data }))} />
+                    <AIAssistant />
                 </div>
             </div>
         </div>

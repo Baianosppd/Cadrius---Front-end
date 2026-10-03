@@ -1,8 +1,9 @@
 import styles from './NodeLibrary.module.css';
+import { isSupported } from '../../services/flowMapper';
 import {
     FiMessageSquare, FiMail, FiCalendar, FiZap,
     FiSend, FiFileText, FiPlusSquare, FiSmartphone,
-    FiHardDrive, FiSlack, FiGitBranch, FiClock
+    FiHardDrive, FiSlack, FiGitBranch, FiClock, FiLink
 } from 'react-icons/fi';
 
 const nodeGroups = [
@@ -12,6 +13,7 @@ const nodeGroups = [
         nodes: [
             { type: 'trigger', subtype: 'whatsapp', label: 'WhatsApp', description: 'Mensagem recebida', icon: FiMessageSquare, color: '#16a34a', bg: '#dcfce7' },
             { type: 'trigger', subtype: 'email', label: 'E-mail', description: 'E-mail recebido', icon: FiMail, color: '#16a34a', bg: '#dcfce7' },
+            { type: 'trigger', subtype: 'webhook_in', label: 'Webhook externo', description: 'Recebe eventos de outros sistemas', icon: FiLink, color: '#16a34a', bg: '#dcfce7' },
             { type: 'trigger', subtype: 'projuris', label: 'Projuris', description: 'Evento no sistema', icon: FiFileText, color: '#16a34a', bg: '#dcfce7' },
             { type: 'trigger', subtype: 'agendamento', label: 'Agendamento', description: 'Horário programado', icon: FiCalendar, color: '#16a34a', bg: '#dcfce7' },
         ],
@@ -21,6 +23,7 @@ const nodeGroups = [
         color: '#3b82f6',
         nodes: [
             { type: 'action', subtype: 'send_whatsapp', label: 'Enviar WhatsApp', description: 'Enviar mensagem', icon: FiSend, color: '#3b82f6', bg: '#dbeafe' },
+            { type: 'action', subtype: 'webhook', label: 'Chamar webhook', description: 'Enviar dados a um sistema externo', icon: FiLink, color: '#3b82f6', bg: '#dbeafe' },
             { type: 'action', subtype: 'send_email', label: 'Enviar E-mail', description: 'Enviar e-mail', icon: FiMail, color: '#3b82f6', bg: '#dbeafe' },
             { type: 'action', subtype: 'criar_projuris', label: 'Criar no Projuris', description: 'Processo ou tarefa', icon: FiPlusSquare, color: '#3b82f6', bg: '#dbeafe' },
             { type: 'action', subtype: 'send_sms', label: 'Enviar SMS', description: 'Notificação por SMS', icon: FiSmartphone, color: '#3b82f6', bg: '#dbeafe' },
@@ -41,7 +44,10 @@ const nodeGroups = [
 const DraggableNode = ({ node }) => {
     const Icon = node.icon;
 
+    const supported = isSupported(node.subtype);
+
     const onDragStart = (e) => {
+        if (!supported) { e.preventDefault(); return; }
         e.dataTransfer.setData('application/reactflow', JSON.stringify(node));
         e.dataTransfer.effectAllowed = 'move';
     };
@@ -49,15 +55,17 @@ const DraggableNode = ({ node }) => {
     return (
         <div
             className={styles.node_item}
-            draggable
+            draggable={supported}
             onDragStart={onDragStart}
+            style={supported ? undefined : { opacity: 0.55, cursor: 'not-allowed' }}
+            title={supported ? 'Arraste para o canvas' : 'Em breve: ainda não disponível no servidor'}
         >
             <div className={styles.node_icon} style={{ backgroundColor: node.bg }}>
                 <Icon style={{ color: node.color, width: 16, height: 16 }} />
             </div>
             <div className={styles.node_text}>
                 <p className={styles.node_label}>{node.label}</p>
-                <span className={styles.node_description}>{node.description}</span>
+                <span className={styles.node_description}>{supported ? node.description : 'Em breve'}</span>
             </div>
         </div>
     );
@@ -68,7 +76,7 @@ const NodeLibrary = () => {
         <div className={styles.container}>
             <div className={styles.header}>
                 <p className={styles.header_title}>Biblioteca de Nós</p>
-                <p className={styles.header_subtitle}>Arraste para o canvas ou clique para adicionar</p>
+                <p className={styles.header_subtitle}>Arraste para o canvas</p>
             </div>
 
             <div className={styles.groups}>

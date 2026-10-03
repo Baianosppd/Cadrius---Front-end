@@ -24,7 +24,7 @@ const nodeTypes = {
 let nodeId = 0;
 const getId = () => `node_${nodeId++}`;
 
-const FlowCanvasInner = forwardRef(({ onNodesChange: onNodesChangeProp, onEdgesChange: onEdgesChangeProp }, ref) => {
+const FlowCanvasInner = forwardRef(({ onNodesChange: onNodesChangeProp, onEdgesChange: onEdgesChangeProp, onSelectNode }, ref) => {
     const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -35,7 +35,17 @@ const FlowCanvasInner = forwardRef(({ onNodesChange: onNodesChangeProp, onEdgesC
         loadFlow: (flowNodes, flowEdges) => {
             setNodes(flowNodes);
             setEdges(flowEdges);
+            if (onNodesChangeProp) onNodesChangeProp(flowNodes);
+            if (onEdgesChangeProp) onEdgesChangeProp(flowEdges);
             setTimeout(() => fitView(), 100);
+        },
+        // Atualiza campos de configuração de um nó (usado pelo painel de propriedades)
+        updateNodeData: (id, patch) => {
+            setNodes((nds) => {
+                const updated = nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n));
+                if (onNodesChangeProp) onNodesChangeProp(updated);
+                return updated;
+            });
         },
         autoLayout: () => {
             const laid = getAutoLayout(nodes, edges);
@@ -91,10 +101,13 @@ const FlowCanvasInner = forwardRef(({ onNodesChange: onNodesChangeProp, onEdgesC
             if (onNodesChangeProp) onNodesChangeProp(updated);
             return updated;
         });
-        setEdges((eds) => eds.filter(
-            (e) => e.source !== nodeId && e.target !== nodeId
-        ));
-    }, [setNodes, setEdges, onNodesChangeProp]);
+        setEdges((eds) => {
+            const updated = eds.filter((e) => e.source !== nodeId && e.target !== nodeId);
+            if (onEdgesChangeProp) onEdgesChangeProp(updated);
+            return updated;
+        });
+        if (onSelectNode) onSelectNode(null);
+    }, [setNodes, setEdges, onNodesChangeProp, onEdgesChangeProp, onSelectNode]);
 
     const handleAutoLayout = () => {
         const laid = getAutoLayout(nodes, edges);
@@ -113,6 +126,8 @@ const FlowCanvasInner = forwardRef(({ onNodesChange: onNodesChangeProp, onEdgesC
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                onNodeClick={(_, node) => onSelectNode && onSelectNode(node.id)}
+                onPaneClick={() => onSelectNode && onSelectNode(null)}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 nodeTypes={nodeTypes}

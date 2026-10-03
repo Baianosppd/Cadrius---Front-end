@@ -1,6 +1,6 @@
+import LegalAcceptance from '../../../../components/common/LegalAcceptance';
 import styles from '../individual/Step.module.css';
 import { FiUser } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
 
 const StepGerenteResponsavel = ({ formData, onChange }) => {
     return (
@@ -15,23 +15,6 @@ const StepGerenteResponsavel = ({ formData, onChange }) => {
                 </div>
             </div>
 
-            <div className={styles.social_buttons}>
-                <button className={styles.social_button}>
-                    <FcGoogle className={styles.social_icon} />
-                    Importar dados com Google
-                </button>
-                <button className={styles.social_button}>
-                    <img src="/microsoft-icon.png" alt="Microsoft" className={styles.social_icon} />
-                    Importar com Microsoft
-                </button>
-            </div>
-
-            <div className={styles.divider}>
-                <span className={styles.divider_line} />
-                <span className={styles.divider_text}>ou preencha manualmente</span>
-                <span className={styles.divider_line} />
-            </div>
-
             <div className={styles.fields_grid}>
                 <div className={styles.field}>
                     <label className={styles.label}>Nome Completo <span className={styles.required}>Obrigatório</span></label>
@@ -43,7 +26,7 @@ const StepGerenteResponsavel = ({ formData, onChange }) => {
                 </div>
                 <div className={styles.field}>
                     <label className={styles.label}>E-mail de Acesso <span className={styles.required}>Obrigatório</span></label>
-                    <input className={styles.input} placeholder="joao@empresa.com" value={formData.gerenteEmail || ''} onChange={e => onChange({ gerenteEmail: e.target.value })} />
+                    <input className={styles.input} type="email" placeholder="joao@empresa.com" value={formData.gerenteEmail || ''} onChange={e => onChange({ gerenteEmail: e.target.value })} />
                 </div>
                 <div className={styles.field}>
                     <label className={styles.label}>Criar Senha <span className={styles.required}>Obrigatório</span></label>
@@ -55,6 +38,8 @@ const StepGerenteResponsavel = ({ formData, onChange }) => {
                     <span style={{ fontSize: 12, color: '#9ca3af' }}>Este e-mail será usado para login no sistema</span>
                 </div>
             </div>
+
+            <LegalAcceptance formData={formData} onChange={onChange} />
         </div>
     );
 };

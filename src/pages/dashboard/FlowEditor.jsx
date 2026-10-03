@@ -1,17 +1,38 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './FlowEditor.module.css';
 import EditorHeader from '../../components/ui/EditorHeader';
 import NodeLibrary from '../../components/ui/NodeLibrary';
 import FlowCanvas from '../../components/ui/FlowCanvas';
 import FlowAIChat from '../../components/ui/FlowAIChat';
+import NodeInspector from '../../components/ui/NodeInspector';
+import { getAutoLayout } from '../../components/ui/FlowAutoLayout';
 import api from '../../services/api.js';
 import { toast } from 'react-toastify';
+import { flowToWorkflow, validateFlow, workflowToFlow } from '../../services/flowMapper';
+import { errorMessage } from '../../components/seguranca/ui';
+
+const COLORS = {
+    trigger: { color: '#16a34a', bg: '#dcfce7' },
+    action: { color: '#3b82f6', bg: '#dbeafe' },
+};
+
+// Dá cor aos nós vindos do back (o ícone é opcional)
+const decorate = (nodes) => nodes.map((n) => ({ ...n, data: { ...n.data, ...(COLORS[n.data.type] || {}) } }));
 
 function FlowEditor() {
+    const [params] = useSearchParams();
+    const workflowId = params.get('id');
+    const navigate = useNavigate();
+
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
     const [flowTitle, setFlowTitle] = useState('Novo Fluxo');
     const [active, setActive] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [connections, setConnections] = useState([]);
+    const [connectionId, setConnectionId] = useState(null);
+    const [selectedId, setSelectedId] = useState(null);
     const canvasRef = useRef(null);
     const importInputRef = useRef(null);
 
@@ -22,123 +43,81 @@ function FlowEditor() {
         connections: edges.length,
     };
 
-    // =============================
-    // SALVAR — envia JSON pro back
-    // =============================
+    const applyFlow = useCallback((flowNodes, flowEdges) => {
+        const laidOut = getAutoLayout(flowNodes, flowEdges);
+        canvasRef.current?.loadFlow(decorate(laidOut), flowEdges);
+    }, []);
+
+    useEffect(() => {
+        api.get('connections/').then((r) => setConnections(r.data)).catch(() => setConnections([]));
+    }, []);
+
+    // Edição: carrega o workflow existente do back
+    useEffect(() => {
+        if (!workflowId) return;
+        api.get(`workflows/${workflowId}/`)
+            .then(({ data }) => {
+                setFlowTitle(data.name);
+                setActive(data.is_active);
+                setConnectionId(data.trigger?.connection ?? null);
+                const flow = workflowToFlow(data);
+                setTimeout(() => applyFlow(flow.nodes, flow.edges), 50);
+            })
+            .catch(() => { toast.error('Não foi possível carregar a automação.'); navigate('/automacao'); });
+    }, [workflowId, applyFlow, navigate]);
+
     const handleSave = async () => {
         const flow = canvasRef.current?.getFlow();
         if (!flow) return;
+        const problems = validateFlow(flow.nodes, flow.edges);
+        if (!connectionId && flow.nodes.some((n) => n.data?.type === 'trigger')) problems.push('Selecione a conexão do gatilho (clique no gatilho).');
+        if (problems.length) { toast.error(problems[0]); return; }
 
-        const payload = {
-            title: flowTitle,
-            active,
-            nodes: flow.nodes.map(n => ({
-                id: n.id,
-                type: n.data.type,
-                subtype: n.data.subtype,
-                label: n.data.label,
-                description: n.data.description,
-                position: n.position,
-            })),
-            edges: flow.edges.map(e => ({
-                id: e.id,
-                source: e.source,
-                target: e.target,
-            })),
-        };
-
+        setSaving(true);
         try {
-            await api.post('/automacoes/fluxos/', payload);
-            toast.success('Fluxo salvo com sucesso!');
+            const body = flowToWorkflow({ nodes: flow.nodes, edges: flow.edges, title: flowTitle, active, connectionId });
+            if (workflowId) await api.put(`workflows/${workflowId}/`, body);
+            else await api.post('workflows/', body);
+            toast.success('Automação salva!');
+            navigate('/automacao');
         } catch (err) {
-            toast.error('Falha ao salvar o fluxo. Tente novamente.');
+            toast.error(errorMessage(err, 'Falha ao salvar a automação.'));
+        } finally {
+            setSaving(false);
         }
     };
 
-    // =============================
-    // IMPORTAR — carrega JSON no canvas
-    // =============================
+    // Importar JSON exportado: aceita o formato do back (trigger + actions)
     const handleImportFile = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = (event) => {
             try {
                 const json = JSON.parse(event.target.result);
-                loadFlowFromJson(json);
-                toast.success('Fluxo importado com sucesso!');
+                if (!json.trigger || !Array.isArray(json.actions)) throw new Error('formato');
+                if (json.name) setFlowTitle(json.name);
+                const flow = workflowToFlow(json);
+                applyFlow(flow.nodes, flow.edges);
+                toast.success('Fluxo importado.');
             } catch {
-                toast.error('Arquivo inválido. Use um JSON de fluxo exportado pelo Cadrius.');
+                toast.error('Arquivo inválido. Use um JSON de automação (trigger + actions).');
             }
         };
         reader.readAsText(file);
         e.target.value = '';
     };
 
-    const loadFlowFromJson = (json) => {
-        const nodeIconMap = {
-            whatsapp: 'FiMessageSquare',
-            email: 'FiMail',
-            projuris: 'FiFileText',
-            agendamento: 'FiCalendar',
-            send_whatsapp: 'FiSend',
-            send_email: 'FiMail',
-            criar_projuris: 'FiPlusSquare',
-            send_sms: 'FiSmartphone',
-            google_drive: 'FiHardDrive',
-            slack: 'FiSlack',
-            condicao: 'FiGitBranch',
-            aguardar: 'FiClock',
-        };
-
-        const colorMap = {
-            trigger: { color: '#16a34a', bg: '#dcfce7' },
-            action: { color: '#3b82f6', bg: '#dbeafe' },
-            condition: { color: '#f59e0b', bg: '#fef9c3' },
-        };
-
-        const flowNodes = json.nodes.map(n => ({
-            id: n.id,
-            type: 'custom',
-            position: n.position,
-            data: {
-                type: n.type,
-                subtype: n.subtype,
-                label: n.label,
-                description: n.description,
-                color: colorMap[n.type]?.color,
-                bg: colorMap[n.type]?.bg,
-            },
-        }));
-
-        const flowEdges = json.edges.map(e => ({
-            id: e.id,
-            source: e.source,
-            target: e.target,
-            animated: true,
-        }));
-
-        if (json.title) setFlowTitle(json.title);
-        if (json.active !== undefined) setActive(json.active);
-
-        canvasRef.current?.loadFlow(flowNodes, flowEdges);
-        setNodes(flowNodes);
-        setEdges(flowEdges);
+    // Sugestão da IA → vira nós no canvas (nada é salvo até o usuário revisar e clicar em Salvar)
+    const handleAIWorkflow = (generated) => {
+        const flow = workflowToFlow({
+            trigger: generated.trigger, actions: generated.actions,
+        });
+        if (generated.workflow_name) setFlowTitle(generated.workflow_name);
+        applyFlow(flow.nodes, flow.edges);
     };
 
-    // =============================
-    // CARREGAR DO BACK (por ID)
-    // =============================
-    const handleLoadFromBack = async (id) => {
-        try {
-            const response = await api.get(`/automacoes/fluxos/${id}/`);
-            loadFlowFromJson(response.data);
-            toast.success('Fluxo carregado!');
-        } catch (err) {
-            toast.error('Falha ao carregar o fluxo.');
-        }
-    };
+    const selected = nodes.find((n) => n.id === selectedId) || null;
 
     return (
         <div className={styles.container}>
@@ -147,21 +126,15 @@ function FlowEditor() {
                 active={active}
                 lastExecution={null}
                 nodeCount={nodeCount}
-                onAdd={() => { }}
-                onExecute={() => { }}
+                saving={saving}
+                onTitleChange={setFlowTitle}
+                onToggleActive={() => setActive((a) => !a)}
                 onSave={handleSave}
                 onImport={() => importInputRef.current?.click()}
                 onAutoLayout={() => canvasRef.current?.autoLayout()}
             />
 
-            {/* Input escondido para importar arquivo */}
-            <input
-                ref={importInputRef}
-                type="file"
-                accept=".json"
-                style={{ display: 'none' }}
-                onChange={handleImportFile}
-            />
+            <input ref={importInputRef} type="file" accept=".json" style={{ display: 'none' }} onChange={handleImportFile} />
 
             <div className={styles.body}>
                 <NodeLibrary />
@@ -170,9 +143,21 @@ function FlowEditor() {
                         ref={canvasRef}
                         onNodesChange={setNodes}
                         onEdgesChange={setEdges}
+                        onSelectNode={setSelectedId}
                     />
                 </div>
-                <FlowAIChat onAddNodes={() => { }} />
+                {selected ? (
+                    <NodeInspector
+                        node={selected}
+                        connections={connections}
+                        connectionId={connectionId}
+                        onConnection={setConnectionId}
+                        onChange={(id, patch) => canvasRef.current?.updateNodeData(id, patch)}
+                        onClose={() => setSelectedId(null)}
+                    />
+                ) : (
+                    <FlowAIChat onWorkflow={handleAIWorkflow} />
+                )}
             </div>
         </div>
     );

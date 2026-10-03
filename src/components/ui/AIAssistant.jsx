@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import styles from './AIAssistant.module.css';
 import { FiSend } from 'react-icons/fi';
-import { toast } from 'react-toastify';
-import api from '../../services/api.js';
 
-const AIAssistant = ({ onFillForm }) => {
+const AIAssistant = () => {
     const [messages, setMessages] = useState([
         {
             role: 'assistant',
@@ -22,32 +20,13 @@ const AIAssistant = ({ onFillForm }) => {
         setInput('');
         setLoading(true);
 
-        try {
-            const response = await api.post('/api/workflows/generate/', {
-                prompt: input,
-            });
-
-            const data = response.data;
-
-            // Se o back retornar dados para preencher o formulário
-            if (data.formData) {
-                onFillForm(data.formData);
-                setMessages(prev => [...prev, {
-                    role: 'assistant',
-                    text: data.message || 'Preenchi o formulário com as informações identificadas!'
-                }]);
-            } else {
-                // Se retornar só uma mensagem de texto
-                setMessages(prev => [...prev, {
-                    role: 'assistant',
-                    text: data.message || 'Entendido! Como posso ajudar mais?'
-                }]);
-            }
-        } catch (err) {
-            toast.error('Falha de comunicação com o assistente IA. Tente novamente em instantes.');
-        } finally {
-            setLoading(false);
-        }
+        // O back ainda não tem endpoint de assistente de tarefas (CAD-112). A geração de AUTOMAÇÕES por IA
+        // fica no editor de fluxos; aqui avisamos em vez de chamar uma rota que não existe.
+        setMessages(prev => [...prev, {
+            role: 'assistant',
+            text: 'O preenchimento automático de tarefas por IA ainda não está disponível. Preencha o formulário ao lado — ou use o assistente do editor de automações para criar fluxos.',
+        }]);
+        setLoading(false);
     };
 
     const handleKeyDown = (e) => {

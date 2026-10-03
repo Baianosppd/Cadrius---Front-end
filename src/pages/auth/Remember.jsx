@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import Title from '../../components/ui/Title';
 import Button from '../../components/ui/Button';
@@ -13,9 +14,10 @@ import styles from './Remember.module.css';
 function Remember() {
     const [email, setEmail] = useState('');
 
+    // O back ainda não tem recuperação de senha (CAD-111): não fingimos que o e-mail foi enviado.
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Enviar email para:", email);
+        toast.info("A recuperação de senha por e-mail ainda não está disponível. Peça ao dono ou administrador do seu escritório para ajudar, ou fale com o suporte.");
     };
 
     return (
