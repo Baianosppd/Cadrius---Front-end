@@ -1,9 +1,21 @@
 // src/services/api.js
 import axios from 'axios';
 
+const BASE_URL = import.meta.env.VITE_API_URL; // ex.: https://api.cadrius.ia.br/api/v1/
+
+// Origem do servidor (para rotas fora de /api/v1/, como /api/billing/...)
+export const API_ORIGIN = (() => {
+    try { return new URL(BASE_URL).origin; } catch { return ''; }
+})();
+
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL, //Pega a URL do localhost ou servidor
+    baseURL: BASE_URL,
 });
+
+// Evento disparado quando o back responde 428 consent_required (termos novos a aceitar).
+export const CONSENT_REQUIRED_EVENT = 'cadrius:consent-required';
+// Evento disparado quando a sessão expirou de vez (refresh inválido).
+export const SESSION_EXPIRED_EVENT = 'cadrius:session-expired';
 
 // =============================
 // INTERCEPTOR DE REQUEST
@@ -18,6 +30,25 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+// Uma única renovação de token por vez: várias requisições 401 simultâneas esperam a mesma promessa
+// (com ROTATE_REFRESH_TOKENS/blacklist, usar o mesmo refresh duas vezes derrubaria a sessão).
+let refreshPromise = null;
+
+function refreshAccessToken() {
+    if (!refreshPromise) {
+        const refresh = localStorage.getItem('refresh_token');
+        if (!refresh) return Promise.reject(new Error('Refresh token não encontrado'));
+        refreshPromise = axios
+            .post(`${BASE_URL}auth/token/refresh/`, { refresh })
+            .then((res) => {
+                localStorage.setItem('access_token', res.data.access);
+                if (res.data.refresh) localStorage.setItem('refresh_token', res.data.refresh);
+                return res.data.access;
+            })
+            .finally(() => { refreshPromise = null; });
+    }
+    return refreshPromise;
+}
 
 // =============================
 // INTERCEPTOR DE RESPONSE
@@ -27,47 +58,36 @@ api.interceptors.response.use(
 
     async (error) => {
         const originalRequest = error.config;
+        const status = error.response?.status;
 
-        // --- ALTERAÇÃO AQUI ---
-        // Verifica se é erro 401
-        // E certifica que NÃO é a rota de login (token)
+        // 428: o usuário precisa aceitar versões novas dos documentos legais (LGPD)
+        if (status === 428 && error.response?.data?.code === 'consent_required') {
+            window.dispatchEvent(new CustomEvent(CONSENT_REQUIRED_EVENT, { detail: error.response.data }));
+            return Promise.reject(error);
+        }
+
+        // 401 em rota autenticada (não no login/refresh): tenta renovar o token uma vez
         if (
-            error.response &&
-            error.response.status === 401 &&
+            status === 401 &&
+            originalRequest &&
             !originalRequest._retry &&
-            !originalRequest.url.includes('/auth/token/') // Não tenta refresh se for login!
+            !originalRequest.url?.includes('auth/token')
         ) {
             originalRequest._retry = true;
 
             try {
-                const refreshToken = localStorage.getItem('refresh_token');
-
-                if (!refreshToken) {
-                    throw new Error("Refresh token não encontrado");
-                }
-
-                const response = await axios.post(
-                    `${import.meta.env.VITE_API_URL}auth/token/refresh/`,
-                    { refresh: refreshToken }
-                );
-
-                const newAccessToken = response.data.access;
-                localStorage.setItem('access_token', newAccessToken);
+                const newAccessToken = await refreshAccessToken();
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return api(originalRequest);
-
             } catch (refreshError) {
-                console.warn("Refresh falhou. Fazendo logout...");
-                localStorage.clear();
-                if (window.location.pathname !== '/') {
-                    window.location.href = '/';
-                }
+                console.warn('Refresh falhou. Encerrando a sessão.');
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
                 return Promise.reject(refreshError);
             }
         }
 
-        // Se for erro de login (401 na rota /auth/token/), 
-        // ele vai cair direto aqui e o seu Login.jsx vai pegar no catch!
         return Promise.reject(error);
     }
 );

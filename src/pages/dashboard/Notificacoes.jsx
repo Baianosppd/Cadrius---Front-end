@@ -1,96 +1,58 @@
-// src/components/pages/Integracoes.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { toast } from 'react-toastify';
 import api from '../../services/api.js';
 import styles from './Notificacoes.module.css';
-
-import { SiOpenai, SiWhatsapp } from 'react-icons/si';
-import { FiMail, FiHardDrive } from 'react-icons/fi';
+import { NOTIFICATIONS_CHANGED } from '../../components/common/BarraSup.jsx';
 
 import PageHeader from '../../components/ui/PageHearder.jsx';
 import NotificationList from '../../components/ui/NotificationList.jsx';
 import NotificationDetail from '../../components/ui/NotificationDetails.jsx';
 
 function Notificacoes() {
-    
-    //Retirar consts quando conectar com o banco
-const [selectedNotification, setSelectedNotification] = useState(null);
+    const [selectedNotification, setSelectedNotification] = useState(null);
+    const [notifications, setNotifications] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const notifications = [
-        {
-            title: 'Documento analisado com sucesso',
-            description: 'Petição Inicial - Caso Silva foi processada e os prazos foram extraídos.',
-            time: 'Há 20 minutos',
-            read: false,
-            type: 'documento',
-            origem: 'Módulo de Documentos',
-            documento: 'Petição Inicial - Caso Silva.pdf',
-            acao: 'Análise concluída com sucesso',
-            detalhes: 'Foram extraídos 3 prazos importantes e 2 cláusulas críticas identificadas.',
-            actionLabel: 'Ir para Módulo de Documentos',
-            link: '/documentos',
-        },
-        {
-            title: 'Prazo próximo identificado',
-            description: 'Contestação para o processo 1234.56.789 vence em 5 dias.',
-            time: 'Há 2 horas',
-            read: false,
-            type: 'prazo',
-            origem: 'Módulo de Prazos',
-            documento: 'Contestação 1234.56.789',
-            acao: 'Prazo identificado automaticamente',
-            detalhes: 'O prazo vence em 5 dias. Tome as providências necessárias.',
-            actionLabel: 'Ver Prazo',
-            link: '/prazos',
-        },
-        {
-            title: 'Nova automação concluída',
-            description: 'Email enviado automaticamente para a cliente Maria Santos.',
-            time: 'Há 3 horas',
-            read: true,
-            type: 'automacao',
-            origem: 'Módulo de Automações',
-            documento: '—',
-            acao: 'Email enviado com sucesso',
-            detalhes: 'A automação de envio de email foi concluída com sucesso.',
-            actionLabel: 'Ver Automações',
-            link: '/automacoes',
-        },
-        {
-            title: 'Falha na sincronização',
-            description: 'Não foi possível sincronizar com Google Drive. Tente reconectar.',
-            time: 'Há 4 horas',
-            read: true,
-            type: 'erro',
-            origem: 'Google Drive',
-            documento: '—',
-            acao: 'Falha na conexão',
-            detalhes: 'Não foi possível sincronizar com Google Drive. Tente reconectar sua conta.',
-            actionLabel: 'Ir para Integrações',
-            link: '/integracoes',
-        },
-        {
-            title: 'Novo documento carregado',
-            description: 'Contrato de Prestação de Serviços foi enviado com sucesso.',
-            time: 'Há 5 horas',
-            read: true,
-            type: 'documento',
-            origem: 'Módulo de Documentos',
-            documento: 'Contrato de Prestação de Serviços.pdf',
-            acao: 'Upload concluído',
-            detalhes: 'O documento foi carregado e está disponível para análise.',
-            actionLabel: 'Ir para Módulo de Documentos',
-            link: '/documentos',
-        },
-    ];
+    const load = useCallback(() => {
+        api.get('notifications/')
+            .then((r) => setNotifications(r.data.results ?? r.data))
+            .catch(() => toast.error('Não foi possível carregar as notificações.'))
+            .finally(() => setLoading(false));
+    }, []);
+    useEffect(() => { load(); }, [load]);
+
+    const open = async (n) => {
+        setSelectedNotification(n);
+        if (!n.read) {
+            try {
+                await api.post(`notifications/${n.id}/read/`);
+                setNotifications((list) => list.map((x) => (x.id === n.id ? { ...x, read: true } : x)));
+                window.dispatchEvent(new Event(NOTIFICATIONS_CHANGED));
+            } catch { /* leitura é best-effort */ }
+        }
+    };
+
+    const markAll = async () => {
+        try {
+            await api.post('notifications/read-all/');
+            setNotifications((list) => list.map((x) => ({ ...x, read: true })));
+            window.dispatchEvent(new Event(NOTIFICATIONS_CHANGED));
+        } catch { toast.error('Não foi possível marcar como lidas.'); }
+    };
+
     return (
         <div className={styles.Notificacoes_container}>
             {!selectedNotification ? (
                 <>
                     <PageHeader title="Notificações" subtitle="Acompanhe todas as atualizações do sistema" />
-                    <NotificationList
-                        notifications={notifications}
-                        onSelect={(notification) => setSelectedNotification(notification)}
-                    />
+                    {notifications.some((n) => !n.read) && (
+                        <button onClick={markAll} style={{ alignSelf: 'flex-end', margin: '0 0 12px', padding: '6px 12px', border: '1px solid #d1d5db', borderRadius: 8, background: '#fff', cursor: 'pointer' }}>
+                            Marcar todas como lidas
+                        </button>
+                    )}
+                    {loading ? <p>Carregando…</p> : notifications.length === 0 ? <p style={{ color: '#6b7280' }}>Nenhuma notificação por enquanto.</p> : (
+                        <NotificationList notifications={notifications} onSelect={open} />
+                    )}
                 </>
             ) : (
                 <NotificationDetail
@@ -99,7 +61,6 @@ const [selectedNotification, setSelectedNotification] = useState(null);
                 />
             )}
         </div>
-
     );
 }
 

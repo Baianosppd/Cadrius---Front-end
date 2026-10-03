@@ -1,51 +1,83 @@
-import { createContext, useState, useEffect } from "react";
-import api from "../services/api";
+import { createContext, useState, useEffect, useCallback } from "react";
+import api, { SESSION_EXPIRED_EVENT } from "../services/api";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
+
+const clearTokens = () => {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+};
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [organization, setOrganization] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const applyUser = useCallback((data) => {
+    setUser(data);
+    setOrganization(data?.organization ?? null);
+  }, []);
+
+  const reset = useCallback(() => {
+    clearTokens();
+    setUser(null);
+    setOrganization(null);
+  }, []);
+
+  // Recarrega os dados do usuário (após login, cadastro, login social ou aceite de termos)
+  const refreshUser = useCallback(async () => {
+    const response = await api.get("/auth/user/");
+    applyUser(response.data);
+    return response.data;
+  }, [applyUser]);
+
   useEffect(() => {
     async function loadUser() {
-      const token = localStorage.getItem("access_token");
-
-      if (token) {
+      if (localStorage.getItem("access_token")) {
         try {
-          const response = await api.get("/auth/user/");
-          setUser(response.data);
-          setOrganization(response.data.organization);
+          await refreshUser();
         } catch (err) {
           console.error("Erro ao carregar usuário:", err.response?.data);
-          localStorage.clear();
-          setUser(null);
+          reset();
         }
       }
-
       setLoading(false);
     }
-
     loadUser();
-  }, []);
+  }, [refreshUser, reset]);
+
+  // Sessão expirada em qualquer chamada: volta ao login sem recarregar a página
+  useEffect(() => {
+    const onExpired = () => reset();
+    window.addEventListener(SESSION_EXPIRED_EVENT, onExpired);
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired);
+  }, [reset]);
 
   async function login(username, password) {
     const response = await api.post("/auth/token/", { username, password });
-
-    localStorage.setItem("access_token", response.data.access);
-    localStorage.setItem("refresh_token", response.data.refresh);
-
-    const userResponse = await api.get("/auth/user/");
-    setUser(userResponse.data);
-    setOrganization(userResponse.data.organization);
+    await loginWithTokens(response.data.access, response.data.refresh);
   }
 
-  function logout() {
-    localStorage.clear();
-    setUser(null);
-    setOrganization(null);
+  // Usado também pelo cadastro (o back já devolve access/refresh) e pelo login social
+  async function loginWithTokens(access, refresh) {
+    localStorage.setItem("access_token", access);
+    localStorage.setItem("refresh_token", refresh);
+    await refreshUser();
   }
+
+  async function logout() {
+    const refresh = localStorage.getItem("refresh_token");
+    try {
+      // Revoga o refresh token no servidor (blacklist) — apagar só o localStorage não encerraria a sessão
+      if (refresh) await api.post("/auth/logout/", { refresh });
+    } catch (err) {
+      console.warn("Logout no servidor falhou:", err.response?.status);
+    }
+    reset();
+  }
+
+  const role = user?.role ?? null;
 
   return (
     <AuthContext.Provider
@@ -53,7 +85,12 @@ export function AuthProvider({ children }) {
         signed: !!user,
         user,
         organization,
+        role,
+        isOrgManager: role === "OWNER" || role === "ADMIN",
+        isStaff: !!user?.is_staff,
         login,
+        loginWithTokens,
+        refreshUser,
         logout,
         loading,
       }}

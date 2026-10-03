@@ -59,6 +59,13 @@
 }
 
 .logout_link {
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: left;
     display: flex;
     align-items: center;
     gap: 15px;

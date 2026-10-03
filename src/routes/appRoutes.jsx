@@ -5,7 +5,6 @@ import AuthLayout from "../layouts/authLayout";
 import MainLayout from "../layouts/mainLayout";
 
 import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
 import Remember from "../pages/auth/Remember"
 import GoogleCallback from "../pages/auth/GoogleCallback";
 
@@ -43,7 +42,7 @@ export default function AppRoutes() {
         {/* Rotas públicas */}
         <Route element={<AuthLayout />}>
           <Route path="/" element={<Login />} />
-          <Route path="/cadastro" element={<Register />} />
+          <Route path="/cadastro" element={<Navigate to="/criar-conta" replace />} />
           <Route path="/esqueceu-a-senha" element={<Remember />} />
           <Route path="/google/callback" element={<GoogleCallback />} />
         </Route>
@@ -75,7 +74,6 @@ export default function AppRoutes() {
 
           <Route path="/newtask" element={<NewTask />} />
 
-
           <Route path="/underconstruction" element={<UnderConstruction />} />
         </Route>
 
@@ -84,6 +82,8 @@ export default function AppRoutes() {
           <Route path="/editor" element={<FlowEditor />} />
         </Route>
 
+        {/* Qualquer outra rota */}
+        <Route path="*" element={<Navigate to={signed ? "/dashboard" : "/"} replace />} />
       </Routes>
     </BrowserRouter>
   );

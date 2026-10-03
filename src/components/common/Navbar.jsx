@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     FiHome,
     FiMail,
@@ -16,6 +16,7 @@ import useAuth from '../../hooks/useAuth';
 function Navbar() {
 
     const { logout } = useAuth();
+    const navigate = useNavigate();
 
     const location = useLocation();
 
@@ -82,14 +83,14 @@ function Navbar() {
 
             {/* 2. Rodapé da Sidebar - Logout */}
             <div className={styles.sidebar_footer}>
-                <Link
-                    to="/login"
+                <button
+                    type="button"
                     className={styles.logout_link}
-                    onClick={logout}
+                    onClick={async () => { await logout(); navigate('/', { replace: true }); }}
                 >
                     <FiLogOut className={styles.nav_icon} />
                     <span className={styles.nav_text}>Sair</span>
-                </Link>
+                </button>
             </div>
         </nav>
     );

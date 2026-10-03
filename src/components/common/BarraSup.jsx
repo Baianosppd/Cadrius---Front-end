@@ -1,12 +1,29 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FiBell, FiChevronDown } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import styles from './BarraSup.module.css';
-import Title from '../ui/Title';
-import Button from '../ui/Button';
+import api from '../../services/api';
+import useAuth from '../../hooks/useAuth';
 
-function BarraSup({ nome, fotoUrl }) {
+// Disparado quando o usuário lê notificações (atualiza o número do sino sem esperar o polling)
+// eslint-disable-next-line react-refresh/only-export-components
+export const NOTIFICATIONS_CHANGED = 'cadrius:notifications-changed';
+
+function BarraSup({ nome }) {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const [unread, setUnread] = useState(0);
+
+    const loadUnread = useCallback(() => {
+        api.get('notifications/unread-count/').then((r) => setUnread(r.data.unread ?? r.data.count ?? 0)).catch(() => {});
+    }, []);
+
+    useEffect(() => {
+        loadUnread();
+        const timer = setInterval(loadUnread, 60000);
+        window.addEventListener(NOTIFICATIONS_CHANGED, loadUnread);
+        return () => { clearInterval(timer); window.removeEventListener(NOTIFICATIONS_CHANGED, loadUnread); };
+    }, [loadUnread]);
 
     return (
         <header className={styles.barra_superior}>
@@ -19,7 +36,7 @@ function BarraSup({ nome, fotoUrl }) {
                     onClick={() => navigate('/notificacoes')}
                 >
                     <FiBell size={20} />
-                    <span className={styles.badge}>4</span>
+                    {unread > 0 && <span className={styles.badge}>{unread > 99 ? '99+' : unread}</span>}
                 </button>
 
                 <div
@@ -28,7 +45,13 @@ function BarraSup({ nome, fotoUrl }) {
                     style={{ cursor: 'pointer' }}
                 >
                     <div className={styles.avatar_wrapper}>
-                        <img src={fotoUrl} alt="Perfil" className={styles.avatar_img} />
+                        {user?.profile_picture ? (
+                            <img src={user.profile_picture} alt="Perfil" className={styles.avatar_img} />
+                        ) : (
+                            <div className={styles.avatar_img} aria-label="Perfil" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#dbeafe', color: '#1d4ed8', fontWeight: 700 }}>
+                                {user?.initials || '?'}
+                            </div>
+                        )}
                         <span className={styles.status_indicator}></span>
                     </div>
                     <div className={styles.user_info_trigger}>
