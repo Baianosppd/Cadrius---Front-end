@@ -1,73 +1,46 @@
 import styles from './DocumentList.module.css';
-import { FiSearch, FiFilter, FiFile, FiMoreVertical, FiEdit2, FiTrash2 } from 'react-icons/fi';
-import { useState } from 'react';
-import SignatureModal from '../common/SignatureModal';
+import { FiSearch, FiFile, FiDownload } from 'react-icons/fi';
 
 const statusConfig = {
-    concluido: { label: 'Concluído', className: 'status_concluido' },
+    pronto: { label: 'Pronto', className: 'status_concluido' },
     processando: { label: 'Processando', className: 'status_processando' },
+    aguardando_assinatura: { label: 'Aguardando assinatura', className: 'status_processando' },
+    assinado: { label: 'Assinado', className: 'status_concluido' },
     erro: { label: 'Erro', className: 'status_erro' },
 };
 
-const DocumentRow = ({ name, client, type, date, status, onSign, onDelete }) => {
-    const s = statusConfig[status];
-    const [menuOpen, setMenuOpen] = useState(false);
+const TYPE_LABEL = { contrato: 'Contrato', peticao: 'Petição', procuracao: 'Procuração', outro: 'Outro' };
+
+const DocumentRow = ({ doc, onDownload }) => {
+    const s = statusConfig[doc.status] || { label: doc.status, className: 'status_processando' };
 
     return (
         <tr className={styles.row}>
             <td className={styles.cell_name}>
                 <FiFile className={styles.file_icon} />
-                {name}
+                {doc.nome}
             </td>
-            <td className={styles.cell}>{client}</td>
+            <td className={styles.cell}>{doc.cliente || '—'}</td>
             <td className={styles.cell}>
-                <span className={styles.type_badge}>{type}</span>
+                <span className={styles.type_badge}>{TYPE_LABEL[doc.tipo] || doc.tipo}</span>
             </td>
-            <td className={styles.cell}>{date}</td>
-            <td className={styles.cell}>
-                <button className={styles.sign_button} onClick={onSign}>
-                    <FiEdit2 className={styles.sign_icon} />
-                    Assinar
-                </button>
-            </td>
+            <td className={styles.cell}>{doc.data ? new Date(doc.data).toLocaleDateString('pt-BR') : '—'}</td>
             <td className={styles.cell}>
                 <span className={`${styles.status_badge} ${styles[s.className]}`}>
                     {s.label}
                 </span>
             </td>
             <td className={styles.cell_actions}>
-                <div className={styles.menu_wrapper}>
-                    <button
-                        className={styles.menu_button}
-                        onClick={() => setMenuOpen(p => !p)}
-                    >
-                        <FiMoreVertical />
-                    </button>
-                    {menuOpen && (
-                        <div className={styles.dropdown}>
-                            <button
-                                className={styles.dropdown_item_danger}
-                                onClick={() => { onDelete(); setMenuOpen(false); }}
-                            >
-                                <FiTrash2 className={styles.dropdown_icon} />
-                                Excluir Documento
-                            </button>
-                        </div>
-                    )}
-                </div>
+                <button className={styles.sign_button} onClick={() => onDownload(doc)} title="Baixar arquivo">
+                    <FiDownload className={styles.sign_icon} />
+                    Baixar
+                </button>
             </td>
         </tr>
     );
 };
 
-const DocumentList = ({ documents = [] }) => {
-    const [search, setSearch] = useState('');
-    const [signingDoc, setSigningDoc] = useState(null);
-
-    const filtered = documents.filter(d =>
-        d.name.toLowerCase().includes(search.toLowerCase())
-    );
-
+const DocumentList = ({ documents = [], search = '', onSearchChange, onDownload, page = 1, pages = 1, onPage, loading = false }) => {
     return (
         <div className={styles.container}>
             <h2 className={styles.title}>Todos os Documentos</h2>
@@ -79,13 +52,9 @@ const DocumentList = ({ documents = [] }) => {
                         className={styles.search_input}
                         placeholder="Buscar documentos..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => onSearchChange(e.target.value)}
                     />
                 </div>
-                <button className={styles.filter_button}>
-                    <FiFilter className={styles.filter_icon} />
-                    Filtros
-                </button>
             </div>
 
             <table className={styles.table}>
@@ -95,29 +64,27 @@ const DocumentList = ({ documents = [] }) => {
                         <th className={styles.header_cell}>Cliente</th>
                         <th className={styles.header_cell}>Tipo</th>
                         <th className={styles.header_cell}>Data</th>
-                        <th className={styles.header_cell}>Assinar</th>
                         <th className={styles.header_cell}>Status</th>
                         <th className={styles.header_cell}>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {filtered.map((doc, index) => (
-                        <DocumentRow
-                            key={index}
-                            {...doc}
-                            onSign={() => setSigningDoc(doc)}
-                            onDelete={() => console.log('excluir', doc.name)}
-                        />
+                    {documents.map((doc) => (
+                        <DocumentRow key={doc.id} doc={doc} onDownload={onDownload} />
                     ))}
+                    {!loading && documents.length === 0 && (
+                        <tr><td colSpan={6} style={{ padding: 24, textAlign: 'center', color: '#6b7280' }}>Nenhum documento encontrado. Envie o primeiro acima.</td></tr>
+                    )}
                 </tbody>
             </table>
 
-            {signingDoc && (
-                <SignatureModal
-                    document={signingDoc}
-                    onClose={() => setSigningDoc(null)}
-                />
-)}
+            {pages > 1 && (
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, alignItems: 'center', padding: 12 }}>
+                    <button disabled={page <= 1} onClick={() => onPage(page - 1)}>Anterior</button>
+                    <span>Página {page} de {pages}</span>
+                    <button disabled={page >= pages} onClick={() => onPage(page + 1)}>Próxima</button>
+                </div>
+            )}
         </div>
     );
 };

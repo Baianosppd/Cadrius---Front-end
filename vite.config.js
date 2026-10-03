@@ -14,5 +14,6 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: { host: '0.0.0.0', port: 5173, allowedHosts },
     build: { chunkSizeWarningLimit: 1200 },
+    test: { environment: 'node', include: ['src/**/*.test.{js,jsx}'] },
   }
 })

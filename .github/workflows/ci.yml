@@ -25,6 +25,8 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - name: Lint (erros bloqueiam; avisos não)
         run: npm run lint
+      - name: Testes unitários
+        run: npm test
       - name: Build de produção
         run: npm run build
         env:

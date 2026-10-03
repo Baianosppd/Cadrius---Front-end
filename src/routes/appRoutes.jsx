@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
@@ -14,19 +15,12 @@ import Processos from "../pages/dashboard/Processos";
 import Comunicacao from "../pages/dashboard/Comunicacao";
 import Integracoes from "../pages/dashboard/Integracoes";
 import Perfil from "../pages/dashboard/Perfil";
-import Documents from "../pages/dashboard/Documents";
 import UnderConstruction from '../pages/dashboard/UnderConstruction';
 import GestaoEquipe from "../pages/dashboard/GestaoEquipe";
 import Notificacoes from "../pages/dashboard/Notificacoes";
-import DocumentDetail from "../pages/dashboard/DocumentDetail";
 import NewTask from "../pages/dashboard/NewTask";
-import Privacidade from "../pages/seguranca/Privacidade";
-import Auditoria from "../pages/seguranca/Auditoria";
-import IASegura from "../pages/seguranca/IASegura";
-import CentroSeguranca from "../pages/seguranca/CentroSeguranca";
 
 import EditorLayout from '../layouts/EditorLayout';
-import FlowEditor from '../pages/dashboard/FlowEditor';
 
 import RegisterLayout from '../layouts/RegisterLayout';
 import SelectType from '../pages/auth/SelectType';
@@ -34,6 +28,15 @@ import RegisterIndividual from '../pages/auth/RegisterIndividual';
 
 import RegisterEmpresa from '../pages/auth/RegisterEmpresa';
 
+
+// Carregamento sob demanda: o editor de fluxos (React Flow) e o visualizador de PDF são pesados
+const FlowEditor = lazy(() => import('../pages/dashboard/FlowEditor'));
+const Documents = lazy(() => import('../pages/dashboard/Documents'));
+const DocumentDetail = lazy(() => import('../pages/dashboard/DocumentDetail'));
+const Privacidade = lazy(() => import('../pages/seguranca/Privacidade'));
+const Auditoria = lazy(() => import('../pages/seguranca/Auditoria'));
+const IASegura = lazy(() => import('../pages/seguranca/IASegura'));
+const CentroSeguranca = lazy(() => import('../pages/seguranca/CentroSeguranca'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -48,6 +51,7 @@ export default function AppRoutes() {
 
   return (
     <BrowserRouter>
+      <Suspense fallback={<div style={{ padding: 32, textAlign: "center" }}>Carregando…</div>}>
       <Routes>
         {/* Rotas públicas */}
         <Route element={<AuthLayout />}>
@@ -102,6 +106,7 @@ export default function AppRoutes() {
         {/* Qualquer outra rota */}
         <Route path="*" element={<Navigate to={signed ? "/dashboard" : "/"} replace />} />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
