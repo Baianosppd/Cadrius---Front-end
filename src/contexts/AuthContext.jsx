@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useCallback } from "react";
 import api, { SESSION_EXPIRED_EVENT } from "../services/api";
+import { setMonitoringUser } from "../services/monitoring";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
@@ -17,12 +18,14 @@ export function AuthProvider({ children }) {
   const applyUser = useCallback((data) => {
     setUser(data);
     setOrganization(data?.organization ?? null);
+    setMonitoringUser(data);
   }, []);
 
   const reset = useCallback(() => {
     clearTokens();
     setUser(null);
     setOrganization(null);
+    setMonitoringUser(null);
   }, []);
 
   // Recarrega os dados do usuário (após login, cadastro, login social ou aceite de termos)
