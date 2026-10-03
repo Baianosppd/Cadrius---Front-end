@@ -4,6 +4,7 @@ import NavBar from "../components/common/Navbar";
 import styles from "./MainLayout.module.css"; // Vamos criar este arquivo
 
 import useAuth from '../hooks/useAuth';
+import ConsentModal from "../components/seguranca/ConsentModal";
 
 export default function MainLayout() {
 
@@ -25,6 +26,7 @@ export default function MainLayout() {
                 />
 
 
+                <ConsentModal />
                 <main className={styles.page_body}>
                     <Outlet />
                 </main>

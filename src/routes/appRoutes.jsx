@@ -20,6 +20,10 @@ import GestaoEquipe from "../pages/dashboard/GestaoEquipe";
 import Notificacoes from "../pages/dashboard/Notificacoes";
 import DocumentDetail from "../pages/dashboard/DocumentDetail";
 import NewTask from "../pages/dashboard/NewTask";
+import Privacidade from "../pages/seguranca/Privacidade";
+import Auditoria from "../pages/seguranca/Auditoria";
+import IASegura from "../pages/seguranca/IASegura";
+import CentroSeguranca from "../pages/seguranca/CentroSeguranca";
 
 import EditorLayout from '../layouts/EditorLayout';
 import FlowEditor from '../pages/dashboard/FlowEditor';
@@ -30,6 +34,12 @@ import RegisterIndividual from '../pages/auth/RegisterIndividual';
 
 import RegisterEmpresa from '../pages/auth/RegisterEmpresa';
 
+
+// Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
+function RequireRole({ allow, children }) {
+  const auth = useAuth();
+  return allow(auth) ? children : <Navigate to="/dashboard" replace />;
+}
 
 export default function AppRoutes() {
   const { signed, loading } = useAuth();
@@ -73,6 +83,13 @@ export default function AppRoutes() {
           <Route path="/documentdetail" element={<DocumentDetail />} />
 
           <Route path="/newtask" element={<NewTask />} />
+
+          {/* Privacidade, IA e segurança (CAD-109) */}
+          <Route path="/privacidade" element={<Privacidade />} />
+          <Route path="/ia" element={<IASegura />} />
+          <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
+          <Route path="/seguranca" element={<RequireRole allow={(a) => a.isStaff}><CentroSeguranca /></RequireRole>} />
+
 
           <Route path="/underconstruction" element={<UnderConstruction />} />
         </Route>
