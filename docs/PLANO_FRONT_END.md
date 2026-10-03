@@ -12,7 +12,7 @@ Legenda: **P0** bloqueia teste/produção · **P1** antes do piloto com clientes
 ## A. Front-end (Ryan)
 
 ### P0
-**CAD-113: Task - Revisar e mergear as branches do front** · `CAD-106` (Docker/CI) → `CAD-108` (alinhamento) → `CAD-109` (segurança) → `CAD-111` (documentos/lazy/testes) → `CAD-112` (Sentry). Cada uma contém a anterior. Aceite: `Develop` e `main` com CI verde; `app-teste.cadrius.ia.br` abre.
+**CAD-141: Task - Revisar e mergear as branches do front** · `CAD-106` (Docker/CI) → `CAD-108` (alinhamento) → `CAD-109` (segurança) → `CAD-111` (documentos/lazy/testes) → `CAD-112` (Sentry). Cada uma contém a anterior. Aceite: `Develop` e `main` com CI verde; `app-teste.cadrius.ia.br` abre.
 
 **CAD-124: Task - Detalhe da automação** · tela `/automacao/:id` com: URL secreta do webhook (campo `trigger.webhook_token` → `POST /api/workflows/webhooks/catch/<token>/`, botão copiar), histórico de execuções (status, erro, duração), botão "Executar agora" (quando existir no back), rascunho de IA com comparação antes de aprovar. Aceite: dono consegue configurar um gatilho de webhook sem sair do sistema.
 
@@ -90,7 +90,7 @@ Backup/restauração do front não se aplica (estático); manter **imagem anteri
 
 | Semana | Front | Back | Design | DevSecOps |
 |---|---|---|---|---|
-| 1 | `CAD-113` (merge), `CAD-124`, `CAD-131` | `CAD-119`, `CAD-121` | `CAD-127` (tokens), `CAD-137` | DNS, branches, bootstrap, `CAD-140` |
+| 1 | `CAD-141` (merge), `CAD-124`, `CAD-131` | `CAD-119`, `CAD-121` | `CAD-127` (tokens), `CAD-137` | DNS, branches, bootstrap, `CAD-140` |
 | 2 | `CAD-123`, `CAD-130`, `CAD-126` | `CAD-105`, `CAD-115`, `CAD-090` | `CAD-136`, `CAD-138` | `CAD-129`, `CAD-139` |
 | 3 | `CAD-125`, `CAD-132`, `CAD-133` | `CAD-118`, `CAD-122`, `CAD-080` | acessibilidade, usabilidade | `CAD-128`, DAST |
 
