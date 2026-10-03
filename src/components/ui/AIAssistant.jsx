@@ -20,7 +20,7 @@ const AIAssistant = () => {
         setInput('');
         setLoading(true);
 
-        // O back ainda não tem endpoint de assistente de tarefas (CAD-112). A geração de AUTOMAÇÕES por IA
+        // O back ainda não tem endpoint de assistente de tarefas (CAD-116). A geração de AUTOMAÇÕES por IA
         // fica no editor de fluxos; aqui avisamos em vez de chamar uma rota que não existe.
         setMessages(prev => [...prev, {
             role: 'assistant',

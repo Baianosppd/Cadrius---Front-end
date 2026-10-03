@@ -14,7 +14,7 @@ import styles from './Remember.module.css';
 function Remember() {
     const [email, setEmail] = useState('');
 
-    // O back ainda não tem recuperação de senha (CAD-111): não fingimos que o e-mail foi enviado.
+    // O back ainda não tem recuperação de senha (CAD-115): não fingimos que o e-mail foi enviado.
     const handleSubmit = (e) => {
         e.preventDefault();
         toast.info("A recuperação de senha por e-mail ainda não está disponível. Peça ao dono ou administrador do seu escritório para ajudar, ou fale com o suporte.");
