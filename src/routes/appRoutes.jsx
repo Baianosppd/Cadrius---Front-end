@@ -85,7 +85,8 @@ export default function AppRoutes() {
           <Route path="/integracoes" element={<Integracoes />} />
           <Route path="/notificacoes" element={<Notificacoes />} />
           <Route path="/perfil" element={<Perfil />} />
-          <Route path="/documentdetail" element={<DocumentDetail />} />
+          <Route path="/documentdetail" element={<Navigate to="/documents" replace />} />
+          <Route path="/documentos/:id" element={<DocumentDetail />} />
 
           <Route path="/newtask" element={<NewTask />} />
 

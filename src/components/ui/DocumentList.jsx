@@ -1,4 +1,5 @@
 import styles from './DocumentList.module.css';
+import { Link } from 'react-router-dom';
 import { FiSearch, FiFile, FiDownload } from 'react-icons/fi';
 
 const statusConfig = {
@@ -18,7 +19,7 @@ const DocumentRow = ({ doc, onDownload }) => {
         <tr className={styles.row}>
             <td className={styles.cell_name}>
                 <FiFile className={styles.file_icon} />
-                {doc.nome}
+                <Link to={`/documentos/${doc.id}`} style={{ color: 'inherit' }}>{doc.nome}</Link>
             </td>
             <td className={styles.cell}>{doc.cliente || '—'}</td>
             <td className={styles.cell}>
