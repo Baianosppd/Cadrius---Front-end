@@ -14,7 +14,7 @@ ENV VITE_API_URL=${VITE_API_URL} VITE_SENTRY_DSN=${VITE_SENTRY_DSN} VITE_APP_ENV
 RUN npm run build
 
 # ---- Produção: Nginx sem privilégios servindo o build estático ---------------------------
-FROM nginxinc/nginx-unprivileged:1.27-alpine AS prod
+FROM nginxinc/nginx-unprivileged:1.31-alpine AS prod
 # ${API_ORIGIN} (ex.: https://api.cadrius.ia.br) é substituído no start pelo mecanismo de templates da imagem.
 COPY nginx/security-headers.inc.template /etc/nginx/templates/security-headers.inc.template
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
