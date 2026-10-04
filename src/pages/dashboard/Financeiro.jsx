@@ -212,7 +212,7 @@ function Resumo() {
                 <StatCard title="Assinantes pagantes" value={data.assinantes_pagantes} note={`Ticket médio ${brl(data.ticket_medio_brl)}`} />
                 <StatCard title="Em teste" value={st.trialing} note={`${data.trials_terminando_em_7_dias} terminam em 7 dias`} />
                 <StatCard title="Pagamento pendente" value={st.past_due} tone={st.past_due ? 'red' : 'green'} note={`${st.restricted} restritas · ${st.suspended} suspensas · ${st.canceled} canceladas`} />
-                <StatCard title="Créditos avulsos (30 dias)" value={brl(data.pacotes_30d.receita_brl)} note={`${data.pacotes_30d.creditos_vendidos} créditos vendidos`} />
+                <StatCard title="Créditos avulsos (30 dias)" value={brl(data.pacotes_30d.receita_brl)} note={`${data.pacotes_30d.creditos_vendidos} créditos vendidos${data.creditos_cortesia_30d ? ` · ${data.creditos_cortesia_30d} de cortesia` : ''}`} />
                 <StatCard title="Promoções" value={data.promocoes_ativas} note={`${data.usos_de_promocao} usos no total`} />
             </div>
             <h3>Histórico de preços</h3>

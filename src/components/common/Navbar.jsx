@@ -10,7 +10,6 @@ import {
     FiCpu,
     FiLock,
     FiActivity,
-    FiDollarSign,
     FiCheckCircle
 } from 'react-icons/fi'; // Importando ícones modernos
 import styles from './Navbar.module.css';
@@ -119,22 +118,12 @@ function Navbar() {
                     </Link>
                 </li>
 
-                {/* Financeiro (equipe Cadrius): preços, promoções e informes */}
+                {/* Gestão Cadrius (equipe): TI e Financeiro em área própria (CAD-168) */}
                 {isStaff && (
-                    <li className={`${styles.nav_item} ${isActive('/financeiro')}`}>
-                        <Link to="/financeiro">
-                            <FiDollarSign className={styles.nav_icon} />
-                            <span className={styles.nav_text}>Financeiro</span>
-                        </Link>
-                    </li>
-                )}
-
-                {/* Centro de Segurança (equipe Cadrius) */}
-                {isStaff && (
-                    <li className={`${styles.nav_item} ${isActive('/seguranca')}`}>
-                        <Link to="/seguranca">
+                    <li className={`${styles.nav_item} ${isActive('/gestao')}`}>
+                        <Link to="/gestao">
                             <FiShield className={styles.nav_icon} />
-                            <span className={styles.nav_text}>Centro de Segurança</span>
+                            <span className={styles.nav_text}>Gestão Cadrius</span>
                         </Link>
                     </li>
                 )}

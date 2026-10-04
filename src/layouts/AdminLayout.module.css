@@ -1,0 +1,18 @@
+/* Gestão Cadrius (TI e Financeiro): visual escuro para deixar claro que NÃO é a área do cliente */
+.layout { display: flex; height: 100vh; width: 100vw; overflow: hidden; background: #f3f4f6; }
+.sidebar { width: 250px; flex-shrink: 0; background: #0f172a; color: #cbd5e1; display: flex; flex-direction: column; padding: 20px 14px; gap: 6px; }
+.brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 0 10px 4px; }
+.brand_sub { font-size: .75rem; color: #94a3b8; padding: 0 10px 14px; border-bottom: 1px solid #1e293b; margin-bottom: 8px; }
+.areas { display: flex; gap: 6px; padding: 0 10px 10px; flex-wrap: wrap; }
+.area { font-size: .7rem; font-weight: 700; background: #1e293b; color: #93c5fd; border-radius: 999px; padding: 2px 8px; text-transform: uppercase; letter-spacing: .04em; }
+.link { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; color: #cbd5e1; text-decoration: none; font-size: .9rem; }
+.link:hover { background: #1e293b; color: #fff; }
+.active { background: #2563eb; color: #fff; }
+.active:hover { background: #2563eb; }
+.spacer { flex: 1; }
+.footer_btn { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; color: #94a3b8; background: none; border: none; font: inherit; font-size: .88rem; cursor: pointer; text-align: left; text-decoration: none; }
+.footer_btn:hover { background: #1e293b; color: #fff; }
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.topbar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 12px 30px; font-size: .85rem; color: #6b7280; display: flex; justify-content: space-between; gap: 12px; }
+.body { flex: 1; overflow-y: auto; padding: 30px; }
+.denied { margin: auto; max-width: 520px; text-align: center; color: #374151; display: flex; flex-direction: column; gap: 12px; }

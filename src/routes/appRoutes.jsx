@@ -22,6 +22,7 @@ import Notificacoes from "../pages/dashboard/Notificacoes";
 import NewTask from "../pages/dashboard/NewTask";
 
 import EditorLayout from '../layouts/EditorLayout';
+import AdminLayout from '../layouts/AdminLayout';
 
 import RegisterLayout from '../layouts/RegisterLayout';
 import SelectType from '../pages/auth/SelectType';
@@ -40,6 +41,11 @@ const Privacidade = lazy(() => import('../pages/seguranca/Privacidade'));
 const Auditoria = lazy(() => import('../pages/seguranca/Auditoria'));
 const IASegura = lazy(() => import('../pages/seguranca/IASegura'));
 const CentroSeguranca = lazy(() => import('../pages/seguranca/CentroSeguranca'));
+// Gestão Cadrius (TI e Financeiro) — CAD-168
+const GestaoVisao = lazy(() => import('../pages/gestao/Visao'));
+const GestaoEscritorios = lazy(() => import('../pages/gestao/Escritorios'));
+const GestaoUsuarios = lazy(() => import('../pages/gestao/Usuarios'));
+const GestaoSistema = lazy(() => import('../pages/gestao/Sistema'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -98,11 +104,22 @@ export default function AppRoutes() {
           <Route path="/ia" element={<IASegura />} />
           <Route path="/aprovacoes" element={<CentralAprovacoes />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
-          <Route path="/seguranca" element={<RequireRole allow={(a) => a.isStaff}><CentroSeguranca /></RequireRole>} />
-          <Route path="/financeiro" element={<RequireRole allow={(a) => a.isStaff}><Financeiro /></RequireRole>} />
+          {/* Telas da equipe migraram para a Gestão Cadrius (CAD-168); links antigos continuam funcionando */}
+          <Route path="/seguranca" element={<Navigate to="/gestao/seguranca" replace />} />
+          <Route path="/financeiro" element={<Navigate to="/gestao/financeiro" replace />} />
 
 
           <Route path="/underconstruction" element={<UnderConstruction />} />
+        </Route>
+
+        {/* Gestão Cadrius: área interna da equipe (TI e Financeiro). O back confere a área de cada chamada (403). */}
+        <Route element={signed ? <RequireRole allow={(a) => a.isStaff}><AdminLayout /></RequireRole> : <Navigate to="/" />}>
+          <Route path="/gestao" element={<GestaoVisao />} />
+          <Route path="/gestao/escritorios" element={<GestaoEscritorios />} />
+          <Route path="/gestao/usuarios" element={<GestaoUsuarios />} />
+          <Route path="/gestao/sistema" element={<GestaoSistema />} />
+          <Route path="/gestao/financeiro" element={<Financeiro />} />
+          <Route path="/gestao/seguranca" element={<CentroSeguranca />} />
         </Route>
 
         {/* Editor */}
