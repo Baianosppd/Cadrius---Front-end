@@ -7,10 +7,15 @@ import ProfileInfo from '../../components/ui/ProfileInfo.jsx';
 import ChangePassword from '../../components/ui/ChangePassword.jsx';
 import PlanCard from '../../components/ui/Cards/PlanCard.jsx';
 import { toast } from 'react-toastify';
+import useAuth from '../../hooks/useAuth';
+import { getCurrentPlan, getCreditPacks, startCreditCheckout, creditsNotice } from '../../services/billing';
+import { startCheckout } from '../../services/registration';
 
 function Perfil() {
     const [user, setUser] = useState(null);
-    const [plans, setPlans] = useState([]);
+    const [billing, setBilling] = useState(null);   // GET /api/billing/plans/current/ (plano REAL do escritório + assinatura)
+    const [packs, setPacks] = useState([]);
+    const { isOrgManager } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,11 +23,19 @@ function Perfil() {
             .then(response => setUser(response.data))
             .catch(error => console.error("Erro ao carregar perfil:", error));
 
-        const billingBase = import.meta.env.VITE_API_URL.replace('api/v1/', '');
-        api.get(`${billingBase}api/billing/plans/`)
-            .then(res => setPlans(res.data))
-            .catch(err => console.error('Erro ao buscar planos:', err));
+        getCurrentPlan().then(setBilling).catch(() => setBilling(null));   // 403 = usuário sem escritório (equipe)
+        getCreditPacks().then(setPacks).catch(() => setPacks([]));
     }, []);
+
+    const buyCredits = async (packId) => {
+        try { await startCreditCheckout(packId); }
+        catch (err) { toast.error(err?.response?.data?.detail || 'Não foi possível iniciar o pagamento.'); }
+    };
+
+    const subscribe = async (planId) => {
+        try { await startCheckout(planId); }
+        catch (err) { toast.error(err?.response?.data?.detail || 'Não foi possível iniciar o pagamento.'); }
+    };
 
     const handleSave = async (data) => {
         try {
@@ -54,10 +67,10 @@ function Perfil() {
         }
     };
 
-    // PRO é o único plano com features e description vazia (ver billing/plans.py no back)
-    const currentPlan = plans.find(p => p.features.length > 0 && p.description === '');
-    const currentPlanWithBilling = currentPlan ? { ...currentPlan, billingDate: '23/06/2024' } : null;
-    const otherPlans = plans.filter(p => !(p.features.length > 0 && p.description === ''));
+    const assinatura = billing?.assinatura;
+    const nextBilling = billing?.proxima_cobranca ? new Date(billing.proxima_cobranca).toLocaleDateString('pt-BR') : '—';
+    const currentPlan = billing ? { ...billing.plano, billingDate: nextBilling } : null;
+    const otherPlans = billing?.outros_planos || [];
 
     return (
         <div className={styles.perfil_container}>
@@ -78,12 +91,39 @@ function Perfil() {
                         onPhotoChange={handlePhotoChange}
                     />
                     <ChangePassword onSave={(data) => console.log(data)} />
-                    {currentPlanWithBilling && (
+                    {currentPlan && (
                         <PlanCard
-                            currentPlan={currentPlanWithBilling}
+                            currentPlan={currentPlan}
                             otherPlans={otherPlans}
                             onManage={() => { }}
                         />
+                    )}
+                    {assinatura && (
+                        <section aria-label="Assinatura e créditos" style={{ marginTop: 24, padding: 20, border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff' }}>
+                            <h2 style={{ marginTop: 0 }}>Assinatura e créditos</h2>
+                            <p>Estado: <strong>{{ trialing: 'Em teste', active: 'Ativa', past_due: 'Pagamento pendente', restricted: 'Restrita', suspended: 'Suspensa', canceled: 'Cancelada' }[assinatura.estado] || assinatura.estado}</strong></p>
+                            <p>{creditsNotice(assinatura) || 'IA pausada: regularize a assinatura.'}</p>
+                            {assinatura.estado === 'trialing' && isOrgManager && (
+                                <div>
+                                    <p>Assine para liberar os limites do seu plano:</p>
+                                    {[billing.plano, ...otherPlans].filter(p => p.price !== 'Grátis').map((p) => (
+                                        <button key={p.id} type="button" onClick={() => subscribe(p.id)} style={{ marginRight: 8 }}>
+                                            Assinar {p.name} — {p.price}/mês
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                            {isOrgManager && assinatura.ia_ativa && packs.length > 0 && (
+                                <div style={{ marginTop: 12 }}>
+                                    <p>Precisa de mais créditos? (valem 12 meses e são usados depois dos do plano)</p>
+                                    {packs.map((p) => (
+                                        <button key={p.id} type="button" onClick={() => buyCredits(p.id)} style={{ marginRight: 8 }}>
+                                            {p.credits.toLocaleString('pt-BR')} créditos — R$ {Number(p.price).toLocaleString('pt-BR')}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </section>
                     )}
                 </>
             )}

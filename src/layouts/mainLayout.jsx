@@ -5,6 +5,7 @@ import styles from "./MainLayout.module.css"; // Vamos criar este arquivo
 
 import useAuth from '../hooks/useAuth';
 import ConsentModal from "../components/seguranca/ConsentModal";
+import SubscriptionBanner from "../components/common/SubscriptionBanner";
 
 export default function MainLayout() {
 
@@ -26,6 +27,7 @@ export default function MainLayout() {
                 />
 
 
+                <SubscriptionBanner />
                 <ConsentModal />
                 <main className={styles.page_body}>
                     <Outlet />
