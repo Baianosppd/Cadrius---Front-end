@@ -33,6 +33,7 @@ import RegisterEmpresa from '../pages/auth/RegisterEmpresa';
 const FlowEditor = lazy(() => import('../pages/dashboard/FlowEditor'));
 const Documents = lazy(() => import('../pages/dashboard/Documents'));
 const DocumentDetail = lazy(() => import('../pages/dashboard/DocumentDetail'));
+const CentralAprovacoes = lazy(() => import('../pages/dashboard/CentralAprovacoes'));
 const Financeiro = lazy(() => import('../pages/dashboard/Financeiro'));
 const Privacidade = lazy(() => import('../pages/seguranca/Privacidade'));
 const Auditoria = lazy(() => import('../pages/seguranca/Auditoria'));
@@ -86,13 +87,14 @@ export default function AppRoutes() {
           <Route path="/notificacoes" element={<Notificacoes />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/documentdetail" element={<Navigate to="/documents" replace />} />
-          <Route path="/documentos/:id" element={<DocumentDetail />} />
+          <Route path="/documents/:id" element={<DocumentDetail />} />
 
           <Route path="/newtask" element={<NewTask />} />
 
           {/* Privacidade, IA e segurança (CAD-109) */}
           <Route path="/privacidade" element={<Privacidade />} />
           <Route path="/ia" element={<IASegura />} />
+          <Route path="/aprovacoes" element={<CentralAprovacoes />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           <Route path="/seguranca" element={<RequireRole allow={(a) => a.isStaff}><CentroSeguranca /></RequireRole>} />
           <Route path="/financeiro" element={<RequireRole allow={(a) => a.isStaff}><Financeiro /></RequireRole>} />

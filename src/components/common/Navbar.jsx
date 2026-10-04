@@ -10,7 +10,8 @@ import {
     FiCpu,
     FiLock,
     FiActivity,
-    FiDollarSign
+    FiDollarSign,
+    FiCheckCircle
 } from 'react-icons/fi'; // Importando ícones modernos
 import styles from './Navbar.module.css';
 
@@ -109,6 +110,14 @@ function Navbar() {
                         </Link>
                     </li>
                 )}
+
+                {/* IA do escritório: aprovações, autonomia, regras e memória (CAD-165) */}
+                <li className={`${styles.nav_item} ${isActive('/aprovacoes')}`}>
+                    <Link to="/aprovacoes">
+                        <FiCheckCircle className={styles.nav_icon} />
+                        <span className={styles.nav_text}>IA do escritório</span>
+                    </Link>
+                </li>
 
                 {/* Financeiro (equipe Cadrius): preços, promoções e informes */}
                 {isStaff && (
