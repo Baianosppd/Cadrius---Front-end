@@ -8,13 +8,14 @@ import ChangePassword from '../../components/ui/ChangePassword.jsx';
 import PlanCard from '../../components/ui/Cards/PlanCard.jsx';
 import { toast } from 'react-toastify';
 import useAuth from '../../hooks/useAuth';
-import { getCurrentPlan, getCreditPacks, startCreditCheckout, creditsNotice } from '../../services/billing';
-import { startCheckout } from '../../services/registration';
+import { getCurrentPlan, getCreditPacks, startCreditCheckout, creditsNotice, validatePromo, startSubscriptionCheckout } from '../../services/billing';
 
 function Perfil() {
     const [user, setUser] = useState(null);
     const [billing, setBilling] = useState(null);   // GET /api/billing/plans/current/ (plano REAL do escritório + assinatura)
     const [packs, setPacks] = useState([]);
+    const [promo, setPromo] = useState('');
+    const [promoInfo, setPromoInfo] = useState({});   // planId → prévia do desconto
     const { isOrgManager } = useAuth();
     const navigate = useNavigate();
 
@@ -32,8 +33,17 @@ function Perfil() {
         catch (err) { toast.error(err?.response?.data?.detail || 'Não foi possível iniciar o pagamento.'); }
     };
 
+    const checkPromo = async (planId) => {
+        if (!promo.trim()) return;
+        try {
+            const r = await validatePromo(planId, promo.trim());
+            setPromoInfo((p) => ({ ...p, [planId]: r }));
+            if (!r.valid) toast.warn(r.detail);
+        } catch (err) { toast.error(err?.response?.data?.detail || 'Não foi possível validar o cupom.'); }
+    };
+
     const subscribe = async (planId) => {
-        try { await startCheckout(planId); }
+        try { await startSubscriptionCheckout(planId, promo.trim()); }
         catch (err) { toast.error(err?.response?.data?.detail || 'Não foi possível iniciar o pagamento.'); }
     };
 
@@ -106,11 +116,16 @@ function Perfil() {
                             {assinatura.estado === 'trialing' && isOrgManager && (
                                 <div>
                                     <p>Assine para liberar os limites do seu plano:</p>
-                                    {[billing.plano, ...otherPlans].filter(p => p.price !== 'Grátis').map((p) => (
-                                        <button key={p.id} type="button" onClick={() => subscribe(p.id)} style={{ marginRight: 8 }}>
-                                            Assinar {p.name} — {p.price}/mês
-                                        </button>
-                                    ))}
+                                    <label>Cupom de desconto: <input value={promo} onChange={(e) => { setPromo(e.target.value.toUpperCase()); setPromoInfo({}); }} placeholder="CÓDIGO" style={{ marginLeft: 6 }} /></label>
+                                    <div style={{ marginTop: 8 }}>
+                                        {[billing.plano, ...otherPlans].filter(p => p.price !== 'Grátis').map((p) => (
+                                            <span key={p.id} style={{ display: 'inline-block', marginRight: 12, marginBottom: 8 }}>
+                                                <button type="button" onClick={() => subscribe(p.id)}>Assinar {p.name} — {p.price}/mês</button>
+                                                {promo.trim() && <button type="button" onClick={() => checkPromo(p.id)} style={{ marginLeft: 4 }}>Aplicar cupom</button>}
+                                                {promoInfo[p.id]?.valid && <small style={{ display: 'block', color: '#166534' }}>Com o cupom: R$ {Number(promoInfo[p.id].discounted).toLocaleString('pt-BR')} ({promoInfo[p.id].duration === 'once' ? 'na 1ª cobrança' : promoInfo[p.id].duration === 'forever' ? 'sempre' : `por ${promoInfo[p.id].duration_months} meses`})</small>}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                             {isOrgManager && assinatura.ia_ativa && packs.length > 0 && (

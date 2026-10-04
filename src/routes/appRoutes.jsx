@@ -33,6 +33,7 @@ import RegisterEmpresa from '../pages/auth/RegisterEmpresa';
 const FlowEditor = lazy(() => import('../pages/dashboard/FlowEditor'));
 const Documents = lazy(() => import('../pages/dashboard/Documents'));
 const DocumentDetail = lazy(() => import('../pages/dashboard/DocumentDetail'));
+const Financeiro = lazy(() => import('../pages/dashboard/Financeiro'));
 const Privacidade = lazy(() => import('../pages/seguranca/Privacidade'));
 const Auditoria = lazy(() => import('../pages/seguranca/Auditoria'));
 const IASegura = lazy(() => import('../pages/seguranca/IASegura'));
@@ -93,6 +94,7 @@ export default function AppRoutes() {
           <Route path="/ia" element={<IASegura />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           <Route path="/seguranca" element={<RequireRole allow={(a) => a.isStaff}><CentroSeguranca /></RequireRole>} />
+          <Route path="/financeiro" element={<RequireRole allow={(a) => a.isStaff}><Financeiro /></RequireRole>} />
 
 
           <Route path="/underconstruction" element={<UnderConstruction />} />

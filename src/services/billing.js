@@ -8,6 +8,16 @@ export async function getCurrentPlan() {
     return data;
 }
 
+export async function getNotices() {
+    const { data } = await api.get(`${BASE}notices/`);
+    return data;
+}
+
+export async function validatePromo(planId, code) {
+    const { data } = await api.post(`${BASE}promotions/validate/`, { plan_id: planId, code });
+    return data;
+}
+
 export async function getCreditPacks() {
     const { data } = await api.get(`${BASE}credit-packs/`);
     return data;
@@ -15,6 +25,14 @@ export async function getCreditPacks() {
 
 export async function startCreditCheckout(packId) {
     const { data } = await api.post(`${BASE}credit-packs/checkout/`, { pack_id: packId });
+    window.location.href = data.checkout_url;
+}
+
+// Assinatura de plano (com cupom opcional): abre o checkout do Stripe. O valor final é recalculado no servidor.
+export async function startSubscriptionCheckout(planId, promoCode) {
+    const body = { plan_id: planId };
+    if (promoCode) body.promo_code = promoCode;
+    const { data } = await api.post(`${BASE}checkout/`, body);
     window.location.href = data.checkout_url;
 }
 
