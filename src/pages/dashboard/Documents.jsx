@@ -21,7 +21,7 @@ function Documents() {
     const [uploading, setUploading] = useState(false);
 
     const load = useCallback(() => {
-        api.get('documentos/', { params: { page, ...(search.trim() ? { nome: search.trim() } : {}) } })
+        api.get('documentos/', { params: { page, ...(search.trim() ? { q: search.trim() } : {}) } })
             .then((r) => { setDocuments(r.data.results ?? r.data); setCount(r.data.count ?? 0); })
             .catch((err) => toast.error(errorMessage(err, 'Não foi possível carregar os documentos.')))
             .finally(() => setLoading(false));

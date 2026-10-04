@@ -8,6 +8,7 @@ import PageHeader from '../../components/ui/PageHearder.jsx';
 import IntegrationGrid from '../../components/ui/Cards/IntegrationGrid.jsx';
 import SyncHistory from '../../components/ui/SyncHistory.jsx';
 import ConnectionModal from '../../components/common/ConnectionModal.jsx';
+import GoogleCalendarCard from '../../components/common/GoogleCalendarCard.jsx';
 import { CONNECTION_APPS } from '../../services/connections';
 import { errorMessage } from '../../components/seguranca/ui';
 
@@ -54,6 +55,7 @@ function Integracoes() {
     return (
         <div className={styles.integracoes_container}>
             <PageHeader title="Integrações" subtitle="Conecte suas ferramentas favoritas ao Cadrius" />
+            <GoogleCalendarCard />
             <IntegrationGrid integrations={integrations} />
             {connections.length > 0 && (
                 <div style={{ margin: '16px 0' }}>

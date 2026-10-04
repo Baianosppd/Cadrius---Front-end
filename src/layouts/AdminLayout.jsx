@@ -1,0 +1,59 @@
+import { useEffect, useState } from 'react';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { FiActivity, FiArrowLeft, FiLogOut } from 'react-icons/fi';
+import useAuth from '../hooks/useAuth';
+import { AREA_LABEL, backofficeApi } from '../services/backoffice';
+import { errorMessage } from '../components/seguranca/ui';
+import ConsentModal from '../components/seguranca/ConsentModal';
+import styles from './AdminLayout.module.css';
+import { visibleMenu } from './adminMenu';
+
+export default function AdminLayout() {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+    const [me, setMe] = useState({ data: null, error: null });
+
+    useEffect(() => {
+        let alive = true;
+        backofficeApi.me()
+            .then((data) => alive && setMe({ data, error: null }))
+            .catch((e) => alive && setMe({ data: null, error: {
+                403: 'Sua conta é da equipe, mas ainda não tem área (TI ou Financeiro) na Gestão Cadrius. Peça a um administrador.',
+                428: 'Aceite os termos vigentes (janela aberta) para entrar na Gestão Cadrius.',
+            }[e?.response?.status] || errorMessage(e) }));
+        return () => { alive = false; };
+    }, []);
+
+    const areas = me.data?.areas || [];
+    return (
+        <div className={styles.layout}>
+            <aside className={styles.sidebar}>
+                <div className={styles.brand}>Gestão Cadrius</div>
+                <div className={styles.brand_sub}>Área interna da equipe — TI e Financeiro</div>
+                <div className={styles.areas}>{areas.map((a) => <span key={a} className={styles.area}>{AREA_LABEL[a] || a}</span>)}</div>
+                {visibleMenu(areas).map((item) => (
+                    <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>
+                        <item.icon /> {item.label}
+                    </NavLink>
+                ))}
+                <div className={styles.spacer} />
+                <Link to="/dashboard" className={styles.footer_btn}><FiArrowLeft /> Voltar ao app</Link>
+                <button type="button" className={styles.footer_btn} onClick={async () => { await logout(); navigate('/', { replace: true }); }}>
+                    <FiLogOut /> Sair
+                </button>
+            </aside>
+            <ConsentModal />
+            <div className={styles.main}>
+                <div className={styles.topbar}>
+                    <span><FiActivity /> Ambiente administrativo: toda ação fica registrada na trilha de auditoria.</span>
+                    <span>{user?.email}</span>
+                </div>
+                <main className={styles.body}>
+                    {me.error && <div className={styles.denied}><h2>Sem acesso</h2><p>{me.error}</p></div>}
+                    {!me.error && !me.data && <div className={styles.denied}>Carregando…</div>}
+                    {me.data && <Outlet context={{ areas }} />}
+                </main>
+            </div>
+        </div>
+    );
+}

@@ -9,7 +9,8 @@ import {
     FiShield,
     FiCpu,
     FiLock,
-    FiActivity
+    FiActivity,
+    FiCheckCircle
 } from 'react-icons/fi'; // Importando ícones modernos
 import styles from './Navbar.module.css';
 
@@ -109,12 +110,20 @@ function Navbar() {
                     </li>
                 )}
 
-                {/* Centro de Segurança (equipe Cadrius) */}
+                {/* IA do escritório: aprovações, autonomia, regras e memória (CAD-165) */}
+                <li className={`${styles.nav_item} ${isActive('/aprovacoes')}`}>
+                    <Link to="/aprovacoes">
+                        <FiCheckCircle className={styles.nav_icon} />
+                        <span className={styles.nav_text}>IA do escritório</span>
+                    </Link>
+                </li>
+
+                {/* Gestão Cadrius (equipe): TI e Financeiro em área própria (CAD-168) */}
                 {isStaff && (
-                    <li className={`${styles.nav_item} ${isActive('/seguranca')}`}>
-                        <Link to="/seguranca">
+                    <li className={`${styles.nav_item} ${isActive('/gestao')}`}>
+                        <Link to="/gestao">
                             <FiShield className={styles.nav_icon} />
-                            <span className={styles.nav_text}>Centro de Segurança</span>
+                            <span className={styles.nav_text}>Gestão Cadrius</span>
                         </Link>
                     </li>
                 )}

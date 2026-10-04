@@ -4,6 +4,17 @@ import useAuth from "../../hooks/useAuth";
 
 // Retorno do login social (Google/Microsoft). O back redireciona para /google/callback#access=...&refresh=...
 // (fragmento: não vai para logs de servidor nem para o cabeçalho Referer). Também aceita ?access=&refresh=.
+const SSO_ERRORS = {
+    no_account: "Não encontramos uma conta com esse e-mail. Crie sua conta primeiro e depois use o login social.",
+    email_unverified: "O provedor não confirmou o seu e-mail, então não podemos vincular a conta. Entre com e-mail e senha.",
+    account_disabled: "Esta conta está desativada. Fale com o administrador do seu escritório.",
+    access_denied: "Você cancelou o login social.",
+    sso_disabled: "O login social não está disponível neste ambiente.",
+    state_invalid: "A sessão do login expirou. Tente novamente.",
+};
+const ssoErrorMessage = (code) => SSO_ERRORS[code]
+    || "Não foi possível concluir o login social. Tente novamente ou entre com e-mail e senha.";
+
 function GoogleCallback() {
     const navigate = useNavigate();
     const { loginWithTokens } = useAuth();
@@ -18,6 +29,7 @@ function GoogleCallback() {
         const params = new URLSearchParams(source);
         const access = params.get("access");
         const refresh = params.get("refresh");
+        const code = params.get("error"); // código devolvido pelo back (CAD-105)
 
         // Remove os tokens da barra de endereço/histórico imediatamente
         window.history.replaceState(null, "", window.location.pathname);
@@ -30,7 +42,7 @@ function GoogleCallback() {
             .then(() => navigate("/dashboard", { replace: true }))
             .catch(() => setError(
                 !access || !refresh
-                    ? "Não foi possível concluir o login social. Tente novamente ou entre com e-mail e senha."
+                    ? ssoErrorMessage(code)
                     : "Sessão inválida. Tente entrar novamente."
             ));
     }, [loginWithTokens, navigate]);

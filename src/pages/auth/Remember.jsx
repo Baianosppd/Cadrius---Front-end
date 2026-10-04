@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 import Title from '../../components/ui/Title';
 import Button from '../../components/ui/Button';
@@ -8,16 +7,29 @@ import Input from '../../components/ui/Input';
 import Label from '../../components/ui/Label';
 import ContainerCard from '../../components/ui/ContainerCard';
 import FormGroup from '../../components/ui/FormGroup';
+import { requestPasswordReset, passwordResetError } from '../../services/passwordReset';
 
 import styles from './Remember.module.css';
 
 function Remember() {
     const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [sent, setSent] = useState(false);
+    const [error, setError] = useState(null);
 
-    // O back ainda não tem recuperação de senha (CAD-115): não fingimos que o e-mail foi enviado.
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        toast.info("A recuperação de senha por e-mail ainda não está disponível. Peça ao dono ou administrador do seu escritório para ajudar, ou fale com o suporte.");
+        if (!email.trim()) return setError('Informe o e-mail da sua conta.');
+        setLoading(true);
+        setError(null);
+        try {
+            await requestPasswordReset(email);
+            setSent(true); // o back responde igual exista ou não a conta (não revela cadastros)
+        } catch (err) {
+            setError(passwordResetError(err));
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -30,49 +42,31 @@ function Remember() {
                 <ContainerCard>
                     <Title as="h1">Esqueceu a senha</Title>
 
-                    <div className={styles.send}>
-                        <form onSubmit={handleSubmit}>
-                            <FormGroup>
-                                <Label>Email</Label>
-                                <Input
-                                    placeholder="exemplo@gmail.com"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </FormGroup>
-
-                            <Button type="submit">Enviar</Button>
-                        </form>
-                    </div>
-
-                    <div className={styles.verify}>
-                        <form onSubmit={handleSubmit}>
-                            <Input
-                                placeholder="-"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <Input
-                                placeholder="-"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <Input
-                                placeholder="-"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <Input
-                                placeholder="-"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <Button type="submit">Verificar</Button>
-                        </form>
-                    </div>
+                    {sent ? (
+                        <div className={styles.send} role="status">
+                            <p>Se o e-mail estiver cadastrado, enviamos as instruções para redefinir a senha.
+                                O link vale por 1 hora. Confira também a caixa de spam.</p>
+                        </div>
+                    ) : (
+                        <div className={styles.send}>
+                            <form onSubmit={handleSubmit} noValidate>
+                                <FormGroup>
+                                    <Label>E-mail</Label>
+                                    <Input
+                                        type="email"
+                                        autoComplete="email"
+                                        placeholder="seu@email.com"
+                                        value={email}
+                                        onChange={(e) => { setEmail(e.target.value); setError(null); }}
+                                    />
+                                </FormGroup>
+                                {error && <p role="alert" style={{ color: '#b91c1c', fontSize: '0.875rem' }}>{error}</p>}
+                                <Button type="submit" disabled={loading}>{loading ? 'Enviando…' : 'Enviar'}</Button>
+                            </form>
+                        </div>
+                    )}
 
                     <Link to="/">Voltar</Link>
-
                 </ContainerCard>
             </div>
         </div>
