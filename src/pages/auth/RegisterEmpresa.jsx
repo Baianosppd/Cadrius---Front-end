@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './RegisterIndividual.module.css'; // reutiliza o mesmo CSS
 import RegisterHeader from '../../components/common/RegisterHeader';
@@ -8,6 +8,7 @@ import { FiGrid } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import api from '../../services/api.js';
 import useAuth from '../../hooks/useAuth';
+import useRegistrationDraft from '../../hooks/useRegistrationDraft';
 import { companyPayload, validateStep, registrationError, startCheckout } from '../../services/registration';
 
 import StepDadosBasicos from './steps/empresa/StepDadosBasicos';
@@ -44,16 +45,22 @@ const stepComponents = [
 function RegisterEmpresa() {
     const navigate = useNavigate();
     const { loginWithTokens } = useAuth();
-    const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState({});
+    // Rascunho em sessionStorage (sem senha/CPF): recarregar a página não perde o que foi digitado.
+    const { step: currentStep, setStep: setCurrentStep, formData, setFormData, restored, discard } =
+        useRegistrationDraft('empresa', { maxStep: 6 });
     const [busy, setBusy] = useState(false);
 
-    const updateForm = useCallback((data) => setFormData(prev => ({ ...prev, ...data })), []);
+    useEffect(() => {
+        if (restored) toast.info('Recuperamos o que você já tinha preenchido. Por segurança, digite novamente senhas e CPF.');
+    }, [restored]);
+
+    const updateForm = useCallback((data) => setFormData(prev => ({ ...prev, ...data })), [setFormData]);
 
     const submit = async () => {
         setBusy(true);
         try {
             const { data } = await api.post('auth/register/empresa/', companyPayload(formData));
+            discard(); // conta criada: o rascunho não é mais necessário
             await loginWithTokens(data.access, data.refresh);
             return true;
         } catch (err) {
@@ -120,7 +127,7 @@ function RegisterEmpresa() {
             <RegisterFooter
                 onPrev={handlePrev}
                 onNext={handleNext}
-                onCancel={() => navigate('/criar-conta')}
+                onCancel={() => { discard(); navigate('/criar-conta'); }}
                 isFirst={currentStep === 1 || currentStep === steps.length}
                 isLast={currentStep === steps.length}
             />
