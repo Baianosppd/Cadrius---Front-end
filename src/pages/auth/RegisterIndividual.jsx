@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './RegisterIndividual.module.css';
 import RegisterHeader from '../../components/common/RegisterHeader';
@@ -14,6 +14,7 @@ import StepConfirmacao from './steps/individual/StepConfirmacao';
 
 import api from '../../services/api.js';
 import useAuth from '../../hooks/useAuth';
+import useRegistrationDraft from '../../hooks/useRegistrationDraft';
 import { individualPayload, validateStep, registrationError, startCheckout } from '../../services/registration';
 import { toast } from 'react-toastify';
 
@@ -36,9 +37,14 @@ const stepComponents = [
 function RegisterIndividual() {
     const navigate = useNavigate();
     const { loginWithTokens } = useAuth();
-    const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState({});
+    // Rascunho em sessionStorage (sem senha/CPF): recarregar a página não perde o que foi digitado.
+    const { step: currentStep, setStep: setCurrentStep, formData, setFormData, restored, discard } =
+        useRegistrationDraft('individual', { maxStep: 3 });
     const [busy, setBusy] = useState(false);
+
+    useEffect(() => {
+        if (restored) toast.info('Recuperamos o que você já tinha preenchido. Por segurança, digite novamente senha e CPF.');
+    }, [restored]);
 
     // useCallback: o LegalAcceptance usa onChange em um efeito
     const updateForm = useCallback((data) => setFormData(prev => ({ ...prev, ...data })), []);
@@ -48,6 +54,7 @@ function RegisterIndividual() {
         setBusy(true);
         try {
             const { data } = await api.post('auth/register/', individualPayload(formData));
+            discard(); // conta criada: o rascunho não é mais necessário
             await loginWithTokens(data.access, data.refresh);
             return true;
         } catch (err) {
@@ -116,7 +123,7 @@ function RegisterIndividual() {
             <RegisterFooter
                 onPrev={handlePrev}
                 onNext={handleNext}
-                onCancel={() => navigate('/criar-conta')}
+                onCancel={() => { discard(); navigate('/criar-conta'); }}
                 isFirst={currentStep === 1 || currentStep === steps.length}
                 isLast={currentStep === steps.length}
             />
