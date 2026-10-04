@@ -39,6 +39,7 @@ export const USER_ACTIONS = {
     unlock: { label: 'Desbloquear login', fields: [] },
     send_password_reset: { label: 'Enviar link de nova senha', fields: [] },
     revoke_sessions: { label: 'Encerrar sessões', fields: [] },
+    reset_mfa: { label: 'Redefinir verificação em duas etapas', danger: true, fields: [] },
     deactivate: { label: 'Desativar conta', danger: true, fields: [] },
     activate: { label: 'Reativar conta', fields: [] },
 };
@@ -62,6 +63,7 @@ export function userActionsFor(user) {
         .filter(([key]) => (key === 'deactivate' ? user?.ativo : key === 'activate' ? !user?.ativo : true))
         .filter(([key]) => key !== 'unlock' || user?.bloqueado)
         .filter(([key]) => key !== 'send_password_reset' || user?.ativo)
+        .filter(([key]) => key !== 'reset_mfa' || user?.mfa)
         .map(([key, a]) => ({ key, ...a }));
 }
 

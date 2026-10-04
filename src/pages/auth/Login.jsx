@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { pendingMfa } from '../../services/mfa';
 import { useNavigate, Link } from 'react-router-dom';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
@@ -22,14 +23,22 @@ function Login() {
     const [error, setError] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
 
-    const { login } = useAuth();
+    // 2ª etapa: desafio vindo do login por senha ou do login social (CAD-169)
+    const [mfaToken, setMfaToken] = useState(() => pendingMfa.take());
+    const [mfaCode, setMfaCode] = useState('');
+
+    const { login, verifyMfa } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
         try {
-            await login(username, password);
+            const { mfaToken: challenge } = await login(username, password);
+            if (challenge) {
+                setMfaToken(challenge);
+                return;
+            }
             navigate('/dashboard');
         } catch (err) {
             console.error("Erro no login:", err.response?.data);
@@ -38,6 +47,27 @@ function Login() {
                 return;
             }
             setError('Falha no login. Verifique suas credenciais.');
+        }
+    };
+
+    const handleMfa = async (e) => {
+        e.preventDefault();
+        setError(null);
+        try {
+            const data = await verifyMfa(mfaToken, mfaCode);
+            if (data.recovery_codes_left !== undefined) {
+                toast.warn(`Você usou um código de recuperação. Restam ${data.recovery_codes_left}. Gere novos no Perfil.`);
+            }
+            navigate('/dashboard');
+        } catch (err) {
+            const code = err.response?.data?.code;
+            if (code === 'mfa_expired') {
+                setMfaToken(null);
+                setMfaCode('');
+                setError(err.response.data.detail);
+                return;
+            }
+            setError(err.response?.data?.detail || 'Falha de comunicação com o servidor.');
         }
     };
 
@@ -66,7 +96,7 @@ function Login() {
                     <h2 className={styles.form_title}>Entrar</h2>
                     <p className={styles.form_subtitle}>Acesse sua conta para continuar</p>
 
-                    {ssoEnabled && (
+                    {ssoEnabled && !mfaToken && (
                         <>
                     {/* Botões sociais */}
                     <button className={styles.social_button} onClick={handleGoogle}>
@@ -87,8 +117,24 @@ function Login() {
                         </>
                     )}
 
+                    {mfaToken && (
+                        <form onSubmit={handleMfa}>
+                            <p className={styles.form_subtitle}>Verificação em duas etapas: digite o código de 6 dígitos do seu aplicativo autenticador
+                                (ou um código de recuperação).</p>
+                            <FormGroup>
+                                <Label>Código</Label>
+                                <Input type="text" inputMode="numeric" autoComplete="one-time-code" autoFocus placeholder="123456"
+                                    value={mfaCode} onChange={(e) => { setMfaCode(e.target.value); setError(null); }} />
+                            </FormGroup>
+                            <Button type="submit">Verificar</Button>
+                            <button type="button" className={styles.forgot_link} style={{ background: 'none', border: 'none', marginTop: 12, cursor: 'pointer' }}
+                                onClick={() => { setMfaToken(null); setMfaCode(''); setError(null); }}>Voltar</button>
+                            {error && <div className={styles.credentials_invalid}>{error}</div>}
+                        </form>
+                    )}
+
                     {/* Formulário */}
-                    <form onSubmit={handleSubmit}>
+                    {!mfaToken && <form onSubmit={handleSubmit}>
                         <FormGroup>
                             <Label>E-mail</Label>
                             <Input
@@ -138,7 +184,7 @@ function Login() {
                                 {error}
                             </div>
                         )}
-                    </form>
+                    </form>}
 
                     <p className={styles.register_link}>
                         Não tem uma conta? <Link to="/criar-conta">Criar conta</Link>

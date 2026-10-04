@@ -15,6 +15,7 @@ describe('backoffice', () => {
     it('ações de usuário conforme o estado da conta', () => {
         expect(userActionsFor({ ativo: true, bloqueado: false }).map((a) => a.key)).toEqual(['send_password_reset', 'revoke_sessions', 'deactivate']);
         expect(userActionsFor({ ativo: false, bloqueado: true }).map((a) => a.key)).toEqual(['unlock', 'revoke_sessions', 'activate']);
+        expect(userActionsFor({ ativo: true, mfa: true }).map((a) => a.key)).toContain('reset_mfa');
     });
 
     it('exige motivo e valida os números antes de enviar', () => {
