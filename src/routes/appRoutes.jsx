@@ -7,6 +7,7 @@ import MainLayout from "../layouts/mainLayout";
 
 import Login from "../pages/auth/Login";
 import Remember from "../pages/auth/Remember"
+import ResetPassword from "../pages/auth/ResetPassword";
 import GoogleCallback from "../pages/auth/GoogleCallback";
 
 import Dashboard from "../pages/dashboard/Dashboard";
@@ -60,6 +61,7 @@ export default function AppRoutes() {
           <Route path="/" element={<Login />} />
           <Route path="/cadastro" element={<Navigate to="/criar-conta" replace />} />
           <Route path="/esqueceu-a-senha" element={<Remember />} />
+          <Route path="/redefinir-senha" element={<ResetPassword />} />
           <Route path="/google/callback" element={<GoogleCallback />} />
         </Route>
 
