@@ -47,7 +47,7 @@ function RegisterIndividual() {
     }, [restored]);
 
     // useCallback: o LegalAcceptance usa onChange em um efeito
-    const updateForm = useCallback((data) => setFormData(prev => ({ ...prev, ...data })), []);
+    const updateForm = useCallback((data) => setFormData(prev => ({ ...prev, ...data })), [setFormData]);
 
     // Cria a conta (o back já devolve access/refresh → o usuário entra logado)
     const submit = async () => {

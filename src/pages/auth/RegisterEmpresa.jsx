@@ -54,7 +54,7 @@ function RegisterEmpresa() {
         if (restored) toast.info('Recuperamos o que você já tinha preenchido. Por segurança, digite novamente senhas e CPF.');
     }, [restored]);
 
-    const updateForm = useCallback((data) => setFormData(prev => ({ ...prev, ...data })), []);
+    const updateForm = useCallback((data) => setFormData(prev => ({ ...prev, ...data })), [setFormData]);
 
     const submit = async () => {
         setBusy(true);
