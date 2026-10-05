@@ -127,6 +127,18 @@ export default function RuleEditor({ catalog, rule, onDone, onCancel }) {
                         <input className={styles.input} type="number" min={1} max={30} value={form.gatilho_config.dias_antes ?? 3} onChange={(e) => setCfg('dias_antes', Number(e.target.value))} />
                     </label>
                 )}
+                {form.gatilho === 'receivable_due' && (
+                    <div className={styles.filters}>
+                        <label className={styles.field}>Quando
+                            <select className={styles.select} value={form.gatilho_config.quando || 'antes'} onChange={(e) => setCfg('quando', e.target.value)}>
+                                <option value="antes">Antes do vencimento</option><option value="vencido">Depois de vencido (sem pagamento)</option>
+                            </select>
+                        </label>
+                        <label className={styles.field}>Dias
+                            <input className={styles.input} type="number" min={0} max={60} value={form.gatilho_config.dias ?? 3} onChange={(e) => setCfg('dias', Number(e.target.value))} />
+                        </label>
+                    </div>
+                )}
                 {form.gatilho === 'schedule' && (
                     <div className={styles.filters}>
                         <label className={styles.field}>Frequência

@@ -6,9 +6,10 @@ import { Banner, Empty, PageHeader, Pill, errorMessage } from '../../components/
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import CobrancaModal from '../../components/integracoes/CobrancaModal';
+import ClientFile from '../../components/carteira/ClientFile';
 import { EMPTY_CONTACT, KINDS, channelStatus, contactBody, contactsApi, formatPhone } from '../../services/contacts';
 
-function ContatoForm({ initial, onDone, onCancel, canDelete, onCharge }) {
+function ContatoForm({ initial, onDone, onCancel, canDelete, onCharge, onFile }) {
     const [form, setForm] = useState({ ...EMPTY_CONTACT, ...initial, tags: (initial?.tags || []).join(', ') });
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
@@ -63,6 +64,7 @@ function ContatoForm({ initial, onDone, onCancel, canDelete, onCharge }) {
                 <div className={styles.btn_row}>
                     <button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy}>Salvar</button>
                     <button type="button" className={styles.btn} onClick={onCancel} disabled={busy}>Cancelar</button>
+                    {initial?.id && onFile && initial.kind === 'cliente' && <button type="button" className={styles.btn} onClick={() => onFile(initial)}>Ficha e portal do cliente</button>}
                     {initial?.id && onCharge && <button type="button" className={styles.btn} onClick={() => onCharge(initial)}>Cobrar honorários</button>}
                     {initial?.id && canDelete && <button type="button" className={`${styles.btn} ${styles.btn_danger}`} onClick={remove}>Excluir</button>}
                 </div>
@@ -78,6 +80,7 @@ export default function Contatos() {
     const [query, setQuery] = useState({ q: '', kind: '', tag: '' });
     const [editing, setEditing] = useState(null);
     const [charging, setCharging] = useState(null);
+    const [file, setFile] = useState(null);
     const { data, error, reload } = useLoader(() => contactsApi.list(query), [query.q, query.kind, query.tag]);
     return (
         <div className={styles.page}>
@@ -128,8 +131,10 @@ export default function Contatos() {
                 </div>
             )}
             {data && data.total > data.resultados.length && <div className={styles.muted}>Mostrando {data.resultados.length} de {data.total}. Refine a busca.</div>}
+            {file && <ClientFile contact={file} onClose={() => setFile(null)} />}
             {charging && <CobrancaModal contact={charging} onClose={() => setCharging(null)} />}
             {editing && <ContatoForm initial={editing.id ? editing : null} canDelete={isOrgManager} onCharge={(c) => { setEditing(null); setCharging(c); }}
+                onFile={(c) => { setEditing(null); setFile(c); }}
                 onCancel={() => setEditing(null)} onDone={() => { setEditing(null); reload(); }} />}
         </div>
     );

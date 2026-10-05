@@ -95,3 +95,22 @@
   .filters .field { flex: 1 1 100%; }
   .filters > .btn { flex: 1 1 auto; }
 }
+
+/* CAD-175: quadro do funil (kanban), barras do painel financeiro e botão com cara de link */
+.kanban { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(240px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x proximity; }
+.kanban_col { background: #f3f4f6; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 8px; min-width: 0; scroll-snap-align: start; }
+.kanban_head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: .9rem; }
+.kanban_card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 2px; font-size: .9rem; overflow-wrap: anywhere; }
+.link_btn { background: none; border: none; padding: 0; font: inherit; color: #2563eb; cursor: pointer; text-align: left; font-weight: 600; }
+.link_btn:hover { text-decoration: underline; }
+.bar_row { display: grid; grid-template-columns: 70px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: .85rem; margin-top: 6px; }
+.bar_label { color: #374151; font-weight: 600; }
+.bar_track { display: flex; flex-direction: column; gap: 3px; }
+.bar_in, .bar_out { height: 8px; border-radius: 4px; min-width: 2px; }
+.bar_in { background: #16a34a; }
+.bar_out { background: #f97316; }
+@media (max-width: 640px) {
+  .kanban { grid-auto-columns: 85%; }
+  .bar_row { grid-template-columns: 56px minmax(0, 1fr); }
+  .bar_row > :last-child { grid-column: 1 / -1; }
+}

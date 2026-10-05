@@ -1,0 +1,24 @@
+.page { min-height: 100vh; background: var(--c-bg, #f6f7fb); color: #111827; padding: 24px 16px 48px; }
+.wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+.brand { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.brand h1 { margin: 0; font-size: 1.5rem; }
+.muted { color: #6b7280; font-size: .9rem; }
+.card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; }
+.card h2 { margin: 0 0 4px; font-size: 1.05rem; overflow-wrap: anywhere; }
+.timeline { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.timeline li { border-left: 3px solid #2563eb; padding-left: 12px; }
+.timeline li.unknown { border-left-color: #d1d5db; }
+.date { font-size: .8rem; color: #6b7280; }
+.orig { font-size: .78rem; color: #9ca3af; }
+.fee { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid #f3f4f6; flex-wrap: wrap; }
+.fee:first-of-type { border-top: none; }
+.late { color: #dc2626; font-weight: 600; }
+.pay { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 8px; background: #2563eb; color: #fff; text-decoration: none; font-weight: 600; }
+.pay:focus-visible { outline: 3px solid #93c5fd; outline-offset: 2px; }
+.error { text-align: center; padding: 48px 16px; }
+@media (prefers-color-scheme: dark) {
+  .page { background: #0f172a; color: #e5e7eb; }
+  .card { background: #111827; border-color: #1f2937; }
+  .fee { border-top-color: #1f2937; }
+  .muted, .date { color: #9ca3af; }
+}

@@ -23,7 +23,7 @@ export default function CobrancaModal({ contact, onClose }) {
                 <h2 id="cob-title" className={styles.modal_title}>Cobrar {contact.name}</h2>
                 {result ? (
                     <>
-                        <Banner tone="ok">Cobrança criada no Asaas ({result.status}).</Banner>
+                        <Banner tone="ok">Cobrança criada no Asaas ({result.status}). Ela já aparece em <Link to="/financas">Finanças → A receber</Link> e recebe baixa sozinha quando o webhook estiver configurado.</Banner>
                         {result.link && <a className={`${styles.btn} ${styles.btn_primary}`} href={result.link} target="_blank" rel="noreferrer noopener">Abrir fatura para enviar ao cliente</a>}
                         {result.boleto && <a className={styles.btn} href={result.boleto} target="_blank" rel="noreferrer noopener">Boleto (PDF)</a>}
                         <button type="button" className={styles.btn} onClick={onClose}>Fechar</button>
