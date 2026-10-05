@@ -68,6 +68,10 @@ const Minutas = lazy(() => import('../pages/escritorio/Minutas'));
 // CAD-174: marketing (escritório e Cadrius)
 const Marketing = lazy(() => import('../pages/escritorio/Marketing'));
 const GestaoMarketing = lazy(() => import('../pages/gestao/Marketing'));
+// CAD-175: carteira de clientes, finanças do escritório e portal do cliente
+const Carteira = lazy(() => import('../pages/escritorio/Carteira'));
+const Financas = lazy(() => import('../pages/escritorio/Financas'));
+const PortalCliente = lazy(() => import('../pages/portal/PortalCliente'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -84,6 +88,9 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Suspense fallback={<div style={{ padding: 32, textAlign: "center" }}>Carregando…</div>}>
       <Routes>
+        {/* Portal do cliente: público, só com o link pessoal (CAD-175) */}
+        <Route path="/portal/:token" element={<PortalCliente />} />
+
         {/* Rotas públicas */}
         <Route element={<AuthLayout />}>
           <Route path="/" element={<Login />} />
@@ -135,6 +142,8 @@ export default function AppRoutes() {
           <Route path="/publicacoes" element={<Publicacoes />} />
           <Route path="/minutas" element={<Minutas />} />
           <Route path="/marketing" element={<Marketing />} />
+          <Route path="/carteira" element={<Carteira />} />
+          <Route path="/financas" element={<Financas />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           {/* Telas da equipe migraram para a Gestão Cadrius (CAD-168); links antigos continuam funcionando */}
           <Route path="/seguranca" element={<Navigate to="/gestao/seguranca" replace />} />

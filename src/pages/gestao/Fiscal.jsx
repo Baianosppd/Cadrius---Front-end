@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
 import { Banner, Empty, PageHeader, StatCard, StatusPill, errorMessage, fmtDate, fmtDateTime } from '../../components/seguranca/ui';
-import { NF_STATUS, backofficeApi, monthRange } from '../../services/backoffice';
+import { NF_MANUAL, NF_STATUS, backofficeApi, monthRange } from '../../services/backoffice';
+import { NfseModal, Obrigacoes } from '../../components/gestao/FiscalF';
 import { brl } from '../../services/financeiro';
 import useLoader from './useLoader';
 
@@ -29,7 +30,7 @@ function RegistrarNF({ payment, onDone, onCancel }) {
                 <div className={styles.muted}>{payment.descricao} · {brl(payment.valor_brl)} · pago em {fmtDateTime(payment.pago_em)}</div>
                 <label className={styles.field}>Situação
                     <select className={styles.select} value={form.status} onChange={set('status')}>
-                        {Object.entries(NF_STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+                        {NF_MANUAL.map((k) => <option key={k} value={k}>{NF_STATUS[k].label}</option>)}
                     </select>
                 </label>
                 {form.status === 'issued' && (
@@ -48,10 +49,11 @@ function RegistrarNF({ payment, onDone, onCancel }) {
     );
 }
 
-export default function Fiscal() {
+function Recebimentos() {
     const [period, setPeriod] = useState(monthRange());
     const [status, setStatus] = useState('');
     const [editing, setEditing] = useState(null);
+    const [nfse, setNfse] = useState(null);
     const params = { ...period, ...(status ? { status } : {}) };
     const { data, error, reload } = useLoader(() => backofficeApi.fiscalPayments(params), [period.start, period.end, status]);
 
@@ -67,9 +69,8 @@ export default function Fiscal() {
     };
 
     return (
-        <div className={styles.page}>
-            <PageHeader title="Fiscal" subtitle="Recebimentos da Cadrius e notas fiscais (fase 1: emissão fora do sistema, registro aqui)"
-                actions={<button type="button" className={styles.btn} onClick={exportCsv}>Exportar CSV para o contador</button>} />
+        <div className={styles.stack}>
+            <div className={styles.btn_row}><button type="button" className={styles.btn} onClick={exportCsv}>Exportar CSV para o contador</button></div>
             <div className={styles.filters}>
                 <label className={styles.field}>De<input className={styles.input} type="date" value={period.start} onChange={(e) => setPeriod((p) => ({ ...p, start: e.target.value }))} /></label>
                 <label className={styles.field}>Até<input className={styles.input} type="date" value={period.end} onChange={(e) => setPeriod((p) => ({ ...p, end: e.target.value }))} /></label>
@@ -103,7 +104,10 @@ export default function Fiscal() {
                                         <td>{p.descricao}<div className={styles.muted}>{p.tipo_label}</div></td>
                                         <td>{brl(p.valor_brl)}</td>
                                         <td><StatusPill map={NF_STATUS} value={p.nf_status} />{p.nf_numero && <div className={styles.muted}>nº {p.nf_numero} · {fmtDate(p.nf_emitida_em)}</div>}</td>
-                                        <td><button type="button" className={styles.btn} onClick={() => setEditing(p)}>Registrar NF</button></td>
+                                        <td><div className={styles.btn_row}>
+                                            <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_primary}`} onClick={() => setNfse(p)}>Conferir NFS-e</button>
+                                            <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => setEditing(p)}>Registrar NF</button>
+                                        </div></td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -112,6 +116,25 @@ export default function Fiscal() {
                 </>
             )}
             {editing && <RegistrarNF payment={editing} onCancel={() => setEditing(null)} onDone={() => { setEditing(null); reload(); }} />}
+            {nfse && <NfseModal payment={nfse} onClose={() => setNfse(null)} onChanged={reload} />}
+        </div>
+    );
+}
+
+const TABS = [['recebimentos', 'Recebimentos e notas'], ['obrigacoes', 'Obrigações']];
+
+// Setor Fiscal da Cadrius: fase 1 (registro), fase 2 (NFS-e pelo emissor) e fase 3 (obrigações) — CAD-170/175
+export default function Fiscal() {
+    const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get('aba') === 'obrigacoes' ? 'obrigacoes' : 'recebimentos'));
+    return (
+        <div className={styles.page}>
+            <PageHeader title="Fiscal" subtitle="Recebimentos da Cadrius, notas fiscais (NFS-e) e calendário de obrigações" />
+            <div className={styles.tabs} role="tablist">
+                {TABS.map(([k, label]) => (
+                    <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tab_active : ''}`} onClick={() => setTab(k)}>{label}</button>
+                ))}
+            </div>
+            {tab === 'recebimentos' ? <Recebimentos /> : <Obrigacoes />}
         </div>
     );
 }

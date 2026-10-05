@@ -20,6 +20,11 @@ export const backofficeApi = {
     fiscalPayments: (params) => api.get(`${BASE}fiscal/payments/`, { params }).then((r) => r.data),
     fiscalInvoice: (id, body) => api.post(`${BASE}fiscal/payments/${id}/invoice/`, body).then((r) => r.data),
     fiscalExport: (params) => api.get(`${BASE}fiscal/payments/export.csv`, { params, responseType: 'blob' }).then((r) => r.data),
+    fiscalNfse: (id) => api.get(`${BASE}fiscal/payments/${id}/nfse/`).then((r) => r.data),
+    fiscalNfseAction: (id, body) => api.post(`${BASE}fiscal/payments/${id}/nfse/`, body).then((r) => r.data),
+    fiscalObligations: () => api.get(`${BASE}fiscal/obligations/`).then((r) => r.data),
+    fiscalObligationUpdate: (body) => api.patch(`${BASE}fiscal/obligations/`, body).then((r) => r.data),
+    fiscalObligationDone: (id, body) => api.post(`${BASE}fiscal/obligations/${id}/done/`, body).then((r) => r.data),
 };
 
 export const AREA_LABEL = { ti: 'TI', financeiro: 'Financeiro', fiscal: 'Fiscal', suporte: 'Suporte', marketing: 'Marketing' };
@@ -28,6 +33,15 @@ export const AREAS = Object.keys(AREA_LABEL);
 export const NF_STATUS = {
     pending: { label: 'NF pendente', tone: 'yellow' }, issued: { label: 'NF emitida', tone: 'green' },
     not_required: { label: 'Sem NF', tone: 'gray' },
+    processing: { label: 'NFS-e em processamento', tone: 'blue' }, error: { label: 'NFS-e com erro', tone: 'red' },
+    canceled: { label: 'NF cancelada', tone: 'gray' },
+};
+// Situações que a equipe registra à mão (fase 1); as demais vêm do emissor (CAD-175)
+export const NF_MANUAL = ['pending', 'issued', 'not_required'];
+
+export const OBLIGATION_STATUS = {
+    pendente: { label: 'Pendente', tone: 'blue' }, hoje: { label: 'Vence hoje', tone: 'yellow' },
+    atrasado: { label: 'Atrasada', tone: 'red' }, feito: { label: 'Feita', tone: 'green' },
 };
 
 // Formulário de nova conta da equipe → corpo da API (valida o básico; o back valida de novo)
