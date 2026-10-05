@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useCallback } from "react";
 import api, { SESSION_EXPIRED_EVENT } from "../services/api";
 import { setMonitoringUser } from "../services/monitoring";
+import { mfaApi } from "../services/mfa";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
@@ -57,9 +58,18 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired);
   }, [reset]);
 
+  // Com verificação em duas etapas ativa o back devolve um desafio em vez dos tokens (CAD-169)
   async function login(username, password) {
     const response = await api.post("/auth/token/", { username, password });
+    if (response.data.mfa_required) return { mfaToken: response.data.mfa_token };
     await loginWithTokens(response.data.access, response.data.refresh);
+    return { mfaToken: null };
+  }
+
+  async function verifyMfa(mfaToken, code) {
+    const data = await mfaApi.verify(mfaToken, code);
+    await loginWithTokens(data.access, data.refresh);
+    return data;
   }
 
   // Usado também pelo cadastro (o back já devolve access/refresh) e pelo login social
@@ -92,6 +102,7 @@ export function AuthProvider({ children }) {
         isOrgManager: role === "OWNER" || role === "ADMIN",
         isStaff: !!user?.is_staff,
         login,
+        verifyMfa,
         loginWithTokens,
         refreshUser,
         logout,

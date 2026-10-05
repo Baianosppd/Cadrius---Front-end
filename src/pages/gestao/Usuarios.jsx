@@ -45,6 +45,7 @@ export default function Usuarios() {
                                     <td><span className={styles.btn_row}>
                                         {u.ativo ? <Pill tone="green">Ativo</Pill> : <Pill tone="gray">Desativado</Pill>}
                                         {u.bloqueado && <Pill tone="red">Login bloqueado</Pill>}
+                                        {u.mfa ? <Pill tone="blue">MFA</Pill> : (u.equipe_cadrius && <Pill tone="yellow">Sem MFA</Pill>)}
                                     </span></td>
                                     <td>{fmtDateTime(u.ultimo_acesso)}</td>
                                     <td>

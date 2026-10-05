@@ -5,24 +5,28 @@ import useAuth from '../hooks/useAuth';
 import { AREA_LABEL, backofficeApi } from '../services/backoffice';
 import { errorMessage } from '../components/seguranca/ui';
 import ConsentModal from '../components/seguranca/ConsentModal';
+import MfaSetup from '../components/seguranca/MfaSetup';
 import styles from './AdminLayout.module.css';
 import { visibleMenu } from './adminMenu';
 
 export default function AdminLayout() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-    const [me, setMe] = useState({ data: null, error: null });
+    const [me, setMe] = useState({ data: null, error: null, mfa: false });
+    const [tick, setTick] = useState(0);
+    // Fica no cadastro até a pessoa confirmar que guardou os códigos (o usuário passa a ter MFA no meio do fluxo)
+    const [enrolling, setEnrolling] = useState(false);
 
     useEffect(() => {
         let alive = true;
         backofficeApi.me()
-            .then((data) => alive && setMe({ data, error: null }))
-            .catch((e) => alive && setMe({ data: null, error: {
+            .then((data) => alive && setMe({ data, error: null, mfa: false }))
+            .catch((e) => alive && setMe(e?.response?.data?.code === 'mfa_required' ? { data: null, error: null, mfa: true } : { data: null, mfa: false, error: {
                 403: 'Sua conta é da equipe, mas ainda não tem área (TI ou Financeiro) na Gestão Cadrius. Peça a um administrador.',
                 428: 'Aceite os termos vigentes (janela aberta) para entrar na Gestão Cadrius.',
             }[e?.response?.status] || errorMessage(e) }));
         return () => { alive = false; };
-    }, []);
+    }, [tick]);
 
     const areas = me.data?.areas || [];
     return (
@@ -50,7 +54,18 @@ export default function AdminLayout() {
                 </div>
                 <main className={styles.body}>
                     {me.error && <div className={styles.denied}><h2>Sem acesso</h2><p>{me.error}</p></div>}
-                    {!me.error && !me.data && <div className={styles.denied}>Carregando…</div>}
+                    {me.mfa && (enrolling || !user?.mfa_enabled) && (
+                        <MfaSetup onStart={() => setEnrolling(true)} onDone={() => { setMe({ data: null, error: null, mfa: false }); setEnrolling(false); setTick((t) => t + 1); }}
+                            intro="A Gestão Cadrius exige verificação em duas etapas. Cadastre o aplicativo autenticador do seu celular para continuar." />
+                    )}
+                    {me.mfa && !enrolling && user?.mfa_enabled && (
+                        <div className={styles.denied}><h2>Confirme a verificação em duas etapas</h2>
+                            <p>Esta sessão começou antes do código. Saia e entre de novo com a senha e o código do aplicativo.</p>
+                            <button type="button" className={styles.footer_btn} style={{ margin: '0 auto', color: '#2563eb' }}
+                                onClick={async () => { await logout(); navigate('/', { replace: true }); }}>Sair e entrar de novo</button>
+                        </div>
+                    )}
+                    {!me.error && !me.data && !me.mfa && <div className={styles.denied}>Carregando…</div>}
                     {me.data && <Outlet context={{ areas }} />}
                 </main>
             </div>

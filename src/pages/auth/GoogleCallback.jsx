@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { pendingMfa } from "../../services/mfa";
 
 // Retorno do login social (Google/Microsoft). O back redireciona para /google/callback#access=...&refresh=...
 // (fragmento: não vai para logs de servidor nem para o cabeçalho Referer). Também aceita ?access=&refresh=.
@@ -33,6 +34,14 @@ function GoogleCallback() {
 
         // Remove os tokens da barra de endereço/histórico imediatamente
         window.history.replaceState(null, "", window.location.pathname);
+
+        // Conta com verificação em duas etapas: a tela de login pede o código (CAD-169)
+        const mfaToken = params.get("mfa_token");
+        if (mfaToken) {
+            pendingMfa.save(mfaToken);
+            navigate("/?mfa=1", { replace: true });
+            return;
+        }
 
         const login = !access || !refresh
             ? Promise.reject(new Error("sem tokens"))
