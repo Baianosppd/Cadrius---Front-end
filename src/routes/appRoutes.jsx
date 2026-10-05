@@ -62,6 +62,9 @@ const Suporte = lazy(() => import('../pages/escritorio/Suporte'));
 // Fase C (CAD-172): agenda forense e processos acompanhados
 const AgendaForense = lazy(() => import('../pages/escritorio/AgendaForense'));
 const Acompanhamento = lazy(() => import('../pages/escritorio/Acompanhamento'));
+// Fase D (CAD-173): publicações do DJEN e minutas
+const Publicacoes = lazy(() => import('../pages/escritorio/Publicacoes'));
+const Minutas = lazy(() => import('../pages/escritorio/Minutas'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -126,6 +129,8 @@ export default function AppRoutes() {
           <Route path="/suporte" element={<Suporte />} />
           <Route path="/agenda-forense" element={<AgendaForense />} />
           <Route path="/acompanhamento" element={<Acompanhamento />} />
+          <Route path="/publicacoes" element={<Publicacoes />} />
+          <Route path="/minutas" element={<Minutas />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           {/* Telas da equipe migraram para a Gestão Cadrius (CAD-168); links antigos continuam funcionando */}
           <Route path="/seguranca" element={<Navigate to="/gestao/seguranca" replace />} />
