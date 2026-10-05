@@ -103,7 +103,7 @@
 
 .primary_button {
     flex: 1;
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     color: #ffffff;
     border: none;
     border-radius: 8px;

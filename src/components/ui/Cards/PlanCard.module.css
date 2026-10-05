@@ -38,7 +38,7 @@
 }
 
 .active_badge {
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     color: #ffffff;
     font-size: 12px;
     font-weight: 600;
@@ -140,7 +140,7 @@
 
 .manage_button {
     width: 100%;
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     color: #ffffff;
     border: none;
     border-radius: 8px;

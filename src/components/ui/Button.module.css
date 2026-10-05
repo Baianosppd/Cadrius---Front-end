@@ -1,7 +1,7 @@
 .btn_default {
     width: 100%;
     padding: 14px;
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -20,5 +20,5 @@
 }
 /* CAD-219 */
 .btn_default { min-height: 46px; padding: 0 var(--sp-4); border-radius: var(--radius); font-size: var(--fs-md); box-shadow: var(--shadow-sm); }
-.btn_default:hover { background-color: var(--c-primary-600); }
+.btn_default:hover { background-color: var(--c-primary-solid-hover); }
 .btn_default:disabled { opacity: .6; cursor: not-allowed; }

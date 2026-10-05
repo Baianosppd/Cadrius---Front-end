@@ -86,7 +86,7 @@
 
 .progress_fill {
     height: 100%;
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     border-radius: 4px;
     transition: width 0.3s;
 }
@@ -131,7 +131,7 @@
 
 .number_active {
     border-color: var(--c-primary);
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     color: #ffffff;
 }
 

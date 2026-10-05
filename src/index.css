@@ -8,14 +8,16 @@
   --c-primary-700: #1e40af;
   --c-primary-50: #eff6ff;
   --c-primary-100: #dbeafe;
+  --c-primary-solid: #2563eb;       /* fundo de botões com texto branco (AA nos dois temas) */
+  --c-primary-solid-hover: #1d4ed8;
   --c-ring: rgba(37, 99, 235, .18);
 
   /* Neutros (ardósia: mais sóbrio que o cinza puro) */
   --c-ink: #0f172a;          /* títulos */
   --c-text: #1e293b;         /* texto principal */
   --c-text-2: #334155;       /* texto secundário forte */
-  --c-muted: #64748b;        /* rótulos, descrições */
-  --c-subtle: #94a3b8;       /* dicas, placeholders */
+  --c-muted: #5e6d82;        /* rótulos, descrições */
+  --c-subtle: #828fa2;       /* dicas, placeholders */
   --c-border: #e2e8f0;
   --c-border-2: #cbd5e1;
   --c-bg: #f5f7fa;           /* fundo da aplicação */
@@ -70,6 +72,8 @@
   --c-primary-700: #93c5fd;
   --c-primary-50: rgba(59, 130, 246, .14);
   --c-primary-100: rgba(59, 130, 246, .26);
+  --c-primary-solid: #2563eb;
+  --c-primary-solid-hover: #1d4ed8;
   --c-ring: rgba(96, 165, 250, .35);
 
   --c-ink: #f1f5f9;

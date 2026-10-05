@@ -23,7 +23,7 @@
 .card_description { font-size: var(--fs-base); color: var(--c-muted); line-height: 1.55; }
 .features { list-style: none; display: flex; flex-direction: column; gap: var(--sp-2); width: 100%; margin: var(--sp-1) 0; }
 .feature_item { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-base); color: var(--c-text-2); }
-.feature_dot { width: 7px; height: 7px; border-radius: 2px; background: var(--c-primary); flex-shrink: 0; }
+.feature_dot { width: 7px; height: 7px; border-radius: 2px; background: var(--c-primary-solid); flex-shrink: 0; }
 .card_cta { margin-top: auto; display: inline-flex; align-items: center; gap: var(--sp-2); font-weight: 650; color: var(--c-primary); padding-top: var(--sp-2); }
 
 .trust { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-3) var(--sp-6); max-width: 980px; color: var(--c-muted); font-size: var(--fs-sm); }

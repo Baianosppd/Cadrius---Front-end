@@ -7,7 +7,7 @@ de sistemas jurídicos (Clio, Astrea); cartões com padding interno uniforme, me
 ## 1. Tokens (src/index.css)
 | Grupo | Tokens | Uso |
 |---|---|---|
-| Marca | `--c-primary` `#2563eb`, `-600`, `-700`, `-50`, `-100` | ações principais, links, item ativo do menu |
+| Marca | `--c-primary` `#2563eb`, `-600`, `-700`, `-50`, `-100` | links, ícones e item ativo do menu. **Fundo de botão com texto branco usa `--c-primary-solid` / `--c-primary-solid-hover`** (garante 4,5:1 também no modo noturno) |
 | Neutros (ardósia) | `--c-ink` (títulos), `--c-text`, `--c-text-2`, `--c-muted`, `--c-subtle`, `--c-border`, `--c-border-2`, `--c-bg`, `--c-surface`, `--c-surface-2`, `--c-surface-3` | todo texto, fundo e borda |
 | Estados | `--c-success*`, `--c-warning*`, `--c-danger*`, `--c-info*` | selos, avisos, ações destrutivas |
 | Tipografia | `--font-ui` (Inter), `--font-brand` (Poppins, **só a marca**), `--fs-xs` 12 … `--fs-2xl` 26 | texto 14 px; títulos de página 26 px |
@@ -51,3 +51,12 @@ de sistemas jurídicos (Clio, Astrea); cartões com padding interno uniforme, me
 - **Primeiros passos** no Painel (`components/painel/FirstSteps.jsx`, lógica em `services/onboarding.js`).
 - **Marketing**: `PostPreview` (como o post aparece em cada canal) e calendário editorial (`monthGrid`).
 - Mapa completo das telas e do que mudou: `docs/MAPA_TELAS_UX.md`.
+
+## 7. Contraste e navegação (CAD-220)
+- **Contraste testado no CI**: `src/services/__tests__/contrast.test.js` lê os tokens do `index.css` nos dois temas e
+  confere os pares texto/fundo no WCAG AA (4,5:1 texto; 3:1 dicas e texto grande). Token novo de cor de texto ou fundo →
+  incluir o par no teste.
+- **Busca global**: `CommandPalette` (Ctrl+K / Cmd+K, ou o campo "Buscar" do topo). Telas novas do menu entram sozinhas
+  (vêm do `appMenu.js`); atalhos de criação ficam em `ACTIONS` (`services/search.js`) e a tela deve aceitar o parâmetro
+  (`?novo=1`, `?nova=1`).
+- **Tour da primeira visita**: `services/tour.js` (`TOURS`, até 3 frases curtas por módulo, com a primeira ação).

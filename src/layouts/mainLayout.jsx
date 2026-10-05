@@ -6,6 +6,8 @@ import styles from './MainLayout.module.css';
 import useAuth from '../hooks/useAuth';
 import ConsentModal from '../components/seguranca/ConsentModal';
 import SubscriptionBanner from '../components/common/SubscriptionBanner';
+import CommandPalette from '../components/common/CommandPalette';
+import ModuleTour from '../components/common/ModuleTour';
 
 // Layout do escritório (CAD-174): menu fixo no computador; no celular/tablet vira gaveta aberta pelo botão ☰
 export default function MainLayout() {
@@ -32,6 +34,8 @@ export default function MainLayout() {
                 <ConsentModal />
                 <main className={styles.page_body} id="conteudo">
                     <div className={styles.page_inner}><Outlet /></div>
+                    <CommandPalette />
+                    <ModuleTour />
                 </main>
             </div>
         </div>

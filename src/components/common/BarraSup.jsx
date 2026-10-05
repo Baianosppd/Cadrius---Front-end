@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FiBell, FiChevronDown, FiMenu } from 'react-icons/fi';
+import { FiBell, FiChevronDown, FiMenu, FiSearch } from 'react-icons/fi';
+import { openPalette } from '../../services/search';
 import { useNavigate } from 'react-router-dom';
 import styles from './BarraSup.module.css';
 import api from '../../services/api';
@@ -37,6 +38,10 @@ function BarraSup({ nome, onMenu, menuOpen }) {
                 )}
                 <span className={styles.brand_mobile}>Cadrius</span>
             </div>
+
+            <button type="button" className={styles.search_trigger} onClick={openPalette} aria-label="Buscar (Ctrl+K)" aria-keyshortcuts="Control+K Meta+K">
+                <FiSearch aria-hidden="true" /><span className={styles.search_text}>Buscar telas, clientes, processos…</span><kbd className={styles.search_kbd}>Ctrl K</kbd>
+            </button>
 
             <div className={styles.actions_container}>
                 <ThemeToggle />

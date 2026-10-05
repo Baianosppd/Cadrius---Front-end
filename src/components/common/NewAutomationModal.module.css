@@ -128,7 +128,7 @@
 }
 
 .save_button {
-    background-color: var(--c-primary); /* bg-blue-600 */
+    background-color: var(--c-primary-solid); /* bg-blue-600 */
     color: white;
     padding: 0.5rem 1.5rem; /* px-6 py-2 */
     border-radius: 0.5rem; /* rounded-lg */
@@ -139,5 +139,5 @@
 }
 
 .save_button:hover {
-    background-color: var(--c-primary-600); /* hover:bg-blue-700 */
+    background-color: var(--c-primary-solid-hover); /* hover:bg-blue-700 */
 }

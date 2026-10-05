@@ -126,7 +126,7 @@ export default function Minutas() {
     const [params, setParams] = useSearchParams();
     const { data, error, reload } = useLoader(() => Promise.all([minutasApi.list(), minutasApi.templates()]), []);
     const [selected, setSelected] = useState(null);
-    const fromQuery = params.get('fonte') ? { fonte: params.get('fonte'), id: params.get('id') } : null;
+    const fromQuery = params.get('fonte') ? { fonte: params.get('fonte'), id: params.get('id') } : (params.get('nova') ? {} : null);
     const [creating, setCreating] = useState(fromQuery);
     if (error) return <div className={styles.page}><Banner tone="error">{error}</Banner></div>;
     const [drafts, tpl] = data || [[], { modelos: [] }];

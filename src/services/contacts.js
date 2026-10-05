@@ -3,6 +3,7 @@ import api from './api';
 
 export const contactsApi = {
     list: (params) => api.get('contacts/', { params }).then((r) => r.data),
+    get: (id) => api.get(`contacts/${id}/`).then((r) => r.data),
     create: (body) => api.post('contacts/', body).then((r) => r.data),
     update: (id, body) => api.patch(`contacts/${id}/`, body).then((r) => r.data),
     remove: (id) => api.delete(`contacts/${id}/`),

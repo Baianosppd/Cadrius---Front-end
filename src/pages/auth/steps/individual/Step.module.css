@@ -203,7 +203,7 @@
     top: -12px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     color: #ffffff;
     font-size: 12px;
     font-weight: 600;

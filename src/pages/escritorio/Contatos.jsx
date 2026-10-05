@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
 import { Banner, Empty, PageHeader, Pill, errorMessage } from '../../components/seguranca/ui';
@@ -78,7 +78,13 @@ export default function Contatos() {
     const canWrite = role !== 'VIEWER';
     const [term, setTerm] = useState('');
     const [query, setQuery] = useState({ q: '', kind: '', tag: '' });
-    const [editing, setEditing] = useState(null);
+    const [params] = useSearchParams();
+    const [editing, setEditing] = useState(() => (params.get('novo') ? {} : null));
+    const abrir = params.get('abrir');
+    // Atalho da busca global (Ctrl+K): /contatos?abrir=<id> abre o contato direto
+    useEffect(() => {
+        if (abrir) contactsApi.get(abrir).then(setEditing).catch(() => {});
+    }, [abrir]);
     const [charging, setCharging] = useState(null);
     const [file, setFile] = useState(null);
     const { data, error, reload } = useLoader(() => contactsApi.list(query), [query.q, query.kind, query.tag]);

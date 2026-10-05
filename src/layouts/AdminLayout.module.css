@@ -7,8 +7,8 @@
 .area { font-size: .7rem; font-weight: 700; background: #1e293b; color: #93c5fd; border-radius: 999px; padding: 2px 8px; text-transform: uppercase; letter-spacing: .04em; }
 .link { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; color: #cbd5e1; text-decoration: none; font-size: .9rem; }
 .link:hover { background: #1e293b; color: #fff; }
-.active { background: var(--c-primary); color: #fff; }
-.active:hover { background: var(--c-primary); }
+.active { background: var(--c-primary-solid); color: #fff; }
+.active:hover { background: var(--c-primary-solid); }
 .spacer { flex: 1; }
 .footer_btn { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; color: #94a3b8; background: none; border: none; font: inherit; font-size: .88rem; cursor: pointer; text-align: left; text-decoration: none; }
 .footer_btn:hover { background: #1e293b; color: #fff; }

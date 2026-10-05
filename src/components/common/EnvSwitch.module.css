@@ -37,8 +37,8 @@
 .actions { display: flex; justify-content: flex-end; gap: var(--sp-2); }
 .btn { min-height: 40px; padding: 0 var(--sp-4); border-radius: var(--radius); border: 1px solid var(--c-border-2); background: var(--c-surface); color: var(--c-text-2); font: inherit; font-weight: 600; cursor: pointer; }
 .btn:hover { background: var(--c-surface-2); }
-.btn_primary { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
-.btn_primary:hover { background: var(--c-primary-600); }
+.btn_primary { background: var(--c-primary-solid); border-color: var(--c-primary); color: #fff; }
+.btn_primary:hover { background: var(--c-primary-solid-hover); }
 @media (max-width: 640px) {
   .overlay { align-items: flex-end; padding: 0; }
   .modal { max-width: 100%; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: var(--sp-5) var(--sp-4) calc(var(--sp-5) + env(safe-area-inset-bottom)); }
