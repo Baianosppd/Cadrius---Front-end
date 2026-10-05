@@ -74,7 +74,7 @@ const DocumentList = ({ documents = [], search = '', onSearchChange, onDownload,
                         <DocumentRow key={doc.id} doc={doc} onDownload={onDownload} />
                     ))}
                     {!loading && documents.length === 0 && (
-                        <tr><td colSpan={6} style={{ padding: 24, textAlign: 'center', color: '#6b7280' }}>Nenhum documento encontrado. Envie o primeiro acima.</td></tr>
+                        <tr><td colSpan={6} style={{ padding: 24, textAlign: 'center', color: 'var(--c-muted)' }}>Nenhum documento encontrado. Envie o primeiro acima.</td></tr>
                     )}
                 </tbody>
             </table>

@@ -3,7 +3,7 @@
     flex-direction: column;
     gap: 24px;
     padding: 32px;
-    background-color: #f8f9fa;
+    background-color: var(--c-surface-2);
     min-height: 100vh;
 }
 
@@ -26,3 +26,6 @@
     .dashboard_container { padding: 16px; gap: 16px; min-height: 0; }
     .actions_row { grid-template-columns: minmax(0, 1fr); gap: 10px; }
 }
+
+/* CAD-219: o espaço da página vem do layout (mesmo alinhamento em todas as telas) */
+.dashboard_container { padding: 0; background: transparent; min-height: 0;  }

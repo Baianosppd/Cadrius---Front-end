@@ -13,8 +13,8 @@
     /*gambiarra pra ficar certo no lugar*/
     left: 12px;
     z-index: 10;
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 6px;
     padding: 6px;
     cursor: pointer;
@@ -25,11 +25,11 @@
 }
 
 .layout_button:hover {
-    background-color: #f9fafb;
+    background-color: var(--c-surface-2);
 }
 
 .layout_icon {
     width: 16px;
     height: 16px;
-    color: #374151;
+    color: var(--c-text-2);
 }

@@ -4,5 +4,5 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background-color: #f8f9fa;
+    background-color: var(--c-surface-2);
 }

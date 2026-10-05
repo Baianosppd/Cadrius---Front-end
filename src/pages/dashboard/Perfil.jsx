@@ -8,6 +8,8 @@ import ChangePassword from '../../components/ui/ChangePassword.jsx';
 import MfaCard from '../../components/seguranca/MfaCard.jsx';
 import PlanCard from '../../components/ui/Cards/PlanCard.jsx';
 import { toast } from 'react-toastify';
+import ui from '../../components/seguranca/seguranca.module.css';
+import { PageHeader } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import { getCurrentPlan, getCreditPacks, startCreditCheckout, creditsNotice, validatePromo, startSubscriptionCheckout } from '../../services/billing';
 
@@ -85,8 +87,9 @@ function Perfil() {
 
     return (
         <div className={styles.perfil_container}>
+            <PageHeader title="Meu perfil" subtitle="Seus dados, senha, verificação em duas etapas e a assinatura do escritório" />
             {!user ? (
-                <p style={{ padding: 32, color: '#6b7280' }}>Carregando perfil...</p>
+                <p className={ui.muted}>Carregando perfil…</p>
             ) : (
                 <>
                     <ProfileInfo
@@ -111,19 +114,19 @@ function Perfil() {
                         />
                     )}
                     {assinatura && (
-                        <section aria-label="Assinatura e créditos" style={{ marginTop: 24, padding: 20, border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff' }}>
-                            <h2 style={{ marginTop: 0 }}>Assinatura e créditos</h2>
+                        <section aria-label="Assinatura e créditos" className={`${ui.card} ${ui.stack}`}>
+                            <h2 className={ui.section_title}>Assinatura e créditos</h2>
                             <p>Estado: <strong>{{ trialing: 'Em teste', active: 'Ativa', past_due: 'Pagamento pendente', restricted: 'Restrita', suspended: 'Suspensa', canceled: 'Cancelada' }[assinatura.estado] || assinatura.estado}</strong></p>
                             <p>{creditsNotice(assinatura) || 'IA pausada: regularize a assinatura.'}</p>
                             {assinatura.estado === 'trialing' && isOrgManager && (
                                 <div>
                                     <p>Assine para liberar os limites do seu plano:</p>
-                                    <label>Cupom de desconto: <input value={promo} onChange={(e) => { setPromo(e.target.value.toUpperCase()); setPromoInfo({}); }} placeholder="CÓDIGO" style={{ marginLeft: 6 }} /></label>
-                                    <div style={{ marginTop: 8 }}>
+                                    <label className={ui.field} style={{ maxWidth: 260 }}>Cupom de desconto<input className={ui.input} value={promo} onChange={(e) => { setPromo(e.target.value.toUpperCase()); setPromoInfo({}); }} placeholder="CÓDIGO" /></label>
+                                    <div className={ui.btn_row} style={{ marginTop: 8 }}>
                                         {[billing.plano, ...otherPlans].filter(p => p.price !== 'Grátis').map((p) => (
-                                            <span key={p.id} style={{ display: 'inline-block', marginRight: 12, marginBottom: 8 }}>
-                                                <button type="button" onClick={() => subscribe(p.id)}>Assinar {p.name} — {p.price}/mês</button>
-                                                {promo.trim() && <button type="button" onClick={() => checkPromo(p.id)} style={{ marginLeft: 4 }}>Aplicar cupom</button>}
+                                            <span key={p.id} className={ui.btn_row}>
+                                                <button type="button" className={`${ui.btn} ${ui.btn_primary}`} onClick={() => subscribe(p.id)}>Assinar {p.name} — {p.price}/mês</button>
+                                                {promo.trim() && <button type="button" className={ui.btn} onClick={() => checkPromo(p.id)}>Aplicar cupom</button>}
                                                 {promoInfo[p.id]?.valid && <small style={{ display: 'block', color: '#166534' }}>Com o cupom: R$ {Number(promoInfo[p.id].discounted).toLocaleString('pt-BR')} ({promoInfo[p.id].duration === 'once' ? 'na 1ª cobrança' : promoInfo[p.id].duration === 'forever' ? 'sempre' : `por ${promoInfo[p.id].duration_months} meses`})</small>}
                                             </span>
                                         ))}
@@ -131,13 +134,13 @@ function Perfil() {
                                 </div>
                             )}
                             {isOrgManager && assinatura.ia_ativa && packs.length > 0 && (
-                                <div style={{ marginTop: 12 }}>
-                                    <p>Precisa de mais créditos? (valem 12 meses e são usados depois dos do plano)</p>
-                                    {packs.map((p) => (
-                                        <button key={p.id} type="button" onClick={() => buyCredits(p.id)} style={{ marginRight: 8 }}>
+                                <div className={ui.stack}>
+                                    <p className={ui.muted}>Precisa de mais créditos? Valem 12 meses e são usados depois dos do plano.</p>
+                                    <div className={ui.btn_row}>{packs.map((p) => (
+                                        <button key={p.id} type="button" className={ui.btn} onClick={() => buyCredits(p.id)}>
                                             {p.credits.toLocaleString('pt-BR')} créditos — R$ {Number(p.price).toLocaleString('pt-BR')}
                                         </button>
-                                    ))}
+                                    ))}</div>
                                 </div>
                             )}
                         </section>

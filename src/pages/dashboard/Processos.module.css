@@ -25,7 +25,7 @@
 .empty_message {
     padding: 2rem;
     text-align: center;
-    color: #6B7280;
+    color: var(--c-muted);
 }
 
 /*-----------------------------------------------*/
@@ -74,7 +74,7 @@
 
 .search_input {
     width: 100%;
-    background-color: #F9FAFB;
+    background-color: var(--c-surface-2);
     /* bg-gray-50 */
     border-radius: 0.5rem;
     /* rounded-lg */
@@ -98,12 +98,12 @@
     /* w-4 */
     height: 1rem;
     /* h-4 */
-    color: #6B7280;
+    color: var(--c-muted);
     /* text-gray-500 */
 }
 
 .filter_select {
-    background-color: #F9FAFB;
+    background-color: var(--c-surface-2);
     /* bg-gray-50 */
     border-radius: 0.5rem;
     font-size: 0.875rem;
@@ -118,7 +118,7 @@
     font-size: 0.875rem;
     /* text-sm */
     text-align: left;
-    color: #6B7280;
+    color: var(--c-muted);
     /* text-gray-500 */
     border-collapse: collapse;
     /* Remove espaçamento padrão da tabela */
@@ -127,10 +127,10 @@
 .table_header {
     font-size: 0.75rem;
     /* text-xs */
-    color: #4B5563;
+    color: var(--c-text-2);
     /* text-gray-700 */
     text-transform: uppercase;
-    background-color: #F9FAFB;
+    background-color: var(--c-surface-2);
     /* bg-gray-50 */
 }
 
@@ -141,12 +141,12 @@
 
 .table_row {
     background-color: white;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid var(--c-border);
     transition: background-color 0.2s;
 }
 
 .table_row:hover {
-    background-color: #F9FAFB;
+    background-color: var(--c-surface-2);
     /* hover:bg-gray-50 */
 }
 
@@ -161,7 +161,7 @@
 .td_num {
     font-weight: 500;
     /* font-medium */
-    color: #1F2937;
+    color: var(--c-text);
     /* text-gray-900 */
 }
 
@@ -204,7 +204,7 @@
 }
 
 .action_btn:hover {
-    background-color: #E5E7EB;
+    background-color: var(--c-border);
     /* hover:bg-gray-200 */
 }
 
@@ -213,7 +213,7 @@
     /* w-4 */
     height: 1rem;
     /* h-4 */
-    color: #6B7280;
+    color: var(--c-muted);
 }
 
 
@@ -233,7 +233,7 @@
 
 .ai_title {
     font-weight: 600;
-    color: #1F2937;
+    color: var(--c-text);
     margin-bottom: 0.75rem;
     /* mb-3 */
 }
@@ -256,7 +256,7 @@
     /* text-sm */
     font-weight: 500;
     /* font-medium */
-    color: #1F2937;
+    color: var(--c-text);
     margin: 0;
 }
 
@@ -268,7 +268,7 @@
 .suggestion_button {
     font-size: 0.75rem;
     /* text-xs */
-    color: #2563EB;
+    color: var(--c-primary);
     /* text-blue-600 */
     font-weight: 600;
     /* font-semibold */
@@ -287,3 +287,8 @@
     .search_container { width: 100%; }
     .table_base { min-width: 560px; }
 }
+
+/* CAD-219 */
+.processos_container { display: flex; flex-direction: column; gap: var(--sp-6); padding-bottom: 0; }
+@media (min-width: 1024px) { .single { grid-template-columns: minmax(0, 1fr); } }
+.single .sidebar_area { display: none; }

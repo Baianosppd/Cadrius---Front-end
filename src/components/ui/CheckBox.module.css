@@ -11,12 +11,12 @@
     margin: 0;
     margin-right: 12px ;
     cursor: pointer;
-    accent-color: #737373;
+    accent-color: var(--c-muted);
 }
 
 .checkbox_label {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--c-muted);
     cursor: pointer;
     user-select: none;
     padding-top: 2px;

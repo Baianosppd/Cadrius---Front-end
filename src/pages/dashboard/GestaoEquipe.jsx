@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api.js';
+import { PageHeader } from '../../components/seguranca/ui';
 import styles from './GestaoEquipe.module.css';
 
 import TabBar from '../../components/ui/TabBar.jsx';
@@ -73,6 +74,7 @@ function GestaoEquipe() {
 
     return (
         <div className={styles.GestaoEquipe_container}>
+            <PageHeader title="Equipe" subtitle="Pessoas do escritório, perfis de acesso e uso de créditos de IA" />
             {showInviteModal && (
                 <InviteMemberModal
                     onClose={() => setShowInviteModal(false)}

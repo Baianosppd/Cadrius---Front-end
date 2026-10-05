@@ -1,6 +1,6 @@
 .container {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 12px;
     padding: 24px;
     display: flex;
@@ -9,9 +9,9 @@
 }
 
 .title {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
@@ -24,17 +24,17 @@
 .label {
     font-size: 13px;
     font-weight: 500;
-    color: #374151;
+    color: var(--c-text-2);
 }
 
 .input {
     padding: 12px 14px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     font-size: 14px;
-    color: #111111;
+    color: var(--c-ink);
     outline: none;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
 }
 
 .input:focus {
@@ -43,12 +43,12 @@
 
 .textarea {
     padding: 12px 14px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     font-size: 14px;
-    color: #111111;
+    color: var(--c-ink);
     outline: none;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     resize: vertical;
     min-height: 100px;
     font-family: inherit;
@@ -60,12 +60,12 @@
 
 .select {
     padding: 12px 14px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     font-size: 14px;
-    color: #111111;
+    color: var(--c-ink);
     outline: none;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     cursor: pointer;
     width: 100%;
 }
@@ -81,7 +81,7 @@
 }
 
 .divider {
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--c-border);
 }
 
 .toggle_row {
@@ -100,13 +100,13 @@
 .toggle_title {
     font-size: 14px;
     font-weight: 600;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .toggle_subtitle {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--c-muted);
 }
 
 .toggle {
@@ -126,7 +126,7 @@
 }
 
 .toggle_inactive {
-    background-color: #d1d5db;
+    background-color: var(--c-border-2);
 }
 
 .toggle_thumb {
@@ -135,7 +135,7 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     transition: left 0.2s;
 }
 
@@ -154,9 +154,9 @@
 
 .cancel_button {
     flex: 1;
-    background-color: #ffffff;
-    color: #111111;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    color: var(--c-ink);
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     padding: 14px;
     font-size: 15px;
@@ -165,12 +165,12 @@
 }
 
 .cancel_button:hover {
-    background-color: #f9fafb;
+    background-color: var(--c-surface-2);
 }
 
 .submit_button {
     flex: 2;
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -184,3 +184,7 @@
     opacity: 0.85;
 }
 @media (max-width: 640px) { .fields_row { grid-template-columns: minmax(0, 1fr); } }
+
+/* CAD-219: campos iguais aos do restante do sistema */
+.input { min-height: var(--control-h); padding: 8px 12px; background-color: var(--c-surface); border: 1px solid var(--c-border-2); font-size: var(--fs-base); }
+.input:focus { box-shadow: 0 0 0 3px var(--c-ring); }

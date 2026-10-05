@@ -35,20 +35,20 @@
 .title {
     font-size: 0.875rem; /* text-sm */
     font-weight: 500; /* font-medium */
-    color: #6B7280; /* text-gray-500 */
+    color: var(--c-muted); /* text-gray-500 */
     margin-bottom: 0.25rem;
 }
 
 .number {
     font-size: 1.875rem; /* text-3xl */
     font-weight: 700; /* font-bold */
-    color: #1F2937; /* text-gray-800 */
+    color: var(--c-text); /* text-gray-800 */
     margin-top: 0;
 }
 
 .observation {
     font-size: 0.75rem; /* text-xs */
-    color: #6B7280; /* Cor padrão cinza */
+    color: var(--c-muted); /* Cor padrão cinza */
     margin-top: 0.5rem;
 }
 
@@ -58,7 +58,7 @@
 
 /* Caso a cor não seja verde (como em '2 urgentes'), a cor padrão cinza ou vermelha será usada */
 .obs_default {
-    color: #9CA3AF; /* Padrão cinza */
+    color: var(--c-subtle); /* Padrão cinza */
 }
 .observation span.text_red {
     color: #EF4444; /* Cor vermelha para 'urgentes' */
@@ -70,7 +70,7 @@
     background-color: #DBEAFE; /* bg-blue-100 */
 }
 .icon_container_blue .icon_style {
-    color: #2563EB; /* text-blue-600 */
+    color: var(--c-primary); /* text-blue-600 */
 }
 
 .icon_container_green {
@@ -113,7 +113,7 @@
 /* --- ESTILIZAÇÃO DAS BORDAS LATERAIS (border-l-4) --- */
 
 .border_blue {
-    border-left-color: #3B82F6; /* border-blue-500 */
+    border-left-color: var(--c-primary); /* border-blue-500 */
 }
 .border_green {
     border-left-color: #10B981; /* border-green-500 */
@@ -154,13 +154,13 @@
 .title_automacao {
     font-size: 1rem;
     font-weight: 600;
-    color: #1F2937;
+    color: var(--c-text);
     line-height: 1.2;
 }
 
 .description_automacao {
     font-size: 0.875rem;
-    color: #6B7280;
+    color: var(--c-muted);
     margin-top: 0.25rem;
 }
 
@@ -197,7 +197,7 @@
 
 .secondary_info {
     font-size: 0.75rem;
-    color: #9CA3AF;
+    color: var(--c-subtle);
 }
 
 /* --- Cores Específicas de Status --- */

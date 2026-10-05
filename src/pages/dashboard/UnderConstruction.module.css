@@ -16,26 +16,26 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background-color: #e5e7eb;
+    background-color: var(--c-border);
     margin-bottom: 8px;
 }
 
 .icon {
     width: 40px;
     height: 40px;
-    color: #9ca3af;
+    color: var(--c-subtle);
 }
 
 .title {
     font-size: 28px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .subtitle {
     font-size: 15px;
-    color: #6b7280;
+    color: var(--c-muted);
     max-width: 420px;
     line-height: 1.6;
     margin: 0;

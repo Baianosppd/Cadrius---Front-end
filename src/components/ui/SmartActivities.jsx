@@ -22,6 +22,7 @@ const SmartActivities = ({ activities = [] }) => {
         <div className={styles.container}>
             <h2 className={styles.title}>Atividades Inteligentes</h2>
             <div className={styles.activity_list}>
+                {activities.length === 0 && <p className={styles.empty}>Sem atividades recentes. Elas aparecem aqui quando a IA lê documentos, publicações ou roda automações.</p>}
                 {activities.map((activity, index) => (
                     <ActivityItem key={index} {...activity} />
                 ))}

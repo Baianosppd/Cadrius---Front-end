@@ -9,7 +9,7 @@ import PerfilEscritorio from '../../components/ia/PerfilEscritorio';
 import Aprendizado from '../../components/ia/Aprendizado';
 import { MEMORY_KIND, MODE_LABEL, RISK_LABEL, RULE_KIND, brainApi, pct, promotionProgress, ruleEvidence } from '../../services/brain';
 
-const card = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: 16, marginBottom: 12 };
+const card = { background: '#fff', border: '1px solid var(--c-border)', borderRadius: 12, padding: 16, marginBottom: 12 };
 
 function useLoad(fn) {
     const [state, setState] = useState({ data: null, error: null });
@@ -42,7 +42,7 @@ function Aprovacoes() {
                         <div key={d.document_id} style={{ ...card, display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center' }}>
                             <div>
                                 <strong>{d.nome}</strong>
-                                <div style={{ color: '#6b7280', fontSize: '0.85rem' }}>
+                                <div style={{ color: 'var(--c-muted)', fontSize: '0.85rem' }}>
                                     {d.provider === 'LOCAL' ? 'Leitura básica local (sem IA)' : `IA ${d.provider}`}{d.confidence != null && ` · confiança ${d.confidence}%`}{d.prazos ? ` · ${d.prazos} prazo(s)` : ''}
                                 </div>
                             </div>
@@ -83,7 +83,7 @@ function Aprovacoes() {
                         <div key={p.id} style={{ ...card, display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center' }}>
                             <div>
                                 <strong>{p.label}</strong>: de “{MODE_LABEL[p.from_mode]}” para “{MODE_LABEL[p.to_mode]}”
-                                <div style={{ color: '#6b7280', fontSize: '0.85rem' }}>{p.samples} decisões nos últimos 60 dias, {pct(p.approval_rate)} aprovadas sem edição, nenhuma rejeitada ou desfeita.</div>
+                                <div style={{ color: 'var(--c-muted)', fontSize: '0.85rem' }}>{p.samples} decisões nos últimos 60 dias, {pct(p.approval_rate)} aprovadas sem edição, nenhuma rejeitada ou desfeita.</div>
                             </div>
                             <span style={{ whiteSpace: 'nowrap' }}>
                                 <button onClick={() => decideProposal(p.id, 'approve')}>Liberar</button>{' '}
@@ -132,7 +132,7 @@ function Autonomia() {
                     </tbody>
                 </table>
             </div>
-            <p style={{ color: '#6b7280', fontSize: '0.85rem' }}>
+            <p style={{ color: 'var(--c-muted)', fontSize: '0.85rem' }}>
                 Critério para sugerir mais autonomia: {data.criteria.min_samples} decisões em {data.criteria.window_days} dias com {pct(data.criteria.min_approval_rate)} aprovadas sem edição e nenhuma rejeitada ou desfeita.
                 Um erro grave rebaixa o nível imediatamente.
             </p>
@@ -197,11 +197,11 @@ function Memoria() {
         <div className={styles.page}>
             <Banner tone="info">A memória é só do seu escritório (cifrada e isolada). Modelos de peça e leituras aprovadas ajudam a IA a seguir o seu estilo — sem treinar modelos de terceiros.</Banner>
             <form onSubmit={search} style={{ display: 'flex', gap: 8 }}>
-                <input style={{ flex: 1, padding: 8, border: '1px solid #d1d5db', borderRadius: 6 }} placeholder="Buscar na memória (ex.: contestação horas extras)" value={query} onChange={(e) => setQuery(e.target.value)} />
+                <input style={{ flex: 1, padding: 8, border: '1px solid var(--c-border-2)', borderRadius: 6 }} placeholder="Buscar na memória (ex.: contestação horas extras)" value={query} onChange={(e) => setQuery(e.target.value)} />
                 <button type="submit">Buscar</button>
             </form>
             {found && (found.length === 0 ? <Empty>Nada parecido encontrado.</Empty> : found.map((f) => (
-                <div key={f.id} style={card}><strong>{f.title || MEMORY_KIND[f.kind]}</strong> <small>({Math.round(f.score * 100)}% parecido)</small><div style={{ color: '#374151' }}>{f.preview}</div></div>
+                <div key={f.id} style={card}><strong>{f.title || MEMORY_KIND[f.kind]}</strong> <small>({Math.round(f.score * 100)}% parecido)</small><div style={{ color: 'var(--c-text-2)' }}>{f.preview}</div></div>
             )))}
             {isOrgManager && (
                 <form onSubmit={add} style={{ ...card, display: 'grid', gap: 8 }}>
@@ -218,7 +218,7 @@ function Memoria() {
             {data.length === 0 && <Empty>A memória está vazia. Ela cresce quando você confirma leituras de documentos.</Empty>}
             {data.map((m) => (
                 <div key={m.id} style={{ ...card, display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                    <div><Pill tone="blue">{MEMORY_KIND[m.kind] || m.kind}</Pill> <strong>{m.title}</strong><div style={{ color: '#6b7280', fontSize: '0.85rem' }}>{m.preview}</div></div>
+                    <div><Pill tone="blue">{MEMORY_KIND[m.kind] || m.kind}</Pill> <strong>{m.title}</strong><div style={{ color: 'var(--c-muted)', fontSize: '0.85rem' }}>{m.preview}</div></div>
                     {isOrgManager && <button onClick={() => remove(m.id)} style={{ color: '#dc2626' }}>Apagar</button>}
                 </div>
             ))}

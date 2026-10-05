@@ -29,7 +29,7 @@
     display: flex;
     align-items: center;
     border-radius: 4px;
-    color: #9ca3af;
+    color: var(--c-subtle);
 }
 
 .delete_button:hover {
@@ -68,18 +68,18 @@
 .label {
     font-size: 13px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .description {
     font-size: 11px;
-    color: #9ca3af;
+    color: var(--c-subtle);
 }
 
 .handle {
     width: 10px;
     height: 10px;
-    background-color: #9ca3af;
+    background-color: var(--c-subtle);
     border: 2px solid #ffffff;
 }

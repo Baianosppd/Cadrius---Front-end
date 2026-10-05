@@ -28,7 +28,7 @@ function Funil({ canWrite, onOpenClient }) {
     const columns = STAGES.filter(([k]) => showClosed || OPEN_STAGES.includes(k));
     return (
         <div className={styles.stack}>
-            <div className={styles.card_grid}>
+            <div className={styles.grid}>
                 <StatCard title="Em negociação" value={brl(OPEN_STAGES.reduce((s, k) => s + stageTotal(groups[k]), 0))}
                     note={`${OPEN_STAGES.reduce((s, k) => s + groups[k].length, 0)} oportunidade(s) abertas`} />
                 <StatCard title="Conversão (90 dias)" value={r.conversao_pct == null ? '—' : `${r.conversao_pct}%`} note={`${r.ganhos} fechado(s), ${r.perdidos} perdido(s)`} />

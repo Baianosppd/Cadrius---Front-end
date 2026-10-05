@@ -51,11 +51,11 @@ function Dashboard() {
 
     return (
         <div className={styles.dashboard_container}>
-            <PageHeader title="Dashboard" subtitle="Visão geral das suas atividades" />
+            <PageHeader title="Painel" subtitle="O resumo do dia: tarefas, documentos e o que a IA preparou" />
 
             <div className={styles.actions_row}>
-                <ActionButton icon={FiFileText} label="Nova Análise de Documento" variant="primary" onClick={() => navigate('/documents')} />
-                <ActionButton icon={FiZap} label="Criar Novo Fluxo de Automação" variant="secondary" onClick={() => navigate('/automacao')} />
+                <ActionButton icon={FiFileText} label="Analisar documento" variant="primary" onClick={() => navigate('/documents')} />
+                <ActionButton icon={FiZap} label="Nova automação" variant="secondary" onClick={() => navigate('/automacao')} />
             </div>
 
             <SummaryGroup stats={stats} />

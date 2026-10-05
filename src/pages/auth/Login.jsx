@@ -90,6 +90,11 @@ function Login() {
             <div className={styles.side_dark}>
                 <h1 className={styles.dark_title}>Cadrius</h1>
                 <p className={styles.dark_subtitle}>Automação inteligente para escritórios jurídicos modernos</p>
+                <ul className={styles.dark_points}>
+                    <li>Publicações do DJEN e prazos em dias úteis</li>
+                    <li>Documentos lidos pela IA, sempre com revisão do advogado</li>
+                    <li>Dados cifrados e trilha de auditoria (LGPD)</li>
+                </ul>
             </div>
 
             {/* Lado direito com formulário */}

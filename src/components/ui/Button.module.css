@@ -1,7 +1,7 @@
 .btn_default {
     width: 100%;
     padding: 14px;
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     border: none;
     border-radius: 6px;

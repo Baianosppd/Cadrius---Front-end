@@ -7,13 +7,13 @@ const IntegrationCard = ({ name, status, description, syncInfo, onAction, logo: 
     return (
         <div className={styles.card}>
             <div className={styles.header}>
-                <div className={styles.logo_wrapper} style={{ backgroundColor: logoBg || '#f3f4f6' }}>
+                <div className={styles.logo_wrapper} style={{ backgroundColor: logoBg || 'var(--c-surface-3)' }}>
                     {typeof Logo === 'string' && Logo.length === 1 ? (
     <span className={styles.logo_letter}>{Logo}</span>
 ) : typeof Logo === 'string' ? (
     <img src={Logo} alt={name} className={styles.logo_img} />
 ) : (
-    <Logo className={styles.logo_icon} style={{ color: logoColor || '#374151' }} />
+    <Logo className={styles.logo_icon} style={{ color: logoColor || 'var(--c-text-2)' }} />
 )}
                 </div>
                 <div>

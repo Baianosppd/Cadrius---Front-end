@@ -105,7 +105,7 @@ function MultiCheck({ options, value, onChange }) {
 function Field({ field, form, setForm }) {
     const v = form[field.name] ?? '';
     const set = (val) => setForm((f) => ({ ...f, [field.name]: val }));
-    const base = { style: { width: '100%', padding: 6, border: '1px solid #d1d5db', borderRadius: 6 } };
+    const base = { style: { width: '100%', padding: 6, border: '1px solid var(--c-border-2)', borderRadius: 6 } };
     if (field.type === 'checkbox') return <input type="checkbox" checked={!!form[field.name]} onChange={(e) => set(e.target.checked)} />;
     if (field.type === 'select') return <select {...base} value={v} onChange={(e) => set(e.target.value)}>{field.options.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>;
     if (field.type === 'textarea') return <textarea {...base} rows={3} value={v} onChange={(e) => set(e.target.value)} />;
@@ -126,9 +126,9 @@ function EditForm({ spec, initial, onSave, onCancel }) {
         try { await onSave(formToBody(spec.fields, form)); } catch (err) { setErrors(apiErrors(err)); } finally { setBusy(false); }
     };
     return (
-        <form onSubmit={submit} style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 8, padding: 14, margin: '8px 0', display: 'grid', gap: 10, gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
+        <form onSubmit={submit} style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)', borderRadius: 8, padding: 14, margin: '8px 0', display: 'grid', gap: 10, gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
             {spec.fields.map((f) => (
-                <label key={f.name} style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: '0.85rem', color: '#374151' }}>{f.label}<Field field={f} form={form} setForm={setForm} /></label>
+                <label key={f.name} style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: '0.85rem', color: 'var(--c-text-2)' }}>{f.label}<Field field={f} form={form} setForm={setForm} /></label>
             ))}
             {errors.length > 0 && <div style={{ gridColumn: '1 / -1' }}><Banner tone="error">{errors.map((e) => <div key={e}>{e}</div>)}</Banner></div>}
             <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 8 }}>

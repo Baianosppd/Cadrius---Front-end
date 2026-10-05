@@ -77,7 +77,7 @@ const AutomationList = ({ workflows = [], search = '', canManage = false, onTogg
                         />
                     ))}
                     {filtered.length === 0 && (
-                        <tr><td colSpan={5} style={{ padding: 24, textAlign: 'center', color: '#6b7280' }}>Nenhuma automação ainda. Clique em “Criar Nova Automação” para criar a primeira.</td></tr>
+                        <tr><td colSpan={5} style={{ padding: 24, textAlign: 'center', color: 'var(--c-muted)' }}>Nenhuma automação ainda. Clique em “Criar Nova Automação” para criar a primeira.</td></tr>
                     )}
                 </tbody>
             </table>

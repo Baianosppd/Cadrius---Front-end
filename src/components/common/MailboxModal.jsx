@@ -95,7 +95,7 @@ function MailboxModal({ isOpen, onClose, onSuccess }) {
                             placeholder="Senha gerada (App Password)"
                             onChange={e => setFormData({ ...formData, password: e.target.value })}
                         />
-                        <small style={{ color: '#6B7280' }}>Para Gmail, use a Senha de App (não a senha de login).</small>
+                        <small style={{ color: 'var(--c-muted)' }}>Para Gmail, use a Senha de App (não a senha de login).</small>
                     </div>
 
                     <div className={styles.action_footer}>

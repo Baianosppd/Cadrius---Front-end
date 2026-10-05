@@ -31,7 +31,7 @@ function Painel() {
             {!data && !error && <Empty>Carregando…</Empty>}
             {data && (
                 <>
-                    <div className={styles.card_grid}>
+                    <div className={styles.grid}>
                         <StatCard title="A receber" value={brl(data.a_receber_centavos)} note={`${brl(data.previsto_30_dias_centavos)} nos próximos 30 dias`} />
                         <StatCard title="Vencido" value={brl(data.vencido_centavos)} tone={data.vencidos ? 'red' : undefined}
                             note={`${data.vencidos} lançamento(s) · ${data.inadimplencia_pct}% do que está em aberto`} />

@@ -3,7 +3,7 @@
     display: flex;
     min-height: 100vh;
     width: 100%;
-    background-color: #f3f4f6;
+    background-color: var(--c-surface-3);
     overflow-x: hidden;
 }
 
@@ -14,7 +14,7 @@
     justify-content: flex-end;
     align-items: center;
     padding-right: 60px;
-    background-color: #f3f4f6;
+    background-color: var(--c-surface-3);
 }
 
 
@@ -44,14 +44,14 @@
 }
 
 .row_options a {
-    color: #6b7280;
+    color: var(--c-muted);
     font-size: 0.875rem;
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 .row_options a:hover {
-    color: #4b5563;
+    color: var(--c-text-2);
     text-decoration: underline;
 }
 
@@ -61,7 +61,7 @@
 
 .side_form h1 {
     font-size: 2.25rem;
-    color: #374151;
+    color: var(--c-text-2);
     font-weight: 800;
     margin-bottom: 2.5rem;
     letter-spacing: -0.5px;
@@ -69,7 +69,7 @@
 
 .side_form h2 {
     font-size: 1.15rem;
-    color: #4b5563;
+    color: var(--c-text-2);
     font-weight: 600;
     margin-bottom: 2rem;
 }

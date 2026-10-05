@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { gcal, gcalResult, GCAL_STATUS_LABEL } from '../../services/gcal';
 import { errorMessage } from '../seguranca/ui';
+import ui from '../seguranca/seguranca.module.css';
 
-const box = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: 20, margin: '16px 0' };
-const input = { width: '100%', padding: 8, border: '1px solid #d1d5db', borderRadius: 6 };
+const input = { width: '100%', padding: 8, border: '1px solid var(--c-border-2)', borderRadius: 6 };
 
 // Cada escritório usa o PRÓPRIO app OAuth do Google (sem verificação do Google para o Cadrius). Passo a passo: deploy/README.md §12.
 export default function GoogleCalendarCard() {
@@ -40,8 +40,8 @@ export default function GoogleCalendarCard() {
     const connect = async () => { const r = await run(gcal.connect); if (r?.authorization_url) window.location.href = r.authorization_url; };
 
     return (
-        <section aria-label="Google Calendar" style={box}>
-            <h2 style={{ marginTop: 0, fontSize: '1.05rem' }}>Google Calendar — prazos e tarefas na sua agenda</h2>
+        <section aria-label="Google Calendar" className={`${ui.card} ${ui.stack}`}>
+            <h2 className={ui.section_title}>Google Calendar — prazos e tarefas na sua agenda</h2>
             {!st.app_configured ? (
                 <p>Cada escritório usa o <strong>próprio app do Google</strong> (nada é compartilhado com outros clientes).
                     {st.can_configure ? ' Siga o passo a passo abaixo e cadastre as credenciais.' : ' Peça ao dono ou administrador do escritório para configurar.'}</p>
@@ -51,7 +51,7 @@ export default function GoogleCalendarCard() {
                     {st.last_error && <span style={{ color: '#b91c1c' }}> · {st.last_error}</span>}</p>
             )}
             {st.app_configured && (
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <div className={ui.btn_row}>
                     {(!st.connected || st.status === 'needs_reauth') && <button disabled={busy} onClick={connect}>{st.connected ? 'Reconectar' : 'Conectar minha agenda'}</button>}
                     {st.connected && st.status === 'active' && <button disabled={busy} onClick={() => run(gcal.syncNow, 'Sincronizado.').then(load)}>Sincronizar agora</button>}
                     {st.connected && <button disabled={busy} onClick={() => run(gcal.disconnect, 'Desconectado.').then(load)}>Desconectar</button>}
@@ -62,7 +62,7 @@ export default function GoogleCalendarCard() {
                     <p><button type="button" onClick={() => setShowSetup((v) => !v)}>{showSetup ? 'Fechar configuração' : (st.app_configured ? 'Editar credenciais do app' : 'Configurar app do Google')}</button></p>
                     {showSetup && (
                         <form onSubmit={saveApp} style={{ display: 'grid', gap: 10 }}>
-                            <ol style={{ fontSize: '0.85rem', color: '#374151', paddingLeft: 18 }}>
+                            <ol style={{ fontSize: '0.85rem', color: 'var(--c-text-2)', paddingLeft: 18 }}>
                                 <li>No <a href="https://console.cloud.google.com" target="_blank" rel="noreferrer">Google Cloud</a>, crie um projeto e ative a <strong>Google Calendar API</strong>.</li>
                                 <li>Tela de permissão OAuth: <strong>Interno</strong> (Workspace) ou <strong>Externo em Teste</strong> com seus e-mails; escopo <code>{st.scope}</code>.</li>
                                 <li>Credenciais → ID do cliente OAuth (aplicativo da Web) com este <strong>URI de redirecionamento</strong>:<br /><code style={{ wordBreak: 'break-all' }}>{st.redirect_uri}</code></li>

@@ -17,7 +17,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end; 
-    border-bottom: 1px solid #E5E7EB; 
+    border-bottom: 1px solid var(--c-border); 
     padding-bottom: 0.75rem; 
     margin-bottom: 1rem; 
 }
@@ -41,12 +41,12 @@
 }
 
 .tab_active {
-    color: #2563EB; /* Texto azul na aba ativa */
-    border-bottom: 2px solid #2563EB; 
+    color: var(--c-primary); /* Texto azul na aba ativa */
+    border-bottom: 2px solid var(--c-primary); 
 }
 
 .tab_inactive {
-    color: #6B7280; /* Texto cinza na aba inativa */
+    color: var(--c-muted); /* Texto cinza na aba inativa */
 }
 
 /* ... (Status Indicators CSS omitted for brevity, but should be included) ... */
@@ -63,7 +63,7 @@
 .item_card {
     padding: 1rem; 
     border-radius: 0.5rem; 
-    border: 1px solid #E5E7EB; 
+    border: 1px solid var(--c-border); 
     background-color: white; /* Garante que o item seja branco */
     /* ... (Grid layout for item_card) ... */
     display: grid;
@@ -81,22 +81,27 @@
 }
 
 .icon_mail {
-    color: #9CA3AF; /* Ícone cinza */
+    color: var(--c-subtle); /* Ícone cinza */
 }
 
 .sender {
     font-weight: 600; 
-    color: #1F2937; /* Texto escuro */
+    color: var(--c-text); /* Texto escuro */
 }
 
 .subject {
     font-size: 0.75rem; 
-    color: #6B7280; /* Texto cinza mais claro */
+    color: var(--c-muted); /* Texto cinza mais claro */
 }
 
 .time {
-    color: #9CA3AF; /* Texto de tempo cinza claro */
+    color: var(--c-subtle); /* Texto de tempo cinza claro */
     grid-column: 2; 
 }
 
 /* ... (Action Buttons CSS omitted for brevity, but should be included) ... */
+/* CAD-219 */
+.comunicacao_container { display: flex; flex-direction: column; gap: var(--sp-6); padding-bottom: 0; }
+.counter_badge { margin-left: var(--sp-2); background: var(--c-surface-3); color: var(--c-text-2); border-radius: 999px; font-size: 11px; font-weight: 700; padding: 0 7px; line-height: 18px; }
+.tab_button { display: inline-flex; align-items: center; padding: var(--sp-3); font-weight: 600; font-size: var(--fs-base); }
+.main_box { border: 1px solid var(--c-border); box-shadow: var(--shadow-sm); border-radius: var(--radius-lg); padding: var(--sp-5); }

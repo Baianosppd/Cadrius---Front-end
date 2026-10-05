@@ -101,7 +101,7 @@ export default function Contatos() {
             {data?.tags?.length > 0 && (
                 <div className={styles.btn_row}>
                     {data.tags.map((t) => (
-                        <button key={t} type="button" className={styles.btn} style={query.tag === t ? { borderColor: '#2563eb', color: '#2563eb' } : undefined}
+                        <button key={t} type="button" className={styles.btn} style={query.tag === t ? { borderColor: 'var(--c-primary)', color: 'var(--c-primary)' } : undefined}
                             onClick={() => setQuery((q) => ({ ...q, tag: q.tag === t ? '' : t }))}>#{t}</button>
                     ))}
                 </div>

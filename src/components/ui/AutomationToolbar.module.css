@@ -1,6 +1,6 @@
 .container {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 12px;
     padding: 16px 20px;
     display: flex;
@@ -15,7 +15,7 @@
     gap: 10px;
     flex: 1;
     max-width: 480px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     padding: 10px 14px;
 }
@@ -23,7 +23,7 @@
 .search_icon {
     width: 16px;
     height: 16px;
-    color: #9ca3af;
+    color: var(--c-subtle);
     flex-shrink: 0;
 }
 
@@ -32,16 +32,16 @@
     outline: none;
     width: 100%;
     font-size: 14px;
-    color: #111111;
+    color: var(--c-ink);
     background: transparent;
 }
 
 .search_input::placeholder {
-    color: #9ca3af;
+    color: var(--c-subtle);
 }
 
 .create_button {
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     border: none;
     border-radius: 8px;

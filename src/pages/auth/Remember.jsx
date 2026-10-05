@@ -66,7 +66,7 @@ function Remember() {
                         </div>
                     )}
 
-                    <Link to="/">Voltar</Link>
+                    <Link to="/" style={{ fontSize: "var(--fs-sm)", fontWeight: 600, textDecoration: "none", alignSelf: "flex-start" }}>← Voltar para o login</Link>
                 </ContainerCard>
             </div>
         </div>

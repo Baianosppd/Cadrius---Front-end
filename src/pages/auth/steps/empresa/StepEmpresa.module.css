@@ -14,7 +14,7 @@
 }
 
 .option_card {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 10px;
     padding: 16px;
     cursor: pointer;
@@ -22,24 +22,24 @@
 }
 
 .option_card:hover {
-    border-color: #3b82f6;
+    border-color: var(--c-primary);
 }
 
 .option_selected {
-    border-color: #3b82f6;
+    border-color: var(--c-primary);
     background-color: #eff6ff;
 }
 
 .option_label {
     font-size: 15px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0 0 4px 0;
 }
 
 .option_description {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--c-muted);
 }
 
 .empty_team {
@@ -54,19 +54,19 @@
 .empty_icon {
     width: 48px;
     height: 48px;
-    color: #d1d5db;
+    color: var(--c-border-2);
 }
 
 .empty_title {
     font-size: 18px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .empty_subtitle {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0;
     max-width: 400px;
     line-height: 1.5;
@@ -76,7 +76,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background-color: #3b82f6;
+    background-color: var(--c-primary);
     color: #ffffff;
     border: none;
     border-radius: 8px;

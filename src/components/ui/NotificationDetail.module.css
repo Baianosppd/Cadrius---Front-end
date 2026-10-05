@@ -12,14 +12,14 @@
     border: none;
     font-size: 14px;
     font-weight: 500;
-    color: #374151;
+    color: var(--c-text-2);
     cursor: pointer;
     padding: 0;
     width: fit-content;
 }
 
 .back_button:hover {
-    color: #111111;
+    color: var(--c-ink);
 }
 
 .back_icon {
@@ -51,19 +51,19 @@
 .title {
     font-size: 22px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0 0 4px 0;
 }
 
 .description {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0 0 4px 0;
 }
 
 .time {
     font-size: 12px;
-    color: #9ca3af;
+    color: var(--c-subtle);
 }
 
 .fields_grid {
@@ -73,8 +73,8 @@
 }
 
 .field {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 10px;
     padding: 16px 20px;
     display: flex;
@@ -84,14 +84,14 @@
 
 .field_label {
     font-size: 12px;
-    color: #9ca3af;
+    color: var(--c-subtle);
     font-weight: 500;
 }
 
 .field_value {
     font-size: 15px;
     font-weight: 600;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
@@ -103,7 +103,7 @@
 
 .primary_button {
     flex: 1;
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -118,9 +118,9 @@
 }
 
 .secondary_button {
-    background-color: #ffffff;
-    color: #111111;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    color: var(--c-ink);
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     padding: 14px 24px;
     font-size: 15px;
@@ -129,6 +129,6 @@
 }
 
 .secondary_button:hover {
-    background-color: #f9fafb;
+    background-color: var(--c-surface-2);
 }
 @media (max-width: 640px) { .fields_grid { grid-template-columns: minmax(0, 1fr); } }

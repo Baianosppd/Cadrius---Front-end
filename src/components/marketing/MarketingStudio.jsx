@@ -89,7 +89,7 @@ function Editor({ api, id, canApprove, onClose, onChanged }) {
                         )}
                     </div>
                     <div className={styles.stack}>
-                        <div className={styles.card} style={{ background: '#f9fafb' }}>
+                        <div className={styles.card} style={{ background: 'var(--c-surface-2)' }}>
                             <div className={styles.section_title}>Verificador (OAB e LGPD)</div>
                             <Alertas alertas={alertas} />
                             {blocking && canApprove && (

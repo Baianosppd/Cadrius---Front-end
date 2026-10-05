@@ -1,8 +1,8 @@
 .container {
     display: flex;
     gap: 0;
-    border-bottom: 1px solid #e5e7eb;
-    background-color: #ffffff;
+    border-bottom: 1px solid var(--c-border);
+    background-color: var(--c-surface);
     border-radius: 12px 12px 0 0;
     padding: 0 24px;
 }
@@ -18,25 +18,25 @@
     border-bottom: 2px solid transparent;
     font-size: 15px;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--c-muted);
     cursor: pointer;
     transition: color 0.2s;
     margin-bottom: -1px;
 }
 
 .tab:hover {
-    color: #111111;
+    color: var(--c-ink);
 }
 
 .active {
-    color: #111111;
+    color: var(--c-ink);
     font-weight: 600;
-    border-bottom: 2px solid #111111;
+    border-bottom: 2px solid var(--c-ink);
 }
 
 .count {
-    background-color: #f3f4f6;
-    color: #6b7280;
+    background-color: var(--c-surface-3);
+    color: var(--c-muted);
     font-size: 12px;
     font-weight: 600;
     padding: 2px 8px;
@@ -44,8 +44,8 @@
 }
 
 .count_active {
-    background-color: #e5e7eb;
-    color: #111111;
+    background-color: var(--c-border);
+    color: var(--c-ink);
 }
 /* CAD-174: muitas abas cabem no celular rolando de lado (sem quebrar o layout) */
 .container { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }

@@ -1,35 +1,24 @@
+/* Ações rápidas do painel (CAD-219): botões de altura padrão; a principal em azul, a secundária com contorno */
 .button {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: var(--sp-2);
     width: 100%;
-    padding: 18px 24px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    min-height: 44px;
+    padding: 0 var(--sp-5);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font: inherit;
+    font-size: var(--fs-md);
     font-weight: 600;
     cursor: pointer;
-    transition: opacity 0.2s;
+    box-shadow: var(--shadow-sm);
+    transition: background .15s, border-color .15s, color .15s;
 }
-
-.button:hover {
-    opacity: 0.9;
-}
-
-.icon {
-    width: 20px;
-    height: 20px;
-}
-
-.primary {
-    background-color: #3730d4;
-    color: #ffffff;
-}
-
-.secondary {
-    background-color: #111111;
-    color: #ffffff;
-}
-
-@media (max-width: 640px) { .button { padding: 14px 16px; font-size: 15px; text-align: left; } }
+.icon { width: 18px; height: 18px; }
+.primary { background-color: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+.primary:hover { background-color: var(--c-primary-600); border-color: var(--c-primary-600); }
+.secondary { background-color: var(--c-surface); border-color: var(--c-border-2); color: var(--c-ink); }
+.secondary:hover { background-color: var(--c-surface-2); border-color: var(--c-subtle); }
+@media (max-width: 640px) { .button { font-size: var(--fs-base); } }

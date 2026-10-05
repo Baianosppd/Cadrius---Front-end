@@ -39,12 +39,13 @@ const TasksToday = ({ tasks = [], onToggleTask, onAddTask }) => {
                     <h2 className={styles.title}>Tarefas de Hoje</h2>
                     <span className={styles.counter}>{completed} de {tasks.length} concluídas</span>
                 </div>
-                <button className={styles.add_button} onClick={onAddTask}>
-                    + Adicionar Nova Tarefa
+                <button type="button" className={styles.add_button} onClick={onAddTask}>
+                    Nova tarefa
                 </button>
             </div>
 
             <div className={styles.task_list}>
+                {tasks.length === 0 && <p className={styles.empty}>Nenhuma tarefa para hoje.</p>}
                 {tasks.map(task => (
                     <TaskItem
                         key={task.id}

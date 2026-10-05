@@ -15,7 +15,7 @@ export default function EnvSwitch({ email = '' }) {
             <button key={target} type="button" role="radio" aria-checked={active} onClick={() => go(target)}
                 style={{ flex: 1, border: 'none', borderRadius: 8, padding: '8px 10px', fontWeight: 600, fontSize: '.85rem', cursor: active ? 'default' : 'pointer',
                     background: active ? (target === 'teste' ? '#fef3c7' : '#fff') : 'transparent',
-                    color: active ? (target === 'teste' ? '#92400e' : '#1d4ed8') : '#6b7280',
+                    color: active ? (target === 'teste' ? '#92400e' : '#1d4ed8') : 'var(--c-muted)',
                     boxShadow: active ? '0 1px 2px rgba(0,0,0,.08)' : 'none' }}>
                 {ENVIRONMENTS[target].label}
             </button>
@@ -23,10 +23,10 @@ export default function EnvSwitch({ email = '' }) {
     };
     return (
         <div style={{ marginBottom: 20 }}>
-            <div role="radiogroup" aria-label="Ambiente" style={{ display: 'flex', gap: 4, background: '#f3f4f6', borderRadius: 10, padding: 4 }}>
+            <div role="radiogroup" aria-label="Ambiente" style={{ display: 'flex', gap: 4, background: 'var(--c-surface-3)', borderRadius: 10, padding: 4 }}>
                 {btn('producao')}{btn('teste')}
             </div>
-            <p style={{ fontSize: '.78rem', color: '#6b7280', marginTop: 6, lineHeight: 1.4 }}>
+            <p style={{ fontSize: '.78rem', color: 'var(--c-muted)', marginTop: 6, lineHeight: 1.4 }}>
                 {env === 'teste'
                     ? 'Você está no ambiente de TESTE: dados fictícios e contas separadas da produção. Experimente à vontade.'
                     : 'O ambiente de teste tem contas e dados separados: use-o para experimentar sem afetar o escritório.'}

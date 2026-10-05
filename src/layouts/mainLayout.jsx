@@ -31,7 +31,7 @@ export default function MainLayout() {
                 <SubscriptionBanner />
                 <ConsentModal />
                 <main className={styles.page_body} id="conteudo">
-                    <Outlet />
+                    <div className={styles.page_inner}><Outlet /></div>
                 </main>
             </div>
         </div>

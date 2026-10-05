@@ -12,7 +12,7 @@
 }
 
 .modal {
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     border-radius: 12px;
     width: 100%;
     max-width: 440px;
@@ -26,13 +26,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px 24px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--c-border);
 }
 
 .title {
     font-size: 16px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
@@ -44,12 +44,12 @@
     border-radius: 6px;
     display: flex;
     align-items: center;
-    color: #6b7280;
+    color: var(--c-muted);
 }
 
 .close_button:hover {
-    background-color: #f3f4f6;
-    color: #111111;
+    background-color: var(--c-surface-3);
+    color: var(--c-ink);
 }
 
 .close_icon {
@@ -73,64 +73,64 @@
 .label {
     font-size: 13px;
     font-weight: 500;
-    color: #374151;
+    color: var(--c-text-2);
 }
 
 .input {
     padding: 10px 14px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     font-size: 14px;
-    color: #111111;
+    color: var(--c-ink);
     outline: none;
 }
 
 .input:focus {
-    border-color: #3b82f6;
+    border-color: var(--c-primary);
 }
 
 .select {
     padding: 10px 14px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     font-size: 14px;
-    color: #111111;
+    color: var(--c-ink);
     outline: none;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     cursor: pointer;
 }
 
 .select:focus {
-    border-color: #3b82f6;
+    border-color: var(--c-primary);
 }
 
 .footer {
     display: flex;
     gap: 12px;
     padding: 16px 24px;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--c-border);
 }
 
 .cancel_button {
     flex: 1;
     padding: 10px;
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
-    color: #374151;
+    color: var(--c-text-2);
     cursor: pointer;
 }
 
 .cancel_button:hover {
-    background-color: #f9fafb;
+    background-color: var(--c-surface-2);
 }
 
 .save_button {
     flex: 1;
     padding: 10px;
-    background-color: #111111;
+    background-color: var(--c-primary);
     border: none;
     border-radius: 8px;
     font-size: 14px;
@@ -142,3 +142,6 @@
 .save_button:hover {
     opacity: 0.85;
 }
+/* CAD-219: campos iguais aos do restante do sistema */
+.input { min-height: var(--control-h); padding: 8px 12px; background-color: var(--c-surface); border: 1px solid var(--c-border-2); font-size: var(--fs-base); }
+.input:focus { box-shadow: 0 0 0 3px var(--c-ring); }

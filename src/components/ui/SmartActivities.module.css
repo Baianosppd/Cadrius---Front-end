@@ -1,14 +1,15 @@
 .container {
-    background-color: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--c-border);
+    box-shadow: var(--shadow-sm);
     padding: 24px;
 }
 
 .title {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0 0 24px 0;
 }
 
@@ -41,18 +42,24 @@
 .activity_title {
     font-size: 14px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .activity_description {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0;
     line-height: 1.4;
 }
 
 .activity_time {
     font-size: 12px;
-    color: #9ca3af;
+    color: var(--c-subtle);
 }
+/* CAD-219 */
+.container { padding: var(--sp-5); }
+.title { font-size: var(--fs-md); font-weight: 650; }
+.empty { color: var(--c-muted); font-size: var(--fs-base); padding: var(--sp-2) 0; }
+.title { margin: 0 0 var(--sp-4); }
+.activity_list { gap: var(--sp-4); }

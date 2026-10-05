@@ -1,21 +1,63 @@
-/* Base visual do Cadrius (CAD-174): tokens, foco acessível e ajustes para telas pequenas */
+/* Base visual do Cadrius — CAD-219 (revisão visual): tokens únicos de cor, tipografia, espaçamento e raio.
+   Referências: grade de 8 pt (com meio-passo de 4), escala tipográfica curta e densidade de sistemas de gestão
+   (Carbon/IBM, Clio, Astrea). Regra de ouro: o espaço entre blocos vem do "gap" do contêiner, nunca de margens soltas. */
 :root {
+  /* Marca (identidade mantida: azul Cadrius) */
   --c-primary: #2563eb;
   --c-primary-600: #1d4ed8;
+  --c-primary-700: #1e40af;
   --c-primary-50: #eff6ff;
-  --c-text: #111827;
-  --c-text-2: #374151;
-  --c-muted: #6b7280;
-  --c-border: #e5e7eb;
-  --c-border-2: #d1d5db;
-  --c-bg: #f3f4f6;
-  --c-surface: #ffffff;
-  --c-danger: #dc2626;
-  --radius: 10px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
-  --shadow-md: 0 8px 24px rgba(17, 24, 39, .12);
-  --sidebar-w: 256px;
-  --topbar-h: 64px;
+  --c-primary-100: #dbeafe;
+  --c-ring: rgba(37, 99, 235, .18);
+
+  /* Neutros (ardósia: mais sóbrio que o cinza puro) */
+  --c-ink: #0f172a;          /* títulos */
+  --c-text: #1e293b;         /* texto principal */
+  --c-text-2: #334155;       /* texto secundário forte */
+  --c-muted: #64748b;        /* rótulos, descrições */
+  --c-subtle: #94a3b8;       /* dicas, placeholders */
+  --c-border: #e2e8f0;
+  --c-border-2: #cbd5e1;
+  --c-bg: #f5f7fa;           /* fundo da aplicação */
+  --c-surface: #ffffff;      /* cartões, tabelas */
+  --c-surface-2: #f8fafc;    /* cabeçalho de tabela, áreas recuadas */
+  --c-surface-3: #f1f5f9;    /* hover, trilhas */
+
+  /* Estados */
+  --c-success: #15803d; --c-success-bg: #f0fdf4; --c-success-bd: #bbf7d0;
+  --c-warning: #a16207; --c-warning-bg: #fffbeb; --c-warning-bd: #fde68a;
+  --c-danger: #b91c1c;  --c-danger-600: #dc2626; --c-danger-bg: #fef2f2; --c-danger-bd: #fecaca;
+  --c-info: #1e40af;    --c-info-bg: #eff6ff;    --c-info-bd: #bfdbfe;
+
+  /* Tipografia */
+  --font-ui: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-brand: 'Poppins', var(--font-ui);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --fs-xs: .75rem;    /* 12 */
+  --fs-sm: .8125rem;  /* 13 */
+  --fs-base: .875rem; /* 14 */
+  --fs-md: .9375rem;  /* 15 */
+  --fs-lg: 1.125rem;  /* 18 */
+  --fs-xl: 1.375rem;  /* 22 */
+  --fs-2xl: 1.625rem; /* 26 */
+
+  /* Espaçamento (4/8) */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px;
+
+  /* Forma e profundidade */
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, .05);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, .12);
+  --shadow-lg: 0 20px 48px rgba(15, 23, 42, .18);
+
+  /* Layout */
+  --sidebar-w: 248px;
+  --topbar-h: 60px;
+  --page-max: 1280px;
+  --page-pad: var(--sp-8);
+  --control-h: 38px;
 }
 
 * {
@@ -29,11 +71,23 @@ body,
 #root {
   width: 100%;
   min-height: 100vh;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-ui);
   background-color: var(--c-bg);
   color: var(--c-text);
   -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+body { font-size: var(--fs-base); line-height: 1.5; font-feature-settings: 'cv11', 'ss01'; }
+
+h1, h2, h3, h4 { color: var(--c-ink); line-height: 1.25; letter-spacing: -0.01em; font-weight: 650; }
+
+/* Números alinhados em tabelas e valores */
+table, .tabular { font-variant-numeric: tabular-nums; }
+
+/* Marca */
+.brand-font { font-family: var(--font-brand); }
 
 /* Foco visível em teclado (acessibilidade), sem contorno no clique do mouse */
 :focus-visible {
@@ -44,12 +98,45 @@ body,
 
 button, input, select, textarea { font-family: inherit; }
 img { max-width: 100%; }
+::placeholder { color: var(--c-subtle); opacity: 1; }
 
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
 }
 
+@media (max-width: 960px) {
+  :root { --page-pad: var(--sp-6); }
+}
+
 /* Inputs com fonte >= 16px no celular evitam o zoom automático do iOS */
 @media (max-width: 640px) {
+  :root { --page-pad: var(--sp-4); }
   input, select, textarea { font-size: 16px !important; }
 }
+
+/* Controles legados sem classe (telas antigas): mesma aparência dos componentes padrão (CAD-219) */
+#conteudo button:not([class]) {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  min-height: var(--control-h); padding: 0 var(--sp-4); border-radius: var(--radius);
+  border: 1px solid var(--c-border-2); background: var(--c-surface); color: var(--c-text-2);
+  font-size: var(--fs-base); font-weight: 600; cursor: pointer; box-shadow: var(--shadow-sm);
+  transition: background .15s, border-color .15s;
+}
+#conteudo button:not([class]):hover:not(:disabled) { background: var(--c-surface-2); border-color: var(--c-subtle); color: var(--c-ink); }
+#conteudo button:not([class]):disabled { opacity: .5; cursor: not-allowed; }
+#conteudo input:not([class]):not([type=checkbox]):not([type=radio]):not([type=range]),
+#conteudo select:not([class]), #conteudo textarea:not([class]) {
+  min-height: var(--control-h); padding: 6px 12px; border: 1px solid var(--c-border-2); border-radius: var(--radius);
+  background: var(--c-surface); color: var(--c-text); font-size: var(--fs-base);
+}
+#conteudo input:not([class]):focus, #conteudo select:not([class]):focus, #conteudo textarea:not([class]):focus {
+  outline: none; border-color: var(--c-primary); box-shadow: 0 0 0 3px var(--c-ring);
+}
+input[type=checkbox], input[type=radio] { accent-color: var(--c-primary); }
+/* Botão do seletor de arquivo */
+input[type=file]::file-selector-button {
+  margin-right: var(--sp-3); min-height: 30px; padding: 0 var(--sp-3); border-radius: var(--radius-sm);
+  border: 1px solid var(--c-border-2); background: var(--c-surface-2); color: var(--c-text-2);
+  font: inherit; font-size: var(--fs-sm); font-weight: 600; cursor: pointer;
+}
+input[type=file]::file-selector-button:hover { background: var(--c-surface-3); }

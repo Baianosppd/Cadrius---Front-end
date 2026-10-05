@@ -50,9 +50,9 @@ function Conectar({ app, onClose, onSaved }) {
                             <button type="button" className={styles.btn} onClick={onClose}>Cancelar</button>
                         </div>
                     </form>
-                    <div className={styles.card} style={{ background: '#f9fafb' }}>
+                    <div className={styles.card} style={{ background: 'var(--c-surface-2)' }}>
                         <div className={styles.section_title}>Onde pegar cada dado</div>
-                        <ol style={{ paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 8, fontSize: '.88rem', color: '#374151' }}>
+                        <ol style={{ paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 8, fontSize: '.88rem', color: 'var(--c-text-2)' }}>
                             {app.guia.map((g, i) => <li key={i}>{g}</li>)}
                         </ol>
                         {app.links.length > 0 && (

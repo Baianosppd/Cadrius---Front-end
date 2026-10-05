@@ -5,15 +5,15 @@
     justify-content: center;
     gap: 12px;
     padding: 48px 32px;
-    border: 2px dashed #d1d5db;
+    border: 2px dashed var(--c-border-2);
     border-radius: 12px;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     cursor: pointer;
     transition: border-color 0.2s;
 }
 
 .dropzone:hover {
-    border-color: #9ca3af;
+    border-color: var(--c-subtle);
 }
 
 .icon_wrapper {
@@ -23,25 +23,25 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background-color: #f3f4f6;
+    background-color: var(--c-surface-3);
 }
 
 .icon {
     width: 24px;
     height: 24px;
-    color: #6b7280;
+    color: var(--c-muted);
 }
 
 .title {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .subtitle {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0;
 }
 
@@ -49,7 +49,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     padding: 12px 24px;
     border-radius: 8px;
@@ -74,5 +74,5 @@
 
 .formats {
     font-size: 13px;
-    color: #9ca3af;
+    color: var(--c-subtle);
 }

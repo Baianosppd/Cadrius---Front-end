@@ -1,6 +1,6 @@
 .container {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -34,13 +34,13 @@
 .title {
     font-size: 16px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .text {
     font-size: 14px;
-    color: #374151;
+    color: var(--c-text-2);
     line-height: 1.6;
     margin: 0;
 }
