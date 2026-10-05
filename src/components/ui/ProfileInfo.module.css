@@ -154,3 +154,4 @@
     border-radius: 50%;
     object-fit: cover;
 }
+@media (max-width: 640px) { .fields_grid { grid-template-columns: minmax(0, 1fr); } }

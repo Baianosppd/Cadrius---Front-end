@@ -63,10 +63,10 @@ function Automacao() {
         <div className={styles.automacao_container}>
             <PageHeader title="Automação de fluxo de trabalho" subtitle="Crie, ative e acompanhe as automações do escritório" />
             <SummaryGroup stats={stats} />
-            <div className={tabs.btn_row} role="tablist" style={{ margin: '12px 0' }}>
+            <div className={tabs.tabs} role="tablist" style={{ margin: '12px 0 16px' }}>
                 {TABS.map(([k, label]) => (
                     <button key={k} type="button" role="tab" aria-selected={tab === k}
-                        className={`${tabs.btn} ${tab === k ? tabs.btn_primary : ''}`} onClick={() => setParams({ aba: k })}>{label}</button>
+                        className={`${tabs.tab} ${tab === k ? tabs.tab_active : ''}`} onClick={() => setParams({ aba: k })}>{label}</button>
                 ))}
             </div>
             {tab === 'regras' && <RegrasTab canManage={isOrgManager} />}

@@ -5,6 +5,8 @@ import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/seguranca/seguranca.module.css';
 import { Banner, Empty, Pill, errorMessage } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
+import PerfilEscritorio from '../../components/ia/PerfilEscritorio';
+import Aprendizado from '../../components/ia/Aprendizado';
 import { MEMORY_KIND, MODE_LABEL, RISK_LABEL, brainApi, pct, promotionProgress } from '../../services/brain';
 
 const card = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: 16, marginBottom: 12 };
@@ -215,7 +217,8 @@ function Memoria() {
     );
 }
 
-const TABS = [{ id: 'aprovacoes', label: 'Aprovações' }, { id: 'autonomia', label: 'Autonomia da IA' }, { id: 'regras', label: 'Regras do escritório' }, { id: 'memoria', label: 'Memória' }];
+const TABS = [{ id: 'aprovacoes', label: 'Aprovações' }, { id: 'aprendizado', label: 'Aprendizado' }, { id: 'perfil', label: 'Perfil do escritório' },
+    { id: 'autonomia', label: 'Autonomia da IA' }, { id: 'regras', label: 'Regras do escritório' }, { id: 'memoria', label: 'Memória' }];
 
 export default function CentralAprovacoes() {
     const [tab, setTab] = useState('aprovacoes');
@@ -227,6 +230,8 @@ export default function CentralAprovacoes() {
             </div>
             <TabBar tabs={TABS} activeTab={tab} onTabChange={setTab} />
             {tab === 'aprovacoes' && <Aprovacoes />}
+            {tab === 'aprendizado' && <Aprendizado />}
+            {tab === 'perfil' && <PerfilEscritorio />}
             {tab === 'autonomia' && <Autonomia />}
             {tab === 'regras' && <Regras />}
             {tab === 'memoria' && <Memoria />}

@@ -279,3 +279,11 @@
     /* mt-1 */
     padding: 0;
 }
+.table_area, .process_table_container { min-width: 0; }
+.process_table_container { overflow-x: auto; }
+@media (max-width: 640px) {
+    .process_table_container { padding: 14px; }
+    .controls_header { flex-wrap: wrap; gap: 10px; }
+    .search_container { width: 100%; }
+    .table_base { min-width: 560px; }
+}

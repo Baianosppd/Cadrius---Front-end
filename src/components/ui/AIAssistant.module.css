@@ -123,3 +123,6 @@
     height: 18px;
     color: #ffffff;
 }
+.container { min-width: 0; }
+.input { min-width: 0; }
+.send_button { flex-shrink: 0; }

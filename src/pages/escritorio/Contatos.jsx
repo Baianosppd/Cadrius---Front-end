@@ -5,9 +5,10 @@ import styles from '../../components/seguranca/seguranca.module.css';
 import { Banner, Empty, PageHeader, Pill, errorMessage } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
+import CobrancaModal from '../../components/integracoes/CobrancaModal';
 import { EMPTY_CONTACT, KINDS, channelStatus, contactBody, contactsApi, formatPhone } from '../../services/contacts';
 
-function ContatoForm({ initial, onDone, onCancel, canDelete }) {
+function ContatoForm({ initial, onDone, onCancel, canDelete, onCharge }) {
     const [form, setForm] = useState({ ...EMPTY_CONTACT, ...initial, tags: (initial?.tags || []).join(', ') });
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
@@ -62,6 +63,7 @@ function ContatoForm({ initial, onDone, onCancel, canDelete }) {
                 <div className={styles.btn_row}>
                     <button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy}>Salvar</button>
                     <button type="button" className={styles.btn} onClick={onCancel} disabled={busy}>Cancelar</button>
+                    {initial?.id && onCharge && <button type="button" className={styles.btn} onClick={() => onCharge(initial)}>Cobrar honorários</button>}
                     {initial?.id && canDelete && <button type="button" className={`${styles.btn} ${styles.btn_danger}`} onClick={remove}>Excluir</button>}
                 </div>
             </form>
@@ -75,6 +77,7 @@ export default function Contatos() {
     const [term, setTerm] = useState('');
     const [query, setQuery] = useState({ q: '', kind: '', tag: '' });
     const [editing, setEditing] = useState(null);
+    const [charging, setCharging] = useState(null);
     const { data, error, reload } = useLoader(() => contactsApi.list(query), [query.q, query.kind, query.tag]);
     return (
         <div className={styles.page}>
@@ -125,7 +128,8 @@ export default function Contatos() {
                 </div>
             )}
             {data && data.total > data.resultados.length && <div className={styles.muted}>Mostrando {data.resultados.length} de {data.total}. Refine a busca.</div>}
-            {editing && <ContatoForm initial={editing.id ? editing : null} canDelete={isOrgManager}
+            {charging && <CobrancaModal contact={charging} onClose={() => setCharging(null)} />}
+            {editing && <ContatoForm initial={editing.id ? editing : null} canDelete={isOrgManager} onCharge={(c) => { setEditing(null); setCharging(c); }}
                 onCancel={() => setEditing(null)} onDone={() => { setEditing(null); reload(); }} />}
         </div>
     );

@@ -141,10 +141,10 @@ export default function Publicacoes() {
         <div className={styles.page}>
             <PageHeader title="Publicações" subtitle="Intimações do Diário de Justiça Eletrônico Nacional (DJEN) pela OAB, com triagem sugerida" />
             <Oabs canManage={isOrgManager} onChecked={reload} />
-            <div className={styles.btn_row} role="tablist" style={{ margin: '12px 0' }}>
+            <div className={styles.tabs} role="tablist">
                 {PUB_STATUS.map(([k, label]) => (
-                    <button key={k} type="button" role="tab" aria-selected={status === k} className={`${styles.btn} ${status === k ? styles.btn_primary : ''}`}
-                        onClick={() => { setStatus(k); setPage(1); }}>{label}{data?.contagem ? ` (${data.contagem[k]})` : ''}</button>
+                    <button key={k} type="button" role="tab" aria-selected={status === k} className={`${styles.tab} ${status === k ? styles.tab_active : ''}`}
+                        onClick={() => { setStatus(k); setPage(1); }}>{label}{data?.contagem && <span className={styles.count}>{data.contagem[k]}</span>}</button>
                 ))}
             </div>
             {error && <Banner tone="error">{error}</Banner>}

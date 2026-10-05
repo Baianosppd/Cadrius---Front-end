@@ -239,3 +239,5 @@
     width: 15px;
     height: 15px;
 }
+.container { min-width: 0; overflow-x: auto; }
+@media (max-width: 640px) { .container { padding: 14px; } .toolbar { flex-wrap: wrap; } .table { min-width: 560px; } }

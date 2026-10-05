@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import AssinaturaModal from '../../components/integracoes/AssinaturaModal';
 import { toast } from 'react-toastify';
 import { FiDownload, FiRefreshCw } from 'react-icons/fi';
 import styles from './DocumentDetail.module.css';
@@ -38,6 +39,7 @@ function ListEditor({ title, items, onChange, render, blank, addLabel, readOnly 
 export default function DocumentDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [signing, setSigning] = useState(false);
     const { isOrgManager, role } = useAuth();
     const canReview = role !== 'VIEWER';
     const [doc, setDoc] = useState(null);
@@ -120,6 +122,7 @@ export default function DocumentDetail() {
                     )}
                     <button className={styles.secondary_button} onClick={download}><FiDownload className={styles.button_icon} /> Baixar</button>
                     <button className={styles.secondary_button} onClick={() => navigate(`/minutas?fonte=documento&id=${id}`)}>Gerar minuta</button>
+                    {doc?.nome?.toLowerCase().endsWith('.pdf') && <button className={styles.secondary_button} onClick={() => setSigning(true)}>Enviar para assinatura</button>}
                 </div>
             </div>
 
@@ -177,6 +180,7 @@ export default function DocumentDetail() {
                 </div>
             )}
             {!isOrgManager && ex?.status === 'review' && !canReview && <p style={{ color: '#6b7280' }}>Seu papel permite apenas visualizar.</p>}
+            {signing && <AssinaturaModal documentId={id} documentName={doc?.nome} onClose={() => setSigning(false)} />}
         </div>
     );
 }
