@@ -60,7 +60,7 @@ export function actionsFor(catalog, triggerId) {
     return (catalog?.acoes || []).filter((a) => !['send_whatsapp', 'send_email'].includes(a.id) || trigger?.destinatarios?.length);
 }
 
-export const triggerHasDeadline = (triggerId) => ['document_confirmed', 'deadline_soon'].includes(triggerId);
+export const triggerHasDeadline = (triggerId) => ['document_confirmed', 'deadline_soon', 'publication_new'].includes(triggerId);
 
 // Corpo da API a partir do formulário do editor
 export function ruleBody(form) {

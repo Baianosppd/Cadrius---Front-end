@@ -119,6 +119,7 @@ export default function DocumentDetail() {
                         <button className={styles.secondary_button} onClick={reprocess} disabled={busy}><FiRefreshCw className={styles.button_icon} /> Ler novamente</button>
                     )}
                     <button className={styles.secondary_button} onClick={download}><FiDownload className={styles.button_icon} /> Baixar</button>
+                    <button className={styles.secondary_button} onClick={() => navigate(`/minutas?fonte=documento&id=${id}`)}>Gerar minuta</button>
                 </div>
             </div>
 
