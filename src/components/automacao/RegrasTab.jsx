@@ -5,6 +5,7 @@ import { Banner, Empty, Pill, errorMessage, fmtDateTime } from '../seguranca/ui'
 import useLoader from '../../pages/gestao/useLoader';
 import { STEP_STATUS, describeRule, hasExternal, rulesApi } from '../../services/rules';
 import RuleEditor from './RuleEditor';
+import SugestoesIA from '../ia/SugestoesIA';
 
 function Simulacao({ result, onClose, onEnable }) {
     return (
@@ -80,7 +81,8 @@ export default function RegrasTab({ canManage }) {
     };
 
     return (
-        <div>
+        <div className={styles.stack}>
+            <SugestoesIA canManage={canManage} onAccepted={() => reload()} />
             <Banner tone="info">
                 Regras do escritório reagem a eventos do Cadrius (documento confirmado, andamento novo, prazo chegando, contato novo, agenda).
                 Toda regra nasce desligada, só liga depois de simulada, e mensagens para clientes esperam aprovação.

@@ -131,3 +131,4 @@
 .secondary_button:hover {
     background-color: #f9fafb;
 }
+@media (max-width: 640px) { .fields_grid { grid-template-columns: minmax(0, 1fr); } }

@@ -1,6 +1,7 @@
 .barra_superior {
     width: 100%;
-    height: 70px;
+    height: var(--topbar-h, 64px);
+    flex-shrink: 0;
     background-color: #ffffff;
     display: flex;
     align-items: center;
@@ -89,4 +90,16 @@
 .chevron {
     color: #94a3b8;
     font-size: 14px;
+}
+.left { display: flex; align-items: center; gap: 10px; }
+.menu_button { display: none; border: none; background: #f3f4f6; border-radius: 10px; width: 40px; height: 40px; align-items: center; justify-content: center; cursor: pointer; color: #374151; }
+.brand_mobile { display: none; font-weight: 800; color: #2563eb; font-size: 1.2rem; letter-spacing: -0.5px; }
+@media (max-width: 960px) {
+  .barra_superior { padding: 0 14px; }
+  .menu_button { display: inline-flex; }
+  .brand_mobile { display: inline; }
+  .actions_container { gap: 12px; }
+}
+@media (max-width: 480px) {
+  .user_info_trigger { display: none; }
 }

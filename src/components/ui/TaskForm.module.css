@@ -183,3 +183,4 @@
 .submit_button:hover {
     opacity: 0.85;
 }
+@media (max-width: 640px) { .fields_row { grid-template-columns: minmax(0, 1fr); } }

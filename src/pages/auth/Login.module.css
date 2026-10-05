@@ -183,3 +183,12 @@
 .register_link a:hover {
     text-decoration: underline;
 }
+/* Celular e tablet (CAD-174): coluna única, sem o painel escuro ocupando a tela */
+@media (max-width: 860px) {
+    .main_wrapper { flex-direction: column; }
+    .side_dark { flex: none; padding: 28px 20px; }
+    .dark_title { font-size: 1.8rem; margin-bottom: 4px; }
+    .dark_subtitle { font-size: .9rem; }
+    .side_form { padding: 24px 20px 40px; align-items: flex-start; }
+    .form_title { font-size: 1.6rem; }
+}

@@ -19,3 +19,10 @@
     gap: 24px;
     align-items: start;
 }
+
+.actions_row > *, .bottom_row > * { min-width: 0; }
+@media (max-width: 1100px) { .bottom_row { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+    .dashboard_container { padding: 16px; gap: 16px; min-height: 0; }
+    .actions_row { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+}

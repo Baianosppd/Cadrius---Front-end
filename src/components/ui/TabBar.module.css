@@ -47,3 +47,11 @@
     background-color: #e5e7eb;
     color: #111111;
 }
+/* CAD-174: muitas abas cabem no celular rolando de lado (sem quebrar o layout) */
+.container { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.container::-webkit-scrollbar { display: none; }
+.tab { white-space: nowrap; flex-shrink: 0; }
+@media (max-width: 640px) {
+    .container { padding: 0 12px; border-radius: 10px 10px 0 0; }
+    .tab { margin-right: 18px; padding: 12px 2px; font-size: 14px; }
+}

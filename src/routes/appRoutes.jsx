@@ -65,6 +65,9 @@ const Acompanhamento = lazy(() => import('../pages/escritorio/Acompanhamento'));
 // Fase D (CAD-173): publicações do DJEN e minutas
 const Publicacoes = lazy(() => import('../pages/escritorio/Publicacoes'));
 const Minutas = lazy(() => import('../pages/escritorio/Minutas'));
+// CAD-174: marketing (escritório e Cadrius)
+const Marketing = lazy(() => import('../pages/escritorio/Marketing'));
+const GestaoMarketing = lazy(() => import('../pages/gestao/Marketing'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -131,6 +134,7 @@ export default function AppRoutes() {
           <Route path="/acompanhamento" element={<Acompanhamento />} />
           <Route path="/publicacoes" element={<Publicacoes />} />
           <Route path="/minutas" element={<Minutas />} />
+          <Route path="/marketing" element={<Marketing />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           {/* Telas da equipe migraram para a Gestão Cadrius (CAD-168); links antigos continuam funcionando */}
           <Route path="/seguranca" element={<Navigate to="/gestao/seguranca" replace />} />
@@ -146,6 +150,7 @@ export default function AppRoutes() {
           <Route path="/gestao/escritorios" element={<GestaoEscritorios />} />
           <Route path="/gestao/usuarios" element={<GestaoUsuarios />} />
           <Route path="/gestao/sistema" element={<GestaoSistema />} />
+          <Route path="/gestao/marketing" element={<GestaoMarketing />} />
           <Route path="/gestao/equipe" element={<GestaoEquipeCadrius />} />
           <Route path="/gestao/fiscal" element={<GestaoFiscal />} />
           <Route path="/gestao/suporte" element={<GestaoSuporte />} />

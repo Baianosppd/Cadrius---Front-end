@@ -36,3 +36,9 @@
 .BoxIA_container > :nth-child(6) {
     grid-column: 2 / 3;
 }
+
+@media (max-width: 900px) {
+    .BoxIA_container { grid-template-columns: minmax(0, 1fr); padding: 16px; gap: 16px; }
+    .BoxIA_container > :nth-child(2), .BoxIA_container > :nth-child(3) { grid-column: 1 / -1; }
+    .BoxIA_container > :nth-child(4) { margin-top: 12px; padding-top: 16px; }
+}

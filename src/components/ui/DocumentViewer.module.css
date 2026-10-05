@@ -83,3 +83,4 @@
     text-align: center;
     padding: 40px;
 }
+@media (max-width: 640px) { .loading, .error { padding: 20px; } }
