@@ -1,0 +1,2 @@
+/* CAD-219: coluna única com espaço uniforme entre os blocos */
+.perfil_container { display: flex; flex-direction: column; gap: var(--sp-6); }

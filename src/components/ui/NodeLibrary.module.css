@@ -1,8 +1,8 @@
 .container {
     width: 240px;
     height: 100%;
-    background-color: #ffffff;
-    border-right: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border-right: 1px solid var(--c-border);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -11,19 +11,19 @@
 
 .header {
     padding: 16px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--c-border);
 }
 
 .header_title {
     font-size: 14px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0 0 4px 0;
 }
 
 .header_subtitle {
     font-size: 12px;
-    color: #9ca3af;
+    color: var(--c-subtle);
     margin: 0;
     line-height: 1.4;
 }
@@ -60,14 +60,14 @@
     gap: 10px;
     padding: 8px 10px;
     border-radius: 8px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     cursor: grab;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     transition: background-color 0.15s;
 }
 
 .node_item:hover {
-    background-color: #f9fafb;
+    background-color: var(--c-surface-2);
 }
 
 .node_item:active {
@@ -93,11 +93,11 @@
 .node_label {
     font-size: 13px;
     font-weight: 600;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .node_description {
     font-size: 11px;
-    color: #9ca3af;
+    color: var(--c-subtle);
 }

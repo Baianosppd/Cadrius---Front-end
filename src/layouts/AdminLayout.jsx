@@ -8,6 +8,7 @@ import ConsentModal from '../components/seguranca/ConsentModal';
 import MfaSetup from '../components/seguranca/MfaSetup';
 import styles from './AdminLayout.module.css';
 import { visibleMenu } from './adminMenu';
+import ThemeToggle from '../components/common/ThemeToggle';
 
 export default function AdminLayout() {
     const { user, logout } = useAuth();
@@ -56,9 +57,9 @@ export default function AdminLayout() {
                     <button type="button" className={styles.menu_btn} onClick={() => setMenuOpen(true)} aria-label="Abrir menu"
                         aria-expanded={menuOpen} aria-controls="menu-gestao"><FiMenu /></button>
                     <span className={styles.topbar_note}><FiActivity /> Ambiente administrativo: toda ação fica registrada na trilha de auditoria.</span>
-                    <span className={styles.topbar_email}>{user?.email}</span>
+                    <span className={styles.topbar_right}><ThemeToggle /><span className={styles.topbar_email}>{user?.email}</span></span>
                 </div>
-                <main className={styles.body}>
+                <main className={styles.body} id="conteudo">
                     {me.error && <div className={styles.denied}><h2>Sem acesso</h2><p>{me.error}</p></div>}
                     {me.mfa && (enrolling || !user?.mfa_enabled) && (
                         <MfaSetup onStart={() => setEnrolling(true)} onDone={() => { setMe({ data: null, error: null, mfa: false }); setEnrolling(false); setTick((t) => t + 1); }}
@@ -67,12 +68,12 @@ export default function AdminLayout() {
                     {me.mfa && !enrolling && user?.mfa_enabled && (
                         <div className={styles.denied}><h2>Confirme a verificação em duas etapas</h2>
                             <p>Esta sessão começou antes do código. Saia e entre de novo com a senha e o código do aplicativo.</p>
-                            <button type="button" className={styles.footer_btn} style={{ margin: '0 auto', color: '#2563eb' }}
+                            <button type="button" className={styles.footer_btn} style={{ margin: '0 auto', color: 'var(--c-primary)' }}
                                 onClick={async () => { await logout(); navigate('/', { replace: true }); }}>Sair e entrar de novo</button>
                         </div>
                     )}
                     {!me.error && !me.data && !me.mfa && <div className={styles.denied}>Carregando…</div>}
-                    {me.data && <Outlet context={{ areas }} />}
+                    {me.data && <div className={styles.page_inner}><Outlet context={{ areas }} /></div>}
                 </main>
             </div>
         </div>

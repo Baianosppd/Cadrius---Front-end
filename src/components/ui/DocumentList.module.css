@@ -1,14 +1,15 @@
 .container {
-    background-color: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--c-border);
+    box-shadow: var(--shadow-sm);
     padding: 24px;
 }
 
 .title {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0 0 20px 0;
 }
 
@@ -24,7 +25,7 @@
     align-items: center;
     gap: 10px;
     flex: 1;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     padding: 10px 14px;
 }
@@ -32,7 +33,7 @@
 .search_icon {
     width: 16px;
     height: 16px;
-    color: #9ca3af;
+    color: var(--c-subtle);
     flex-shrink: 0;
 }
 
@@ -41,12 +42,12 @@
     outline: none;
     width: 100%;
     font-size: 14px;
-    color: #111111;
+    color: var(--c-ink);
     background: transparent;
 }
 
 .search_input::placeholder {
-    color: #9ca3af;
+    color: var(--c-subtle);
 }
 
 .filter_button {
@@ -54,17 +55,17 @@
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     font-size: 14px;
     font-weight: 500;
-    color: #374151;
+    color: var(--c-text-2);
     cursor: pointer;
 }
 
 .filter_button:hover {
-    background-color: #f9fafb;
+    background-color: var(--c-surface-2);
 }
 
 .filter_icon {
@@ -78,7 +79,7 @@
 }
 
 .header_row {
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--c-border);
 }
 
 .header_cell {
@@ -86,11 +87,11 @@
     padding: 12px 16px;
     font-size: 13px;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--c-muted);
 }
 
 .row {
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--c-surface-3);
 }
 
 .row:last-child {
@@ -104,25 +105,25 @@
     padding: 16px;
     font-size: 14px;
     font-weight: 600;
-    color: #111111;
+    color: var(--c-ink);
 }
 
 .cell {
     padding: 16px;
     font-size: 14px;
-    color: #374151;
+    color: var(--c-text-2);
 }
 
 .file_icon {
     width: 18px;
     height: 18px;
-    color: #3b82f6;
+    color: var(--c-primary);
     flex-shrink: 0;
 }
 
 .type_badge {
-    background-color: #f3f4f6;
-    color: #374151;
+    background-color: var(--c-surface-3);
+    color: var(--c-text-2);
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 13px;
@@ -139,25 +140,25 @@
 }
 
 .status_concluido {
-    background-color: #dcfce7;
-    color: #16a34a;
+    background-color: var(--c-success-bg);
+    color: var(--c-success);
 }
 
 .status_processando {
-    background-color: #dbeafe;
-    color: #2563eb;
+    background-color: var(--c-primary-100);
+    color: var(--c-primary);
 }
 
 .status_erro {
-    background-color: #fee2e2;
-    color: #dc2626;
+    background-color: var(--c-danger-bg);
+    color: var(--c-danger);
 }
 
 .sign_button {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -190,7 +191,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #6b7280;
+    color: var(--c-muted);
     padding: 4px;
     border-radius: 4px;
     display: flex;
@@ -198,16 +199,16 @@
 }
 
 .menu_button:hover {
-    background-color: #f3f4f6;
-    color: #111111;
+    background-color: var(--c-surface-3);
+    color: var(--c-ink);
 }
 
 .dropdown {
     position: absolute;
     right: 0;
     top: 100%;
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     padding: 4px;
     z-index: 10;
@@ -226,13 +227,13 @@
     border-radius: 6px;
     font-size: 14px;
     font-weight: 600;
-    color: #dc2626;
+    color: var(--c-danger);
     cursor: pointer;
     text-align: left;
 }
 
 .dropdown_item_danger:hover {
-    background-color: #fef2f2;
+    background-color: var(--c-danger-bg);
 }
 
 .dropdown_icon {

@@ -48,7 +48,7 @@ const EditorHeader = ({
 
             <div className={styles.center}>
                 <div className={styles.counter}>
-                    <span className={styles.counter_dot} style={{ backgroundColor: '#16a34a' }} />
+                    <span className={styles.counter_dot} style={{ backgroundColor: 'var(--c-success)' }} />
                     <span>Gatilhos: {nodeCount.triggers}</span>
                 </div>
                 <div className={styles.counter}>

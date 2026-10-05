@@ -2,9 +2,9 @@ import styles from './DocumentClauses.module.css';
 import { FiAlertTriangle } from 'react-icons/fi';
 
 const priorityConfig = {
-    Alta: { bg: '#fee2e2', color: '#dc2626' },
-    Média: { bg: '#fef9c3', color: '#ca8a04' },
-    Baixa: { bg: '#dcfce7', color: '#16a34a' },
+    Alta: { bg: 'var(--c-danger-bg)', color: 'var(--c-danger)' },
+    Média: { bg: 'var(--c-warning-bg)', color: '#ca8a04' },
+    Baixa: { bg: 'var(--c-success-bg)', color: 'var(--c-success)' },
 };
 
 const ClauseItem = ({ title, description, priority }) => {

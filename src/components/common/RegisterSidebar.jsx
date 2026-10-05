@@ -1,5 +1,6 @@
 import styles from './RegisterSidebar.module.css';
 import { FiCheck } from 'react-icons/fi';
+import { ScalesMark } from '../illustrations/LegalArt';
 
 const RegisterSidebar = ({ title, subtitle, icon: Icon, steps, currentStep, tip }) => {
     const progress = Math.round((currentStep / steps.length) * 100);
@@ -53,9 +54,12 @@ const RegisterSidebar = ({ title, subtitle, icon: Icon, steps, currentStep, tip 
                 </div>
             </div>
 
+            <div className={styles.art_box}>
+                <ScalesMark className={styles.art} />
+                <p className={styles.art_quote}>“A tecnologia a serviço da advocacia — e o advogado sempre no controle.”</p>
+            </div>
             {tip && (
                 <div className={styles.tip}>
-                    <span className={styles.tip_icon}>💡</span>
                     <div>
                         <p className={styles.tip_title}>Dica</p>
                         <p className={styles.tip_text}>{tip}</p>

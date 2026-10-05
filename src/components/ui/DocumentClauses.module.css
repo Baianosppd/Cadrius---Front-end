@@ -1,6 +1,6 @@
 .container {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -18,7 +18,7 @@
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    background-color: #fef2f2;
+    background-color: var(--c-danger-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -28,13 +28,13 @@
 .icon {
     width: 16px;
     height: 16px;
-    color: #ef4444;
+    color: var(--c-danger);
 }
 
 .title {
     font-size: 16px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
@@ -52,7 +52,7 @@
 .clause_bar {
     width: 4px;
     border-radius: 4px;
-    background-color: #ef4444;
+    background-color: var(--c-danger-600);
     flex-shrink: 0;
 }
 
@@ -73,7 +73,7 @@
 .clause_title {
     font-size: 14px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
 }
 
 .priority_badge {
@@ -86,7 +86,7 @@
 
 .clause_description {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0;
     line-height: 1.5;
 }

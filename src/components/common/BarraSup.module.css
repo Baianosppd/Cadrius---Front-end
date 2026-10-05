@@ -2,13 +2,13 @@
     width: 100%;
     height: var(--topbar-h, 64px);
     flex-shrink: 0;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     display: flex;
     align-items: center;
     justify-content: space-between;
     /* Empurra o logo para esquerda e perfil para direita */
-    padding: 0 30px;
-    border-bottom: 1px solid #eef0f2;
+    padding: 0 var(--page-pad);
+    border-bottom: 1px solid var(--c-border);
 }
 
 .brand_area {
@@ -18,8 +18,8 @@
 
 .logo_custom {
     font-size: 1.6rem !important;
-    font-weight: 800;
-    color: #1a1a1a;
+    font-weight: 700;
+    color: var(--c-ink);
     margin: 0;
 }
 
@@ -35,7 +35,7 @@
     border: none;
     position: relative;
     cursor: pointer;
-    color: #64748b;
+    color: var(--c-muted);
     display: flex;
     align-items: center;
 }
@@ -44,7 +44,7 @@
     position: absolute;
     top: -5px;
     right: -5px;
-    background-color: #3b82f6;
+    background-color: var(--c-primary);
     /* Azul Cadrius */
     color: white;
     font-size: 10px;
@@ -65,7 +65,7 @@
 }
 
 .user_profile:hover {
-    background-color: #f1f5f9;
+    background-color: var(--c-surface-3);
 }
 
 .avatar_img {
@@ -83,19 +83,19 @@
 
 .user_name {
     font-weight: 600;
-    color: #334155;
+    color: var(--c-text-2);
     font-size: 14px;
 }
 
 .chevron {
-    color: #94a3b8;
+    color: var(--c-subtle);
     font-size: 14px;
 }
 .left { display: flex; align-items: center; gap: 10px; }
-.menu_button { display: none; border: none; background: #f3f4f6; border-radius: 10px; width: 40px; height: 40px; align-items: center; justify-content: center; cursor: pointer; color: #374151; }
-.brand_mobile { display: none; font-weight: 800; color: #2563eb; font-size: 1.2rem; letter-spacing: -0.5px; }
+.menu_button { display: none; border: none; background: var(--c-surface-3); border-radius: 10px; width: 40px; height: 40px; align-items: center; justify-content: center; cursor: pointer; color: var(--c-text-2); }
+.brand_mobile { display: none; font-family: var(--font-brand); font-weight: 700; color: var(--c-primary); font-size: 1.2rem; letter-spacing: -0.5px; }
 @media (max-width: 960px) {
-  .barra_superior { padding: 0 14px; }
+  .barra_superior { padding: 0 var(--page-pad); }
   .menu_button { display: inline-flex; }
   .brand_mobile { display: inline; }
   .actions_container { gap: 12px; }

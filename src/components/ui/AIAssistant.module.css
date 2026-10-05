@@ -1,5 +1,5 @@
 .container {
-    background: linear-gradient(135deg, #f5f3ff, #faf5ff);
+    background: linear-gradient(135deg, var(--c-primary-50), #faf5ff);
     border: 1px solid #e9d5ff;
     border-radius: 12px;
     padding: 20px;
@@ -24,13 +24,13 @@
 .title {
     font-size: 16px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0 0 2px 0;
 }
 
 .subtitle {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0;
 }
 
@@ -53,8 +53,8 @@
 }
 
 .message_assistant {
-    background-color: #ffffff;
-    color: #374151;
+    background-color: var(--c-surface);
+    color: var(--c-text-2);
     align-self: flex-start;
     border: 1px solid #e9d5ff;
 }
@@ -66,8 +66,8 @@
 }
 
 .loading_dots {
-    color: #9ca3af;
-    font-size: 18px;
+    color: var(--c-subtle);
+    font-size: 1rem;
     letter-spacing: 2px;
 }
 
@@ -80,12 +80,12 @@
 .input {
     flex: 1;
     padding: 12px 14px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     font-size: 14px;
-    color: #111111;
+    color: var(--c-ink);
     outline: none;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
 }
 
 .input:focus {

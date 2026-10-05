@@ -44,7 +44,7 @@ export default function Acompanhamento() {
             )}
             {clients.length === 0 && data && <Banner tone="info">Cadastre os clientes em <Link to="/contatos">Contatos</Link> para vinculá-los aos processos.</Banner>}
             {!data && <Empty>Carregando…</Empty>}
-            {data && cases.length === 0 && <Empty>Nenhum processo acompanhado.</Empty>}
+            {data && cases.length === 0 && <Empty title="Nenhum processo acompanhado">Informe o número CNJ acima: o Cadrius consulta o DataJud a cada hora e avisa os andamentos novos.</Empty>}
             {cases.length > 0 && (
                 <div className={styles.table_wrap}>
                     <table className={styles.table}>

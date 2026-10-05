@@ -30,8 +30,8 @@ export default function Markdown({ text = '' }) {
             const [head, ...body] = rows;
             out.push(
                 <table key={`t${i}`} style={{ borderCollapse: 'collapse', margin: '6px 0', width: '100%', fontSize: '.82rem' }}>
-                    <thead><tr>{head.map((c, k) => <th key={k} style={{ textAlign: 'left', borderBottom: '1px solid #d1d5db', padding: '4px 6px' }}>{inline(c)}</th>)}</tr></thead>
-                    <tbody>{body.map((r, k) => <tr key={k}>{r.map((c, j) => <td key={j} style={{ borderBottom: '1px solid #f3f4f6', padding: '4px 6px', verticalAlign: 'top' }}>{inline(c)}</td>)}</tr>)}</tbody>
+                    <thead><tr>{head.map((c, k) => <th key={k} style={{ textAlign: 'left', borderBottom: '1px solid var(--c-border-2)', padding: '4px 6px' }}>{inline(c)}</th>)}</tr></thead>
+                    <tbody>{body.map((r, k) => <tr key={k}>{r.map((c, j) => <td key={j} style={{ borderBottom: '1px solid var(--c-surface-3)', padding: '4px 6px', verticalAlign: 'top' }}>{inline(c)}</td>)}</tr>)}</tbody>
                 </table>,
             );
             continue;

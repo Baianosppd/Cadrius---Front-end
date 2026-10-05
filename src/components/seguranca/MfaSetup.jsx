@@ -66,7 +66,7 @@ export default function MfaSetup({ onDone, onStart, intro }) {
                 <form onSubmit={confirm} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <p>1. No aplicativo autenticador, toque em <strong>adicionar conta</strong> e leia o QR code:</p>
                     <img src={svgDataUri(setup.qr_svg)} alt="QR code para o aplicativo autenticador" width={200} height={200}
-                        style={{ border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff' }} />
+                        style={{ border: '1px solid var(--c-border)', borderRadius: 8, background: 'var(--c-surface)' }} />
                     <p className={styles.muted}>Sem câmera? Digite a chave: <span className={styles.mono}>{setup.secret.match(/.{1,4}/g).join(' ')}</span></p>
                     <label className={styles.field}>2. Digite o código de 6 dígitos que aparece no aplicativo
                         <input className={styles.input} value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric"

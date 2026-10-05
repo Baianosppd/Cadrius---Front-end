@@ -1,5 +1,5 @@
 .ContainerCard_container {
-    background-color: #ffffff; 
+    background-color: var(--c-surface); 
     border-radius: 12px;
     padding: 50px 40px; 
     width: 100%;

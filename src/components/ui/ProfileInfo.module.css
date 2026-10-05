@@ -1,6 +1,6 @@
 .container {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 12px;
     padding: 24px;
     display: flex;
@@ -9,9 +9,9 @@
 }
 
 .title {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
@@ -32,7 +32,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #111111;
+    background-color: var(--c-primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,7 +51,7 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background-color: #3b82f6;
+    background-color: var(--c-primary);
     border: 2px solid #ffffff;
     display: flex;
     align-items: center;
@@ -74,13 +74,13 @@
 .avatar_name {
     font-size: 16px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .avatar_email {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0;
 }
 
@@ -89,7 +89,7 @@
     border: none;
     font-size: 13px;
     font-weight: 600;
-    color: #3b82f6;
+    color: var(--c-primary);
     cursor: pointer;
     padding: 0;
     width: fit-content;
@@ -114,26 +114,26 @@
 .label {
     font-size: 13px;
     font-weight: 500;
-    color: #374151;
+    color: var(--c-text-2);
 }
 
 .input {
     padding: 12px 14px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     font-size: 14px;
-    color: #111111;
+    color: var(--c-ink);
     outline: none;
-    background-color: #f9fafb;
+    background-color: var(--c-surface-2);
 }
 
 .input:focus {
-    border-color: #3b82f6;
-    background-color: #ffffff;
+    border-color: var(--c-primary);
+    background-color: var(--c-surface);
 }
 
 .save_button {
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -155,3 +155,7 @@
     object-fit: cover;
 }
 @media (max-width: 640px) { .fields_grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* CAD-219: campos iguais aos do restante do sistema */
+.input { min-height: var(--control-h); padding: 8px 12px; background-color: var(--c-surface); border: 1px solid var(--c-border-2); font-size: var(--fs-base); }
+.input:focus { box-shadow: 0 0 0 3px var(--c-ring); }

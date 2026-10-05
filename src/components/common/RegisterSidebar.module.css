@@ -1,8 +1,8 @@
 .sidebar {
     width: 260px;
     height: 100%;
-    background-color: #ffffff;
-    border-right: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border-right: 1px solid var(--c-border);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -27,7 +27,7 @@
     width: 40px;
     height: 40px;
     border-radius: 10px;
-    background-color: #eff6ff;
+    background-color: var(--c-primary-50);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,19 +37,19 @@
 .icon {
     width: 20px;
     height: 20px;
-    color: #3b82f6;
+    color: var(--c-primary);
 }
 
 .title {
     font-size: 14px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .subtitle {
     font-size: 12px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0;
 }
 
@@ -67,26 +67,26 @@
 
 .progress_label {
     font-size: 12px;
-    color: #6b7280;
+    color: var(--c-muted);
 }
 
 .progress_percent {
     font-size: 12px;
     font-weight: 700;
-    color: #3b82f6;
+    color: var(--c-primary);
 }
 
 .progress_bar {
     width: 100%;
     height: 6px;
-    background-color: #e5e7eb;
+    background-color: var(--c-border);
     border-radius: 4px;
     overflow: hidden;
 }
 
 .progress_fill {
     height: 100%;
-    background-color: #3b82f6;
+    background-color: var(--c-primary);
     border-radius: 4px;
     transition: width 0.3s;
 }
@@ -107,31 +107,31 @@
 }
 
 .step_active {
-    background-color: #eff6ff;
-    border: 1px solid #bfdbfe;
+    background-color: var(--c-primary-50);
+    border: 1px solid var(--c-info-bd);
 }
 
 .step_done {
-    background-color: #f0fdf4;
+    background-color: var(--c-success-bg);
 }
 
 .step_number {
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    border: 2px solid #e5e7eb;
+    border: 2px solid var(--c-border);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
     font-weight: 700;
-    color: #9ca3af;
+    color: var(--c-subtle);
     flex-shrink: 0;
 }
 
 .number_active {
-    border-color: #3b82f6;
-    background-color: #3b82f6;
+    border-color: var(--c-primary);
+    background-color: var(--c-primary);
     color: #ffffff;
 }
 
@@ -155,20 +155,20 @@
 .step_label {
     font-size: 13px;
     font-weight: 600;
-    color: #374151;
+    color: var(--c-text-2);
     margin: 0;
 }
 
 .step_sublabel {
     font-size: 11px;
-    color: #9ca3af;
+    color: var(--c-subtle);
 }
 
 .tip {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    background-color: #fffbeb;
+    background-color: var(--c-warning-bg);
     border: 1px solid #fef08a;
     border-radius: 10px;
     padding: 12px;
@@ -182,13 +182,20 @@
 .tip_title {
     font-size: 13px;
     font-weight: 700;
-    color: #92400e;
+    color: var(--c-warning);
     margin: 0 0 4px 0;
 }
 
 .tip_text {
     font-size: 12px;
-    color: #92400e;
+    color: var(--c-warning);
     margin: 0;
     line-height: 1.4;
 }
+/* CAD-219: ilustração jurídica e dica em tom neutro */
+.art_box { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); padding: var(--sp-4) var(--sp-2); text-align: center; }
+.art { width: 96px; height: auto; }
+.art_quote { font-size: var(--fs-sm); color: var(--c-muted); font-style: italic; line-height: 1.5; }
+.tip { background: var(--c-primary-50); border: 1px solid var(--c-info-bd); }
+.tip_title { color: var(--c-primary-700); }
+.tip_text { color: var(--c-text-2); }

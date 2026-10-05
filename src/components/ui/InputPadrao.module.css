@@ -7,7 +7,7 @@
 
 .input_label {
     font-size: 0.875rem; 
-    color: #6b7280; 
+    color: var(--c-muted); 
     font-weight: 500;
     margin-bottom: 6px; 
     text-align: left; 
@@ -24,8 +24,8 @@
     width: 100%;
     padding: 12px 14px; 
     font-size: 1rem;
-    color: #1f2937; 
-    border: 1px solid #d1d5db; 
+    color: var(--c-text); 
+    border: 1px solid var(--c-border-2); 
     border-radius: 8px; 
     transition: all 0.2s ease;
     outline: none; 
@@ -33,7 +33,7 @@
 }
 
 .input_field:focus {
-    border-color: #737373; 
+    border-color: var(--c-muted); 
     box-shadow: 0 0 0 3px rgba(115, 115, 115, 0.1); 
 }
 .input_icon {
@@ -41,7 +41,7 @@
     left: 14px; 
     top: 50%;
     transform: translateY(-50%); 
-    color: #9ca3af; 
+    color: var(--c-subtle); 
     font-size: 1.25rem; 
     pointer-events: none; 
 }
@@ -60,7 +60,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #9ca3af;
+    color: var(--c-subtle);
     cursor: pointer; 
     transition: color 0.2s;
     padding: 5px; 
@@ -69,7 +69,7 @@
 
 
 .password_toggle_icon_wrapper:hover {
-    color: #4b5563;
+    color: var(--c-text-2);
     background-color: rgba(0,0,0,0.03); 
 }
 
@@ -82,7 +82,7 @@
     align-items: center;
     gap: 8px;
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--c-muted);
     cursor: pointer;
     margin-bottom: 20px;
     margin-top: -5px; 
@@ -92,5 +92,5 @@
     width: 16px;
     height: 16px;
     cursor: pointer;
-    accent-color: #737373; 
+    accent-color: var(--c-muted); 
 }

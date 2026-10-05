@@ -1,15 +1,19 @@
 .input_default {
     width: 100%;
     padding: 14px 16px; 
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--c-border-2);
     border-radius: 8px;
     font-size: 1rem;
-    color: #374151;
+    color: var(--c-text-2);
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.2s ease;
 }
 
 .input_default:focus {
-    border-color: #6b7280;
+    border-color: var(--c-muted);
 }
+/* CAD-219 */
+.input_default { min-height: 46px; padding: 10px 14px; background: var(--c-surface); color: var(--c-text); font-size: var(--fs-md); }
+.input_default:hover { border-color: var(--c-subtle); }
+.input_default:focus { border-color: var(--c-primary); box-shadow: 0 0 0 3px var(--c-ring); }

@@ -1,0 +1,4 @@
+.toggle { display: inline-flex; align-items: center; gap: var(--sp-2); min-width: 36px; height: 36px; padding: 0 var(--sp-2); justify-content: center; border-radius: var(--radius); border: 1px solid transparent; background: transparent; color: var(--c-muted); cursor: pointer; font: inherit; font-size: var(--fs-sm); font-weight: 600; transition: background .15s, color .15s; }
+.toggle:hover { background: var(--c-surface-3); color: var(--c-ink); }
+.on_dark { color: #cbd5e1; }
+.on_dark:hover { background: rgba(255, 255, 255, .08); color: #fff; }

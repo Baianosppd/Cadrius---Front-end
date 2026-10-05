@@ -11,11 +11,11 @@
 }
 
 .active {
-    color: #059669;
-    background-color: #D1FAE5;
+    color: var(--c-success);
+    background-color: var(--c-success-bg);
 }
 
 .failed {
-    color: #EF4444;
-    background-color: #FEE2E2;
+    color: var(--c-danger);
+    background-color: var(--c-danger-bg);
 }

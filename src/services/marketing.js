@@ -55,3 +55,33 @@ export function groupByDay(items) {
     }
     return [...groups.entries()].sort(([a], [b]) => (a === 'Sem data') - (b === 'Sem data'));
 }
+
+// Cores de cada canal (identificação rápida na agenda e no calendário)
+export const CHANNEL_COLOR = {
+    instagram: '#e1306c', facebook: '#1877f2', linkedin: '#0a66c2', blog: '#64748b', google_business: '#34a853', newsletter: '#f59e0b', video_curto: '#7c3aed',
+};
+
+// Grade do mês (semanas de domingo a sábado) com os conteúdos de cada dia: [[{date, iso, inMonth, items}], …]
+export function monthGrid(year, month, items = []) {
+    const first = new Date(year, month, 1);
+    const start = new Date(year, month, 1 - first.getDay());
+    const byDay = new Map();
+    for (const it of items) {
+        if (!it.agendado_para) continue;
+        const d = new Date(it.agendado_para);
+        const k = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+        if (!byDay.has(k)) byDay.set(k, []);
+        byDay.get(k).push(it);
+    }
+    const weeks = [];
+    for (let w = 0; w < 6; w += 1) {
+        const week = [];
+        for (let i = 0; i < 7; i += 1) {
+            const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + w * 7 + i);
+            week.push({ date: d, day: d.getDate(), inMonth: d.getMonth() === month, items: byDay.get(`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`) || [] });
+        }
+        if (w >= 4 && week.every((c) => !c.inMonth)) break;
+        weeks.push(week);
+    }
+    return weeks;
+}

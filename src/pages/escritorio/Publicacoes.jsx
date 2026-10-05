@@ -30,9 +30,9 @@ function Oabs({ canManage, onChecked }) {
         <div className={styles.card}>
             <div className={styles.card_title}>OABs acompanhadas no DJEN</div>
             {error && <Banner tone="error">{error}</Banner>}
-            {data && data.length === 0 && <Empty>Nenhuma OAB cadastrada. {canManage ? 'Cadastre a OAB de cada advogado do escritório.' : 'Peça ao administrador para cadastrar.'}</Empty>}
+            {data && data.length === 0 && <Empty title="Comece pela OAB">Nenhuma OAB cadastrada ainda. {canManage ? 'Cadastre a OAB de cada advogado do escritório.' : 'Peça ao administrador para cadastrar.'}</Empty>}
             {data && data.map((w) => (
-                <div key={w.id} className={styles.header_row} style={{ padding: '6px 0' }}>
+                <div key={w.id} className={styles.list_row}>
                     <div>
                         <strong>OAB {w.numero}/{w.uf}</strong> {w.nome && <span className={styles.muted}>· {w.nome}</span>}{' '}
                         <Pill tone={w.ativa ? 'green' : 'gray'}>{w.ativa ? 'ativa' : 'pausada'}</Pill>
@@ -40,15 +40,15 @@ function Oabs({ canManage, onChecked }) {
                             {w.responsavel && ` · prazos para ${w.responsavel.nome}`}{w.erro && ` · ${w.erro}`}</div>
                     </div>
                     <div className={styles.btn_row}>
-                        <button type="button" className={styles.btn} disabled={busy === w.id} onClick={() => check(w)}>{busy === w.id ? 'Consultando…' : 'Consultar agora'}</button>
-                        {canManage && <button type="button" className={styles.btn} onClick={() => publicationsApi.updateOab(w.id, { ativa: !w.ativa }).then(reload)}>{w.ativa ? 'Pausar' : 'Retomar'}</button>}
-                        {canManage && <button type="button" className={`${styles.btn} ${styles.btn_danger}`}
+                        <button type="button" className={`${styles.btn} ${styles.btn_sm}`} disabled={busy === w.id} onClick={() => check(w)}>{busy === w.id ? 'Consultando…' : 'Consultar agora'}</button>
+                        {canManage && <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => publicationsApi.updateOab(w.id, { ativa: !w.ativa }).then(reload)}>{w.ativa ? 'Pausar' : 'Retomar'}</button>}
+                        {canManage && <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_danger}`}
                             onClick={() => window.confirm(`Parar de acompanhar a OAB ${w.numero}/${w.uf}? As publicações já capturadas ficam na caixa.`) && publicationsApi.removeOab(w.id).then(reload)}>Remover</button>}
                     </div>
                 </div>
             ))}
             {canManage && (
-                <form className={styles.filters} onSubmit={add}>
+                <form className={`${styles.filters} ${styles.form_divider}`} onSubmit={add}>
                     <label className={styles.field}>Nº da OAB<input className={styles.input} value={form.numero} onChange={(e) => setForm({ ...form, numero: e.target.value })} inputMode="numeric" required /></label>
                     <label className={styles.field}>UF<input className={styles.input} value={form.uf} onChange={(e) => setForm({ ...form, uf: e.target.value.toUpperCase() })} maxLength={2} required /></label>
                     <label className={styles.field} style={{ flex: 2 }}>Nome do advogado (opcional)<input className={styles.input} value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></label>

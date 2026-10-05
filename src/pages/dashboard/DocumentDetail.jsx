@@ -12,19 +12,19 @@ import {
 } from '../../services/documents';
 
 const TONES = {
-    info: { background: '#eff6ff', color: '#1e40af', border: '#bfdbfe' },
-    warn: { background: '#fffbeb', color: '#92400e', border: '#fde68a' },
-    success: { background: '#f0fdf4', color: '#166534', border: '#bbf7d0' },
-    danger: { background: '#fef2f2', color: '#991b1b', border: '#fecaca' },
+    info: { background: 'var(--c-primary-50)', color: 'var(--c-primary-700)', border: '#bfdbfe' },
+    warn: { background: 'var(--c-warning-bg)', color: '#92400e', border: '#fde68a' },
+    success: { background: 'var(--c-success-bg)', color: 'var(--c-success)', border: '#bbf7d0' },
+    danger: { background: 'var(--c-danger-bg)', color: 'var(--c-danger)', border: '#fecaca' },
 };
-const box = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: 18, marginBottom: 16 };
-const input = { width: '100%', padding: 7, border: '1px solid #d1d5db', borderRadius: 6 };
+const box = { background: 'var(--c-surface)', border: '1px solid var(--c-border)', borderRadius: 12, padding: 18, marginBottom: 16 };
+const input = { width: '100%', padding: 7, border: '1px solid var(--c-border-2)', borderRadius: 6 };
 
 function ListEditor({ title, items, onChange, render, blank, addLabel, readOnly }) {
     return (
         <section style={box}>
             <h3 style={{ marginTop: 0 }}>{title}</h3>
-            {items.length === 0 && <p style={{ color: '#6b7280' }}>Nada identificado.</p>}
+            {items.length === 0 && <p style={{ color: 'var(--c-muted)' }}>Nada identificado.</p>}
             {items.map((item, i) => (
                 <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
                     {render(item, (patch) => onChange(items.map((x, j) => (j === i ? { ...x, ...patch } : x))), i)}
@@ -179,7 +179,7 @@ export default function DocumentDetail() {
                     )}
                 </div>
             )}
-            {!isOrgManager && ex?.status === 'review' && !canReview && <p style={{ color: '#6b7280' }}>Seu papel permite apenas visualizar.</p>}
+            {!isOrgManager && ex?.status === 'review' && !canReview && <p style={{ color: 'var(--c-muted)' }}>Seu papel permite apenas visualizar.</p>}
             {signing && <AssinaturaModal documentId={id} documentName={doc?.nome} onClose={() => setSigning(false)} />}
         </div>
     );

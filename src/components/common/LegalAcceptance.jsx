@@ -31,7 +31,7 @@ export default function LegalAcceptance({ formData, onChange }) {
     };
 
     return (
-        <fieldset style={{ border: '1px solid #e5e7eb', borderRadius: 10, padding: 14, marginTop: 18 }}>
+        <fieldset style={{ border: '1px solid var(--c-border)', borderRadius: 10, padding: 14, marginTop: 18 }}>
             <legend style={{ padding: '0 6px', fontWeight: 600 }}>Termos e privacidade</legend>
             {docs.map((d) => (
                 <div key={d.id} style={{ marginBottom: 8 }}>
@@ -40,13 +40,13 @@ export default function LegalAcceptance({ formData, onChange }) {
                         <span>
                             Li e aceito {LABEL[d.kind]} (v{d.version}){' '}
                             <button type="button" onClick={() => setOpen(open === d.id ? null : d.id)}
-                                style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', padding: 0 }}>
+                                style={{ background: 'none', border: 'none', color: 'var(--c-primary)', cursor: 'pointer', padding: 0 }}>
                                 {open === d.id ? 'ocultar' : 'ler'}
                             </button>
                         </span>
                     </label>
                     {open === d.id && (
-                        <div tabIndex={0} style={{ fontSize: 13, maxHeight: 200, overflowY: 'auto', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 8, padding: 10, marginTop: 6 }}>
+                        <div tabIndex={0} style={{ fontSize: 13, maxHeight: 200, overflowY: 'auto', background: 'var(--c-surface-2)', border: '1px solid var(--c-border)', borderRadius: 8, padding: 10, marginTop: 6 }}>
                             <Markdown text={d.content_md} />
                         </div>
                     )}

@@ -80,7 +80,7 @@ function AIProfileModal({ isOpen, onClose, onSuccess }) {
                             placeholder="Ex: Você é um assistente jurídico. Analise o texto e extraia prazos fatais. A data de hoje é {data_atual}..."
                             onChange={e => setFormData({ ...formData, system_prompt_template: e.target.value })}
                         />
-                        <small style={{ color: '#6B7280' }}>Dica: Use <strong>{`{data_atual}`}</strong> para injetar a data de hoje.</small>
+                        <small style={{ color: 'var(--c-muted)' }}>Dica: Use <strong>{`{data_atual}`}</strong> para injetar a data de hoje.</small>
                     </div>
 
                     <div className={styles.action_footer}>

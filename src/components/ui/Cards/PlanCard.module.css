@@ -1,6 +1,6 @@
 .container {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 12px;
     padding: 24px;
     display: flex;
@@ -9,14 +9,14 @@
 }
 
 .title {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .current_plan {
-    background-color: #f0f7ff;
+    background-color: var(--c-primary-50);
     border-radius: 10px;
     padding: 20px;
     display: flex;
@@ -31,14 +31,14 @@
 }
 
 .current_plan_name {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .active_badge {
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     font-size: 12px;
     font-weight: 600;
@@ -56,17 +56,17 @@
 .price_value {
     font-size: 28px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
 }
 
 .price_period {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--c-muted);
 }
 
 .billing_date {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0;
 }
 
@@ -82,20 +82,20 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    color: #374151;
+    color: var(--c-text-2);
 }
 
 .check_icon {
     width: 16px;
     height: 16px;
-    color: #16a34a;
+    color: var(--c-success);
     flex-shrink: 0;
 }
 
 .other_title {
     font-size: 15px;
     font-weight: 600;
-    color: #374151;
+    color: var(--c-text-2);
     margin: 0;
 }
 
@@ -106,7 +106,7 @@
 }
 
 .other_plan {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 10px;
     padding: 16px;
     display: flex;
@@ -123,24 +123,24 @@
 .other_plan_name {
     font-size: 15px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
 }
 
 .other_plan_price {
     font-size: 15px;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
 }
 
 .other_plan_description {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--c-muted);
     margin: 0;
 }
 
 .manage_button {
     width: 100%;
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     border: none;
     border-radius: 8px;

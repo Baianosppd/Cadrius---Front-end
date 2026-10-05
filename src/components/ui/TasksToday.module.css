@@ -1,7 +1,8 @@
 .container {
-    background-color: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--c-border);
+    box-shadow: var(--shadow-sm);
     padding: 24px;
 }
 
@@ -19,22 +20,22 @@
 }
 
 .title {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 700;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .counter {
-    background-color: #f3f4f6;
-    color: #6b7280;
+    background-color: var(--c-surface-3);
+    color: var(--c-muted);
     font-size: 13px;
     padding: 4px 12px;
     border-radius: 20px;
 }
 
 .add_button {
-    background-color: #111111;
+    background-color: var(--c-primary);
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -59,7 +60,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 0;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--c-surface-3);
 }
 
 .task_item:last-child {
@@ -76,7 +77,7 @@
     width: 18px;
     height: 18px;
     cursor: pointer;
-    accent-color: #3730d4;
+    accent-color: var(--c-primary);
 }
 
 .task_text {
@@ -88,13 +89,13 @@
 .task_desc {
     font-size: 15px;
     font-weight: 600;
-    color: #111111;
+    color: var(--c-ink);
     margin: 0;
 }
 
 .task_time {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--c-muted);
 }
 
 .task_right {
@@ -111,29 +112,29 @@
 }
 
 .alta {
-    background-color: #fee2e2;
-    color: #dc2626;
+    background-color: var(--c-danger-bg);
+    color: var(--c-danger);
 }
 
 .media {
-    background-color: #fef9c3;
+    background-color: var(--c-warning-bg);
     color: #ca8a04;
 }
 
 .baixa {
-    background-color: #dbeafe;
-    color: #2563eb;
+    background-color: var(--c-primary-100);
+    color: var(--c-primary);
 }
 
 .details_link {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--c-muted);
     cursor: pointer;
     white-space: nowrap;
 }
 
 .details_link:hover {
-    color: #111111;
+    color: var(--c-ink);
 }
 .title, .counter { white-space: nowrap; }
 .add_button { white-space: nowrap; }
@@ -142,3 +143,12 @@
     .header { flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
     .add_button { width: 100%; min-height: 40px; }
 }
+
+/* CAD-219 */
+.container { padding: var(--sp-5); }
+.title { font-size: var(--fs-md); font-weight: 650; }
+.empty { color: var(--c-muted); font-size: var(--fs-base); padding: var(--sp-2) 0; }
+.header { margin-bottom: var(--sp-4); gap: var(--sp-3); flex-wrap: wrap; }
+.add_button { min-height: var(--control-h); padding: 0 var(--sp-4); border-radius: var(--radius); }
+.add_button:hover { opacity: 1; background-color: var(--c-primary-600); }
+.counter { font-size: var(--fs-xs); padding: 2px 10px; }

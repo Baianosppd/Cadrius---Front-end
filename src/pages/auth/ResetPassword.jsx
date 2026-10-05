@@ -11,6 +11,7 @@ import FormGroup from '../../components/ui/FormGroup';
 import { confirmPasswordReset, parseResetFragment, passwordResetError } from '../../services/passwordReset';
 
 import styles from './Remember.module.css';
+import { CourthouseScene } from '../../components/illustrations/LegalArt';
 
 function ResetPassword() {
     const navigate = useNavigate();
@@ -45,7 +46,7 @@ function ResetPassword() {
     return (
         <div className={styles.main_wrapper}>
             <div className={styles.side_image}>
-                <img src="/imagem.png" alt="Cadrius" />
+                <CourthouseScene style={{ width: "100%", maxWidth: 460, height: "auto" }} />
             </div>
 
             <div className={styles.side_form}>
@@ -70,7 +71,7 @@ function ResetPassword() {
                                     <Input type="password" autoComplete="new-password" value={confirm}
                                         onChange={(e) => { setConfirm(e.target.value); setError(null); }} />
                                 </FormGroup>
-                                {error && <p role="alert" style={{ color: '#b91c1c', fontSize: '0.875rem' }}>{error}</p>}
+                                {error && <p role="alert" style={{ color: 'var(--c-danger)', fontSize: '0.875rem' }}>{error}</p>}
                                 <Button type="submit" disabled={loading}>{loading ? 'Salvando…' : 'Redefinir senha'}</Button>
                             </form>
                         </div>

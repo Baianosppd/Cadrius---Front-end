@@ -101,7 +101,7 @@ export default function Contatos() {
             {data?.tags?.length > 0 && (
                 <div className={styles.btn_row}>
                     {data.tags.map((t) => (
-                        <button key={t} type="button" className={styles.btn} style={query.tag === t ? { borderColor: '#2563eb', color: '#2563eb' } : undefined}
+                        <button key={t} type="button" className={styles.btn} style={query.tag === t ? { borderColor: 'var(--c-primary)', color: 'var(--c-primary)' } : undefined}
                             onClick={() => setQuery((q) => ({ ...q, tag: q.tag === t ? '' : t }))}>#{t}</button>
                     ))}
                 </div>
@@ -113,7 +113,7 @@ export default function Contatos() {
                     <table className={styles.table}>
                         <thead><tr><th>Nome</th><th>Tipo</th><th>Contato</th><th>Mensagens</th><th>Etiquetas</th></tr></thead>
                         <tbody>
-                            {data.resultados.length === 0 && <tr><td colSpan={5}><Empty>Nenhum contato. Cadastre ou importe uma planilha.</Empty></td></tr>}
+                            {data.resultados.length === 0 && <tr><td colSpan={5}><Empty title="Sua carteira começa aqui">Cadastre os clientes ou importe a planilha do sistema antigo: eles viram destinatários das automações e do portal.</Empty></td></tr>}
                             {data.resultados.map((c) => {
                                 const ch = channelStatus(c);
                                 return (

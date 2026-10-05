@@ -7,6 +7,7 @@ import styles from './Processos.module.css';
 import Card from '../../components/ui/Card';
 import TextoCarregando from "../../components/ui/TextoCarregando";
 import StatusBadge from '../../components/ui/StatusBadge';
+import { PageHeader } from '../../components/seguranca/ui';
 
 // --- Componente Auxiliar: Sugestões da IA ---
 function AISuggestions({ suggestions }) {
@@ -162,8 +163,9 @@ function Processos() {
 
     return (
         <div className={styles.processos_container}>
+            <PageHeader title="Processos por e-mail" subtitle="Intimações e mensagens lidas da caixa de entrada do escritório, com prazos sugeridos pela IA" />
 
-            <div className={styles.main_grid_layout}>
+            <div className={`${styles.main_grid_layout} ${suggestionItems?.length ? '' : styles.single}`}>
 
                 {/* 1. Área Principal (Tabela) */}
                 <div className={styles.table_area}>

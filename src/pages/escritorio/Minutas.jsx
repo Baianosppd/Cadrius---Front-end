@@ -138,9 +138,9 @@ export default function Minutas() {
             {!data && <Empty>Carregando…</Empty>}
             <div className={styles.two_col}>
                 <div>
-                    {data && drafts.length === 0 && <Empty>Nenhuma minuta ainda.</Empty>}
+                    {data && drafts.length === 0 && <Empty title="Nenhuma minuta ainda">Gere a primeira a partir de uma publicação, de um documento ou de um modelo do escritório.</Empty>}
                     {drafts.map((d) => (
-                        <div key={d.id} className={styles.card} style={{ marginBottom: 6, cursor: 'pointer', borderColor: selected === d.id ? '#2563eb' : undefined }}
+                        <div key={d.id} className={styles.card} style={{ marginBottom: 6, cursor: 'pointer', borderColor: selected === d.id ? 'var(--c-primary)' : undefined }}
                             onClick={() => setSelected(d.id)}>
                             <strong>{d.titulo}</strong>
                             <div className={styles.muted}>{fmtDateTime(d.atualizada_em)} · <Pill tone={d.status === 'revisada' ? 'green' : 'yellow'}>{d.status}</Pill>

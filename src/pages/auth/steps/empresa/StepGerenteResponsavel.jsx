@@ -35,7 +35,7 @@ const StepGerenteResponsavel = ({ formData, onChange }) => {
                 <div className={`${styles.field} ${styles.field_full}`}>
                     <label className={styles.label}>Cargo</label>
                     <input className={styles.input} placeholder="Ex: Gerente Jurídico" value={formData.gerenteCargo || ''} onChange={e => onChange({ gerenteCargo: e.target.value })} />
-                    <span style={{ fontSize: 12, color: '#9ca3af' }}>Este e-mail será usado para login no sistema</span>
+                    <span style={{ fontSize: 12, color: 'var(--c-subtle)' }}>Este e-mail será usado para login no sistema</span>
                 </div>
             </div>
 

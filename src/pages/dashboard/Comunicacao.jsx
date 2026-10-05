@@ -4,6 +4,7 @@ import api from '../../services/api.js';
 import styles from './Comunicacao.module.css';
 import StatusBadge from '../../components/ui/StatusBadge';
 import TextoCarregando from '../../components/ui/TextoCarregando';
+import { PageHeader } from '../../components/seguranca/ui';
 
 
 
@@ -108,6 +109,7 @@ function Comunicacao() {
 
     return (
         <div className={styles.comunicacao_container}>
+            <PageHeader title="Comunicação" subtitle="E-mails e mensagens recebidos pelos canais conectados" />
 
             <div className={styles.main_box}>
 

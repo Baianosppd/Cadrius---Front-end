@@ -3,9 +3,55 @@ import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
 import { Banner, Empty, Pill, StatCard, errorMessage, fmtDateTime } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
+import { FiCalendar, FiChevronLeft, FiChevronRight, FiList } from 'react-icons/fi';
 import {
-    AUTO_CHANNELS, CHANNELS, CHANNEL_LABEL, LEVEL_TONE, STATUS, groupByDay, parseHashtags, toLocalInput,
+    AUTO_CHANNELS, CHANNELS, CHANNEL_COLOR, CHANNEL_LABEL, LEVEL_TONE, STATUS, groupByDay, monthGrid, parseHashtags, toLocalInput,
 } from '../../services/marketing';
+import PostPreview from './PostPreview';
+import useAuth from '../../hooks/useAuth';
+
+const WEEKDAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+// Selo do canal com a cor da rede (identificação rápida)
+function ChannelTag({ canal }) {
+    return <span className={styles.channel_tag} style={{ '--ch': CHANNEL_COLOR[canal] || 'var(--c-muted)' }}>{CHANNEL_LABEL[canal] || canal}</span>;
+}
+
+// Calendário editorial do mês (CAD-219): cada dia mostra os conteúdos com a cor do canal
+function Calendario({ items, onOpen }) {
+    const now = new Date();
+    const [ym, setYm] = useState({ y: now.getFullYear(), m: now.getMonth() });
+    const weeks = monthGrid(ym.y, ym.m, items);
+    const raw = new Date(ym.y, ym.m, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    const title = raw.charAt(0).toUpperCase() + raw.slice(1);
+    const move = (d) => setYm(({ y, m }) => { const x = new Date(y, m + d, 1); return { y: x.getFullYear(), m: x.getMonth() }; });
+    const today = now.toDateString();
+    return (
+        <div className={styles.cal}>
+            <div className={styles.cal_head}>
+                <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => move(-1)} aria-label="Mês anterior"><FiChevronLeft /></button>
+                <strong className={styles.cal_title}>{title}</strong>
+                <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => move(1)} aria-label="Próximo mês"><FiChevronRight /></button>
+            </div>
+            <div className={styles.cal_grid} role="grid" aria-label={`Calendário de ${title}`}>
+                {WEEKDAYS.map((d) => <div key={d} className={styles.cal_wd} role="columnheader">{d}</div>)}
+                {weeks.flat().map((c) => (
+                    <div key={c.date.toISOString()} role="gridcell"
+                        className={`${styles.cal_day} ${c.inMonth ? '' : styles.cal_out} ${c.date.toDateString() === today ? styles.cal_today : ''}`}>
+                        <span className={styles.cal_num}>{c.day}</span>
+                        {c.items.slice(0, 3).map((it) => (
+                            <button key={it.id} type="button" className={styles.cal_item} style={{ '--ch': CHANNEL_COLOR[it.canal] || 'var(--c-muted)' }}
+                                onClick={() => onOpen(it.id)} title={`${CHANNEL_LABEL[it.canal]}: ${it.titulo || it.tema}`}>
+                                {it.titulo || it.tema}
+                            </button>
+                        ))}
+                        {c.items.length > 3 && <span className={styles.cal_more}>+{c.items.length - 3}</span>}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
 
 function Alertas({ alertas }) {
     if (!alertas?.length) return <Banner tone="ok">Nenhum alerta encontrado pelo verificador.</Banner>;
@@ -23,7 +69,7 @@ function Alertas({ alertas }) {
 }
 
 // Editor de um conteúdo: texto, verificador ao vivo, imagem, agenda e ações de aprovação/publicação
-function Editor({ api, id, canApprove, onClose, onChanged }) {
+function Editor({ api, id, canApprove, onClose, onChanged, brand }) {
     const [p, setP] = useState(null);
     const [form, setForm] = useState(null);
     const [alertas, setAlertas] = useState(null);
@@ -89,7 +135,7 @@ function Editor({ api, id, canApprove, onClose, onChanged }) {
                         )}
                     </div>
                     <div className={styles.stack}>
-                        <div className={styles.card} style={{ background: '#f9fafb' }}>
+                        <div className={styles.card} style={{ background: 'var(--c-surface-2)' }}>
                             <div className={styles.section_title}>Verificador (OAB e LGPD)</div>
                             <Alertas alertas={alertas} />
                             {blocking && canApprove && (
@@ -105,6 +151,9 @@ function Editor({ api, id, canApprove, onClose, onChanged }) {
                                 <input className={styles.input} value={form.imagem_url} onChange={(e) => setForm({ ...form, imagem_url: e.target.value })} placeholder="https://…" />
                             </label>
                         )}
+                        <div className={styles.section_title}>Como vai aparecer</div>
+                        <PostPreview channel={p.canal} brand={brand} title={form.titulo} text={form.texto} hashtags={form.hashtags}
+                            image={form.imagem_url} hint={p.sugestao_imagem} />
                         <label className={styles.field}>Data e hora da publicação
                             <input className={styles.input} type="datetime-local" value={form.agendado_para} onChange={(e) => setForm({ ...form, agendado_para: e.target.value })} />
                         </label>
@@ -130,7 +179,7 @@ function Editor({ api, id, canApprove, onClose, onChanged }) {
                     {canApprove && !auto && ['aprovado', 'agendado'].includes(p.status) && (
                         <button type="button" className={styles.btn} disabled={busy} onClick={() => save({ status: 'publicado' }, 'Marcado como publicado.')}>Já publiquei</button>
                     )}
-                    <button type="button" className={`${styles.btn} ${styles.btn_ghost}`} style={{ color: '#dc2626', marginLeft: 'auto' }}
+                    <button type="button" className={`${styles.btn} ${styles.btn_ghost}`} style={{ color: 'var(--c-danger)', marginLeft: 'auto' }}
                         onClick={() => window.confirm('Excluir este conteúdo?') && api.remove(p.id).then(() => { onChanged(); onClose(); })}>Excluir</button>
                 </div>
             </div>
@@ -228,7 +277,7 @@ function Campanhas({ api, campaigns, reload }) {
                 </div>
                 <div><button className={`${styles.btn} ${styles.btn_primary}`}>Criar campanha</button></div>
             </form>
-            {campaigns.length === 0 && <Empty>Nenhuma campanha. Agrupe conteúdos de um mesmo objetivo (ex.: "Mês do consumidor").</Empty>}
+            {campaigns.length === 0 && <Empty title="Nenhuma campanha ainda">Agrupe conteúdos de um mesmo objetivo (ex.: "Mês do consumidor").</Empty>}
             <div className={styles.card_grid}>
                 {campaigns.map((c) => (
                     <div key={c.id} className={styles.card}>
@@ -236,7 +285,7 @@ function Campanhas({ api, campaigns, reload }) {
                         <div className={styles.muted} style={{ fontSize: '.84rem' }}>{c.objetivo}</div>
                         <div style={{ margin: '6px 0' }}>{c.canais.map((k) => <Pill key={k} tone="blue">{CHANNEL_LABEL[k]}</Pill>)}</div>
                         <div className={styles.muted} style={{ fontSize: '.8rem' }}>{c.conteudos} conteúdo(s)</div>
-                        <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} style={{ color: '#dc2626', marginTop: 8 }}
+                        <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} style={{ color: 'var(--c-danger)', marginTop: 8 }}
                             onClick={() => window.confirm(`Excluir a campanha "${c.nome}"? Os conteúdos ficam.`) && api.removeCampaign(c.id).then(reload)}>Excluir</button>
                     </div>
                 ))}
@@ -284,6 +333,9 @@ function Indicadores({ api }) {
 export default function MarketingStudio({ api, scope, canWrite, canApprove }) {
     const tabs = [['agenda', 'Agenda'], ...(canWrite ? [['criar', 'Criar conteúdo']] : []), ['campanhas', 'Campanhas'], ...(scope === 'cadrius' ? [['indicadores', 'Indicadores']] : [])];
     const [tab, setTab] = useState('agenda');
+    const [view, setView] = useState('lista');
+    const { user } = useAuth();
+    const brand = scope === 'cadrius' ? 'Cadrius' : (user?.organization?.name || 'Seu escritório');
     const [status, setStatus] = useState('');
     const [open, setOpen] = useState(null);
     const list = useLoader(() => api.list(status ? { status } : {}), [status]);
@@ -299,6 +351,7 @@ export default function MarketingStudio({ api, scope, canWrite, canApprove }) {
             </div>
             {tab === 'agenda' && (
                 <div className={styles.stack}>
+                    <div className={styles.toolbar}>
                     <div className={styles.btn_row} role="group" aria-label="Filtrar por situação">
                         <button type="button" className={`${styles.chip} ${!status ? styles.chip_active : ''}`} onClick={() => setStatus('')}>Todos</button>
                         {Object.entries(STATUS).map(([k, [l]]) => (
@@ -307,11 +360,17 @@ export default function MarketingStudio({ api, scope, canWrite, canApprove }) {
                             </button>
                         ))}
                     </div>
+                    <div className={styles.segmented} role="group" aria-label="Visualização">
+                        <button type="button" aria-pressed={view === 'lista'} className={view === 'lista' ? styles.seg_on : ''} onClick={() => setView('lista')}><FiList /> Lista</button>
+                        <button type="button" aria-pressed={view === 'calendario'} className={view === 'calendario' ? styles.seg_on : ''} onClick={() => setView('calendario')}><FiCalendar /> Calendário</button>
+                    </div>
+                    </div>
                     {list.error && <Banner tone="error">{list.error}</Banner>}
-                    {list.data && list.data.resultados.length === 0 && (
-                        <Empty>{canWrite ? 'Nada por aqui. Use "Criar conteúdo" para gerar o primeiro rascunho.' : 'Nenhum conteúdo.'}</Empty>
+                    {list.data && view === 'calendario' && <Calendario items={list.data.resultados} onOpen={setOpen} />}
+                    {list.data && view === 'lista' && list.data.resultados.length === 0 && (
+                        <Empty title="Sua agenda de conteúdo está vazia">{canWrite ? 'Use "Criar conteúdo": a IA escreve o rascunho dentro das regras da OAB e você revisa.' : 'Nenhum conteúdo.'}</Empty>
                     )}
-                    {list.data && groupByDay(list.data.resultados).map(([day, items]) => (
+                    {list.data && view === 'lista' && groupByDay(list.data.resultados).map(([day, items]) => (
                         <div key={day} className={styles.stack} style={{ gap: 8 }}>
                             <div className={styles.muted} style={{ fontSize: '.8rem', fontWeight: 700, textTransform: 'uppercase' }}>{day}</div>
                             {items.map((c) => {
@@ -319,7 +378,7 @@ export default function MarketingStudio({ api, scope, canWrite, canApprove }) {
                                 return (
                                     <button key={c.id} type="button" className={styles.card} onClick={() => setOpen(c.id)}
                                         style={{ textAlign: 'left', cursor: 'pointer', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', font: 'inherit' }}>
-                                        <Pill tone="blue">{CHANNEL_LABEL[c.canal]}</Pill>
+                                        <ChannelTag canal={c.canal} />
                                         <strong style={{ flex: '1 1 220px', minWidth: 0 }}>{c.titulo || c.tema}</strong>
                                         {c.bloqueado && <Pill tone="red">alertas OAB</Pill>}
                                         <Pill tone={tone}>{label}</Pill>
@@ -334,7 +393,7 @@ export default function MarketingStudio({ api, scope, canWrite, canApprove }) {
             {tab === 'criar' && <Criar api={api} scope={scope} ideas={ideas} campaigns={campaigns} onCreated={(id) => { list.reload(); setOpen(id); setTab('agenda'); }} />}
             {tab === 'campanhas' && <Campanhas api={api} campaigns={campaigns} reload={extra.reload} />}
             {tab === 'indicadores' && <Indicadores api={api} />}
-            {open && <Editor api={api} id={open} canApprove={canApprove} onClose={() => setOpen(null)} onChanged={() => list.reload()} />}
+            {open && <Editor api={api} id={open} brand={brand} canApprove={canApprove} onClose={() => setOpen(null)} onChanged={() => list.reload()} />}
         </div>
     );
 }

@@ -1,4 +1,5 @@
 import styles from './seguranca.module.css';
+import { ScalesMark } from '../illustrations/LegalArt';
 
 const PILL = {
     green: styles.pill_green, yellow: styles.pill_yellow, orange: styles.pill_orange,
@@ -63,8 +64,18 @@ export function Banner({ tone = 'info', children }) {
     return <div className={`${styles.banner} ${cls}`} role={tone === 'error' ? 'alert' : undefined}>{children}</div>;
 }
 
-export function Empty({ children = 'Nada para mostrar.' }) {
-    return <div className={styles.empty}>{children}</div>;
+// Estado vazio. Com "title", vira um estado vazio ilustrado com a próxima ação (CAD-219): explica o que aparece ali
+// e oferece o primeiro passo, em vez de uma tela em branco.
+export function Empty({ children = 'Nada para mostrar.', title, action }) {
+    if (!title) return <div className={styles.empty}>{children}</div>;
+    return (
+        <div className={`${styles.empty} ${styles.empty_rich}`}>
+            <ScalesMark className={styles.empty_art} />
+            <div className={styles.empty_title}>{title}</div>
+            {children && <div className={styles.empty_text}>{children}</div>}
+            {action && <div className={styles.btn_row}>{action}</div>}
+        </div>
+    );
 }
 
 export function PageHeader({ title, subtitle, actions }) {

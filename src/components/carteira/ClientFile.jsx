@@ -96,7 +96,7 @@ export default function ClientFile({ contact, onClose }) {
                         {data.financeiro && (
                             <div className={styles.card_grid}>
                                 <div className={styles.card}><div className={styles.card_title}>Em aberto</div><div className={styles.card_value}>{brl(data.financeiro.em_aberto_centavos)}</div></div>
-                                <div className={styles.card}><div className={styles.card_title}>Vencido</div><div className={styles.card_value} style={data.financeiro.vencido_centavos ? { color: '#dc2626' } : undefined}>{brl(data.financeiro.vencido_centavos)}</div></div>
+                                <div className={styles.card}><div className={styles.card_title}>Vencido</div><div className={styles.card_value} style={data.financeiro.vencido_centavos ? { color: 'var(--c-danger)' } : undefined}>{brl(data.financeiro.vencido_centavos)}</div></div>
                                 <div className={styles.card}><div className={styles.card_title}>Recebido</div><div className={styles.card_value}>{brl(data.financeiro.recebido_centavos)}</div></div>
                             </div>
                         )}

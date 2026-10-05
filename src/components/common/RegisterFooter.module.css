@@ -1,7 +1,7 @@
 .footer {
     height: 72px;
-    background-color: #ffffff;
-    border-top: 1px solid #e5e7eb;
+    background-color: var(--c-surface);
+    border-top: 1px solid var(--c-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -14,12 +14,12 @@
     align-items: center;
     gap: 6px;
     background: none;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--c-border);
     border-radius: 8px;
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 500;
-    color: #374151;
+    color: var(--c-text-2);
     cursor: pointer;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .prev_button:hover:not(:disabled) {
-    background-color: #f9fafb;
+    background-color: var(--c-surface-2);
 }
 
 .cancel_button {
@@ -40,19 +40,19 @@
     border: none;
     font-size: 14px;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--c-muted);
     cursor: pointer;
 }
 
 .cancel_button:hover {
-    color: #111111;
+    color: var(--c-ink);
 }
 
 .next_button {
     display: flex;
     align-items: center;
     gap: 6px;
-    background-color: #3b82f6;
+    background-color: var(--c-primary);
     border: none;
     border-radius: 8px;
     padding: 10px 24px;

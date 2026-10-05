@@ -9,7 +9,7 @@ export default function NodeInspector({ node, connections, connectionId, onConne
     const set = (patch) => onChange(node.id, { config: { ...cfg, ...patch } });
 
     return (
-        <aside style={{ width: 300, borderLeft: '1px solid #e5e7eb', background: '#fff', padding: 16, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <aside style={{ width: 300, borderLeft: '1px solid var(--c-border)', background: 'var(--c-surface)', padding: 16, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <strong>{node.data.label}</strong>
                 <button onClick={onClose} aria-label="Fechar painel" style={{ border: 'none', background: 'none', cursor: 'pointer' }}><FiX /></button>

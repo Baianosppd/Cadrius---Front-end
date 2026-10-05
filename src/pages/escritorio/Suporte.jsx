@@ -114,7 +114,7 @@ export default function Suporte() {
                     <table className={styles.table}>
                         <thead><tr><th>Chamado</th><th>Situação</th><th>Atualizado</th></tr></thead>
                         <tbody>
-                            {data.length === 0 && <tr><td colSpan={3}><Empty>Nenhum chamado ainda.</Empty></td></tr>}
+                            {data.length === 0 && <tr><td colSpan={3}><Empty title="Tudo certo por aqui">Nenhum chamado aberto. Quando precisar, a equipe Cadrius responde por aqui.</Empty></td></tr>}
                             {data.map((t) => (
                                 <tr key={t.id} onClick={() => setParams({ chamado: t.id })} style={{ cursor: 'pointer', opacity: isActive(t.status) ? 1 : 0.6 }}>
                                     <td><strong>#{t.id} · {t.subject}</strong><div className={styles.muted}>{t.category_label}</div></td>

@@ -7,7 +7,7 @@ import {
 export const APP_MENU = [
     {
         section: 'Dia a dia', items: [
-            { to: '/dashboard', label: 'Dashboard', icon: FiHome },
+            { to: '/dashboard', label: 'Painel', icon: FiHome },
             { to: '/publicacoes', label: 'Publicações', icon: FiInbox },
             { to: '/documents', label: 'Documentos', icon: FiMail },
             { to: '/acompanhamento', label: 'Processos acompanhados', icon: FiBriefcase },

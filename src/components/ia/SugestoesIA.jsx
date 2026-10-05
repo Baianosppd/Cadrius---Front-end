@@ -16,7 +16,7 @@ export default function SugestoesIA({ canManage, onAccepted }) {
     if (error) return null;
     const open = data?.abertas || [];
     return (
-        <div className={styles.card} style={{ borderColor: open.length ? '#bfdbfe' : undefined, background: open.length ? '#f8fbff' : undefined }}>
+        <div className={styles.card} style={{ borderColor: open.length ? 'var(--c-info-bd)' : undefined, background: open.length ? 'var(--c-primary-50)' : undefined }}>
             <div className={styles.header_row} style={{ alignItems: 'center' }}>
                 <div>
                     <div className={styles.section_title} style={{ marginBottom: 2 }}>Sugestões da IA {open.length > 0 && <Pill tone="blue">{open.length}</Pill>}</div>

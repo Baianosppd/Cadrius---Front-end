@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { getCurrentPlan, getNotices, subscriptionNotice } from '../../services/billing';
 
 const COLORS = {
-    info: { background: '#eff6ff', color: '#1e40af', border: '#bfdbfe' },
-    warn: { background: '#fffbeb', color: '#92400e', border: '#fde68a' },
-    danger: { background: '#fef2f2', color: '#991b1b', border: '#fecaca' },
+    info: { background: 'var(--c-primary-50)', color: 'var(--c-primary-700)', border: 'var(--c-info-bd)' },
+    warn: { background: 'var(--c-warning-bg)', color: 'var(--c-warning)', border: 'var(--c-warning-bd)' },
+    danger: { background: 'var(--c-danger-bg)', color: 'var(--c-danger)', border: 'var(--c-danger-bd)' },
 };
 
 // Faixa no topo do app com o estado da assinatura (trial, cobrança pendente, IA pausada).

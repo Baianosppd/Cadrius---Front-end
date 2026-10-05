@@ -1,8 +1,17 @@
 // Ambientes do Cadrius (CAD-174): produção (app) e teste (app-teste). São publicações separadas, com bases e contas próprias.
 export const ENVIRONMENTS = {
-    producao: { label: 'Produção', url: import.meta.env.VITE_APP_URL_PROD || 'https://app.cadrius.ia.br' },
-    teste: { label: 'Teste', url: import.meta.env.VITE_APP_URL_TEST || 'https://app-teste.cadrius.ia.br' },
+    producao: { label: 'Produção', url: import.meta.env.VITE_APP_URL_PROD || 'https://app.cadrius.ia.br',
+        description: 'Base oficial do escritório: clientes, processos e prazos reais.' },
+    teste: { label: 'Teste', url: import.meta.env.VITE_APP_URL_TEST || 'https://app-teste.cadrius.ia.br',
+        description: 'Base de homologação: dados fictícios e contas separadas, para experimentar sem riscos.' },
 };
+
+// Endereço exibido de cada base (ex.: app.cadrius.ia.br); a base local mostra o próprio endereço
+export function envHost(key) {
+    const url = ENVIRONMENTS[key]?.url;
+    if (url) { try { return new URL(url).host; } catch { return url; } }
+    return typeof window !== 'undefined' ? window.location.host : '';
+}
 
 // Ambiente atual pelo endereço (ou VITE_APP_ENV em builds locais)
 export function currentEnv(hostname = typeof window !== 'undefined' ? window.location.hostname : '') {
