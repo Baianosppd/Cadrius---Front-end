@@ -46,6 +46,8 @@ const GestaoVisao = lazy(() => import('../pages/gestao/Visao'));
 const GestaoEscritorios = lazy(() => import('../pages/gestao/Escritorios'));
 const GestaoUsuarios = lazy(() => import('../pages/gestao/Usuarios'));
 const GestaoSistema = lazy(() => import('../pages/gestao/Sistema'));
+const GestaoEquipeCadrius = lazy(() => import('../pages/gestao/Equipe'));
+const GestaoFiscal = lazy(() => import('../pages/gestao/Fiscal'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -118,6 +120,8 @@ export default function AppRoutes() {
           <Route path="/gestao/escritorios" element={<GestaoEscritorios />} />
           <Route path="/gestao/usuarios" element={<GestaoUsuarios />} />
           <Route path="/gestao/sistema" element={<GestaoSistema />} />
+          <Route path="/gestao/equipe" element={<GestaoEquipeCadrius />} />
+          <Route path="/gestao/fiscal" element={<GestaoFiscal />} />
           <Route path="/gestao/financeiro" element={<Financeiro />} />
           <Route path="/gestao/seguranca" element={<CentroSeguranca />} />
         </Route>

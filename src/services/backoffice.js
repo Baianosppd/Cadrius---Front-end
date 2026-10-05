@@ -13,9 +13,41 @@ export const backofficeApi = {
     users: (params) => api.get(`${BASE}users/`, { params }).then((r) => r.data),
     userAction: (id, body) => api.post(`${BASE}users/${id}/actions/`, body).then((r) => r.data),
     aiSwitch: (body) => api.post(`${BASE}ai-switch/`, body).then((r) => r.data),
+    // Equipe Cadrius (TI) e setor Fiscal — CAD-170
+    staff: () => api.get(`${BASE}staff/`).then((r) => r.data),
+    createStaff: (body) => api.post(`${BASE}staff/`, body).then((r) => r.data),
+    updateStaff: (id, body) => api.patch(`${BASE}staff/${id}/`, body).then((r) => r.data),
+    fiscalPayments: (params) => api.get(`${BASE}fiscal/payments/`, { params }).then((r) => r.data),
+    fiscalInvoice: (id, body) => api.post(`${BASE}fiscal/payments/${id}/invoice/`, body).then((r) => r.data),
+    fiscalExport: (params) => api.get(`${BASE}fiscal/payments/export.csv`, { params, responseType: 'blob' }).then((r) => r.data),
 };
 
-export const AREA_LABEL = { ti: 'TI', financeiro: 'Financeiro' };
+export const AREA_LABEL = { ti: 'TI', financeiro: 'Financeiro', fiscal: 'Fiscal' };
+export const AREAS = Object.keys(AREA_LABEL);
+
+export const NF_STATUS = {
+    pending: { label: 'NF pendente', tone: 'yellow' }, issued: { label: 'NF emitida', tone: 'green' },
+    not_required: { label: 'Sem NF', tone: 'gray' },
+};
+
+// Formulário de nova conta da equipe → corpo da API (valida o básico; o back valida de novo)
+export function buildStaffBody(form) {
+    const email = String(form.email || '').trim().toLowerCase();
+    const areas = AREAS.filter((a) => form.areas?.includes(a));
+    const reason = String(form.reason || '').trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { ok: false, error: 'E-mail inválido.' };
+    if (!areas.length) return { ok: false, error: 'Escolha ao menos uma área.' };
+    if (reason.length < MIN_REASON) return { ok: false, error: `Informe o motivo (mínimo ${MIN_REASON} caracteres).` };
+    return { ok: true, body: { email, first_name: String(form.first_name || '').trim(), last_name: String(form.last_name || '').trim(), areas, reason } };
+}
+
+// Primeiro e último dia do mês de uma data (AAAA-MM-DD), para o filtro do Fiscal
+export function monthRange(d = new Date()) {
+    const pad = (n) => String(n).padStart(2, '0');
+    const first = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-01`;
+    const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    return { start: first, end: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(lastDay)}` };
+}
 
 export const SUB_STATE = {
     trialing: { label: 'Em teste', tone: 'blue' }, active: { label: 'Ativa', tone: 'green' },

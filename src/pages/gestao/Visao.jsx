@@ -22,6 +22,8 @@ export default function Visao() {
                     note={`Fila: ${ti.fila ?? '—'} · workers: ${ti.workers ?? '—'}`} />}
                 {f && <StatCard title="MRR (tabela)" value={brl(f.mrr_tabela_brl)} note={`${f.assinantes_pagantes} pagantes · ticket ${brl(f.ticket_medio_brl)}`} />}
                 {f && <StatCard title="Testes acabando (7 dias)" value={f.trials_terminando_em_7_dias} tone={f.trials_terminando_em_7_dias ? 'yellow' : undefined} />}
+                {data.fiscal && <StatCard title="Recebido no mês" value={brl(data.fiscal.total_brl)} note={`${data.fiscal.nf_pendentes} NF pendentes`}
+                    tone={data.fiscal.nf_pendentes ? 'yellow' : undefined} />}
             </div>
             <div className={styles.card}>
                 <div className={styles.section_title}>Assinaturas por estado</div>

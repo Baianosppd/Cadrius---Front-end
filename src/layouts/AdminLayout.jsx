@@ -33,7 +33,7 @@ export default function AdminLayout() {
         <div className={styles.layout}>
             <aside className={styles.sidebar}>
                 <div className={styles.brand}>Gestão Cadrius</div>
-                <div className={styles.brand_sub}>Área interna da equipe — TI e Financeiro</div>
+                <div className={styles.brand_sub}>Área interna da equipe — TI, Financeiro e Fiscal</div>
                 <div className={styles.areas}>{areas.map((a) => <span key={a} className={styles.area}>{AREA_LABEL[a] || a}</span>)}</div>
                 {visibleMenu(areas).map((item) => (
                     <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>
