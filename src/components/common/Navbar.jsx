@@ -1,143 +1,54 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {
-    FiHome,
-    FiMail,
-    FiZap,
-    FiLayers,
-    FiSettings,
-    FiLogOut,
-    FiShield,
-    FiCpu,
-    FiLock,
-    FiActivity,
-    FiCheckCircle
-} from 'react-icons/fi'; // Importando ícones modernos
+import { FiLogOut, FiX } from 'react-icons/fi';
 import styles from './Navbar.module.css';
-
-import Title from '../ui/Title';
-
 import useAuth from '../../hooks/useAuth';
+import { HELP_ITEM, STAFF_ITEM, visibleMenu } from '../../layouts/appMenu';
+import EnvBadge from './EnvBadge';
 
-function Navbar() {
+function Item({ item, active, to, onNavigate }) {
+    const Icon = item.icon;
+    return (
+        <li className={`${styles.nav_item} ${active ? styles.active : ''}`}>
+            <Link to={to || item.to} onClick={onNavigate} aria-current={active ? 'page' : undefined}>
+                <Icon className={styles.nav_icon} aria-hidden="true" />
+                <span className={styles.nav_text}>{item.label}</span>
+            </Link>
+        </li>
+    );
+}
 
+// Menu lateral do escritório (CAD-174): seções, rolagem própria e, no celular, gaveta com botão de fechar
+function Navbar({ onNavigate, onClose }) {
     const { logout, isOrgManager, isStaff } = useAuth();
     const navigate = useNavigate();
-
-    const location = useLocation();
-
-    const isActive = (path) => {
-        return location.pathname.startsWith(path) ? styles.active : '';
-    };
-
-
+    const { pathname } = useLocation();
+    const isActive = (path) => pathname === path || pathname.startsWith(`${path}/`);
+    const helpTo = `/suporte${pathname.startsWith('/suporte') ? '' : `?novo=1&de=${encodeURIComponent(pathname)}`}`;
 
     return (
-        <nav className={styles.sidebar}>
-            {/* NOVO: Título Cadrius no topo da Sidebar */}
+        <nav className={styles.sidebar} aria-label="Menu principal">
             <div className={styles.logo_container}>
-                <Title as="h1" className={styles.sidebar_title}>
-                    Cadrius
-                </Title>
+                <Link to="/dashboard" className={styles.sidebar_title} onClick={onNavigate}>Cadrius</Link>
+                <EnvBadge />
+                {onClose && <button type="button" className={styles.close_btn} onClick={onClose} aria-label="Fechar menu"><FiX /></button>}
             </div>
-
-            {/* 1. Lista de Navegação Principal */}
-            <ul className={styles.nav_list}>
-
-                {/* Dashboard */}
-                <li className={`${styles.nav_item} ${isActive('/dashboard')}`}>
-                    <Link to="/dashboard">
-                        <FiHome className={styles.nav_icon} />
-                        <span className={styles.nav_text}>Dashboard</span>
-                    </Link>
-                </li>
-
-                {/* Caixa de Entrada IA */}
-                <li className={`${styles.nav_item} ${isActive('/documents')}`}>
-                    <Link to="/documents">
-                        <FiMail className={styles.nav_icon} />
-                        <span className={styles.nav_text}>Documentos</span>
-                    </Link>
-                </li>
-
-                {/* Automações */}
-                <li className={`${styles.nav_item} ${isActive('/automacao')}`}>
-                    <Link to="/automacao">
-                        <FiZap className={styles.nav_icon} />
-                        <span className={styles.nav_text}>Automações</span>
-                    </Link>
-                </li>
-
-
-                {/* Equipe */}
-                <li className={`${styles.nav_item} ${isActive('/equipe')}`}>
-                    <Link to="/equipe">
-                        <FiSettings className={styles.nav_icon} />
-                        <span className={styles.nav_text}>equipe</span>
-                    </Link>
-                </li>
-
-                {/* Integrações */}
-                <li className={`${styles.nav_item} ${isActive('/integracoes')}`}>
-                    <Link to="/integracoes">
-                        <FiLayers className={styles.nav_icon} />
-                        <span className={styles.nav_text}>Integrações</span>
-                    </Link>
-                </li>
-
-                {/* Privacidade (todos) */}
-                <li className={`${styles.nav_item} ${isActive('/privacidade')}`}>
-                    <Link to="/privacidade">
-                        <FiLock className={styles.nav_icon} />
-                        <span className={styles.nav_text}>Privacidade</span>
-                    </Link>
-                </li>
-
-                {/* IA segura (todos veem a política; donos/admins gerenciam) */}
-                <li className={`${styles.nav_item} ${isActive('/ia')}`}>
-                    <Link to="/ia">
-                        <FiCpu className={styles.nav_icon} />
-                        <span className={styles.nav_text}>IA segura</span>
-                    </Link>
-                </li>
-
-                {/* Auditoria do escritório (donos e administradores) */}
-                {isOrgManager && (
-                    <li className={`${styles.nav_item} ${isActive('/auditoria')}`}>
-                        <Link to="/auditoria">
-                            <FiActivity className={styles.nav_icon} />
-                            <span className={styles.nav_text}>Auditoria</span>
-                        </Link>
-                    </li>
-                )}
-
-                {/* IA do escritório: aprovações, autonomia, regras e memória (CAD-165) */}
-                <li className={`${styles.nav_item} ${isActive('/aprovacoes')}`}>
-                    <Link to="/aprovacoes">
-                        <FiCheckCircle className={styles.nav_icon} />
-                        <span className={styles.nav_text}>IA do escritório</span>
-                    </Link>
-                </li>
-
-                {/* Gestão Cadrius (equipe): TI e Financeiro em área própria (CAD-168) */}
-                {isStaff && (
-                    <li className={`${styles.nav_item} ${isActive('/gestao')}`}>
-                        <Link to="/gestao">
-                            <FiShield className={styles.nav_icon} />
-                            <span className={styles.nav_text}>Gestão Cadrius</span>
-                        </Link>
-                    </li>
-                )}
-
-            </ul>
-
-            {/* 2. Rodapé da Sidebar - Logout */}
+            <div className={styles.scroll}>
+                {visibleMenu(isOrgManager).map((section) => (
+                    <div key={section.section} className={styles.section}>
+                        <div className={styles.section_label}>{section.section}</div>
+                        <ul className={styles.nav_list}>
+                            {section.items.map((item) => <Item key={item.to} item={item} active={isActive(item.to)} onNavigate={onNavigate} />)}
+                        </ul>
+                    </div>
+                ))}
+                <ul className={styles.nav_list}>
+                    <Item item={HELP_ITEM} to={helpTo} active={isActive('/suporte')} onNavigate={onNavigate} />
+                    {isStaff && <Item item={STAFF_ITEM} active={isActive('/gestao')} onNavigate={onNavigate} />}
+                </ul>
+            </div>
             <div className={styles.sidebar_footer}>
-                <button
-                    type="button"
-                    className={styles.logout_link}
-                    onClick={async () => { await logout(); navigate('/', { replace: true }); }}
-                >
-                    <FiLogOut className={styles.nav_icon} />
+                <button type="button" className={styles.logout_link} onClick={async () => { await logout(); navigate('/', { replace: true }); }}>
+                    <FiLogOut className={styles.nav_icon} aria-hidden="true" />
                     <span className={styles.nav_text}>Sair</span>
                 </button>
             </div>

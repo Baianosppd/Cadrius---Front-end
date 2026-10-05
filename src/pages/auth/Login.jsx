@@ -15,9 +15,11 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import styles from './Login.module.css';
+import EnvSwitch from '../../components/common/EnvSwitch';
 
 function Login() {
-    const [username, setUsername] = useState('');
+    // e-mail trazido pelo seletor de ambiente (?email=), nunca a senha
+    const [username, setUsername] = useState(() => new URLSearchParams(window.location.search).get('email') || '');
     const [password, setPassword] = useState('');
     const [lembrar, setLembrar] = useState(false);
     const [error, setError] = useState(null);
@@ -93,6 +95,7 @@ function Login() {
             {/* Lado direito com formulário */}
             <div className={styles.side_form}>
                 <div className={styles.form_container}>
+                    <EnvSwitch email={username} />
                     <h2 className={styles.form_title}>Entrar</h2>
                     <p className={styles.form_subtitle}>Acesse sua conta para continuar</p>
 

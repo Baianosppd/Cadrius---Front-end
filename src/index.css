@@ -1,3 +1,22 @@
+/* Base visual do Cadrius (CAD-174): tokens, foco acessível e ajustes para telas pequenas */
+:root {
+  --c-primary: #2563eb;
+  --c-primary-600: #1d4ed8;
+  --c-primary-50: #eff6ff;
+  --c-text: #111827;
+  --c-text-2: #374151;
+  --c-muted: #6b7280;
+  --c-border: #e5e7eb;
+  --c-border-2: #d1d5db;
+  --c-bg: #f3f4f6;
+  --c-surface: #ffffff;
+  --c-danger: #dc2626;
+  --radius: 10px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
+  --shadow-md: 0 8px 24px rgba(17, 24, 39, .12);
+  --sidebar-w: 256px;
+  --topbar-h: 64px;
+}
 
 * {
   margin: 0;
@@ -11,6 +30,26 @@ body,
   width: 100%;
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
-  /* Fonte limpa padrão */
-  background-color: #f3f4f6;
+  background-color: var(--c-bg);
+  color: var(--c-text);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Foco visível em teclado (acessibilidade), sem contorno no clique do mouse */
+:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button, input, select, textarea { font-family: inherit; }
+img { max-width: 100%; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
+}
+
+/* Inputs com fonte >= 16px no celular evitam o zoom automático do iOS */
+@media (max-width: 640px) {
+  input, select, textarea { font-size: 16px !important; }
 }

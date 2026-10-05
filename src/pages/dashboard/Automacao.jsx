@@ -10,7 +10,13 @@ import SummaryGroup from '../../components/ui/Cards/SummaryGroup.jsx';
 import AutomationToolbar from '../../components/ui/AutomationToolbar.jsx';
 import AutomationList from '../../components/ui/AutomationList.jsx';
 import { FiFileText, FiZap, FiMail } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import tabs from '../../components/seguranca/seguranca.module.css';
+import RegrasTab from '../../components/automacao/RegrasTab.jsx';
+import ExecucoesTab from '../../components/automacao/ExecucoesTab.jsx';
+
+// Abas (CAD-172): fluxos com apps externos (webhooks) e regras internas do escritório, com aprovação e histórico
+const TABS = [['fluxos', 'Fluxos com apps'], ['regras', 'Regras do escritório'], ['aprovacoes', 'Aprovações'], ['historico', 'Histórico']];
 
 function Automacao() {
     const [search, setSearch] = useState('');
@@ -18,7 +24,9 @@ function Automacao() {
     const [workflows, setWorkflows] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const { isOrgManager } = useAuth();
+    const { isOrgManager, role } = useAuth();
+    const [params, setParams] = useSearchParams();
+    const tab = TABS.some(([k]) => k === params.get('aba')) ? params.get('aba') : 'fluxos';
 
     const load = useCallback(async () => {
         try {
@@ -55,6 +63,16 @@ function Automacao() {
         <div className={styles.automacao_container}>
             <PageHeader title="Automação de fluxo de trabalho" subtitle="Crie, ative e acompanhe as automações do escritório" />
             <SummaryGroup stats={stats} />
+            <div className={tabs.tabs} role="tablist" style={{ margin: '12px 0 16px' }}>
+                {TABS.map(([k, label]) => (
+                    <button key={k} type="button" role="tab" aria-selected={tab === k}
+                        className={`${tabs.tab} ${tab === k ? tabs.tab_active : ''}`} onClick={() => setParams({ aba: k })}>{label}</button>
+                ))}
+            </div>
+            {tab === 'regras' && <RegrasTab canManage={isOrgManager} />}
+            {tab === 'aprovacoes' && <ExecucoesTab pendentes canApprove={role !== 'VIEWER'} />}
+            {tab === 'historico' && <ExecucoesTab pendentes={false} />}
+            {tab === 'fluxos' && (<>
             <AutomationToolbar
                 search={search}
                 onSearchChange={setSearch}
@@ -72,6 +90,7 @@ function Automacao() {
                     onDelete={(w) => window.confirm(`Excluir "${w.name}"?`) && run(() => api.delete(`workflows/${w.id}/`), 'Automação excluída.')}
                 />
             )}
+            </>)}
         </div>
     );
 }

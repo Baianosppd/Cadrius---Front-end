@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 import AuthLayout from "../layouts/authLayout";
@@ -32,6 +32,12 @@ import RegisterEmpresa from '../pages/auth/RegisterEmpresa';
 
 
 // Carregamento sob demanda: o editor de fluxos (React Flow) e o visualizador de PDF são pesados
+// Redireciona mantendo ?aba=… (ex.: notificação "aguardando aprovação")
+function RedirectKeepQuery({ to }) {
+  const { search } = useLocation();
+  return <Navigate to={`${to}${search}`} replace />;
+}
+
 const FlowEditor = lazy(() => import('../pages/dashboard/FlowEditor'));
 const Documents = lazy(() => import('../pages/dashboard/Documents'));
 const DocumentDetail = lazy(() => import('../pages/dashboard/DocumentDetail'));
@@ -48,6 +54,20 @@ const GestaoUsuarios = lazy(() => import('../pages/gestao/Usuarios'));
 const GestaoSistema = lazy(() => import('../pages/gestao/Sistema'));
 const GestaoEquipeCadrius = lazy(() => import('../pages/gestao/Equipe'));
 const GestaoFiscal = lazy(() => import('../pages/gestao/Fiscal'));
+const GestaoSuporte = lazy(() => import('../pages/gestao/Suporte'));
+// Fase B (CAD-171): contatos, importação e suporte
+const Contatos = lazy(() => import('../pages/escritorio/Contatos'));
+const Importar = lazy(() => import('../pages/escritorio/Importar'));
+const Suporte = lazy(() => import('../pages/escritorio/Suporte'));
+// Fase C (CAD-172): agenda forense e processos acompanhados
+const AgendaForense = lazy(() => import('../pages/escritorio/AgendaForense'));
+const Acompanhamento = lazy(() => import('../pages/escritorio/Acompanhamento'));
+// Fase D (CAD-173): publicações do DJEN e minutas
+const Publicacoes = lazy(() => import('../pages/escritorio/Publicacoes'));
+const Minutas = lazy(() => import('../pages/escritorio/Minutas'));
+// CAD-174: marketing (escritório e Cadrius)
+const Marketing = lazy(() => import('../pages/escritorio/Marketing'));
+const GestaoMarketing = lazy(() => import('../pages/gestao/Marketing'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -84,6 +104,8 @@ export default function AppRoutes() {
           element={signed ? <MainLayout /> : <Navigate to="/" />}
         >
           <Route path="/automacao" element={<Automacao />} />
+          {/* links das notificações do back usam /automacoes */}
+          <Route path="/automacoes" element={<RedirectKeepQuery to="/automacao" />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/documents" element={<Documents />} />
 
@@ -105,6 +127,14 @@ export default function AppRoutes() {
           <Route path="/privacidade" element={<Privacidade />} />
           <Route path="/ia" element={<IASegura />} />
           <Route path="/aprovacoes" element={<CentralAprovacoes />} />
+          <Route path="/contatos" element={<Contatos />} />
+          <Route path="/importar" element={<Importar />} />
+          <Route path="/suporte" element={<Suporte />} />
+          <Route path="/agenda-forense" element={<AgendaForense />} />
+          <Route path="/acompanhamento" element={<Acompanhamento />} />
+          <Route path="/publicacoes" element={<Publicacoes />} />
+          <Route path="/minutas" element={<Minutas />} />
+          <Route path="/marketing" element={<Marketing />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           {/* Telas da equipe migraram para a Gestão Cadrius (CAD-168); links antigos continuam funcionando */}
           <Route path="/seguranca" element={<Navigate to="/gestao/seguranca" replace />} />
@@ -120,8 +150,10 @@ export default function AppRoutes() {
           <Route path="/gestao/escritorios" element={<GestaoEscritorios />} />
           <Route path="/gestao/usuarios" element={<GestaoUsuarios />} />
           <Route path="/gestao/sistema" element={<GestaoSistema />} />
+          <Route path="/gestao/marketing" element={<GestaoMarketing />} />
           <Route path="/gestao/equipe" element={<GestaoEquipeCadrius />} />
           <Route path="/gestao/fiscal" element={<GestaoFiscal />} />
+          <Route path="/gestao/suporte" element={<GestaoSuporte />} />
           <Route path="/gestao/financeiro" element={<Financeiro />} />
           <Route path="/gestao/seguranca" element={<CentroSeguranca />} />
         </Route>

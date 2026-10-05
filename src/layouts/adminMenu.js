@@ -1,4 +1,4 @@
-import { FiBriefcase, FiDollarSign, FiFileText, FiGrid, FiServer, FiShield, FiUserCheck, FiUsers } from 'react-icons/fi';
+import { FiBriefcase, FiDollarSign, FiFileText, FiGrid, FiHelpCircle, FiServer, FiShield, FiTrendingUp, FiUserCheck, FiUsers } from 'react-icons/fi';
 
 // Menu: cada item diz qual área enxerga (vazio = qualquer área da equipe)
 const MENU = [
@@ -6,6 +6,8 @@ const MENU = [
     { to: '/gestao/escritorios', label: 'Escritórios', icon: FiBriefcase, areas: [] },
     { to: '/gestao/financeiro', label: 'Financeiro', icon: FiDollarSign, areas: ['financeiro'] },
     { to: '/gestao/fiscal', label: 'Fiscal', icon: FiFileText, areas: ['fiscal'] },
+    { to: '/gestao/suporte', label: 'Suporte', icon: FiHelpCircle, areas: ['suporte', 'ti'] },
+    { to: '/gestao/marketing', label: 'Marketing', icon: FiTrendingUp, areas: ['marketing'] },
     { to: '/gestao/usuarios', label: 'Usuários', icon: FiUsers, areas: ['ti'] },
     { to: '/gestao/equipe', label: 'Equipe Cadrius', icon: FiUserCheck, areas: ['ti'] },
     { to: '/gestao/sistema', label: 'Sistema e operação', icon: FiServer, areas: ['ti'] },

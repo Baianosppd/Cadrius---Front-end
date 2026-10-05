@@ -135,3 +135,10 @@
 .details_link:hover {
     color: #111111;
 }
+.title, .counter { white-space: nowrap; }
+.add_button { white-space: nowrap; }
+@media (max-width: 640px) {
+    .container { padding: 16px; }
+    .header { flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+    .add_button { width: 100%; min-height: 40px; }
+}

@@ -30,3 +30,13 @@
     font-size: 14px;
     color: #6b7280;
 }
+
+.container { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
+.stat_box { min-width: 0; }
+@media (max-width: 640px) {
+    .container { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .stat_box { padding: 10px; gap: 2px; }
+    .stat_value { font-size: 20px; }
+    .stat_icon { width: 18px; height: 18px; }
+    .stat_title { font-size: 11px; line-height: 1.25; }
+}

@@ -3,3 +3,5 @@
     width: 100%;
     box-sizing: border-box;
 }
+
+@media (max-width: 640px) { .automacao_container { padding: 16px; } }

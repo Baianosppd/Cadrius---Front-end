@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FiBell, FiChevronDown } from 'react-icons/fi';
+import { FiBell, FiChevronDown, FiMenu } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import styles from './BarraSup.module.css';
 import api from '../../services/api';
@@ -9,7 +9,7 @@ import useAuth from '../../hooks/useAuth';
 // eslint-disable-next-line react-refresh/only-export-components
 export const NOTIFICATIONS_CHANGED = 'cadrius:notifications-changed';
 
-function BarraSup({ nome }) {
+function BarraSup({ nome, onMenu, menuOpen }) {
     const navigate = useNavigate();
     const { user } = useAuth();
     const [unread, setUnread] = useState(0);
@@ -27,7 +27,15 @@ function BarraSup({ nome }) {
 
     return (
         <header className={styles.barra_superior}>
-            <div></div>
+            <div className={styles.left}>
+                {onMenu && (
+                    <button type="button" className={styles.menu_button} onClick={onMenu} aria-label="Abrir menu"
+                        aria-expanded={!!menuOpen} aria-controls="menu-principal">
+                        <FiMenu size={22} />
+                    </button>
+                )}
+                <span className={styles.brand_mobile}>Cadrius</span>
+            </div>
 
             <div className={styles.actions_container}>
                 <button

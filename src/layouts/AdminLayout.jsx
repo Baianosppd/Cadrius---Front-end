@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { FiActivity, FiArrowLeft, FiLogOut } from 'react-icons/fi';
+import { FiActivity, FiArrowLeft, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import { AREA_LABEL, backofficeApi } from '../services/backoffice';
 import { errorMessage } from '../components/seguranca/ui';
@@ -16,6 +16,7 @@ export default function AdminLayout() {
     const [tick, setTick] = useState(0);
     // Fica no cadastro até a pessoa confirmar que guardou os códigos (o usuário passa a ter MFA no meio do fluxo)
     const [enrolling, setEnrolling] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         let alive = true;
@@ -31,12 +32,14 @@ export default function AdminLayout() {
     const areas = me.data?.areas || [];
     return (
         <div className={styles.layout}>
-            <aside className={styles.sidebar}>
-                <div className={styles.brand}>Gestão Cadrius</div>
-                <div className={styles.brand_sub}>Área interna da equipe — TI, Financeiro e Fiscal</div>
+            <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebar_open : ''}`} id="menu-gestao">
+                <div className={styles.brand}>Gestão Cadrius
+                    {menuOpen && <button type="button" className={styles.close_btn} onClick={() => setMenuOpen(false)} aria-label="Fechar menu"><FiX /></button>}
+                </div>
+                <div className={styles.brand_sub}>Área interna da equipe Cadrius</div>
                 <div className={styles.areas}>{areas.map((a) => <span key={a} className={styles.area}>{AREA_LABEL[a] || a}</span>)}</div>
                 {visibleMenu(areas).map((item) => (
-                    <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>
+                    <NavLink key={item.to} to={item.to} end={item.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>
                         <item.icon /> {item.label}
                     </NavLink>
                 ))}
@@ -46,11 +49,14 @@ export default function AdminLayout() {
                     <FiLogOut /> Sair
                 </button>
             </aside>
+            {menuOpen && <div className={styles.backdrop} onClick={() => setMenuOpen(false)} aria-hidden="true" />}
             <ConsentModal />
             <div className={styles.main}>
                 <div className={styles.topbar}>
-                    <span><FiActivity /> Ambiente administrativo: toda ação fica registrada na trilha de auditoria.</span>
-                    <span>{user?.email}</span>
+                    <button type="button" className={styles.menu_btn} onClick={() => setMenuOpen(true)} aria-label="Abrir menu"
+                        aria-expanded={menuOpen} aria-controls="menu-gestao"><FiMenu /></button>
+                    <span className={styles.topbar_note}><FiActivity /> Ambiente administrativo: toda ação fica registrada na trilha de auditoria.</span>
+                    <span className={styles.topbar_email}>{user?.email}</span>
                 </div>
                 <main className={styles.body}>
                     {me.error && <div className={styles.denied}><h2>Sem acesso</h2><p>{me.error}</p></div>}
