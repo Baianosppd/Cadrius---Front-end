@@ -10,7 +10,7 @@ const AutomationRow = ({ workflow, canManage, onToggle, onEdit, onApprove, onRej
                 <p className={styles.name}>
                     {workflow.name}{' '}
                     {workflow.ai_generated && (
-                        <span title="Criada pela IA" style={{ fontSize: 11, background: '#ede9fe', color: '#5b21b6', borderRadius: 999, padding: '1px 8px', marginLeft: 6 }}>
+                        <span title="Criada pela IA" style={{ fontSize: 11, background: 'rgba(139, 92, 246, .14)', color: '#5b21b6', borderRadius: 999, padding: '1px 8px', marginLeft: 6 }}>
                             IA{draft ? ' · aguardando aprovação' : ''}
                         </span>
                     )}

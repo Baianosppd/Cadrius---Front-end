@@ -112,17 +112,17 @@
 }
 
 .alta {
-    background-color: #fee2e2;
-    color: #dc2626;
+    background-color: var(--c-danger-bg);
+    color: var(--c-danger);
 }
 
 .media {
-    background-color: #fef9c3;
+    background-color: var(--c-warning-bg);
     color: #ca8a04;
 }
 
 .baixa {
-    background-color: #dbeafe;
+    background-color: var(--c-primary-100);
     color: var(--c-primary);
 }
 

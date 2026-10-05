@@ -11,9 +11,13 @@ import SmartActivities from '../../components/ui/SmartActivities';
 import { FiFileText, FiZap, FiMail } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import FirstSteps from '../../components/painel/FirstSteps';
+import useAuth from '../../hooks/useAuth';
+import { greeting, todayLabel } from '../../services/onboarding';
 
 function Dashboard() {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [dashStats, setDashStats] = useState(null);
     const [tasks, setTasks] = useState([]);
     const [activities, setActivities] = useState([]);
@@ -51,7 +55,9 @@ function Dashboard() {
 
     return (
         <div className={styles.dashboard_container}>
-            <PageHeader title="Painel" subtitle="O resumo do dia: tarefas, documentos e o que a IA preparou" />
+            <PageHeader title={`${greeting()}${user?.first_name ? `, ${user.first_name}` : ""}`} subtitle={`${todayLabel()} · o resumo do dia: tarefas, documentos e o que a IA preparou`} />
+
+            <FirstSteps totalDocs={dashStats ? Number(dashStats.total_documentos || 0) : undefined} />
 
             <div className={styles.actions_row}>
                 <ActionButton icon={FiFileText} label="Analisar documento" variant="primary" onClick={() => navigate('/documents')} />

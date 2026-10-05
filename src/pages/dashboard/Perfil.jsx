@@ -127,7 +127,7 @@ function Perfil() {
                                             <span key={p.id} className={ui.btn_row}>
                                                 <button type="button" className={`${ui.btn} ${ui.btn_primary}`} onClick={() => subscribe(p.id)}>Assinar {p.name} — {p.price}/mês</button>
                                                 {promo.trim() && <button type="button" className={ui.btn} onClick={() => checkPromo(p.id)}>Aplicar cupom</button>}
-                                                {promoInfo[p.id]?.valid && <small style={{ display: 'block', color: '#166534' }}>Com o cupom: R$ {Number(promoInfo[p.id].discounted).toLocaleString('pt-BR')} ({promoInfo[p.id].duration === 'once' ? 'na 1ª cobrança' : promoInfo[p.id].duration === 'forever' ? 'sempre' : `por ${promoInfo[p.id].duration_months} meses`})</small>}
+                                                {promoInfo[p.id]?.valid && <small style={{ display: 'block', color: 'var(--c-success)' }}>Com o cupom: R$ {Number(promoInfo[p.id].discounted).toLocaleString('pt-BR')} ({promoInfo[p.id].duration === 'once' ? 'na 1ª cobrança' : promoInfo[p.id].duration === 'forever' ? 'sempre' : `por ${promoInfo[p.id].duration_months} meses`})</small>}
                                             </span>
                                         ))}
                                     </div>

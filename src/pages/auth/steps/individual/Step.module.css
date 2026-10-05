@@ -15,7 +15,7 @@
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    background-color: #eff6ff;
+    background-color: var(--c-primary-50);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,7 +53,7 @@
     justify-content: center;
     gap: 10px;
     padding: 12px;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     border: 1px solid var(--c-border);
     border-radius: 8px;
     font-size: 14px;
@@ -116,7 +116,7 @@
 
 .required {
     font-size: 11px;
-    color: #ef4444;
+    color: var(--c-danger);
     font-weight: 600;
 }
 
@@ -133,7 +133,7 @@
     font-size: 14px;
     color: var(--c-ink);
     outline: none;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
 }
 
 .input:focus {
@@ -147,7 +147,7 @@
     font-size: 14px;
     color: var(--c-ink);
     outline: none;
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     cursor: pointer;
     width: 100%;
 }
@@ -157,15 +157,15 @@
 }
 
 .info_box {
-    background-color: #eff6ff;
-    border: 1px solid #bfdbfe;
+    background-color: var(--c-primary-50);
+    border: 1px solid var(--c-info-bd);
     border-radius: 8px;
     padding: 14px 16px;
 }
 
 .info_text {
     font-size: 13px;
-    color: #1e40af;
+    color: var(--c-primary-700);
     margin: 0;
     line-height: 1.5;
 }
@@ -195,7 +195,7 @@
 
 .plan_selected {
     border-color: var(--c-primary);
-    background-color: #eff6ff;
+    background-color: var(--c-primary-50);
 }
 
 .popular_badge {
@@ -253,7 +253,7 @@
 .feature_check {
     width: 14px;
     height: 14px;
-    color: #16a34a;
+    color: var(--c-success);
     flex-shrink: 0;
 }
 
@@ -266,7 +266,7 @@
 }
 
 .card_form {
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     border: 1px solid var(--c-border);
     border-radius: 12px;
     padding: 24px;
@@ -287,7 +287,7 @@
     align-items: center;
     gap: 8px;
     font-size: 13px;
-    color: #16a34a;
+    color: var(--c-success);
 }
 
 .stripe_icon {
@@ -296,7 +296,7 @@
 }
 
 .summary {
-    background-color: #ffffff;
+    background-color: var(--c-surface);
     border: 1px solid var(--c-border);
     border-radius: 12px;
     padding: 24px;
@@ -313,7 +313,7 @@
 }
 
 .discount {
-    color: #16a34a;
+    color: var(--c-success);
     font-weight: 600;
 }
 
@@ -348,7 +348,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #dcfce7;
+    background-color: var(--c-success-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -374,7 +374,7 @@
 }
 
 .next_steps {
-    background-color: #f0f7ff;
+    background-color: var(--c-primary-50);
     border-radius: 12px;
     padding: 24px;
     width: 100%;

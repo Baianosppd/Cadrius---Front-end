@@ -110,8 +110,8 @@
 
 .signature_block {
     width: 100%;
-    background-color: #eff6ff;
-    border: 1px solid #bfdbfe;
+    background-color: var(--c-primary-50);
+    border: 1px solid var(--c-info-bd);
     border-radius: 10px;
     padding: 20px;
     display: flex;
@@ -155,7 +155,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    border-bottom: 1px solid #bfdbfe;
+    border-bottom: 1px solid var(--c-info-bd);
     padding-bottom: 16px;
 }
 
@@ -265,7 +265,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #dcfce7;
+    background-color: var(--c-success-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -274,7 +274,7 @@
 .success_icon {
     width: 40px;
     height: 40px;
-    color: #16a34a;
+    color: var(--c-success);
 }
 
 .success_title {

@@ -18,7 +18,7 @@
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    background-color: #fef2f2;
+    background-color: var(--c-danger-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -28,7 +28,7 @@
 .icon {
     width: 16px;
     height: 16px;
-    color: #ef4444;
+    color: var(--c-danger);
 }
 
 .title {
@@ -52,7 +52,7 @@
 .clause_bar {
     width: 4px;
     border-radius: 4px;
-    background-color: #ef4444;
+    background-color: var(--c-danger-600);
     flex-shrink: 0;
 }
 

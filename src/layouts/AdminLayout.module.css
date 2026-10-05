@@ -33,3 +33,6 @@
   .body { padding: var(--page-pad) var(--page-pad) var(--sp-8); }
 }
 @media (max-width: 480px) { .topbar_email { font-size: .78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60vw; } }
+
+.topbar_right { display: inline-flex; align-items: center; gap: var(--sp-2); min-width: 0; }
+.topbar { color: var(--c-muted); }

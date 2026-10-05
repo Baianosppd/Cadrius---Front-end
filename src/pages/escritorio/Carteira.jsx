@@ -51,7 +51,7 @@ function Funil({ canWrite, onOpenClient }) {
                                 <button type="button" className={styles.link_btn} onClick={() => onOpenClient(o.contato)}>{o.contato?.nome}</button>
                                 <div><strong>{o.titulo}</strong></div>
                                 <div className={styles.muted}>{o.origem_label}{o.valor_centavos ? ` · ${brl(o.valor_centavos)}` : ''}</div>
-                                {o.proxima_acao && <div className={styles.muted} style={o.atrasada ? { color: '#dc2626' } : undefined}>
+                                {o.proxima_acao && <div className={styles.muted} style={o.atrasada ? { color: 'var(--c-danger)' } : undefined}>
                                     {o.atrasada ? 'Atrasada: ' : 'Próxima: '}{o.proxima_acao}{o.proxima_acao_em ? ` (${fmtDate(o.proxima_acao_em)})` : ''}</div>}
                                 {o.etapa === 'perdido' && o.motivo_perda && <div className={styles.muted}>Motivo: {o.motivo_perda}</div>}
                                 {canWrite && (
@@ -132,7 +132,7 @@ function Contratos({ canWrite, canManage }) {
                 <table className={styles.table}>
                     <thead><tr><th>Contrato</th><th>Forma</th><th>Valor</th><th>Recebido</th><th>Em aberto</th><th>Situação</th></tr></thead>
                     <tbody>
-                        {data.resultados.length === 0 && <tr><td colSpan={6}><Empty>Nenhum contrato. Feche uma oportunidade no funil ou crie aqui.</Empty></td></tr>}
+                        {data.resultados.length === 0 && <tr><td colSpan={6}><Empty title="Nenhum contrato ainda">Feche uma oportunidade no funil ou crie o contrato aqui: as parcelas entram sozinhas em Finanças.</Empty></td></tr>}
                         {data.resultados.map((a) => (
                             <tr key={a.id} onClick={() => setOpen(a.id)} style={{ cursor: 'pointer' }}>
                                 <td><strong>{a.titulo}</strong><div className={styles.muted}>{a.contato?.nome}</div></td>

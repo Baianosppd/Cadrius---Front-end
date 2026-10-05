@@ -81,3 +81,10 @@
 .send {
     display: default;
 }
+/* CAD-219: ilustração temática e celular sem a coluna da imagem */
+.side_image { background: linear-gradient(135deg, var(--c-surface-3) 0%, var(--c-primary-50) 100%); }
+@media (max-width: 860px) {
+    .main_wrapper { flex-direction: column; }
+    .side_image { display: none; }
+    .side_form { padding: var(--sp-8) var(--sp-4); }
+}

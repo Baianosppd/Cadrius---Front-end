@@ -48,7 +48,7 @@ export default function GoogleCalendarCard() {
             ) : (
                 <p>Estado: <strong>{st.connected ? GCAL_STATUS_LABEL[st.status] : 'Não conectado'}</strong>
                     {st.last_sync_at && <> · última sincronização {new Date(st.last_sync_at).toLocaleString('pt-BR')}</>}
-                    {st.last_error && <span style={{ color: '#b91c1c' }}> · {st.last_error}</span>}</p>
+                    {st.last_error && <span style={{ color: 'var(--c-danger)' }}> · {st.last_error}</span>}</p>
             )}
             {st.app_configured && (
                 <div className={ui.btn_row}>

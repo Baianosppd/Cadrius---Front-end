@@ -1,7 +1,7 @@
 /* --- ESTILO BASE DO CARTÃO --- */
 
 .card_base {
-    background-color: white;
+    background-color: var(--c-surface);
     border-radius: 0.75rem; /* rounded-xl */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* shadow-sm */
     padding: 1.5rem; /* p-6 */
@@ -61,23 +61,23 @@
     color: var(--c-subtle); /* Padrão cinza */
 }
 .observation span.text_red {
-    color: #EF4444; /* Cor vermelha para 'urgentes' */
+    color: var(--c-danger); /* Cor vermelha para 'urgentes' */
 }
 
 /* --- ESTILIZAÇÃO DOS ÍCONES (CONTAINER E COR) --- */
 
 .icon_container_blue {
-    background-color: #DBEAFE; /* bg-blue-100 */
+    background-color: var(--c-primary-100); /* bg-blue-100 */
 }
 .icon_container_blue .icon_style {
     color: var(--c-primary); /* text-blue-600 */
 }
 
 .icon_container_green {
-    background-color: #D1FAE5; /* bg-green-100 */
+    background-color: var(--c-success-bg); /* bg-green-100 */
 }
 .icon_container_green .icon_style {
-    color: #059669; /* text-green-600 */
+    color: var(--c-success); /* text-green-600 */
 }
 
 .icon_container_purple {
@@ -88,7 +88,7 @@
 }
 
 .icon_container_yellow {
-    background-color: #FEF3C7; /* bg-yellow-100 */
+    background-color: var(--c-warning-bg); /* bg-yellow-100 */
 }
 .icon_container_yellow .icon_style {
     color: #F59E0B; /* text-yellow-600 */
@@ -128,7 +128,7 @@
 
 /* --- Estilo Base para Card de Automação --- */
 .card_base_automacao {
-    background-color: white;
+    background-color: var(--c-surface);
     border-radius: 0.75rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
@@ -203,16 +203,16 @@
 /* --- Cores Específicas de Status --- */
 
 .status_ativa {
-    background-color: #D1FAE5; /* Verde claro */
-    color: #059669; /* Verde escuro */
+    background-color: var(--c-success-bg); /* Verde claro */
+    color: var(--c-success); /* Verde escuro */
 }
 
 .status_pausada {
-    background-color: #FEF3C7; /* Amarelo claro */
+    background-color: var(--c-warning-bg); /* Amarelo claro */
     color: #F59E0B; /* Amarelo escuro */
 }
 
 .status_erro {
-    background-color: #FEE2E2; /* Vermelho claro */
-    color: #EF4444; /* Vermelho escuro */
+    background-color: var(--c-danger-bg); /* Vermelho claro */
+    color: var(--c-danger); /* Vermelho escuro */
 }

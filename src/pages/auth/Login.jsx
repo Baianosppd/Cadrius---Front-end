@@ -16,6 +16,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import styles from './Login.module.css';
 import EnvSwitch from '../../components/common/EnvSwitch';
+import ThemeToggle from '../../components/common/ThemeToggle';
+import { CourthouseScene } from '../../components/illustrations/LegalArt';
 
 function Login() {
     // e-mail trazido pelo seletor de ambiente (?email=), nunca a senha
@@ -95,12 +97,14 @@ function Login() {
                     <li>Documentos lidos pela IA, sempre com revisão do advogado</li>
                     <li>Dados cifrados e trilha de auditoria (LGPD)</li>
                 </ul>
+                <div className={styles.dark_art} data-theme="dark"><CourthouseScene /></div>
             </div>
 
             {/* Lado direito com formulário */}
             <div className={styles.side_form}>
+                <div className={styles.form_tools}><ThemeToggle /></div>
                 <div className={styles.form_container}>
-                    <EnvSwitch email={username} />
+                    <div className={styles.mobile_brand} aria-hidden="true">Cadrius</div>
                     <h2 className={styles.form_title}>Entrar</h2>
                     <p className={styles.form_subtitle}>Acesse sua conta para continuar</p>
 
@@ -147,6 +151,10 @@ function Login() {
                             <Label>E-mail</Label>
                             <Input
                                 type="email"
+                                id="username"
+                                name="username"
+                                autoComplete="username"
+                                inputMode="email"
                                 placeholder="seu@email.com"
                                 value={username}
                                 onChange={(e) => { setUsername(e.target.value); setError(null); }}
@@ -158,6 +166,9 @@ function Login() {
                             <div className={styles.password_wrapper}>
                                 <Input
                                     type={showPassword ? 'text' : 'password'}
+                                    id="current-password"
+                                    name="password"
+                                    autoComplete="current-password"
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => { setPassword(e.target.value); setError(null); }}
@@ -166,6 +177,7 @@ function Login() {
                                 <button
                                     type="button"
                                     className={styles.eye_button}
+                                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                                     onClick={() => setShowPassword(p => !p)}
                                 >
                                     {showPassword ? <FiEyeOff /> : <FiEye />}
@@ -197,6 +209,7 @@ function Login() {
                     <p className={styles.register_link}>
                         Não tem uma conta? <Link to="/criar-conta">Criar conta</Link>
                     </p>
+                    <EnvSwitch email={username} />
                 </div>
             </div>
         </div>

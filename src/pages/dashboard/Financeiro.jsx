@@ -180,7 +180,7 @@ function Crud({ spec }) {
                                 {spec.columns.map(([key, label, render]) => <td key={label}>{render ? render(row[key], row) : String(row[key] ?? '—')}</td>)}
                                 <td style={{ whiteSpace: 'nowrap' }}>
                                     <button onClick={() => setEditing(editing === row.id ? null : row.id)}>Editar</button>
-                                    {spec.canDelete && <button onClick={() => remove(row)} style={{ color: '#dc2626', marginLeft: 6 }}>Apagar</button>}
+                                    {spec.canDelete && <button onClick={() => remove(row)} style={{ color: 'var(--c-danger)', marginLeft: 6 }}>Apagar</button>}
                                 </td>
                             </tr>
                         ))}

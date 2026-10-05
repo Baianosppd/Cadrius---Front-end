@@ -35,7 +35,7 @@
     border: none;
     position: relative;
     cursor: pointer;
-    color: #64748b;
+    color: var(--c-muted);
     display: flex;
     align-items: center;
 }
@@ -65,7 +65,7 @@
 }
 
 .user_profile:hover {
-    background-color: #f1f5f9;
+    background-color: var(--c-surface-3);
 }
 
 .avatar_img {
@@ -83,12 +83,12 @@
 
 .user_name {
     font-weight: 600;
-    color: #334155;
+    color: var(--c-text-2);
     font-size: 14px;
 }
 
 .chevron {
-    color: #94a3b8;
+    color: var(--c-subtle);
     font-size: 14px;
 }
 .left { display: flex; align-items: center; gap: 10px; }

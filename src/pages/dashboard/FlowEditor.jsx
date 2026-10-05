@@ -13,7 +13,7 @@ import { flowToWorkflow, validateFlow, workflowToFlow } from '../../services/flo
 import { errorMessage } from '../../components/seguranca/ui';
 
 const COLORS = {
-    trigger: { color: '#16a34a', bg: '#dcfce7' },
+    trigger: { color: 'var(--c-success)', bg: '#dcfce7' },
     action: { color: '#3b82f6', bg: '#dbeafe' },
 };
 

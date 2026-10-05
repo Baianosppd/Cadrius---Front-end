@@ -9,7 +9,7 @@ import PerfilEscritorio from '../../components/ia/PerfilEscritorio';
 import Aprendizado from '../../components/ia/Aprendizado';
 import { MEMORY_KIND, MODE_LABEL, RISK_LABEL, RULE_KIND, brainApi, pct, promotionProgress, ruleEvidence } from '../../services/brain';
 
-const card = { background: '#fff', border: '1px solid var(--c-border)', borderRadius: 12, padding: 16, marginBottom: 12 };
+const card = { background: 'var(--c-surface)', border: '1px solid var(--c-border)', borderRadius: 12, padding: 16, marginBottom: 12 };
 
 function useLoad(fn) {
     const [state, setState] = useState({ data: null, error: null });
@@ -219,7 +219,7 @@ function Memoria() {
             {data.map((m) => (
                 <div key={m.id} style={{ ...card, display: 'flex', justifyContent: 'space-between', gap: 12 }}>
                     <div><Pill tone="blue">{MEMORY_KIND[m.kind] || m.kind}</Pill> <strong>{m.title}</strong><div style={{ color: 'var(--c-muted)', fontSize: '0.85rem' }}>{m.preview}</div></div>
-                    {isOrgManager && <button onClick={() => remove(m.id)} style={{ color: '#dc2626' }}>Apagar</button>}
+                    {isOrgManager && <button onClick={() => remove(m.id)} style={{ color: 'var(--c-danger)' }}>Apagar</button>}
                 </div>
             ))}
         </div>

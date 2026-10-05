@@ -8,7 +8,9 @@ import '@fontsource/poppins/700.css'
 import './index.css'
 import App from './App.jsx'
 import { initMonitoring } from './services/monitoring'
+import { initTheme } from './services/theme'
 
+initTheme()
 initMonitoring()
 
 createRoot(document.getElementById('root')).render(

@@ -126,7 +126,7 @@ export default function Integracoes() {
                                             <span className={styles.btn_row}>
                                                 {canWrite && <button type="button" className={`${styles.btn} ${styles.btn_sm}`} disabled={tests[c.id]?.busy} onClick={() => test(c)}>
                                                     {tests[c.id]?.busy ? 'Testando…' : 'Testar'}</button>}
-                                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} style={{ color: '#dc2626' }} onClick={() => remove(c)}>Remover</button>
+                                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} style={{ color: 'var(--c-danger)' }} onClick={() => remove(c)}>Remover</button>
                                             </span>
                                         </div>
                                     ))}

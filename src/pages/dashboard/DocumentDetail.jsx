@@ -12,12 +12,12 @@ import {
 } from '../../services/documents';
 
 const TONES = {
-    info: { background: '#eff6ff', color: '#1e40af', border: '#bfdbfe' },
-    warn: { background: '#fffbeb', color: '#92400e', border: '#fde68a' },
-    success: { background: '#f0fdf4', color: '#166534', border: '#bbf7d0' },
-    danger: { background: '#fef2f2', color: '#991b1b', border: '#fecaca' },
+    info: { background: 'var(--c-primary-50)', color: 'var(--c-primary-700)', border: '#bfdbfe' },
+    warn: { background: 'var(--c-warning-bg)', color: '#92400e', border: '#fde68a' },
+    success: { background: 'var(--c-success-bg)', color: 'var(--c-success)', border: '#bbf7d0' },
+    danger: { background: 'var(--c-danger-bg)', color: 'var(--c-danger)', border: '#fecaca' },
 };
-const box = { background: '#fff', border: '1px solid var(--c-border)', borderRadius: 12, padding: 18, marginBottom: 16 };
+const box = { background: 'var(--c-surface)', border: '1px solid var(--c-border)', borderRadius: 12, padding: 18, marginBottom: 16 };
 const input = { width: '100%', padding: 7, border: '1px solid var(--c-border-2)', borderRadius: 6 };
 
 function ListEditor({ title, items, onChange, render, blank, addLabel, readOnly }) {

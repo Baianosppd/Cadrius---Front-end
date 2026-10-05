@@ -8,6 +8,7 @@ import ConsentModal from '../components/seguranca/ConsentModal';
 import MfaSetup from '../components/seguranca/MfaSetup';
 import styles from './AdminLayout.module.css';
 import { visibleMenu } from './adminMenu';
+import ThemeToggle from '../components/common/ThemeToggle';
 
 export default function AdminLayout() {
     const { user, logout } = useAuth();
@@ -56,7 +57,7 @@ export default function AdminLayout() {
                     <button type="button" className={styles.menu_btn} onClick={() => setMenuOpen(true)} aria-label="Abrir menu"
                         aria-expanded={menuOpen} aria-controls="menu-gestao"><FiMenu /></button>
                     <span className={styles.topbar_note}><FiActivity /> Ambiente administrativo: toda ação fica registrada na trilha de auditoria.</span>
-                    <span className={styles.topbar_email}>{user?.email}</span>
+                    <span className={styles.topbar_right}><ThemeToggle /><span className={styles.topbar_email}>{user?.email}</span></span>
                 </div>
                 <main className={styles.body} id="conteudo">
                     {me.error && <div className={styles.denied}><h2>Sem acesso</h2><p>{me.error}</p></div>}

@@ -1,0 +1,47 @@
+/* Seletor de base (CAD-219) — campo no rodapé do login + modal de bases, no estilo SAP Logon / Protheus */
+.field { width: 100%; display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); min-height: 52px; margin-top: var(--sp-6);
+  border: 1px solid var(--c-border-2); border-radius: var(--radius); background: var(--c-surface-2); cursor: pointer; text-align: left; font: inherit; color: var(--c-text);
+  transition: border-color .15s, background .15s; }
+.field:hover { border-color: var(--c-primary); background: var(--c-surface); }
+.field_icon { font-size: 18px; color: var(--c-muted); flex-shrink: 0; }
+.field_text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.field_label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--c-muted); }
+.field_value { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-base); font-weight: 600; color: var(--c-ink); flex-wrap: wrap; }
+.field_host { font-weight: 400; font-size: var(--fs-xs); color: var(--c-muted); }
+.field_action { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); font-weight: 600; color: var(--c-primary); white-space: nowrap; }
+.note { margin-top: var(--sp-2); font-size: var(--fs-xs); color: var(--c-warning); }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.dot_producao { background: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, .18); }
+.dot_teste { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, .2); }
+.dot_local { background: #64748b; }
+
+.overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, .55); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; padding: var(--sp-4); z-index: 10000; }
+.modal { width: 100%; max-width: 520px; background: var(--c-surface); color: var(--c-text); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: var(--sp-6); display: flex; flex-direction: column; gap: var(--sp-5); border: 1px solid var(--c-border); }
+.modal_head { display: flex; justify-content: space-between; gap: var(--sp-3); }
+.modal_title { font-size: var(--fs-lg); }
+.modal_sub { font-size: var(--fs-sm); color: var(--c-muted); margin-top: 2px; }
+.close { width: 34px; height: 34px; border-radius: var(--radius); border: none; background: var(--c-surface-3); color: var(--c-text-2); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.list { border: none; display: flex; flex-direction: column; gap: var(--sp-2); }
+.option { position: relative; display: flex; align-items: flex-start; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); border: 1px solid var(--c-border); border-radius: var(--radius); cursor: pointer; transition: border-color .15s, background .15s; }
+.option:hover { border-color: var(--c-border-2); background: var(--c-surface-2); }
+.option input { position: absolute; opacity: 0; pointer-events: none; }
+.option:focus-within { box-shadow: 0 0 0 3px var(--c-ring); }
+.option_on { border-color: var(--c-primary); background: var(--c-primary-50); }
+.option .dot { margin-top: 7px; }
+.option_body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.option_name { font-weight: 650; color: var(--c-ink); display: flex; align-items: center; gap: var(--sp-2); }
+.current { font-size: 11px; font-weight: 700; color: var(--c-success); background: var(--c-success-bg); border: 1px solid var(--c-success-bd); border-radius: 999px; padding: 0 8px; }
+.option_desc { font-size: var(--fs-sm); color: var(--c-text-2); }
+.option_host { font-size: var(--fs-xs); color: var(--c-muted); font-family: var(--font-mono); }
+.check { color: var(--c-primary); font-size: 18px; margin-top: 4px; }
+.actions { display: flex; justify-content: flex-end; gap: var(--sp-2); }
+.btn { min-height: 40px; padding: 0 var(--sp-4); border-radius: var(--radius); border: 1px solid var(--c-border-2); background: var(--c-surface); color: var(--c-text-2); font: inherit; font-weight: 600; cursor: pointer; }
+.btn:hover { background: var(--c-surface-2); }
+.btn_primary { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+.btn_primary:hover { background: var(--c-primary-600); }
+@media (max-width: 640px) {
+  .overlay { align-items: flex-end; padding: 0; }
+  .modal { max-width: 100%; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: var(--sp-5) var(--sp-4) calc(var(--sp-5) + env(safe-area-inset-bottom)); }
+  .actions .btn { flex: 1; min-height: 48px; }
+  .field_host { display: none; }
+}

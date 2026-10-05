@@ -116,8 +116,8 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    background-color: #f0fdf4;
-    color: #16a34a;
+    background-color: var(--c-success-bg);
+    color: var(--c-success);
     font-size: 13px;
     font-weight: 500;
     padding: 4px 12px;

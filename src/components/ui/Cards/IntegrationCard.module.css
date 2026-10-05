@@ -51,7 +51,7 @@
 }
 
 .status_connected {
-    color: #16a34a;
+    color: var(--c-success);
 }
 
 .status_disconnected {

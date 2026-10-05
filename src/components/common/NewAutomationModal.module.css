@@ -20,7 +20,7 @@
 /* --- MODAL BOX (O Conteúdo Branco) --- */
 
 .modal_box {
-    background-color: white;
+    background-color: var(--c-surface);
     border-radius: 0.75rem; /* rounded-xl */
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* shadow-2xl */
     padding: 2rem; /* p-8 */
@@ -115,7 +115,7 @@
 .select_field:focus {
     border-color: var(--c-primary); /* focus:ring-blue-500 */
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
-    background-color: white;
+    background-color: var(--c-surface);
 }
 
 

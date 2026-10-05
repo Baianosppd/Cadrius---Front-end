@@ -24,11 +24,11 @@
 }
 
 .item_unread {
-    background-color: #f0f7ff;
+    background-color: var(--c-primary-50);
 }
 
 .item_unread:hover {
-    background-color: #e8f2ff;
+    background-color: var(--c-primary-100);
 }
 
 .item_left {

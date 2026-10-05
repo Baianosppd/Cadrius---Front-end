@@ -27,7 +27,7 @@
     width: 40px;
     height: 40px;
     border-radius: 10px;
-    background-color: #eff6ff;
+    background-color: var(--c-primary-50);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,12 +107,12 @@
 }
 
 .step_active {
-    background-color: #eff6ff;
-    border: 1px solid #bfdbfe;
+    background-color: var(--c-primary-50);
+    border: 1px solid var(--c-info-bd);
 }
 
 .step_done {
-    background-color: #f0fdf4;
+    background-color: var(--c-success-bg);
 }
 
 .step_number {
@@ -168,7 +168,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    background-color: #fffbeb;
+    background-color: var(--c-warning-bg);
     border: 1px solid #fef08a;
     border-radius: 10px;
     padding: 12px;
@@ -182,13 +182,20 @@
 .tip_title {
     font-size: 13px;
     font-weight: 700;
-    color: #92400e;
+    color: var(--c-warning);
     margin: 0 0 4px 0;
 }
 
 .tip_text {
     font-size: 12px;
-    color: #92400e;
+    color: var(--c-warning);
     margin: 0;
     line-height: 1.4;
 }
+/* CAD-219: ilustração jurídica e dica em tom neutro */
+.art_box { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); padding: var(--sp-4) var(--sp-2); text-align: center; }
+.art { width: 96px; height: auto; }
+.art_quote { font-size: var(--fs-sm); color: var(--c-muted); font-style: italic; line-height: 1.5; }
+.tip { background: var(--c-primary-50); border: 1px solid var(--c-info-bd); }
+.tip_title { color: var(--c-primary-700); }
+.tip_text { color: var(--c-text-2); }

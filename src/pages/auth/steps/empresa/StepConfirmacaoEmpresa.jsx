@@ -5,7 +5,7 @@ const StepConfirmacaoEmpresa = () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <div className={styles.icon_wrapper} style={{ backgroundColor: '#dcfce7' }}>
+                <div className={styles.icon_wrapper} style={{ backgroundColor: 'var(--c-success-bg)' }}>
                     <span style={{ fontSize: 24 }}>🎉</span>
                 </div>
                 <div>

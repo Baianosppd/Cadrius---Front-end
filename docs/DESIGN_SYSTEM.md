@@ -38,3 +38,16 @@ de sistemas jurídicos (Clio, Astrea); cartões com padding interno uniforme, me
 - [ ] Sem `margin` entre blocos irmãos; usar `gap`.
 - [ ] Uma ação principal azul por área; destrutivas com `.btn_danger`.
 - [ ] Testar em 1440 px e 390 px (sem rolagem lateral; tabelas rolam dentro do cartão).
+
+## 5. Modo noturno
+- Tokens escuros em `:root[data-theme="dark"]` (ou em qualquer bloco com `data-theme="dark"`, como o painel do login).
+- Preferência em `services/theme.js` (`light` | `dark` | `system`), aplicada antes do primeiro render; botão `ThemeToggle`.
+- Regra: **nenhuma cor fixa de fundo/texto** em telas novas — só tokens; tons de estado com `--c-*-bg`/`--c-*-bd`.
+
+## 6. Padrões novos
+- **Base (ambiente)**: `EnvSwitch` no rodapé do login abre o modal "Selecionar base" (Produção / Teste), no estilo SAP Logon / Protheus.
+- **Estado vazio ilustrado**: `<Empty title="…" action={…}>texto</Empty>`.
+- **Ilustrações**: `components/illustrations/LegalArt.jsx` (`CourthouseScene`, `LawyerDesk`, `LawFirmTeam`, `ScalesMark`) — decorativas, nas cores do tema.
+- **Primeiros passos** no Painel (`components/painel/FirstSteps.jsx`, lógica em `services/onboarding.js`).
+- **Marketing**: `PostPreview` (como o post aparece em cada canal) e calendário editorial (`monthGrid`).
+- Mapa completo das telas e do que mudou: `docs/MAPA_TELAS_UX.md`.

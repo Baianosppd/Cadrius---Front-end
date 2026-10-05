@@ -5,7 +5,7 @@
 }
 
 .main_box {
-    background-color: white; /* Fundo branco do painel */
+    background-color: var(--c-surface); /* Fundo branco do painel */
     border-radius: 0.75rem; 
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
     padding: 1.5rem; 
@@ -64,7 +64,7 @@
     padding: 1rem; 
     border-radius: 0.5rem; 
     border: 1px solid var(--c-border); 
-    background-color: white; /* Garante que o item seja branco */
+    background-color: var(--c-surface); /* Garante que o item seja branco */
     /* ... (Grid layout for item_card) ... */
     display: grid;
     grid-template-columns: 1fr auto; 

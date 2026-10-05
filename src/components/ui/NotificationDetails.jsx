@@ -3,10 +3,10 @@ import { FiFileText, FiCalendar, FiZap, FiMail, FiArrowLeft } from 'react-icons/
 import { useNavigate } from 'react-router-dom';
 
 const iconMap = {
-    documento: { icon: FiFileText, color: '#3b82f6', bg: '#eff6ff' },
-    prazo: { icon: FiCalendar, color: '#f59e0b', bg: '#fffbeb' },
-    automacao: { icon: FiZap, color: '#8b5cf6', bg: '#f5f3ff' },
-    erro: { icon: FiMail, color: '#ef4444', bg: '#fef2f2' },
+    documento: { icon: FiFileText, color: '#3b82f6', bg: 'var(--c-primary-50)' },
+    prazo: { icon: FiCalendar, color: '#f59e0b', bg: 'var(--c-warning-bg)' },
+    automacao: { icon: FiZap, color: '#8b5cf6', bg: 'rgba(139, 92, 246, .14)' },
+    erro: { icon: FiMail, color: '#ef4444', bg: 'var(--c-danger-bg)' },
 };
 
 const DetailField = ({ label, value }) => (

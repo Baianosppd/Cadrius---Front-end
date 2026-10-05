@@ -30,7 +30,7 @@ function Oabs({ canManage, onChecked }) {
         <div className={styles.card}>
             <div className={styles.card_title}>OABs acompanhadas no DJEN</div>
             {error && <Banner tone="error">{error}</Banner>}
-            {data && data.length === 0 && <Empty>Nenhuma OAB cadastrada. {canManage ? 'Cadastre a OAB de cada advogado do escritório.' : 'Peça ao administrador para cadastrar.'}</Empty>}
+            {data && data.length === 0 && <Empty title="Comece pela OAB">Nenhuma OAB cadastrada ainda. {canManage ? 'Cadastre a OAB de cada advogado do escritório.' : 'Peça ao administrador para cadastrar.'}</Empty>}
             {data && data.map((w) => (
                 <div key={w.id} className={styles.list_row}>
                     <div>

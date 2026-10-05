@@ -104,7 +104,7 @@ export default function RegrasTab({ canManage }) {
                     ))}
                 </div>
             )}
-            {rules.length === 0 && <Empty>Nenhuma regra ainda. Comece por um modelo pronto.</Empty>}
+            {rules.length === 0 && <Empty title="Nenhuma regra ainda">Comece por um modelo pronto: toda regra nasce desligada e só liga depois de simulada.</Empty>}
             {rules.length > 0 && (
                 <div className={styles.table_wrap}>
                     <table className={styles.table}>

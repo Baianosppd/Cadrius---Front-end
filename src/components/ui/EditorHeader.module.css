@@ -41,8 +41,8 @@
 }
 
 .status_active {
-    background-color: #dcfce7;
-    color: #16a34a;
+    background-color: var(--c-success-bg);
+    color: var(--c-success);
 }
 
 .status_inactive {

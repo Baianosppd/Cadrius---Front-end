@@ -140,18 +140,18 @@
 }
 
 .status_concluido {
-    background-color: #dcfce7;
-    color: #16a34a;
+    background-color: var(--c-success-bg);
+    color: var(--c-success);
 }
 
 .status_processando {
-    background-color: #dbeafe;
+    background-color: var(--c-primary-100);
     color: var(--c-primary);
 }
 
 .status_erro {
-    background-color: #fee2e2;
-    color: #dc2626;
+    background-color: var(--c-danger-bg);
+    color: var(--c-danger);
 }
 
 .sign_button {
@@ -227,13 +227,13 @@
     border-radius: 6px;
     font-size: 14px;
     font-weight: 600;
-    color: #dc2626;
+    color: var(--c-danger);
     cursor: pointer;
     text-align: left;
 }
 
 .dropdown_item_danger:hover {
-    background-color: #fef2f2;
+    background-color: var(--c-danger-bg);
 }
 
 .dropdown_icon {

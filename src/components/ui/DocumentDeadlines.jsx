@@ -2,9 +2,9 @@ import styles from './DocumentDeadlines.module.css';
 import { FiClock } from 'react-icons/fi';
 
 const deadlineColor = (days) => {
-    if (days <= 15) return { bg: '#fee2e2', color: '#dc2626' };
-    if (days <= 30) return { bg: '#fef9c3', color: '#ca8a04' };
-    return { bg: '#dcfce7', color: '#16a34a' };
+    if (days <= 15) return { bg: 'var(--c-danger-bg)', color: 'var(--c-danger)' };
+    if (days <= 30) return { bg: 'var(--c-warning-bg)', color: '#ca8a04' };
+    return { bg: 'var(--c-success-bg)', color: 'var(--c-success)' };
 };
 
 const DeadlineItem = ({ label, days }) => {

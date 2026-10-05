@@ -27,7 +27,7 @@
 
 .option_selected {
     border-color: var(--c-primary);
-    background-color: #eff6ff;
+    background-color: var(--c-primary-50);
 }
 
 .option_label {

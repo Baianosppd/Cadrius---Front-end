@@ -50,7 +50,7 @@
 }
 
 .process_table_container {
-    background-color: white;
+    background-color: var(--c-surface);
     border-radius: 0.75rem;
     /* rounded-xl */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -140,7 +140,7 @@
 }
 
 .table_row {
-    background-color: white;
+    background-color: var(--c-surface);
     border-bottom: 1px solid var(--c-border);
     transition: background-color 0.2s;
 }
@@ -166,16 +166,16 @@
 }
 
 .td_deadline {
-    color: #EF4444;
+    color: var(--c-danger);
     /* text-red-600 */
     font-weight: 500;
 }
 
 /* Badge de Situação */
 .status_badge_active {
-    background-color: #D1FAE5;
+    background-color: var(--c-success-bg);
     /* bg-green-100 */
-    color: #059669;
+    color: var(--c-success);
     /* text-green-800 */
     font-size: 0.75rem;
     /* text-xs */
@@ -219,7 +219,7 @@
 
 /* --- 2. ESTILO DA SIDEBAR DE SUGESTÕES DA IA (1/4) --- */
 .ai_suggestions_box {
-    background-color: white;
+    background-color: var(--c-surface);
     border-radius: 0.75rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
@@ -239,7 +239,7 @@
 }
 
 .suggestion_item {
-    background-color: #EFF6FF;
+    background-color: var(--c-primary-50);
     /* bg-blue-50 */
     padding: 0.75rem;
     /* p-3 */

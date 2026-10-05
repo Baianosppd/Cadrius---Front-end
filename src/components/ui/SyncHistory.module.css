@@ -50,7 +50,7 @@
 }
 
 .dot_error {
-    background-color: #dc2626;
+    background-color: var(--c-danger-600);
 }
 
 .item_content {
@@ -73,7 +73,7 @@
 }
 
 .description_error {
-    color: #dc2626;
+    color: var(--c-danger);
 }
 
 .item_time {

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './BarraSup.module.css';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
+import ThemeToggle from './ThemeToggle';
 
 // Disparado quando o usuário lê notificações (atualiza o número do sino sem esperar o polling)
 // eslint-disable-next-line react-refresh/only-export-components
@@ -38,6 +39,7 @@ function BarraSup({ nome, onMenu, menuOpen }) {
             </div>
 
             <div className={styles.actions_container}>
+                <ThemeToggle />
                 <button
                     className={styles.icon_button_notification}
                     aria-label="Notificações"
@@ -56,7 +58,7 @@ function BarraSup({ nome, onMenu, menuOpen }) {
                         {user?.profile_picture ? (
                             <img src={user.profile_picture} alt="Perfil" className={styles.avatar_img} />
                         ) : (
-                            <div className={styles.avatar_img} aria-label="Perfil" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#dbeafe', color: '#1d4ed8', fontWeight: 700 }}>
+                            <div className={styles.avatar_img} aria-label="Perfil" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--c-primary-100)', color: 'var(--c-primary-700)', fontWeight: 700 }}>
                                 {user?.initials || '?'}
                             </div>
                         )}

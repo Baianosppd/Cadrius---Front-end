@@ -18,7 +18,7 @@
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    background-color: #fffbeb;
+    background-color: var(--c-warning-bg);
     display: flex;
     align-items: center;
     justify-content: center;

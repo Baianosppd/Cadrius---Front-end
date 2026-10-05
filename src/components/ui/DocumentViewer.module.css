@@ -79,7 +79,7 @@
 
 .error {
     font-size: 14px;
-    color: #ef4444;
+    color: var(--c-danger);
     text-align: center;
     padding: 40px;
 }
