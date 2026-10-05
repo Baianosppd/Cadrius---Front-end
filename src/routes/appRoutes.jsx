@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 import AuthLayout from "../layouts/authLayout";
@@ -32,6 +32,12 @@ import RegisterEmpresa from '../pages/auth/RegisterEmpresa';
 
 
 // Carregamento sob demanda: o editor de fluxos (React Flow) e o visualizador de PDF são pesados
+// Redireciona mantendo ?aba=… (ex.: notificação "aguardando aprovação")
+function RedirectKeepQuery({ to }) {
+  const { search } = useLocation();
+  return <Navigate to={`${to}${search}`} replace />;
+}
+
 const FlowEditor = lazy(() => import('../pages/dashboard/FlowEditor'));
 const Documents = lazy(() => import('../pages/dashboard/Documents'));
 const DocumentDetail = lazy(() => import('../pages/dashboard/DocumentDetail'));
@@ -53,6 +59,9 @@ const GestaoSuporte = lazy(() => import('../pages/gestao/Suporte'));
 const Contatos = lazy(() => import('../pages/escritorio/Contatos'));
 const Importar = lazy(() => import('../pages/escritorio/Importar'));
 const Suporte = lazy(() => import('../pages/escritorio/Suporte'));
+// Fase C (CAD-172): agenda forense e processos acompanhados
+const AgendaForense = lazy(() => import('../pages/escritorio/AgendaForense'));
+const Acompanhamento = lazy(() => import('../pages/escritorio/Acompanhamento'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -89,6 +98,8 @@ export default function AppRoutes() {
           element={signed ? <MainLayout /> : <Navigate to="/" />}
         >
           <Route path="/automacao" element={<Automacao />} />
+          {/* links das notificações do back usam /automacoes */}
+          <Route path="/automacoes" element={<RedirectKeepQuery to="/automacao" />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/documents" element={<Documents />} />
 
@@ -113,6 +124,8 @@ export default function AppRoutes() {
           <Route path="/contatos" element={<Contatos />} />
           <Route path="/importar" element={<Importar />} />
           <Route path="/suporte" element={<Suporte />} />
+          <Route path="/agenda-forense" element={<AgendaForense />} />
+          <Route path="/acompanhamento" element={<Acompanhamento />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           {/* Telas da equipe migraram para a Gestão Cadrius (CAD-168); links antigos continuam funcionando */}
           <Route path="/seguranca" element={<Navigate to="/gestao/seguranca" replace />} />

@@ -13,7 +13,9 @@ import {
     FiCheckCircle,
     FiUsers,
     FiUpload,
-    FiHelpCircle
+    FiHelpCircle,
+    FiCalendar,
+    FiBriefcase
 } from 'react-icons/fi'; // Importando ícones modernos
 import styles from './Navbar.module.css';
 
@@ -77,6 +79,18 @@ function Navbar() {
                     <Link to="/contatos">
                         <FiUsers className={styles.nav_icon} />
                         <span className={styles.nav_text}>Contatos</span>
+                    </Link>
+                </li>
+                <li className={`${styles.nav_item} ${isActive('/acompanhamento')}`}>
+                    <Link to="/acompanhamento">
+                        <FiBriefcase className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Processos acompanhados</span>
+                    </Link>
+                </li>
+                <li className={`${styles.nav_item} ${isActive('/agenda-forense')}`}>
+                    <Link to="/agenda-forense">
+                        <FiCalendar className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Agenda forense</span>
                     </Link>
                 </li>
                 <li className={`${styles.nav_item} ${isActive('/importar')}`}>
