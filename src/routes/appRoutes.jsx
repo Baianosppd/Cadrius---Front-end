@@ -48,6 +48,11 @@ const GestaoUsuarios = lazy(() => import('../pages/gestao/Usuarios'));
 const GestaoSistema = lazy(() => import('../pages/gestao/Sistema'));
 const GestaoEquipeCadrius = lazy(() => import('../pages/gestao/Equipe'));
 const GestaoFiscal = lazy(() => import('../pages/gestao/Fiscal'));
+const GestaoSuporte = lazy(() => import('../pages/gestao/Suporte'));
+// Fase B (CAD-171): contatos, importação e suporte
+const Contatos = lazy(() => import('../pages/escritorio/Contatos'));
+const Importar = lazy(() => import('../pages/escritorio/Importar'));
+const Suporte = lazy(() => import('../pages/escritorio/Suporte'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -105,6 +110,9 @@ export default function AppRoutes() {
           <Route path="/privacidade" element={<Privacidade />} />
           <Route path="/ia" element={<IASegura />} />
           <Route path="/aprovacoes" element={<CentralAprovacoes />} />
+          <Route path="/contatos" element={<Contatos />} />
+          <Route path="/importar" element={<Importar />} />
+          <Route path="/suporte" element={<Suporte />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           {/* Telas da equipe migraram para a Gestão Cadrius (CAD-168); links antigos continuam funcionando */}
           <Route path="/seguranca" element={<Navigate to="/gestao/seguranca" replace />} />
@@ -122,6 +130,7 @@ export default function AppRoutes() {
           <Route path="/gestao/sistema" element={<GestaoSistema />} />
           <Route path="/gestao/equipe" element={<GestaoEquipeCadrius />} />
           <Route path="/gestao/fiscal" element={<GestaoFiscal />} />
+          <Route path="/gestao/suporte" element={<GestaoSuporte />} />
           <Route path="/gestao/financeiro" element={<Financeiro />} />
           <Route path="/gestao/seguranca" element={<CentroSeguranca />} />
         </Route>
