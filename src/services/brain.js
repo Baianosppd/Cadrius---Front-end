@@ -62,3 +62,15 @@ export function promotionProgress(row, criteria) {
     const blocked = row.rejected > 0 || row.undone > 0;
     return { volume, quality, blocked, ready: volume >= 1 && quality >= 1 && !blocked };
 }
+
+// Regras aprendidas: correção de leitura (field_correction) ou vocabulário do escritório (term, CAD-174).
+export const RULE_KIND = {
+    field_correction: 'Leitura de documentos',
+    term: 'Vocabulário do escritório',
+};
+
+export function ruleEvidence(rule) {
+    const n = Number(rule?.evidence || 0);
+    if (rule?.kind === 'term') return `A equipe fez essa troca em ${n} ${n === 1 ? 'texto' : 'textos'} revisados.`;
+    return n === 1 ? 'Baseada em 1 correção.' : `Baseada em ${n} correções iguais.`;
+}

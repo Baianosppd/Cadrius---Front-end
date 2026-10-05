@@ -7,7 +7,7 @@ import { Banner, Empty, Pill, errorMessage } from '../../components/seguranca/ui
 import useAuth from '../../hooks/useAuth';
 import PerfilEscritorio from '../../components/ia/PerfilEscritorio';
 import Aprendizado from '../../components/ia/Aprendizado';
-import { MEMORY_KIND, MODE_LABEL, RISK_LABEL, brainApi, pct, promotionProgress } from '../../services/brain';
+import { MEMORY_KIND, MODE_LABEL, RISK_LABEL, RULE_KIND, brainApi, pct, promotionProgress, ruleEvidence } from '../../services/brain';
 
 const card = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: 16, marginBottom: 12 };
 
@@ -62,12 +62,15 @@ function Aprovacoes() {
                 <section>
                     <h3>Regras sugeridas pelo sistema</h3>
                     {data.rules_proposed.map((r) => (
-                        <div key={r.id} style={{ ...card, display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center' }}>
-                            <div>{r.description}<div style={{ color: '#6b7280', fontSize: '0.85rem' }}>Você fez essa correção {r.evidence} vezes.</div></div>
-                            <span style={{ whiteSpace: 'nowrap' }}>
-                                <button onClick={() => decideRule(r.id, 'approve')}>Aprovar regra</button>{' '}
-                                <button onClick={() => decideRule(r.id, 'reject')}>Recusar</button>
-                            </span>
+                        <div key={r.id} style={{ ...card, display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                            <div style={{ flex: '1 1 260px' }}>
+                                <Pill tone="blue">{RULE_KIND[r.kind] || r.kind}</Pill> {r.description}
+                                <div className={styles.muted}>{ruleEvidence(r)}</div>
+                            </div>
+                            <div className={styles.btn_row}>
+                                <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => decideRule(r.id, 'approve')}>Aprovar regra</button>
+                                <button type="button" className={styles.btn} onClick={() => decideRule(r.id, 'reject')}>Recusar</button>
+                            </div>
                         </div>
                     ))}
                 </section>
@@ -148,18 +151,24 @@ function Regras() {
     const LABEL = { proposed: ['Proposta', 'yellow'], active: ['Ativa', 'green'], disabled: ['Desligada', 'gray'] };
     return (
         <div className={styles.page}>
-            <Banner tone="info">Regras aprendidas com as suas correções. Só valem depois de aprovadas, e você pode desligá-las quando quiser.</Banner>
-            {data.length === 0 && <Empty>Ainda não há regras. Elas aparecem quando você repete a mesma correção várias vezes.</Empty>}
+            <Banner tone="info">
+                Regras aprendidas com o trabalho da equipe: correções repetidas na leitura de documentos e trocas de termos que vocês
+                sempre fazem nas minutas e posts (vocabulário do escritório). Só valem depois de aprovadas e podem ser desligadas quando quiser.
+            </Banner>
+            {data.length === 0 && <Empty>Ainda não há regras. Elas aparecem quando a mesma correção ou troca de termo se repete.</Empty>}
             {data.map((r) => (
-                <div key={r.id} style={{ ...card, display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center' }}>
-                    <div>{r.description} <Pill tone={LABEL[r.status]?.[1]}>{LABEL[r.status]?.[0] || r.status}</Pill>
-                        <div style={{ color: '#6b7280', fontSize: '0.85rem' }}>Baseada em {r.evidence} correções.</div></div>
+                <div key={r.id} style={{ ...card, display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div style={{ flex: '1 1 260px' }}>
+                        <Pill tone="blue">{RULE_KIND[r.kind] || r.kind}</Pill> <Pill tone={LABEL[r.status]?.[1]}>{LABEL[r.status]?.[0] || r.status}</Pill>
+                        <div>{r.description}</div>
+                        <div className={styles.muted}>{ruleEvidence(r)}</div>
+                    </div>
                     {isOrgManager && (
-                        <span style={{ whiteSpace: 'nowrap' }}>
-                            {r.status !== 'active' && <button onClick={() => decide(r.id, 'approve')}>Ativar</button>}
-                            {r.status === 'active' && <button onClick={() => decide(r.id, 'disable')}>Desligar</button>}
-                            {r.status === 'proposed' && <button onClick={() => decide(r.id, 'reject')} style={{ marginLeft: 6 }}>Recusar</button>}
-                        </span>
+                        <div className={styles.btn_row}>
+                            {r.status !== 'active' && <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => decide(r.id, 'approve')}>Ativar</button>}
+                            {r.status === 'active' && <button type="button" className={styles.btn} onClick={() => decide(r.id, 'disable')}>Desligar</button>}
+                            {r.status === 'proposed' && <button type="button" className={styles.btn} onClick={() => decide(r.id, 'reject')}>Recusar</button>}
+                        </div>
                     )}
                 </div>
             ))}

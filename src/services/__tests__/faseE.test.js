@@ -70,3 +70,13 @@ describe('aprendizado e menu', () => {
         expect(flat(visibleMenu(false))).toContain('/marketing');
     });
 });
+
+describe('regras aprendidas (vocabulário do escritório)', () => {
+    it('explica a evidência conforme o tipo da regra', async () => {
+        const { ruleEvidence, RULE_KIND } = await import('../brain');
+        expect(ruleEvidence({ kind: 'term', evidence: 3 })).toBe('A equipe fez essa troca em 3 textos revisados.');
+        expect(ruleEvidence({ kind: 'field_correction', evidence: 1 })).toBe('Baseada em 1 correção.');
+        expect(ruleEvidence({ kind: 'field_correction', evidence: 5 })).toBe('Baseada em 5 correções iguais.');
+        expect(RULE_KIND.term).toBe('Vocabulário do escritório');
+    });
+});
