@@ -10,7 +10,10 @@ import {
     FiCpu,
     FiLock,
     FiActivity,
-    FiCheckCircle
+    FiCheckCircle,
+    FiUsers,
+    FiUpload,
+    FiHelpCircle
 } from 'react-icons/fi'; // Importando ícones modernos
 import styles from './Navbar.module.css';
 
@@ -69,6 +72,20 @@ function Navbar() {
 
 
                 {/* Equipe */}
+                {/* Fase B (CAD-171): contatos e importação de planilhas */}
+                <li className={`${styles.nav_item} ${isActive('/contatos')}`}>
+                    <Link to="/contatos">
+                        <FiUsers className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Contatos</span>
+                    </Link>
+                </li>
+                <li className={`${styles.nav_item} ${isActive('/importar')}`}>
+                    <Link to="/importar">
+                        <FiUpload className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Importar dados</span>
+                    </Link>
+                </li>
+
                 <li className={`${styles.nav_item} ${isActive('/equipe')}`}>
                     <Link to="/equipe">
                         <FiSettings className={styles.nav_icon} />
@@ -115,6 +132,14 @@ function Navbar() {
                     <Link to="/aprovacoes">
                         <FiCheckCircle className={styles.nav_icon} />
                         <span className={styles.nav_text}>IA do escritório</span>
+                    </Link>
+                </li>
+
+                {/* Suporte com a equipe Cadrius (CAD-171): leva a tela atual para o chamado */}
+                <li className={`${styles.nav_item} ${isActive('/suporte')}`}>
+                    <Link to={`/suporte${location.pathname.startsWith('/suporte') ? '' : `?novo=1&de=${encodeURIComponent(location.pathname)}`}`}>
+                        <FiHelpCircle className={styles.nav_icon} />
+                        <span className={styles.nav_text}>Ajuda e suporte</span>
                     </Link>
                 </li>
 

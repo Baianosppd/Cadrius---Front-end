@@ -22,7 +22,7 @@ export const backofficeApi = {
     fiscalExport: (params) => api.get(`${BASE}fiscal/payments/export.csv`, { params, responseType: 'blob' }).then((r) => r.data),
 };
 
-export const AREA_LABEL = { ti: 'TI', financeiro: 'Financeiro', fiscal: 'Fiscal' };
+export const AREA_LABEL = { ti: 'TI', financeiro: 'Financeiro', fiscal: 'Fiscal', suporte: 'Suporte' };
 export const AREAS = Object.keys(AREA_LABEL);
 
 export const NF_STATUS = {
