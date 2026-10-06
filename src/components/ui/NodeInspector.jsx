@@ -38,6 +38,21 @@ export default function NodeInspector({ node, connections, connectionId, onConne
                 </>
             )}
 
+            {subtype === 'send_email' && (
+                <>
+                    <label className={styles.field}>Para (e-mail)
+                        <input className={styles.input} placeholder="{{email}}" value={cfg.to || ''} onChange={(e) => set({ to: e.target.value })} />
+                        <span>Vazio usa {'{{email}}'} do evento. Só envia para a equipe ou para cliente que autorizou e-mail (LGPD).</span>
+                    </label>
+                    <label className={styles.field}>Assunto
+                        <input className={styles.input} placeholder="Atualização do seu processo" value={cfg.subject || ''} onChange={(e) => set({ subject: e.target.value })} />
+                    </label>
+                    <label className={styles.field}>Mensagem
+                        <textarea className={styles.textarea} placeholder="Olá {{nome}}, ..." value={cfg.body || ''} onChange={(e) => set({ body: e.target.value })} />
+                    </label>
+                </>
+            )}
+
             {subtype === 'webhook' && (
                 <>
                     <label className={styles.field}>URL (https)

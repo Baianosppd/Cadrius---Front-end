@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { pendingMfa } from "../../services/mfa";
+import { homePath } from "../../services/home";
 
 // Retorno do login social (Google/Microsoft). O back redireciona para /google/callback#access=...&refresh=...
 // (fragmento: não vai para logs de servidor nem para o cabeçalho Referer). Também aceita ?access=&refresh=.
@@ -48,7 +49,7 @@ function GoogleCallback() {
             : loginWithTokens(access, refresh);
 
         login
-            .then(() => navigate("/dashboard", { replace: true }))
+            .then((me) => navigate(homePath(me), { replace: true }))
             .catch(() => setError(
                 !access || !refresh
                     ? ssoErrorMessage(code)

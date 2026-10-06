@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { pendingMfa } from '../../services/mfa';
+import { homePath } from '../../services/home';
 import { useNavigate, Link } from 'react-router-dom';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
@@ -38,12 +39,12 @@ function Login() {
         e.preventDefault();
         setError(null);
         try {
-            const { mfaToken: challenge } = await login(username, password);
+            const { mfaToken: challenge, user: me } = await login(username, password);
             if (challenge) {
                 setMfaToken(challenge);
                 return;
             }
-            navigate('/dashboard');
+            navigate(homePath(me));
         } catch (err) {
             console.error("Erro no login:", err.response?.data);
             if (!err.response) {
@@ -62,7 +63,7 @@ function Login() {
             if (data.recovery_codes_left !== undefined) {
                 toast.warn(`Você usou um código de recuperação. Restam ${data.recovery_codes_left}. Gere novos no Perfil.`);
             }
-            navigate('/dashboard');
+            navigate(homePath(data.user));
         } catch (err) {
             const code = err.response?.data?.code;
             if (code === 'mfa_expired') {

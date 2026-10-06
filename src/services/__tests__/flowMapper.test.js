@@ -19,6 +19,18 @@ describe('flowMapper', () => {
         expect(validateFlow([t, bad], [edge('t', 'a')]).join(' ')).toMatch(/Ainda não disponíveis/);
     });
 
+    it('e-mail (CAD-224): exige mensagem e faz ida e volta com o back', () => {
+        const t = node('t', 'trigger', 'webhook_in');
+        expect(validateFlow([t, node('e', 'action', 'send_email', { body: '' })], [edge('t', 'e')]).join(' ')).toMatch(/escreva a mensagem/);
+        const e = node('e', 'action', 'send_email', { to: '', subject: 'Prazo', body: 'Olá {{nome}}' });
+        const wf = flowToWorkflow({ nodes: [t, e], edges: [edge('t', 'e')], title: 'x', active: true, connectionId: 1 });
+        expect(wf.actions[0].action_type).toBe('EMAIL_SMTP');
+        expect(JSON.parse(wf.actions[0].payload_template)).toEqual({ to: '{{email}}', subject: 'Prazo', body: 'Olá {{nome}}' });
+        const back = workflowToFlow({ trigger: { event_type: 'Webhook Externo' }, actions: wf.actions });
+        expect(back.nodes[1].data.subtype).toBe('send_email');
+        expect(back.nodes[1].data.config).toEqual({ to: '', subject: 'Prazo', body: 'Olá {{nome}}' });
+    });
+
     it('exige texto no WhatsApp e URL https no webhook', () => {
         const t = node('t', 'trigger', 'whatsapp');
         const w = node('w', 'action', 'send_whatsapp', { text: '  ' });

@@ -18,6 +18,12 @@ export async function validatePromo(planId, code) {
     return data;
 }
 
+// Cupom de dias extras de teste (CAD-224): aplica na hora, durante o período de teste.
+export async function redeemPromo(code) {
+    const { data } = await api.post(`${BASE}promotions/redeem/`, { code });
+    return data;
+}
+
 export async function getCreditPacks() {
     const { data } = await api.get(`${BASE}credit-packs/`);
     return data;

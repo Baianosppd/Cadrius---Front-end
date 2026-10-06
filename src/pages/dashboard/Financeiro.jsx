@@ -8,7 +8,7 @@ import {
 } from '../../services/financeiro';
 
 const SEVERITIES = [['info', 'Informativo'], ['warn', 'Atenção'], ['danger', 'Urgente']];
-const KINDS = [['percent', 'Percentual (%)'], ['amount', 'Valor fixo (R$)']];
+const KINDS = [['percent', 'Percentual (%)'], ['amount', 'Valor fixo (R$)'], ['trial', 'Dias extras de teste']];
 const DURATIONS = [['once', 'Só na 1ª cobrança'], ['repeating', 'Por N meses'], ['forever', 'Para sempre']];
 
 // Cada recurso: URL, colunas da tabela e campos do formulário (o back valida; os erros aparecem no formulário)
@@ -41,8 +41,8 @@ const RESOURCES = {
     },
     promocoes: {
         resource: 'promotions', canCreate: true, canDelete: false,
-        note: 'O cupom vale na assinatura (checkout). Depois de usado, o desconto não pode mudar — crie outro cupom. Desative em vez de apagar.',
-        columns: [['code', 'Código'], ['name', 'Nome'], ['kind', 'Desconto', (v, r) => (v === 'percent' ? `${Number(r.value)}%` : brl(r.value))],
+        note: 'Desconto vale na assinatura (checkout); "Dias extras de teste" (1 a 90) entra na hora, no cadastro ou no Perfil durante o teste. O cliente pode digitar o cupom já na abertura da conta. Depois de usado, o desconto não pode mudar — crie outro cupom. Desative em vez de apagar.',
+        columns: [['code', 'Código'], ['name', 'Nome'], ['kind', 'Desconto', (v, r) => (v === 'percent' ? `${Number(r.value)}%` : v === 'trial' ? `+${Number(r.value)} dias de teste` : brl(r.value))],
             ['duration', 'Duração', (v, r) => ({ once: '1ª cobrança', forever: 'sempre' }[v] || `${r.duration_months} meses`)],
             ['redemptions_count', 'Usos', (v, r) => `${v}${r.max_redemptions ? ` / ${r.max_redemptions}` : ''}`],
             ['plan_tiers', 'Planos', (v) => (v?.length ? v.join(', ') : 'todos')],
@@ -52,7 +52,7 @@ const RESOURCES = {
             { name: 'name', label: 'Nome interno', type: 'text' },
             { name: 'description', label: 'Descrição', type: 'text' },
             { name: 'kind', label: 'Tipo', type: 'select', options: KINDS },
-            { name: 'value', label: 'Valor (% ou R$)', type: 'text' },
+            { name: 'value', label: 'Valor (%, R$ ou dias)', type: 'text' },
             { name: 'duration', label: 'Duração', type: 'select', options: DURATIONS },
             { name: 'duration_months', label: 'Meses (se "Por N meses")', type: 'number', nullable: true },
             { name: 'plan_tiers', label: 'Planos (vazio = todos)', type: 'tiers' },

@@ -71,6 +71,7 @@ const Marketing = lazy(() => import('../pages/escritorio/Marketing'));
 const GestaoMarketing = lazy(() => import('../pages/gestao/Marketing'));
 const GestaoCiber = lazy(() => import('../pages/gestao/Ciberseguranca'));
 const GestaoJuridico = lazy(() => import('../pages/gestao/Juridico'));
+const GestaoIA = lazy(() => import('../pages/gestao/IaAtividades'));
 const Assistente = lazy(() => import('../pages/escritorio/Assistente'));
 const Plugins = lazy(() => import('../pages/escritorio/Plugins'));
 // CAD-175: carteira de clientes, finanças do escritório e portal do cliente
@@ -177,6 +178,7 @@ export default function AppRoutes() {
           <Route path="/gestao/sistema" element={<GestaoSistema />} />
           <Route path="/gestao/marketing" element={<GestaoMarketing />} />
           <Route path="/gestao/juridico" element={<GestaoJuridico />} />
+          <Route path="/gestao/ia" element={<GestaoIA />} />
           <Route path="/gestao/equipe" element={<GestaoEquipeCadrius />} />
           <Route path="/gestao/fiscal" element={<GestaoFiscal />} />
           <Route path="/gestao/suporte" element={<GestaoSuporte />} />

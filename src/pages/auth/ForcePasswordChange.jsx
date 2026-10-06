@@ -11,6 +11,7 @@ import FormGroup from '../../components/ui/FormGroup';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
 import { passwordChecks } from '../../services/passwordPolicy';
+import { homePath } from '../../services/home';
 
 import styles from './Remember.module.css';
 import { CourthouseScene } from '../../components/illustrations/LegalArt';
@@ -36,7 +37,7 @@ export default function ForcePasswordChange() {
             await api.post('/auth/change-password/', { current_password: current, new_password: password, confirm_password: confirm });
             const me = await refreshUser();
             toast.success('Senha alterada. Bem-vindo(a) de volta!');
-            navigate(me?.is_staff && !me?.organization ? '/gestao' : '/dashboard', { replace: true });
+            navigate(homePath(me), { replace: true });
         } catch (err) {
             const data = err.response?.data || {};
             setError([data.current_password, data.new_password, data.confirm_password, data.detail, data.non_field_errors]
