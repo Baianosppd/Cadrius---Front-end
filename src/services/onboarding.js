@@ -22,7 +22,17 @@ export function dismiss() {
 }
 
 // Estado de cada passo a partir das respostas das APIs (função pura, testável)
-export function computeSteps({ oabs, contacts, docs, rules, profile, connections } = {}) {
+// Advogado autônomo (CAD-222): mesmos passos, linguagem de quem trabalha sozinho
+const SOLO_LABELS = {
+    perfil: 'Complete seu perfil profissional (áreas, cidade, assinatura)',
+    regra: 'Ligue sua primeira automação (ex.: lembrar o cliente da audiência)',
+};
+
+export function stepsFor(solo) {
+    return STEPS.map((s) => (solo && SOLO_LABELS[s.key] ? { ...s, label: SOLO_LABELS[s.key] } : s));
+}
+
+export function computeSteps({ oabs, contacts, docs, rules, profile, connections } = {}, solo = false) {
     const done = {
         oab: Array.isArray(oabs) && oabs.length > 0,
         contatos: Number(contacts?.total ?? contacts?.resultados?.length ?? 0) > 0,
@@ -31,14 +41,14 @@ export function computeSteps({ oabs, contacts, docs, rules, profile, connections
         perfil: !!(profile && (profile.cidade || profile.assinatura)),
         integracao: Array.isArray(connections) ? connections.length > 0 : Number(connections?.length ?? 0) > 0,
     };
-    const steps = STEPS.map((s) => ({ ...s, done: !!done[s.key] }));
+    const steps = stepsFor(solo).map((s) => ({ ...s, done: !!done[s.key] }));
     const count = steps.filter((s) => s.done).length;
     return { steps, done: count, total: steps.length, pct: Math.round((100 * count) / steps.length) };
 }
 
 const settle = (p) => p.then((v) => v, () => undefined);
 
-export async function loadSteps(totalDocs) {
+export async function loadSteps(totalDocs, solo = false) {
     const [oabs, contacts, rules, profile, connections] = await Promise.all([
         settle(api.get('publications/oabs/').then((r) => r.data)),
         settle(api.get('contacts/').then((r) => r.data)),
@@ -46,7 +56,7 @@ export async function loadSteps(totalDocs) {
         settle(api.get('brain/profile/').then((r) => r.data)),
         settle(api.get('connections/').then((r) => r.data)),
     ]);
-    return computeSteps({ oabs, contacts, docs: totalDocs, rules, profile, connections: connections?.results ?? connections });
+    return computeSteps({ oabs, contacts, docs: totalDocs, rules, profile, connections: connections?.results ?? connections }, solo);
 }
 
 // "Bom dia", "Boa tarde", "Boa noite" pelo horário local

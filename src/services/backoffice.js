@@ -24,6 +24,11 @@ export const backofficeApi = {
     fiscalNfseAction: (id, body) => api.post(`${BASE}fiscal/payments/${id}/nfse/`, body).then((r) => r.data),
     fiscalObligations: () => api.get(`${BASE}fiscal/obligations/`).then((r) => r.data),
     fiscalObligationUpdate: (body) => api.patch(`${BASE}fiscal/obligations/`, body).then((r) => r.data),
+    // Cibersegurança (CAD-221)
+    cyber: () => api.get(`${BASE}cyber/`).then((r) => r.data),
+    blockIp: (body) => api.post(`${BASE}cyber/blocked-ips/`, body).then((r) => r.data),
+    unblockIp: (id) => api.delete(`${BASE}cyber/blocked-ips/${id}/`),
+    reviewAlert: (id, status) => api.post(`${BASE}cyber/alerts/${id}/review/`, { status }).then((r) => r.data),
     fiscalObligationDone: (id, body) => api.post(`${BASE}fiscal/obligations/${id}/done/`, body).then((r) => r.data),
 };
 
@@ -84,6 +89,7 @@ export const ORG_ACTIONS = {
 export const USER_ACTIONS = {
     unlock: { label: 'Desbloquear login', fields: [] },
     send_password_reset: { label: 'Enviar link de nova senha', fields: [] },
+    temp_password: { label: 'Definir senha temporária (troca no próximo acesso)', danger: true, fields: [] },
     revoke_sessions: { label: 'Encerrar sessões', fields: [] },
     reset_mfa: { label: 'Redefinir verificação em duas etapas', danger: true, fields: [] },
     deactivate: { label: 'Desativar conta', danger: true, fields: [] },
@@ -108,7 +114,7 @@ export function userActionsFor(user) {
     return Object.entries(USER_ACTIONS)
         .filter(([key]) => (key === 'deactivate' ? user?.ativo : key === 'activate' ? !user?.ativo : true))
         .filter(([key]) => key !== 'unlock' || user?.bloqueado)
-        .filter(([key]) => key !== 'send_password_reset' || user?.ativo)
+        .filter(([key]) => !['send_password_reset', 'temp_password'].includes(key) || user?.ativo)
         .filter(([key]) => key !== 'reset_mfa' || user?.mfa)
         .map(([key, a]) => ({ key, ...a }));
 }

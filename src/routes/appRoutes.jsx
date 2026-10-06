@@ -9,6 +9,7 @@ import Login from "../pages/auth/Login";
 import Remember from "../pages/auth/Remember"
 import ResetPassword from "../pages/auth/ResetPassword";
 import GoogleCallback from "../pages/auth/GoogleCallback";
+import ForcePasswordChange from "../pages/auth/ForcePasswordChange";
 
 import Dashboard from "../pages/dashboard/Dashboard";
 import Automacao from "../pages/dashboard/Automacao";
@@ -68,6 +69,9 @@ const Minutas = lazy(() => import('../pages/escritorio/Minutas'));
 // CAD-174: marketing (escritório e Cadrius)
 const Marketing = lazy(() => import('../pages/escritorio/Marketing'));
 const GestaoMarketing = lazy(() => import('../pages/gestao/Marketing'));
+const GestaoCiber = lazy(() => import('../pages/gestao/Ciberseguranca'));
+const Assistente = lazy(() => import('../pages/escritorio/Assistente'));
+const Plugins = lazy(() => import('../pages/escritorio/Plugins'));
 // CAD-175: carteira de clientes, finanças do escritório e portal do cliente
 const Carteira = lazy(() => import('../pages/escritorio/Carteira'));
 const Financas = lazy(() => import('../pages/escritorio/Financas'));
@@ -80,9 +84,12 @@ function RequireRole({ allow, children }) {
 }
 
 export default function AppRoutes() {
-  const { signed, loading } = useAuth();
+  const { signed, loading, user } = useAuth();
 
   if (loading) return null;
+  // Senha temporária da TI (CAD-221): nada abre até a pessoa trocar a senha
+  const mustChange = signed && !!user?.must_change_password;
+  const blocked = <Navigate to={mustChange ? "/trocar-senha" : "/"} replace />;
 
   return (
     <BrowserRouter>
@@ -98,6 +105,7 @@ export default function AppRoutes() {
           <Route path="/esqueceu-a-senha" element={<Remember />} />
           <Route path="/redefinir-senha" element={<ResetPassword />} />
           <Route path="/google/callback" element={<GoogleCallback />} />
+          <Route path="/trocar-senha" element={mustChange ? <ForcePasswordChange /> : <Navigate to={signed ? "/dashboard" : "/"} replace />} />
         </Route>
 
         <Route element={<RegisterLayout />}>
@@ -108,7 +116,7 @@ export default function AppRoutes() {
 
         {/* Rotas privadas */}
         <Route
-          element={signed ? <MainLayout /> : <Navigate to="/" />}
+          element={signed && !mustChange ? <MainLayout /> : blocked}
         >
           <Route path="/automacao" element={<Automacao />} />
           {/* links das notificações do back usam /automacoes */}
@@ -144,6 +152,8 @@ export default function AppRoutes() {
           <Route path="/marketing" element={<Marketing />} />
           <Route path="/carteira" element={<Carteira />} />
           <Route path="/financas" element={<Financas />} />
+          <Route path="/assistente" element={<Assistente />} />
+          <Route path="/plugins" element={<Plugins />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           {/* Telas da equipe migraram para a Gestão Cadrius (CAD-168); links antigos continuam funcionando */}
           <Route path="/seguranca" element={<Navigate to="/gestao/seguranca" replace />} />
@@ -154,7 +164,7 @@ export default function AppRoutes() {
         </Route>
 
         {/* Gestão Cadrius: área interna da equipe (TI e Financeiro). O back confere a área de cada chamada (403). */}
-        <Route element={signed ? <RequireRole allow={(a) => a.isStaff}><AdminLayout /></RequireRole> : <Navigate to="/" />}>
+        <Route element={signed && !mustChange ? <RequireRole allow={(a) => a.isStaff}><AdminLayout /></RequireRole> : blocked}>
           <Route path="/gestao" element={<GestaoVisao />} />
           <Route path="/gestao/escritorios" element={<GestaoEscritorios />} />
           <Route path="/gestao/usuarios" element={<GestaoUsuarios />} />
@@ -165,10 +175,11 @@ export default function AppRoutes() {
           <Route path="/gestao/suporte" element={<GestaoSuporte />} />
           <Route path="/gestao/financeiro" element={<Financeiro />} />
           <Route path="/gestao/seguranca" element={<CentroSeguranca />} />
+          <Route path="/gestao/ciberseguranca" element={<GestaoCiber />} />
         </Route>
 
         {/* Editor */}
-        <Route element={signed ? <EditorLayout /> : <Navigate to="/" />}>
+        <Route element={signed && !mustChange ? <EditorLayout /> : blocked}>
           <Route path="/editor" element={<FlowEditor />} />
         </Route>
 

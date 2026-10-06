@@ -16,6 +16,7 @@ const api = axios.create({
 export const CONSENT_REQUIRED_EVENT = 'cadrius:consent-required';
 // Evento disparado quando a sessão expirou de vez (refresh inválido).
 export const SESSION_EXPIRED_EVENT = 'cadrius:session-expired';
+export const PASSWORD_CHANGE_EVENT = 'cadrius:password-change-required';
 
 // =============================
 // INTERCEPTOR DE REQUEST
@@ -63,6 +64,12 @@ api.interceptors.response.use(
         // 428: o usuário precisa aceitar versões novas dos documentos legais (LGPD)
         if (status === 428 && error.response?.data?.code === 'consent_required') {
             window.dispatchEvent(new CustomEvent(CONSENT_REQUIRED_EVENT, { detail: error.response.data }));
+            return Promise.reject(error);
+        }
+
+        // 403 password_change_required: senha temporária da TI (CAD-221) → recarrega o perfil e as rotas levam à troca
+        if (status === 403 && error.response?.data?.code === 'password_change_required') {
+            window.dispatchEvent(new Event(PASSWORD_CHANGE_EVENT));
             return Promise.reject(error);
         }
 

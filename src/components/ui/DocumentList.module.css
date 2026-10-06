@@ -158,7 +158,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     color: #ffffff;
     border: none;
     border-radius: 8px;

@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { gcal, gcalResult, GCAL_STATUS_LABEL } from '../../services/gcal';
 import { errorMessage } from '../seguranca/ui';
 import ui from '../seguranca/seguranca.module.css';
+import AgendaGoogleEvents from './AgendaGoogleEvents';
 
 const input = { width: '100%', padding: 8, border: '1px solid var(--c-border-2)', borderRadius: 6 };
 
@@ -41,7 +42,7 @@ export default function GoogleCalendarCard() {
 
     return (
         <section aria-label="Google Calendar" className={`${ui.card} ${ui.stack}`}>
-            <h2 className={ui.section_title}>Google Calendar — prazos e tarefas na sua agenda</h2>
+            <h2 className={ui.section_title}>Google Agenda — prazos, audiências e tarefas nos dois sentidos</h2>
             {!st.app_configured ? (
                 <p>Cada escritório usa o <strong>próprio app do Google</strong> (nada é compartilhado com outros clientes).
                     {st.can_configure ? ' Siga o passo a passo abaixo e cadastre as credenciais.' : ' Peça ao dono ou administrador do escritório para configurar.'}</p>
@@ -57,6 +58,7 @@ export default function GoogleCalendarCard() {
                     {st.connected && <button disabled={busy} onClick={() => run(gcal.disconnect, 'Desconectado.').then(load)}>Desconectar</button>}
                 </div>
             )}
+            {st.connected && st.status === 'active' && <AgendaGoogleEvents status={st} onSaved={load} />}
             {st.can_configure && (
                 <>
                     <p><button type="button" onClick={() => setShowSetup((v) => !v)}>{showSetup ? 'Fechar configuração' : (st.app_configured ? 'Editar credenciais do app' : 'Configurar app do Google')}</button></p>

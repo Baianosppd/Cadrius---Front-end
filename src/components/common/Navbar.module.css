@@ -9,7 +9,7 @@
 .nav_item a { display: flex; align-items: center; gap: var(--sp-3); padding: 0 var(--sp-3); text-decoration: none; color: var(--c-text-2); font-weight: 500; border-radius: var(--radius); transition: background .15s, color .15s; min-height: 36px; position: relative; }
 .nav_item a:hover { background-color: var(--c-surface-3); color: var(--c-ink); }
 .active a { background-color: var(--c-primary-50); color: var(--c-primary-700); font-weight: 600; }
-.active a::before { content: ''; position: absolute; left: -12px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: var(--c-primary); }
+.active a::before { content: ''; position: absolute; left: -12px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: var(--c-primary-solid); }
 .nav_icon { font-size: 17px; flex-shrink: 0; }
 .nav_text { font-size: var(--fs-base); }
 .sidebar_footer { border-top: 1px solid var(--c-border); padding-top: var(--sp-3); margin-top: var(--sp-2); }

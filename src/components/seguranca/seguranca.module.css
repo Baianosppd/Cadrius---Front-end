@@ -69,8 +69,8 @@
 .btn:hover:not(:disabled) { background: var(--c-surface-2); border-color: var(--c-subtle); color: var(--c-ink); }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
 .btn_sm { min-height: 30px; padding: 0 var(--sp-3); font-size: var(--fs-sm); }
-.btn_primary { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
-.btn_primary:hover:not(:disabled) { background: var(--c-primary-600); border-color: var(--c-primary-600); color: #fff; }
+.btn_primary { background: var(--c-primary-solid); border-color: var(--c-primary); color: #fff; }
+.btn_primary:hover:not(:disabled) { background: var(--c-primary-solid-hover); border-color: var(--c-primary-600); color: #fff; }
 .btn_ghost { border-color: transparent; background: transparent; color: var(--c-primary); box-shadow: none; }
 .btn_ghost:hover:not(:disabled) { background: var(--c-primary-50); border-color: transparent; color: var(--c-primary-600); }
 /* Ação destrutiva: contorno vermelho (sóbrio); só fica cheia ao passar o mouse */
@@ -89,7 +89,7 @@
 
 /* ---------- Barras ---------- */
 .bar { height: 8px; border-radius: 999px; background: var(--c-surface-3); overflow: hidden; }
-.bar_fill { height: 100%; border-radius: 999px; background: var(--c-primary); transition: width .3s; }
+.bar_fill { height: 100%; border-radius: 999px; background: var(--c-primary-solid); transition: width .3s; }
 .bar_fill_green { background: #16a34a; } .bar_fill_yellow { background: #ca8a04; } .bar_fill_red { background: var(--c-danger-600); }
 
 .doc_text { font-size: var(--fs-base); line-height: 1.6; max-height: 280px; overflow-y: auto; background: var(--c-surface-2); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--sp-3); color: var(--c-text-2); }
@@ -168,7 +168,7 @@
 .cal_out { background: var(--c-surface-2); }
 .cal_out .cal_num { color: var(--c-subtle); }
 .cal_num { font-size: var(--fs-xs); font-weight: 600; color: var(--c-text-2); }
-.cal_today .cal_num { background: var(--c-primary); color: #fff; border-radius: 999px; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; }
+.cal_today .cal_num { background: var(--c-primary-solid); color: #fff; border-radius: 999px; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; }
 .cal_item { border: none; text-align: left; font: inherit; font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 4px; cursor: pointer; color: var(--c-ink);
   background: color-mix(in srgb, var(--ch) 16%, transparent); border-left: 3px solid var(--ch); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cal_more { font-size: 11px; color: var(--c-muted); }

@@ -53,12 +53,19 @@ Legenda das heurísticas: **H1** visibilidade do estado · **H2** linguagem do u
 - **Estados vazios ilustrados** com título, explicação e próxima ação.
 - **Ilustrações próprias do meio jurídico** (tribunal, mesa do advogado, escritório, balança), em vetor e nas cores do tema.
 
-## 6. Próximos passos sugeridos
-1. Busca global (Ctrl+K) com atalhos para telas e clientes (H7).
+## 6. Próximos passos
+1. ✅ **Busca global (Ctrl+K / Cmd+K)** — telas do menu (respeitando o perfil), ações rápidas (novo contato, nova minuta,
+   lançar despesa…) e registros do escritório (contatos, processos, documentos); sem acento, por teclado, com recentes.
+   Atalho visível na barra do topo (H6, H7). *(CAD-220)*
 2. Desfazer em ações em lote e confirmação com o nome do item nas exclusões (H3, H5).
-3. Tour guiado curto na primeira entrada de cada módulo grande (H10).
-4. Testes de usabilidade com 5 advogados (tarefa: cadastrar OAB, revisar publicação, criar contrato) e medir tempo/erros.
-5. Teste de contraste automático (axe) no CI para os dois temas.
+3. ✅ **Tour curto na primeira entrada** de Publicações, Minutas, Automações, Carteira, Finanças, Marketing e IA do
+   escritório: cartão no canto, até 3 passos, "Pular" sempre visível, não volta depois de visto (H10). *(CAD-220)*
+4. ✅ **Roteiro do teste com 5 advogados** em `docs/ROTEIRO_TESTE_USABILIDADE.md` (tarefas, métricas SEQ/SUS, análise).
+   Falta agendar e aplicar. *(CAD-220)*
+5. ✅ **Teste de contraste automático** (`src/services/__tests__/contrast.test.js`, roda no `npm test` do CI): pares
+   texto/fundo dos dois temas no WCAG AA. Na primeira execução achou 4 falhas, corrigidas: texto secundário claro
+   (`--c-muted` #64748b → #5e6d82), dica/placeholder (`--c-subtle` #94a3b8 → #828fa2) e botão principal no escuro
+   (branco sobre #3b82f6 dava 3,7:1 → novo token `--c-primary-solid` #2563eb, 5,2:1). *(CAD-220)*
 
 ## Fontes
 - [Heurísticas de Nielsen aplicadas a SaaS](https://www.saashero.net/design/nielsen-10-usability-heuristics-explained/) · [Avaliação heurística em SaaS](https://www.saashero.net/design/heuristic-evaluation-nielsen-saas/)

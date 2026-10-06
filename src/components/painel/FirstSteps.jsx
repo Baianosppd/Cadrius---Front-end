@@ -3,17 +3,19 @@ import { Link } from 'react-router-dom';
 import { FiCheckCircle, FiChevronRight, FiCircle, FiX } from 'react-icons/fi';
 import { dismiss, isDismissed, loadSteps } from '../../services/onboarding';
 import styles from './FirstSteps.module.css';
+import useAuth from '../../hooks/useAuth';
 
 // "Primeiros passos" do Painel (CAD-219): progresso visível + atalho para cada passo
 export default function FirstSteps({ totalDocs }) {
     const [state, setState] = useState(null);
     const [hidden, setHidden] = useState(isDismissed);
+    const { isSolo } = useAuth();
     useEffect(() => {
         if (hidden || totalDocs === undefined) return undefined;
         let live = true;
-        loadSteps(totalDocs).then((s) => { if (live) setState(s); });
+        loadSteps(totalDocs, isSolo).then((s) => { if (live) setState(s); });
         return () => { live = false; };
-    }, [hidden, totalDocs]);
+    }, [hidden, totalDocs, isSolo]);
     if (hidden || !state || state.done === state.total) return null;
     return (
         <section className={styles.box} aria-labelledby="primeiros-passos">

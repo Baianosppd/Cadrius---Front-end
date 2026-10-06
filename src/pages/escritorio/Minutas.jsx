@@ -7,6 +7,7 @@ import useAuth from '../../hooks/useAuth';
 import api from '../../services/api';
 import useLoader from '../gestao/useLoader';
 import { countPending, docxName, downloadBlob, minutasApi, nextPending } from '../../services/publications';
+import AIWriteMenu from '../../components/assistant/AIWriteMenu';
 
 // Minutas sobre documentos e publicações (CAD-173): sempre rascunho, com os trechos da fonte que foram usados
 function NovaMinuta({ templates, initial, onCreated, onCancel }) {
@@ -106,6 +107,7 @@ function Editor({ id, canWrite, onChange }) {
             {canWrite && (
                 <div className={styles.btn_row}>
                     <button type="button" className={styles.btn} disabled={busy || !dirty} onClick={() => save()}>Salvar</button>
+                    <AIWriteMenu value={text} onApply={setText} />
                     <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy || pending > 0 || d.status === 'revisada' && !dirty}
                         title={pending ? 'Complete os trechos [COMPLETAR] antes' : ''} onClick={() => save({ status: 'revisada' })}>Marcar como revisada</button>
                     <button type="button" className={`${styles.btn} ${styles.btn_danger}`} onClick={() => window.confirm('Excluir esta minuta?') && minutasApi.remove(id).then(() => onChange(true))}>Excluir</button>
@@ -126,7 +128,7 @@ export default function Minutas() {
     const [params, setParams] = useSearchParams();
     const { data, error, reload } = useLoader(() => Promise.all([minutasApi.list(), minutasApi.templates()]), []);
     const [selected, setSelected] = useState(null);
-    const fromQuery = params.get('fonte') ? { fonte: params.get('fonte'), id: params.get('id') } : null;
+    const fromQuery = params.get('fonte') ? { fonte: params.get('fonte'), id: params.get('id') } : (params.get('nova') ? {} : null);
     const [creating, setCreating] = useState(fromQuery);
     if (error) return <div className={styles.page}><Banner tone="error">{error}</Banner></div>;
     const [drafts, tpl] = data || [[], { modelos: [] }];

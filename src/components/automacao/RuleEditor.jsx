@@ -55,6 +55,26 @@ function ActionFields({ action, onChange, trigger, vars }) {
             </>);
         case 'notify':
             return (<>{text('titulo', 'Título do aviso', { max: 120 })}{text('mensagem', 'Mensagem', { multiline: true, max: 500 })}</>);
+        case 'send_message':
+            return (<>
+                <div className={styles.filters}>
+                    <label className={styles.field}>Para
+                        <select className={styles.select} value={p.destinatario} onChange={(e) => set('destinatario', e.target.value)}>
+                            {trigger.destinatarios.map((d) => <option key={d} value={d}>{d === 'cliente' ? 'Cliente' : 'O contato do evento'}</option>)}
+                        </select>
+                    </label>
+                    <label className={styles.field}>Canal
+                        <select className={styles.select} value={p.canal} onChange={(e) => set('canal', e.target.value)}>
+                            <option value="melhor">Melhor canal autorizado (WhatsApp, senão e-mail)</option>
+                            <option value="whatsapp">Só WhatsApp</option><option value="email">Só e-mail</option>
+                        </select>
+                    </label>
+                </div>
+                {text('assunto', 'Assunto (se for por e-mail)', { max: 150 })}
+                {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
+                <p className={styles.muted}>Só envia por canal que o cliente autorizou (LGPD). Fora do horário comercial (8h às 20h, segunda a sábado)
+                    o envio fica agendado para o próximo horário permitido.</p>
+            </>);
         case 'send_whatsapp':
         case 'send_email':
             return (<>
@@ -66,6 +86,16 @@ function ActionFields({ action, onChange, trigger, vars }) {
                 {action.type === 'send_email' && text('assunto', 'Assunto', { max: 150 })}
                 {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
                 <p className={styles.muted}>Só envia a quem autorizou este canal no cadastro do contato (LGPD).</p>
+            </>);
+        case 'team_chat':
+            return (<>
+                <label className={styles.field}>Canal
+                    <select className={styles.select} value={p.canal} onChange={(e) => set('canal', e.target.value)}>
+                        <option value="slack">Slack</option><option value="teams">Microsoft Teams</option><option value="telegram">Telegram</option>
+                    </select>
+                </label>
+                {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
+                <p className={styles.muted}>Usa a conexão do app em Integrações. Vai para um serviço externo: por padrão espera aprovação.</p>
             </>);
         case 'erp_call':
             return (<>
@@ -126,6 +156,20 @@ export default function RuleEditor({ catalog, rule, onDone, onCancel }) {
                     <label className={styles.field}>Avisar com quantos dias úteis de antecedência
                         <input className={styles.input} type="number" min={1} max={30} value={form.gatilho_config.dias_antes ?? 3} onChange={(e) => setCfg('dias_antes', Number(e.target.value))} />
                     </label>
+                )}
+                {form.gatilho === 'calendar_event' && (
+                    <label className={styles.field}>Quantos dias antes do compromisso (0 = no próprio dia, a partir das 8h)
+                        <input className={styles.input} type="number" min={0} max={30} value={form.gatilho_config.dias_antes ?? 1} onChange={(e) => setCfg('dias_antes', Number(e.target.value))} />
+                    </label>
+                )}
+                {form.gatilho === 'task_overdue' && (
+                    <label className={styles.field}>Dias de atraso (0 = assim que passar do horário)
+                        <input className={styles.input} type="number" min={0} max={30} value={form.gatilho_config.dias_atraso ?? 1} onChange={(e) => setCfg('dias_atraso', Number(e.target.value))} />
+                    </label>
+                )}
+                {form.gatilho === 'email_received' && (
+                    <p className={styles.muted}>Dica: em "Condições", use <strong>email.categoria</strong> (intimacao, cliente, agenda, financeiro, comercial,
+                        documento, marketing, outro) e <strong>email.urgencia</strong> (alta, media, baixa).</p>
                 )}
                 {form.gatilho === 'receivable_due' && (
                     <div className={styles.filters}>
@@ -201,7 +245,7 @@ export default function RuleEditor({ catalog, rule, onDone, onCancel }) {
                         <button key={a.id} type="button" className={styles.btn} onClick={() => set('acoes', [...form.acoes, emptyAction(a.id, trigger.destinatarios)])}>+ {a.label}</button>
                     ))}
                 </div>
-                {form.acoes.some((a) => ['send_whatsapp', 'send_email'].includes(a.type)) && (
+                {form.acoes.some((a) => ['send_whatsapp', 'send_email', 'send_message'].includes(a.type)) && (
                     <label className={styles.check_row}>
                         <input type="checkbox" checked={form.exige_aprovacao} onChange={(e) => set('exige_aprovacao', e.target.checked)} />
                         Pedir aprovação de alguém da equipe antes de enviar (recomendado)

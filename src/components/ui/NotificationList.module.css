@@ -80,7 +80,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     flex-shrink: 0;
     margin-top: 4px;
 }

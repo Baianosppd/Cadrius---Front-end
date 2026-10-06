@@ -130,7 +130,7 @@
 .save_button {
     flex: 1;
     padding: 10px;
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     border: none;
     border-radius: 8px;
     font-size: 14px;

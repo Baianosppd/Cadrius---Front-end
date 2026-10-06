@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useCallback } from "react";
-import api, { SESSION_EXPIRED_EVENT } from "../services/api";
+import api, { PASSWORD_CHANGE_EVENT, SESSION_EXPIRED_EVENT } from "../services/api";
 import { setMonitoringUser } from "../services/monitoring";
 import { mfaApi } from "../services/mfa";
 
@@ -58,6 +58,13 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired);
   }, [reset]);
 
+  // A API recusou por senha temporária (CAD-221): recarrega o perfil; as rotas levam à troca obrigatória
+  useEffect(() => {
+    const onMustChange = () => { refreshUser().catch(() => {}); };
+    window.addEventListener(PASSWORD_CHANGE_EVENT, onMustChange);
+    return () => window.removeEventListener(PASSWORD_CHANGE_EVENT, onMustChange);
+  }, [refreshUser]);
+
   // Com verificação em duas etapas ativa o back devolve um desafio em vez dos tokens (CAD-169)
   async function login(username, password) {
     const response = await api.post("/auth/token/", { username, password });
@@ -100,6 +107,8 @@ export function AuthProvider({ children }) {
         organization,
         role,
         isOrgManager: role === "OWNER" || role === "ADMIN",
+        // Advogado autônomo (CAD-222): conta pessoa física sozinha — telas sem linguagem de equipe
+        isSolo: !!organization?.solo,
         isStaff: !!user?.is_staff,
         login,
         verifyMfa,

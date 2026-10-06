@@ -52,7 +52,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    background-color: var(--c-primary);
+    background-color: var(--c-primary-solid);
     border: none;
     border-radius: 8px;
     padding: 10px 24px;
