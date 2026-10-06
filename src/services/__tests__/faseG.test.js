@@ -42,3 +42,32 @@ describe('troca obrigatória de senha', () => {
         expect(ok('somenteletrasaqui')).toBe(false);
     });
 });
+
+describe('CAD-222', () => {
+    it('menu do advogado autônomo: sem textos de equipe e "Equipe" some com 1 usuário', async () => {
+        const { visibleMenu } = await import('../../layouts/appMenu');
+        const labels = (opts) => visibleMenu(true, opts).flatMap((s) => s.items.map((i) => i.label));
+        expect(labels()).toContain('Equipe');
+        expect(labels({ solo: true, maxUsers: 3 })).toContain('Convidar alguém');
+        expect(labels({ solo: true, maxUsers: 1 })).not.toContain('Equipe');
+        expect(labels()).toContain('Plugins (Claude, ChatGPT)');
+    });
+    it('primeiros passos com linguagem de autônomo', async () => {
+        const { computeSteps } = await import('../onboarding');
+        expect(computeSteps({}, true).steps.find((s) => s.key === 'perfil').label).toMatch(/perfil profissional/);
+        expect(computeSteps({}, false).steps.find((s) => s.key === 'perfil').label).toMatch(/escritório/);
+    });
+    it('passo a passo do conector por app', async () => {
+        const { connectorSteps } = await import('../assistant');
+        const urls = { url: 'https://api/mcp/', urlWithToken: 'https://api/mcp/cdr_x/', token: 'cdr_x' };
+        expect(connectorSteps('claude', urls)).toContain('https://api/mcp/cdr_x/');
+        expect(connectorSteps('code', urls).join(' ')).toContain('Authorization: Bearer cdr_x');
+        expect(connectorSteps('chatgpt', urls).join(' ')).toContain('modo desenvolvedor');
+    });
+    it('editor de regras: aviso pelo melhor canal e gatilhos com data', async () => {
+        const { emptyAction, triggerHasDeadline, hasExternal } = await import('../rules');
+        expect(emptyAction('send_message', ['cliente']).params).toEqual({ destinatario: 'cliente', canal: 'melhor', assunto: '', mensagem: '' });
+        expect(triggerHasDeadline('calendar_event')).toBe(true);
+        expect(hasExternal({ acoes: [{ type: 'send_message' }] })).toBe(true);
+    });
+});

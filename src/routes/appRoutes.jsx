@@ -71,6 +71,7 @@ const Marketing = lazy(() => import('../pages/escritorio/Marketing'));
 const GestaoMarketing = lazy(() => import('../pages/gestao/Marketing'));
 const GestaoCiber = lazy(() => import('../pages/gestao/Ciberseguranca'));
 const Assistente = lazy(() => import('../pages/escritorio/Assistente'));
+const Plugins = lazy(() => import('../pages/escritorio/Plugins'));
 // CAD-175: carteira de clientes, finanças do escritório e portal do cliente
 const Carteira = lazy(() => import('../pages/escritorio/Carteira'));
 const Financas = lazy(() => import('../pages/escritorio/Financas'));
@@ -152,6 +153,7 @@ export default function AppRoutes() {
           <Route path="/carteira" element={<Carteira />} />
           <Route path="/financas" element={<Financas />} />
           <Route path="/assistente" element={<Assistente />} />
+          <Route path="/plugins" element={<Plugins />} />
           <Route path="/auditoria" element={<RequireRole allow={(a) => a.isOrgManager}><Auditoria /></RequireRole>} />
           {/* Telas da equipe migraram para a Gestão Cadrius (CAD-168); links antigos continuam funcionando */}
           <Route path="/seguranca" element={<Navigate to="/gestao/seguranca" replace />} />

@@ -1,6 +1,6 @@
 // Menu do escritório agrupado por seção (CAD-174). Ordem = frequência de uso no dia a dia.
 import {
-    FiActivity, FiBriefcase, FiCalendar, FiCheckCircle, FiCpu, FiMessageCircle, FiEdit3, FiHelpCircle, FiHome, FiInbox, FiLayers, FiLock,
+    FiActivity, FiBriefcase, FiCalendar, FiCheckCircle, FiCpu, FiMessageCircle, FiPackage, FiEdit3, FiHelpCircle, FiHome, FiInbox, FiLayers, FiLock,
     FiDollarSign, FiMail, FiSettings, FiShield, FiTarget, FiTrendingUp, FiUpload, FiUsers, FiZap,
 } from 'react-icons/fi';
 
@@ -29,8 +29,9 @@ export const APP_MENU = [
             { to: '/financas', label: 'Finanças', icon: FiDollarSign },
             { to: '/aprovacoes', label: 'IA do escritório', icon: FiCheckCircle },
             { to: '/integracoes', label: 'Integrações', icon: FiLayers },
+            { to: '/plugins', label: 'Plugins (Claude, ChatGPT)', icon: FiPackage },
             { to: '/importar', label: 'Importar dados', icon: FiUpload },
-            { to: '/equipe', label: 'Equipe', icon: FiSettings },
+            { to: '/equipe', label: 'Equipe', soloLabel: 'Convidar alguém', icon: FiSettings, hideSoloWhenSingleSeat: true },
         ],
     },
     {
@@ -46,6 +47,13 @@ export const HELP_ITEM = { to: '/suporte', label: 'Ajuda e suporte', icon: FiHel
 export const STAFF_ITEM = { to: '/gestao', label: 'Gestão Cadrius', icon: FiShield };
 
 // Filtra pelo perfil (itens só de dono/admin)
-export function visibleMenu(isOrgManager) {
-    return APP_MENU.map((s) => ({ ...s, items: s.items.filter((i) => !i.managersOnly || isOrgManager) })).filter((s) => s.items.length);
+// solo = advogado autônomo (CAD-222): sem textos de equipe; "Equipe" some se o plano só tem 1 usuário
+export function visibleMenu(isOrgManager, { solo = false, maxUsers = 99 } = {}) {
+    return APP_MENU.map((s) => ({
+        ...s,
+        items: s.items
+            .filter((i) => !i.managersOnly || isOrgManager)
+            .filter((i) => !(solo && i.hideSoloWhenSingleSeat && maxUsers <= 1))
+            .map((i) => (solo && i.soloLabel ? { ...i, label: i.soloLabel } : i)),
+    })).filter((s) => s.items.length);
 }

@@ -34,12 +34,13 @@ export const casesApi = {
 export const RUN_STATUS = {
     success: ['Concluída', 'green'], partial: ['Com falhas', 'yellow'], failed: ['Falhou', 'red'], skipped: ['Condições não atendidas', 'gray'],
     pending_approval: ['Aguardando aprovação', 'yellow'], rejected: ['Recusada', 'gray'], expired: ['Expirada', 'gray'],
-    running: ['Executando', 'blue'],
+    running: ['Executando', 'blue'], scheduled: ['Agendada (horário comercial)', 'blue'],
 };
 
 export const STEP_STATUS = {
     planejado: ['Vai executar', 'blue'], feito: ['Feito', 'green'], erro: ['Erro', 'red'], bloqueado: ['Bloqueado', 'red'],
     aguardando: ['Aguardando aprovação', 'yellow'], recusado: ['Recusado', 'gray'], expirado: ['Expirado', 'gray'],
+    agendado: ['Agendado para o horário comercial', 'blue'],
 };
 
 // Parâmetros iniciais de cada ação no editor
@@ -51,6 +52,7 @@ export function emptyAction(type, destinatarios = []) {
         case 'send_email': return { type, params: { destinatario: destinatarios[0] || '', assunto: '', mensagem: '' } };
         case 'erp_call': return { type, params: { conector_id: '', operacao: '', dados: {} } };
         case 'team_chat': return { type, params: { canal: 'slack', mensagem: '' } };
+        case 'send_message': return { type, params: { destinatario: destinatarios[0] || '', canal: 'melhor', assunto: '', mensagem: '' } };
         default: return { type, params: {} };
     }
 }
@@ -58,10 +60,11 @@ export function emptyAction(type, destinatarios = []) {
 // Ações válidas para o gatilho: envio a contato só quando o evento traz um contato; tarefa "na data do prazo" só se há prazo
 export function actionsFor(catalog, triggerId) {
     const trigger = catalog?.gatilhos?.find((g) => g.id === triggerId);
-    return (catalog?.acoes || []).filter((a) => !['send_whatsapp', 'send_email'].includes(a.id) || trigger?.destinatarios?.length);
+    return (catalog?.acoes || []).filter((a) => !['send_whatsapp', 'send_email', 'send_message'].includes(a.id) || trigger?.destinatarios?.length);
 }
 
-export const triggerHasDeadline = (triggerId) => ['document_confirmed', 'deadline_soon', 'publication_new'].includes(triggerId);
+export const triggerHasDeadline = (triggerId) => ['document_confirmed', 'deadline_soon', 'publication_new', 'calendar_event', 'email_received',
+    'task_overdue'].includes(triggerId);
 
 // Corpo da API a partir do formulário do editor
 export function ruleBody(form) {
@@ -99,7 +102,7 @@ export function describeRule(rule, catalog) {
     return `Quando: ${g?.label || rule.gatilho_label || rule.gatilho} → ${labels.join(', ') || 'nenhuma ação'}`;
 }
 
-export const hasExternal = (rule) => (rule.acoes || []).some((a) => ['send_whatsapp', 'send_email', 'erp_call', 'team_chat'].includes(a.type));
+export const hasExternal = (rule) => (rule.acoes || []).some((a) => ['send_whatsapp', 'send_email', 'send_message', 'erp_call', 'team_chat'].includes(a.type));
 
 // Data ISO (AAAA-MM-DD) → DD/MM/AAAA, sem fuso
 export const brDate = (iso) => (iso ? String(iso).slice(0, 10).split('-').reverse().join('/') : '—');

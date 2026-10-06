@@ -7,6 +7,8 @@ export const OPEN_EVENT = 'cadrius:command-palette';
 
 export const ACTIONS = [
     { id: 'a-assistente', label: 'Perguntar ao assistente IA', hint: 'Assistente', to: '/assistente', keywords: 'ia chat perguntar escrever corrigir resumir' },
+    { id: 'a-estrategia', label: 'Montar estratégia de um caso', hint: 'Assistente', to: '/assistente', keywords: 'tese caso estrategia plano' },
+    { id: 'a-conector', label: 'Ligar o Cadrius no Claude ou ChatGPT', hint: 'Plugins', to: '/plugins', keywords: 'mcp conector claude chatgpt pro token' },
     { id: 'a-contato', label: 'Novo contato', hint: 'Contatos', to: '/contatos?novo=1', keywords: 'cliente cadastrar pessoa' },
     { id: 'a-oportunidade', label: 'Nova oportunidade no funil', hint: 'Carteira', to: '/carteira', keywords: 'lead captação cliente novo' },
     { id: 'a-minuta', label: 'Nova minuta', hint: 'Minutas', to: '/minutas?nova=1', keywords: 'peça petição rascunho' },

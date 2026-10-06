@@ -1,6 +1,13 @@
 // Tour curto na primeira entrada de cada módulo grande (CAD-220). Até 3 passos, sem bloquear a tela: um cartão no canto
 // que explica para que serve o módulo e qual é a primeira ação. Visto uma vez por navegador; "Pular" encerra (H10).
 export const TOURS = {
+    '/plugins': {
+        title: 'Plugins',
+        steps: [
+            'Usa o Claude Pro ou o ChatGPT? Ligue o conector e consulte o Cadrius de dentro deles; ações voltam para você confirmar aqui.',
+            'Tem conta de API própria (Claude, OpenAI…)? Cadastre a chave: o assistente usa a sua conta e não gasta créditos do Cadrius.',
+        ],
+    },
     '/assistente': {
         title: 'Assistente IA',
         steps: [

@@ -12,7 +12,35 @@ export const assistantApi = {
     remove: (id) => api.delete(`${BASE}conversations/${id}/`),
     decide: (actionId, decisao) => api.post(`${BASE}actions/${actionId}/decide/`, { decisao }).then((r) => r.data),
     write: (acao, texto, instrucoes = '') => api.post(`${BASE}write/`, { acao, texto, instrucoes }).then((r) => r.data),
+    // CAD-222
+    startCase: (mensagem, processoId) => api.post(`${BASE}conversations/`, { mensagem, modo: 'caso', processo_id: processoId || undefined }).then((r) => r.data),
+    settings: () => api.get(`${BASE}settings/`).then((r) => r.data),
+    saveSettings: (body) => api.patch(`${BASE}settings/`, body).then((r) => r.data),
 };
+
+export const pluginsApi = {
+    get: () => api.get(`${BASE}plugins/`).then((r) => r.data),
+    createToken: (nome, escopo) => api.post(`${BASE}plugins/tokens/`, { nome, escopo }).then((r) => r.data),
+    revokeToken: (id) => api.delete(`${BASE}plugins/tokens/${id}/`),
+    saveKey: (body) => api.post(`${BASE}plugins/keys/`, body).then((r) => r.data),
+    removeKey: (provedor) => api.delete(`${BASE}plugins/keys/`, { params: { provedor } }),
+    testKey: (provedor) => api.post(`${BASE}plugins/keys/test/`, { provedor }).then((r) => r.data),
+};
+
+// Como ligar o conector em cada app (CAD-222). Claude Pro/Max/Team aceitam conectores personalizados (MCP remoto).
+export function connectorSteps(app, { url, urlWithToken, token }) {
+    if (app === 'claude') {
+        return ['No Claude (claude.ai ou app), abra Configurações → Conectores → "Adicionar conector personalizado".',
+            'Nome: Cadrius. URL do servidor remoto:', urlWithToken,
+            'Salve e, numa conversa, ative o conector Cadrius no menu de ferramentas.'];
+    }
+    if (app === 'code') {
+        return ['No terminal (Claude Code):', `claude mcp add --transport http cadrius ${url} --header "Authorization: Bearer ${token}"`,
+            'Depois, na conversa, peça por exemplo: "use o Cadrius para listar meus prazos da semana".'];
+    }
+    return ['No ChatGPT: Configurações → Conectores → Avançado → ative o "modo desenvolvedor".',
+        'Crie um conector: nome Cadrius, URL:', urlWithToken, 'Autenticação: nenhuma (o token já vai na URL).'];
+}
 
 export const WRITE_ACTIONS = [
     { key: 'corrigir', label: 'Corrigir português' },
@@ -25,6 +53,8 @@ export const WRITE_ACTIONS = [
 ];
 
 export const SUGGESTIONS = [
+    'Quais automações você sugere para o meu escritório?',
+    'Crie uma automação: e-mail de intimação vira tarefa urgente e aviso.',
     'Quais prazos vencem nesta semana?',
     'Resuma as publicações novas e diga o que fazer em cada uma.',
     'Calcule 15 dias úteis a partir de hoje.',
