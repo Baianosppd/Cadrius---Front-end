@@ -17,7 +17,7 @@ export const supportApi = {
 };
 
 export const CATEGORIES = [['duvida', 'Dúvida'], ['problema', 'Problema / erro'], ['financeiro', 'Financeiro / assinatura'],
-    ['integracao', 'Integração'], ['sugestao', 'Sugestão'], ['outro', 'Outro']];
+    ['integracao', 'Integração'], ['sugestao', 'Sugestão'], ['parametrizacao', 'Pedido de parametrização'], ['outro', 'Outro']];
 
 export const STATUS = {
     aberto: { label: 'Aberto', tone: 'blue' }, em_andamento: { label: 'Em andamento', tone: 'yellow' },

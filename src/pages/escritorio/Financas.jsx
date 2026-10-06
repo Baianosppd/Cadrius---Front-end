@@ -6,6 +6,7 @@ import { Banner, Empty, PageHeader, Pill, StatCard, errorMessage, fmtDate } from
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import { ExpenseForm, ReceivableForm } from '../../components/carteira/Forms';
+import { DespesasFixas, FiscalEscritorio, FluxoCaixa, Indicadores } from '../../components/financas/FinancePlus';
 import { EXPENSE_CATEGORIES, METHODS, REC_STATUS, brl, carteiraApi, monthBars } from '../../services/carteira';
 
 const CATEGORY = Object.fromEntries(EXPENSE_CATEGORIES);
@@ -166,6 +167,10 @@ function AReceber() {
                                             {r.status === 'aberto' && !r.no_asaas && <button type="button" className={`${styles.btn} ${styles.btn_sm}`} disabled={busy === r.id}
                                                 onClick={() => act(r, 'cobrar', { forma: 'UNDEFINED' }, 'Cobrança criada no Asaas.')}>Gerar boleto/Pix</button>}
                                             {r.link_pagamento && <a className={`${styles.btn} ${styles.btn_sm}`} href={r.link_pagamento} target="_blank" rel="noreferrer noopener">Fatura</a>}
+                                            {r.status === 'pago' && r.no_asaas && !r.nota && <button type="button" className={`${styles.btn} ${styles.btn_sm}`} disabled={busy === r.id}
+                                                onClick={() => window.confirm('Pedir a nota fiscal (NFS-e) deste pagamento à prefeitura pelo Asaas?') && act(r, 'nota', null, 'Nota pedida. O status atualiza sozinho.')}>Emitir nota</button>}
+                                            {r.nota && (r.nota.link ? <a className={`${styles.btn} ${styles.btn_sm}`} href={r.nota.link} target="_blank" rel="noreferrer noopener">Nota ({r.nota.status})</a>
+                                                : <Pill tone="blue">Nota: {r.nota.status}</Pill>)}
                                             {r.status === 'pago' && <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} onClick={() => act(r, 'reabrir', null, 'Lançamento reaberto.')}>Reabrir</button>}
                                             {r.status === 'aberto' && <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`}
                                                 onClick={() => window.confirm('Cancelar este lançamento?') && act(r, 'cancelar', null, 'Lançamento cancelado.')}>Cancelar</button>}
@@ -223,13 +228,18 @@ function Despesas({ canDelete }) {
 
 // Finanças do escritório: honorários a receber, despesas/custas e resultado (CAD-175)
 export default function Financas() {
-    const { isOrgManager } = useAuth();
-    const tabs = isOrgManager ? [['painel', 'Painel'], ['receber', 'A receber'], ['despesas', 'Despesas e custas']] : [['despesas', 'Despesas e custas']];
+    const { isOrgManager, access } = useAuth();
+    // CAD-223: quem está num grupo com "Financeiro" também vê o painel; alterar depende de "ver e alterar"
+    const perms = access?.permissoes || [];
+    const seesFinance = isOrgManager || perms.includes('financeiro.ver');
+    const canEdit = isOrgManager || perms.includes('financeiro.editar');
+    const tabs = seesFinance ? [['painel', 'Painel'], ['fluxo', 'Fluxo de caixa'], ['receber', 'A receber'], ['despesas', 'Despesas e custas'],
+        ['fixas', 'Despesas fixas'], ['indicadores', 'Metas e resultado'], ['fiscal', 'Fiscal e contador']] : [['despesas', 'Despesas e custas']];
     const [tab, setTab] = useState(tabs[0][0]);
     return (
         <div className={styles.page}>
             <PageHeader title="Finanças do escritório" subtitle="Honorários a receber, cobranças, custas e o resultado do mês" />
-            {!isOrgManager && <Banner tone="info">Você pode lançar despesas e custas. Valores a receber e o painel são vistos pelos donos e administradores.</Banner>}
+            {!seesFinance && <Banner tone="info">Você pode lançar despesas e custas. Valores a receber e o painel são vistos pelos donos, administradores e por quem tem o acesso "Financeiro".</Banner>}
             <div className={styles.tabs} role="tablist">
                 {tabs.map(([k, label]) => (
                     <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tab_active : ''}`} onClick={() => setTab(k)}>{label}</button>
@@ -237,7 +247,11 @@ export default function Financas() {
             </div>
             {tab === 'painel' && <Painel />}
             {tab === 'receber' && <AReceber />}
-            {tab === 'despesas' && <Despesas canDelete={isOrgManager} />}
+            {tab === 'despesas' && <Despesas canDelete={canEdit} />}
+            {tab === 'fluxo' && <FluxoCaixa />}
+            {tab === 'fixas' && <DespesasFixas canEdit={canEdit} />}
+            {tab === 'indicadores' && <Indicadores canEdit={canEdit} />}
+            {tab === 'fiscal' && <FiscalEscritorio canEdit={canEdit} />}
         </div>
     );
 }

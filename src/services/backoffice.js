@@ -32,7 +32,7 @@ export const backofficeApi = {
     fiscalObligationDone: (id, body) => api.post(`${BASE}fiscal/obligations/${id}/done/`, body).then((r) => r.data),
 };
 
-export const AREA_LABEL = { ti: 'TI', financeiro: 'Financeiro', fiscal: 'Fiscal', suporte: 'Suporte', marketing: 'Marketing' };
+export const AREA_LABEL = { ti: 'TI', financeiro: 'Financeiro', fiscal: 'Fiscal', suporte: 'Suporte', marketing: 'Marketing', juridico: 'Jurídico' };
 export const AREAS = Object.keys(AREA_LABEL);
 
 export const NF_STATUS = {
@@ -53,11 +53,12 @@ export const OBLIGATION_STATUS = {
 export function buildStaffBody(form) {
     const email = String(form.email || '').trim().toLowerCase();
     const areas = AREAS.filter((a) => form.areas?.includes(a));
+    const consulta = AREAS.filter((a) => form.consulta?.includes(a) && !areas.includes(a));     // CAD-223: só leitura
     const reason = String(form.reason || '').trim();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { ok: false, error: 'E-mail inválido.' };
-    if (!areas.length) return { ok: false, error: 'Escolha ao menos uma área.' };
+    if (!areas.length && !consulta.length) return { ok: false, error: 'Escolha ao menos uma área.' };
     if (reason.length < MIN_REASON) return { ok: false, error: `Informe o motivo (mínimo ${MIN_REASON} caracteres).` };
-    return { ok: true, body: { email, first_name: String(form.first_name || '').trim(), last_name: String(form.last_name || '').trim(), areas, reason } };
+    return { ok: true, body: { email, first_name: String(form.first_name || '').trim(), last_name: String(form.last_name || '').trim(), areas, consulta, reason } };
 }
 
 // Primeiro e último dia do mês de uma data (AAAA-MM-DD), para o filtro do Fiscal

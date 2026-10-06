@@ -70,12 +70,16 @@ const Minutas = lazy(() => import('../pages/escritorio/Minutas'));
 const Marketing = lazy(() => import('../pages/escritorio/Marketing'));
 const GestaoMarketing = lazy(() => import('../pages/gestao/Marketing'));
 const GestaoCiber = lazy(() => import('../pages/gestao/Ciberseguranca'));
+const GestaoJuridico = lazy(() => import('../pages/gestao/Juridico'));
 const Assistente = lazy(() => import('../pages/escritorio/Assistente'));
 const Plugins = lazy(() => import('../pages/escritorio/Plugins'));
 // CAD-175: carteira de clientes, finanças do escritório e portal do cliente
 const Carteira = lazy(() => import('../pages/escritorio/Carteira'));
 const Financas = lazy(() => import('../pages/escritorio/Financas'));
 const PortalCliente = lazy(() => import('../pages/portal/PortalCliente'));
+// CAD-223: captação e pesquisa de satisfação (públicas)
+const Captacao = lazy(() => import('../pages/portal/Captacao'));
+const Pesquisa = lazy(() => import('../pages/portal/Pesquisa'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
 function RequireRole({ allow, children }) {
@@ -97,6 +101,8 @@ export default function AppRoutes() {
       <Routes>
         {/* Portal do cliente: público, só com o link pessoal (CAD-175) */}
         <Route path="/portal/:token" element={<PortalCliente />} />
+        <Route path="/captacao/:token" element={<Captacao />} />
+        <Route path="/pesquisa/:token" element={<Pesquisa />} />
 
         {/* Rotas públicas */}
         <Route element={<AuthLayout />}>
@@ -170,6 +176,7 @@ export default function AppRoutes() {
           <Route path="/gestao/usuarios" element={<GestaoUsuarios />} />
           <Route path="/gestao/sistema" element={<GestaoSistema />} />
           <Route path="/gestao/marketing" element={<GestaoMarketing />} />
+          <Route path="/gestao/juridico" element={<GestaoJuridico />} />
           <Route path="/gestao/equipe" element={<GestaoEquipeCadrius />} />
           <Route path="/gestao/fiscal" element={<GestaoFiscal />} />
           <Route path="/gestao/suporte" element={<GestaoSuporte />} />

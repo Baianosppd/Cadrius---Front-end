@@ -5,7 +5,8 @@ import styles from './GestaoEquipe.module.css';
 
 import TabBar from '../../components/ui/TabBar.jsx';
 import TeamMembers from '../../components/ui/TeamMembers.jsx';
-import PermissionGroups from '../../components/ui/PermissionGroups.jsx';
+import { AccessGroups, AccessReference } from '../../components/equipe/AccessGroups.jsx';
+import useAuth from '../../hooks/useAuth';
 import InviteMemberModal from '../../components/ui/InviteMemberModal.jsx';
 import { toast } from 'react-toastify';
 
@@ -29,17 +30,13 @@ const mapMember = (member) => {
 function GestaoEquipe() {
     const [activeTab, setActiveTab] = useState('funcionarios');
     const [members, setMembers] = useState([]);
-    const [groups, setGroups] = useState([]);
     const [showInviteModal, setShowInviteModal] = useState(false);
+    const { isOrgManager } = useAuth();
 
     useEffect(() => {
         api.get('teams/members/')
             .then(res => setMembers(res.data.map(mapMember)))
             .catch(err => console.error('Erro ao carregar membros:', err));
-
-        api.get('teams/permission-groups/')
-            .then(res => setGroups(res.data))
-            .catch(err => console.error('Erro ao carregar grupos:', err));
     }, []);
 
     const handleInvite = async (data) => {
@@ -69,7 +66,8 @@ function GestaoEquipe() {
 
     const tabs = [
         { id: 'funcionarios', label: 'Funcionários', count: members.length },
-        { id: 'permissoes', label: 'Grupos de Permissão', count: groups.length },
+        ...(isOrgManager ? [{ id: 'permissoes', label: 'Grupos de acesso' }] : []),
+        { id: 'referencia', label: 'O que cada acesso libera' },
     ];
 
     return (
@@ -95,12 +93,8 @@ function GestaoEquipe() {
                 />
             )}
 
-            {activeTab === 'permissoes' && (
-                <PermissionGroups
-                    groups={groups}
-                    onCreateGroup={() => { }}
-                />
-            )}
+            {activeTab === 'permissoes' && isOrgManager && <AccessGroups />}
+            {activeTab === 'referencia' && <AccessReference />}
         </div>
     );
 }

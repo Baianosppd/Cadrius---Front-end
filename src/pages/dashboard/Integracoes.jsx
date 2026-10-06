@@ -115,7 +115,7 @@ export default function Integracoes() {
                                 <div key={app.app} className={`${styles.card} ${styles.stack}`} style={{ gap: 8 }}>
                                     <div className={styles.header_row} style={{ alignItems: 'center' }}>
                                         <strong>{app.label}</strong>
-                                        {mine.length ? <Pill tone="green">conectado</Pill> : app.novo ? <Pill tone="blue">novo</Pill> : null}
+                                        {app.nativo ? <Pill tone="green">já ativo</Pill> : mine.length ? <Pill tone="green">conectado</Pill> : app.novo ? <Pill tone="blue">novo</Pill> : null}
                                     </div>
                                     <p className={styles.muted} style={{ fontSize: '.85rem', flex: 1 }}>{app.uso}</p>
                                     {mine.map((c) => (
@@ -131,7 +131,7 @@ export default function Integracoes() {
                                         </div>
                                     ))}
                                     {tests[mine[0]?.id]?.ok === false && <Banner tone="error">{tests[mine[0].id].mensagem}</Banner>}
-                                    {canWrite && (
+                                    {canWrite && !app.nativo && (
                                         <button type="button" className={`${styles.btn} ${mine.length ? '' : styles.btn_primary}`} onClick={() => setConnecting(app)}>
                                             {mine.length ? 'Adicionar outra conexão' : 'Conectar'}
                                         </button>

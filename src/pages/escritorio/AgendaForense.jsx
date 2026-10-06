@@ -5,6 +5,7 @@ import { Banner, Empty, Pill, PageHeader, errorMessage } from '../../components/
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import { brDate, forenseApi } from '../../services/rules';
+import { ServicosTribunais, SuspensoesTribunais } from '../../components/forense/Tribunais';
 
 // Calculadora de prazo em dias úteis (CPC arts. 219, 220 e 224) + feriados locais/do tribunal cadastrados pelo escritório (CAD-172)
 function Calculadora() {
@@ -113,7 +114,9 @@ export default function AgendaForense() {
         <div className={styles.page}>
             <PageHeader title="Agenda forense" subtitle="Prazos em dias úteis com feriados, recesso e o calendário do seu tribunal" />
             <Calculadora />
+            <SuspensoesTribunais />
             <Feriados canManage={isOrgManager} />
+            <ServicosTribunais />
         </div>
     );
 }

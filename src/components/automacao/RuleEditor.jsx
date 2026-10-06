@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
 import { Banner, errorMessage } from '../seguranca/ui';
-import { actionsFor, emptyAction, insertVariable, ruleBody, ruleToForm, rulesApi, triggerHasDeadline } from '../../services/rules';
+import { DAILY_CONFIG, actionsFor, emptyAction, insertVariable, ruleBody, ruleToForm, rulesApi, triggerHasDeadline } from '../../services/rules';
 
 // Texto com botões de variáveis: clicar insere {{variavel}} onde está o cursor
 function TemplateText({ label, value, onChange, vars, multiline, max }) {
@@ -74,6 +74,20 @@ function ActionFields({ action, onChange, trigger, vars }) {
                 {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
                 <p className={styles.muted}>Só envia por canal que o cliente autorizou (LGPD). Fora do horário comercial (8h às 20h, segunda a sábado)
                     o envio fica agendado para o próximo horário permitido.</p>
+            </>);
+        case 'send_survey':
+            return (<>
+                <div className={styles.filters}>
+                    <label className={styles.field}>Canal
+                        <select className={styles.select} value={p.canal} onChange={(e) => set('canal', e.target.value)}>
+                            <option value="melhor">Melhor canal autorizado</option><option value="whatsapp">Só WhatsApp</option><option value="email">Só e-mail</option>
+                        </select>
+                    </label>
+                </div>
+                {text('motivo', 'Motivo (aparece no resultado; ex.: Contrato concluído)', { max: 120 })}
+                {text('mensagem', 'Mensagem (o link da pesquisa entra no fim)', { multiline: true, max: 800 })}
+                <p className={styles.muted}>O cliente responde de 0 a 10 por um link único (válido por 30 dias). A resposta dispara o gatilho
+                    "Cliente respondeu a pesquisa de satisfação" e entra no NPS em Marketing → Resultados.</p>
             </>);
         case 'send_whatsapp':
         case 'send_email':
@@ -167,6 +181,16 @@ export default function RuleEditor({ catalog, rule, onDone, onCancel }) {
                         <input className={styles.input} type="number" min={0} max={30} value={form.gatilho_config.dias_atraso ?? 1} onChange={(e) => setCfg('dias_atraso', Number(e.target.value))} />
                     </label>
                 )}
+                {DAILY_CONFIG[form.gatilho] && (
+                    <label className={styles.field}>{DAILY_CONFIG[form.gatilho].label}
+                        <input className={styles.input} type="number" min={DAILY_CONFIG[form.gatilho].min} max={DAILY_CONFIG[form.gatilho].max}
+                            value={form.gatilho_config[DAILY_CONFIG[form.gatilho].key] ?? DAILY_CONFIG[form.gatilho].def}
+                            onChange={(e) => setCfg(DAILY_CONFIG[form.gatilho].key, Number(e.target.value))} />
+                    </label>
+                )}
+                {form.gatilho === 'survey_answered' && (
+                    <p className={styles.muted}>Dica: condição <strong>pesquisa.classificacao</strong> = detrator (0 a 6), neutro (7 e 8) ou promotor (9 e 10).</p>
+                )}
                 {form.gatilho === 'email_received' && (
                     <p className={styles.muted}>Dica: em "Condições", use <strong>email.categoria</strong> (intimacao, cliente, agenda, financeiro, comercial,
                         documento, marketing, outro) e <strong>email.urgencia</strong> (alta, media, baixa).</p>
@@ -245,7 +269,7 @@ export default function RuleEditor({ catalog, rule, onDone, onCancel }) {
                         <button key={a.id} type="button" className={styles.btn} onClick={() => set('acoes', [...form.acoes, emptyAction(a.id, trigger.destinatarios)])}>+ {a.label}</button>
                     ))}
                 </div>
-                {form.acoes.some((a) => ['send_whatsapp', 'send_email', 'send_message'].includes(a.type)) && (
+                {form.acoes.some((a) => ['send_whatsapp', 'send_email', 'send_message', 'send_survey'].includes(a.type)) && (
                     <label className={styles.check_row}>
                         <input type="checkbox" checked={form.exige_aprovacao} onChange={(e) => set('exige_aprovacao', e.target.checked)} />
                         Pedir aprovação de alguém da equipe antes de enviar (recomendado)

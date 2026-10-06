@@ -22,3 +22,19 @@
   .fee { border-top-color: #1f2937; }
   .muted, .date { color: #9ca3af; }
 }
+
+/* CAD-223: formulário de captação e pesquisa de satisfação (páginas públicas) */
+.form { display: flex; flex-direction: column; gap: 12px; }
+.form label { display: flex; flex-direction: column; gap: 4px; font-size: .9rem; font-weight: 500; color: #374151; }
+.form input, .form select, .form textarea { border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 12px; font: inherit; background: #fff; color: #111827; }
+.form textarea { min-height: 96px; resize: vertical; }
+.form .check { flex-direction: row; align-items: flex-start; gap: 8px; font-weight: 400; }
+.form .check input { margin-top: 3px; }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.scale { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 6px; }
+.scale button { min-height: 44px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; font: inherit; font-weight: 600; cursor: pointer; color: #111827; }
+.scale button[aria-pressed="true"] { background: #2563eb; border-color: #2563eb; color: #fff; }
+.scale_labels { display: flex; justify-content: space-between; }
+.submit { min-height: 44px; border: none; border-radius: 8px; background: #2563eb; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+.submit:disabled { opacity: .6; cursor: default; }
+@media (max-width: 480px) { .scale { grid-template-columns: repeat(6, minmax(0, 1fr)); } }

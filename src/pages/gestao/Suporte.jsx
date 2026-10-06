@@ -5,6 +5,7 @@ import { Banner, Empty, PageHeader, StatCard, StatusPill, errorMessage, fmtDateT
 import { Conversa } from '../escritorio/Suporte';
 import { PRIORITY, STAFF_STATUS, supportApi } from '../../services/support';
 import useLoader from './useLoader';
+import FilaParametrizacao from '../../components/suporte/FilaParametrizacao';
 
 function Detalhe({ id, onBack }) {
     const { data, error, reload } = useLoader(() => supportApi.staffGet(id), [id]);
@@ -49,12 +50,30 @@ function Detalhe({ id, onBack }) {
 export default function SuporteGestao() {
     const [filters, setFilters] = useState({ status: 'ativos', priority: '', mine: '' });
     const [current, setCurrent] = useState(null);
+    const [view, setView] = useState('chamados');
     const { data, error, reload } = useLoader(() => supportApi.queue(filters), [filters.status, filters.priority, filters.mine, current]);
     if (current) return <Detalhe id={current} onBack={() => { setCurrent(null); reload(); }} />;
     const m = data?.metricas;
+    const tabs = (
+        <div className={styles.tabs} role="tablist">
+            {[['chamados', 'Chamados'], ['param', 'Pedidos de parametrização']].map(([k, l]) => (
+                <button key={k} type="button" role="tab" aria-selected={view === k} className={`${styles.tab} ${view === k ? styles.tab_active : ''}`} onClick={() => setView(k)}>{l}</button>
+            ))}
+        </div>
+    );
+    if (view === 'param') {
+        return (
+            <div className={styles.page}>
+                <PageHeader title="Suporte" subtitle="Pedidos de parametrização dos escritórios: analisar, propor, executar e entregar" />
+                {tabs}
+                <FilaParametrizacao onOpenTicket={setCurrent} />
+            </div>
+        );
+    }
     return (
         <div className={styles.page}>
             <PageHeader title="Suporte" subtitle="Chamados dos escritórios" />
+            {tabs}
             {m && (
                 <div className={styles.grid}>
                     <StatCard title="Abertos" value={m.abertos} />

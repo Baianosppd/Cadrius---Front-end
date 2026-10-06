@@ -109,6 +109,9 @@ export function AuthProvider({ children }) {
         isOrgManager: role === "OWNER" || role === "ADMIN",
         // Advogado autônomo (CAD-222): conta pessoa física sozinha — telas sem linguagem de equipe
         isSolo: !!organization?.solo,
+        // Grupo de acesso (CAD-223): null = sem grupo (vale o cargo); senão a lista de permissões efetivas
+        access: user?.acessos ?? null,
+        can: (perm) => !user?.acessos || user.acessos.permissoes.includes(perm),
         isStaff: !!user?.is_staff,
         login,
         verifyMfa,

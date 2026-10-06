@@ -8,29 +8,29 @@ export const APP_MENU = [
     {
         section: 'Dia a dia', items: [
             { to: '/dashboard', label: 'Painel', icon: FiHome },
-            { to: '/assistente', label: 'Assistente IA', icon: FiMessageCircle },
-            { to: '/publicacoes', label: 'Publicações', icon: FiInbox },
-            { to: '/documents', label: 'Documentos', icon: FiMail },
-            { to: '/acompanhamento', label: 'Processos acompanhados', icon: FiBriefcase },
-            { to: '/agenda-forense', label: 'Agenda forense', icon: FiCalendar },
+            { to: '/assistente', label: 'Assistente IA', icon: FiMessageCircle, module: 'ia' },
+            { to: '/publicacoes', label: 'Publicações', icon: FiInbox, module: 'processos' },
+            { to: '/documents', label: 'Documentos', icon: FiMail, module: 'documentos' },
+            { to: '/acompanhamento', label: 'Processos acompanhados', icon: FiBriefcase, module: 'processos' },
+            { to: '/agenda-forense', label: 'Agenda forense', icon: FiCalendar, module: 'processos' },
         ],
     },
     {
         section: 'Produção', items: [
-            { to: '/minutas', label: 'Minutas', icon: FiEdit3 },
-            { to: '/automacao', label: 'Automações', icon: FiZap },
-            { to: '/contatos', label: 'Contatos', icon: FiUsers },
-            { to: '/carteira', label: 'Carteira de clientes', icon: FiTarget },
-            { to: '/marketing', label: 'Marketing', icon: FiTrendingUp },
+            { to: '/minutas', label: 'Minutas', icon: FiEdit3, module: 'minutas' },
+            { to: '/automacao', label: 'Automações', icon: FiZap, module: 'automacoes' },
+            { to: '/contatos', label: 'Contatos', icon: FiUsers, module: 'contatos' },
+            { to: '/carteira', label: 'Carteira de clientes', icon: FiTarget, module: 'funil' },
+            { to: '/marketing', label: 'Marketing', icon: FiTrendingUp, module: 'marketing' },
         ],
     },
     {
         section: 'Escritório', items: [
-            { to: '/financas', label: 'Finanças', icon: FiDollarSign },
-            { to: '/aprovacoes', label: 'IA do escritório', icon: FiCheckCircle },
-            { to: '/integracoes', label: 'Integrações', icon: FiLayers },
-            { to: '/plugins', label: 'Plugins (Claude, ChatGPT)', icon: FiPackage },
-            { to: '/importar', label: 'Importar dados', icon: FiUpload },
+            { to: '/financas', label: 'Finanças', icon: FiDollarSign, module: 'financeiro' },
+            { to: '/aprovacoes', label: 'IA do escritório', icon: FiCheckCircle, module: 'automacoes' },
+            { to: '/integracoes', label: 'Integrações', icon: FiLayers, module: 'integracoes' },
+            { to: '/plugins', label: 'Plugins (Claude, ChatGPT)', icon: FiPackage, module: 'ia' },
+            { to: '/importar', label: 'Importar dados', icon: FiUpload, module: 'importacao' },
             { to: '/equipe', label: 'Equipe', soloLabel: 'Convidar alguém', icon: FiSettings, hideSoloWhenSingleSeat: true },
         ],
     },
@@ -48,11 +48,13 @@ export const STAFF_ITEM = { to: '/gestao', label: 'Gestão Cadrius', icon: FiShi
 
 // Filtra pelo perfil (itens só de dono/admin)
 // solo = advogado autônomo (CAD-222): sem textos de equipe; "Equipe" some se o plano só tem 1 usuário
-export function visibleMenu(isOrgManager, { solo = false, maxUsers = 99 } = {}) {
+// perms = permissões do grupo de acesso (CAD-223); null = sem grupo (vale o cargo)
+export function visibleMenu(isOrgManager, { solo = false, maxUsers = 99, perms = null } = {}) {
     return APP_MENU.map((s) => ({
         ...s,
         items: s.items
             .filter((i) => !i.managersOnly || isOrgManager)
+            .filter((i) => !perms || !i.module || perms.includes(`${i.module}.ver`))
             .filter((i) => !(solo && i.hideSoloWhenSingleSeat && maxUsers <= 1))
             .map((i) => (solo && i.soloLabel ? { ...i, label: i.soloLabel } : i)),
     })).filter((s) => s.items.length);
