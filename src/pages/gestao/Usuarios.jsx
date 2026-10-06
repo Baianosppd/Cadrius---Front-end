@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
 import { Banner, Empty, PageHeader, Pill, fmtDateTime } from '../../components/seguranca/ui';
 import ActionModal from '../../components/gestao/ActionModal';
+import TempPasswordModal from '../../components/gestao/TempPasswordModal';
 import { backofficeApi, userActionsFor } from '../../services/backoffice';
 import useLoader from './useLoader';
 
@@ -10,10 +11,12 @@ export default function Usuarios() {
     const [term, setTerm] = useState('');
     const [query, setQuery] = useState({ q: '', equipe: '' });
     const [pending, setPending] = useState(null);   // { user, action }
+    const [temp, setTemp] = useState(null);         // { email, senha } — mostrada uma única vez
     const { data, error, reload } = useLoader(() => backofficeApi.users(query), [query.q, query.equipe]);
     const run = async (body) => {
-        await backofficeApi.userAction(pending.user.id, body);
-        toast.success('Ação registrada.');
+        const result = await backofficeApi.userAction(pending.user.id, body);
+        if (result.senha_temporaria) setTemp({ email: pending.user.email, senha: result.senha_temporaria });
+        else toast.success('Ação registrada.');
         reload();
     };
     return (
@@ -46,6 +49,7 @@ export default function Usuarios() {
                                         {u.ativo ? <Pill tone="green">Ativo</Pill> : <Pill tone="gray">Desativado</Pill>}
                                         {u.bloqueado && <Pill tone="red">Login bloqueado</Pill>}
                                         {u.mfa ? <Pill tone="blue">MFA</Pill> : (u.equipe_cadrius && <Pill tone="yellow">Sem MFA</Pill>)}
+                                        {u.troca_de_senha_pendente && <Pill tone="yellow">Troca de senha pendente</Pill>}
                                     </span></td>
                                     <td>{fmtDateTime(u.ultimo_acesso)}</td>
                                     <td>
@@ -66,6 +70,7 @@ export default function Usuarios() {
             {data && data.total > data.resultados.length && <div className={styles.muted}>Mostrando {data.resultados.length} de {data.total}. Refine a busca.</div>}
             {pending && <ActionModal title={pending.action.label} subject={pending.user.email} actionKey={pending.action.key}
                 spec={pending.action} onRun={run} onClose={() => setPending(null)} />}
+            {temp && <TempPasswordModal email={temp.email} password={temp.senha} onClose={() => setTemp(null)} />}
         </div>
     );
 }

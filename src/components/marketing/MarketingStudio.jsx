@@ -9,6 +9,7 @@ import {
 } from '../../services/marketing';
 import PostPreview from './PostPreview';
 import useAuth from '../../hooks/useAuth';
+import AIWriteMenu from '../assistant/AIWriteMenu';
 
 const WEEKDAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
@@ -126,6 +127,7 @@ function Editor({ api, id, canApprove, onClose, onChanged, brand }) {
                         </label>
                         <label className={styles.field}>Texto
                             <textarea className={styles.textarea} style={{ minHeight: 260 }} value={form.texto} aria-label="Texto do conteúdo" onChange={(e) => setText(e.target.value)} />
+                            <AIWriteMenu value={form.texto} onApply={setText} actions={['corrigir', 'simples', 'resumir']} />
                         </label>
                         <div className={styles.muted} style={{ fontSize: '.78rem', textAlign: 'right' }}>{form.texto.length} caracteres</div>
                         {['instagram', 'facebook', 'linkedin'].includes(p.canal) && (

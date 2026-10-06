@@ -6,7 +6,6 @@ import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/seguranca/seguranca.module.css';
 import { Banner, Empty, PageHeader, Pill, StatCard, fmtDateTime, errorMessage } from '../../components/seguranca/ui';
 
-const PROVIDERS = ['OPENAI', 'GEMINI', 'GROQ'];
 
 function Politica({ canEdit }) {
     const [policy, setPolicy] = useState(null);
@@ -64,13 +63,22 @@ function Politica({ canEdit }) {
                 <div className={styles.card}>
                     <div className={styles.section_title}>Limites e provedores</div>
                     <div className={styles.field}>Provedores permitidos
-                        <div className={styles.btn_row}>
-                            {PROVIDERS.map((p) => (
-                                <label key={p} className={styles.check_row}>
-                                    <input type="checkbox" disabled={!canEdit} checked={form.allowed_providers.includes(p)} onChange={() => toggleProvider(p)} />{p}
+                        <div className={styles.stack}>
+                            {(policy.providers || []).map((p) => (
+                                <label key={p.chave} className={styles.check_row} style={{ alignItems: 'flex-start' }}>
+                                    <input type="checkbox" disabled={!canEdit} checked={form.allowed_providers.includes(p.chave)} onChange={() => toggleProvider(p.chave)} />
+                                    <span>
+                                        <strong>{p.nome}</strong>{' '}
+                                        {p.configurado ? <Pill tone="green">Disponível</Pill> : <Pill tone="gray">Não configurado</Pill>}{' '}
+                                        {p.treina_com_dados && <Pill tone="yellow">Só sem dados de clientes</Pill>}{' '}
+                                        {p.local && <Pill tone="blue">Roda no servidor</Pill>}
+                                        <br /><span className={styles.muted}>{p.gratuito ? `Gratuito: ${p.gratuito}. ` : ''}Região: {p.regiao}.</span>
+                                    </span>
                                 </label>
                             ))}
                         </div>
+                        <span className={styles.muted}>Planos gratuitos que usam os dados para treinar a IA nunca recebem dados de clientes —
+                            o Cadrius usa esses provedores só em conteúdo genérico.</span>
                     </div>
                     <div className={styles.field} style={{ marginTop: 12 }}>Limite diário de chamadas de IA
                         <input className={styles.input} type="number" min={0} max={10000} disabled={!canEdit} value={form.daily_ai_request_limit} onChange={(e) => setForm({ ...form, daily_ai_request_limit: e.target.value })} />

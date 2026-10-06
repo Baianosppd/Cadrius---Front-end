@@ -6,6 +6,7 @@ import { APP_MENU, HELP_ITEM } from '../layouts/appMenu';
 export const OPEN_EVENT = 'cadrius:command-palette';
 
 export const ACTIONS = [
+    { id: 'a-assistente', label: 'Perguntar ao assistente IA', hint: 'Assistente', to: '/assistente', keywords: 'ia chat perguntar escrever corrigir resumir' },
     { id: 'a-contato', label: 'Novo contato', hint: 'Contatos', to: '/contatos?novo=1', keywords: 'cliente cadastrar pessoa' },
     { id: 'a-oportunidade', label: 'Nova oportunidade no funil', hint: 'Carteira', to: '/carteira', keywords: 'lead captação cliente novo' },
     { id: 'a-minuta', label: 'Nova minuta', hint: 'Minutas', to: '/minutas?nova=1', keywords: 'peça petição rascunho' },

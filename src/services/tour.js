@@ -1,6 +1,14 @@
 // Tour curto na primeira entrada de cada módulo grande (CAD-220). Até 3 passos, sem bloquear a tela: um cartão no canto
 // que explica para que serve o módulo e qual é a primeira ação. Visto uma vez por navegador; "Pular" encerra (H10).
 export const TOURS = {
+    '/assistente': {
+        title: 'Assistente IA',
+        steps: [
+            'Pergunte como a um colega: "quais prazos vencem esta semana?", "resuma as publicações novas".',
+            'Ele consulta só os dados do seu escritório e escreve, corrige e resume textos.',
+            'Quando pedir uma ação (tarefa, minuta, despesa), ele prepara e você confirma antes de qualquer mudança.',
+        ],
+    },
     '/publicacoes': {
         title: 'Publicações',
         steps: [

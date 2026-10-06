@@ -1,6 +1,6 @@
 // Menu do escritório agrupado por seção (CAD-174). Ordem = frequência de uso no dia a dia.
 import {
-    FiActivity, FiBriefcase, FiCalendar, FiCheckCircle, FiCpu, FiEdit3, FiHelpCircle, FiHome, FiInbox, FiLayers, FiLock,
+    FiActivity, FiBriefcase, FiCalendar, FiCheckCircle, FiCpu, FiMessageCircle, FiEdit3, FiHelpCircle, FiHome, FiInbox, FiLayers, FiLock,
     FiDollarSign, FiMail, FiSettings, FiShield, FiTarget, FiTrendingUp, FiUpload, FiUsers, FiZap,
 } from 'react-icons/fi';
 
@@ -8,6 +8,7 @@ export const APP_MENU = [
     {
         section: 'Dia a dia', items: [
             { to: '/dashboard', label: 'Painel', icon: FiHome },
+            { to: '/assistente', label: 'Assistente IA', icon: FiMessageCircle },
             { to: '/publicacoes', label: 'Publicações', icon: FiInbox },
             { to: '/documents', label: 'Documentos', icon: FiMail },
             { to: '/acompanhamento', label: 'Processos acompanhados', icon: FiBriefcase },

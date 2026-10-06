@@ -50,6 +50,7 @@ export function emptyAction(type, destinatarios = []) {
         case 'send_whatsapp': return { type, params: { destinatario: destinatarios[0] || '', mensagem: '' } };
         case 'send_email': return { type, params: { destinatario: destinatarios[0] || '', assunto: '', mensagem: '' } };
         case 'erp_call': return { type, params: { conector_id: '', operacao: '', dados: {} } };
+        case 'team_chat': return { type, params: { canal: 'slack', mensagem: '' } };
         default: return { type, params: {} };
     }
 }
@@ -98,7 +99,7 @@ export function describeRule(rule, catalog) {
     return `Quando: ${g?.label || rule.gatilho_label || rule.gatilho} → ${labels.join(', ') || 'nenhuma ação'}`;
 }
 
-export const hasExternal = (rule) => (rule.acoes || []).some((a) => ['send_whatsapp', 'send_email', 'erp_call'].includes(a.type));
+export const hasExternal = (rule) => (rule.acoes || []).some((a) => ['send_whatsapp', 'send_email', 'erp_call', 'team_chat'].includes(a.type));
 
 // Data ISO (AAAA-MM-DD) → DD/MM/AAAA, sem fuso
 export const brDate = (iso) => (iso ? String(iso).slice(0, 10).split('-').reverse().join('/') : '—');

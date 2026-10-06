@@ -7,6 +7,7 @@ import useAuth from '../../hooks/useAuth';
 import api from '../../services/api';
 import useLoader from '../gestao/useLoader';
 import { countPending, docxName, downloadBlob, minutasApi, nextPending } from '../../services/publications';
+import AIWriteMenu from '../../components/assistant/AIWriteMenu';
 
 // Minutas sobre documentos e publicações (CAD-173): sempre rascunho, com os trechos da fonte que foram usados
 function NovaMinuta({ templates, initial, onCreated, onCancel }) {
@@ -106,6 +107,7 @@ function Editor({ id, canWrite, onChange }) {
             {canWrite && (
                 <div className={styles.btn_row}>
                     <button type="button" className={styles.btn} disabled={busy || !dirty} onClick={() => save()}>Salvar</button>
+                    <AIWriteMenu value={text} onApply={setText} />
                     <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy || pending > 0 || d.status === 'revisada' && !dirty}
                         title={pending ? 'Complete os trechos [COMPLETAR] antes' : ''} onClick={() => save({ status: 'revisada' })}>Marcar como revisada</button>
                     <button type="button" className={`${styles.btn} ${styles.btn_danger}`} onClick={() => window.confirm('Excluir esta minuta?') && minutasApi.remove(id).then(() => onChange(true))}>Excluir</button>

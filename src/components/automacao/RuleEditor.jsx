@@ -67,6 +67,16 @@ function ActionFields({ action, onChange, trigger, vars }) {
                 {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
                 <p className={styles.muted}>Só envia a quem autorizou este canal no cadastro do contato (LGPD).</p>
             </>);
+        case 'team_chat':
+            return (<>
+                <label className={styles.field}>Canal
+                    <select className={styles.select} value={p.canal} onChange={(e) => set('canal', e.target.value)}>
+                        <option value="slack">Slack</option><option value="teams">Microsoft Teams</option><option value="telegram">Telegram</option>
+                    </select>
+                </label>
+                {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
+                <p className={styles.muted}>Usa a conexão do app em Integrações. Vai para um serviço externo: por padrão espera aprovação.</p>
+            </>);
         case 'erp_call':
             return (<>
                 <div className={styles.filters}>
