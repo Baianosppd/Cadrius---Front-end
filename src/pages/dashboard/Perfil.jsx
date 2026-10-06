@@ -11,9 +11,11 @@ import { toast } from 'react-toastify';
 import ui from '../../components/seguranca/seguranca.module.css';
 import { PageHeader } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
-import { getCurrentPlan, getCreditPacks, startCreditCheckout, creditsNotice, validatePromo, startSubscriptionCheckout } from '../../services/billing';
+import usePaymentReturn from '../../hooks/usePaymentReturn';
+import { getCurrentPlan, getCreditPacks, startCreditCheckout, creditsNotice, validatePromo, startSubscriptionCheckout, redeemPromo } from '../../services/billing';
 
 function Perfil() {
+    usePaymentReturn();
     const [user, setUser] = useState(null);
     const [billing, setBilling] = useState(null);   // GET /api/billing/plans/current/ (plano REAL do escritório + assinatura)
     const [packs, setPacks] = useState([]);
@@ -42,7 +44,18 @@ function Perfil() {
             const r = await validatePromo(planId, promo.trim());
             setPromoInfo((p) => ({ ...p, [planId]: r }));
             if (!r.valid) toast.warn(r.detail);
+            else if (r.kind === 'trial') await redeemTrial();
         } catch (err) { toast.error(err?.response?.data?.detail || 'Não foi possível validar o cupom.'); }
+    };
+
+    // Cupom de dias extras de teste (CAD-224): vale na hora, sem pagamento.
+    const redeemTrial = async () => {
+        try {
+            const r = await redeemPromo(promo.trim());
+            toast.success(`Cupom aplicado: +${r.dias} dias de teste (até ${new Date(r.teste_ate).toLocaleDateString('pt-BR')}).`);
+            setPromo(''); setPromoInfo({});
+            getCurrentPlan().then(setBilling).catch(() => {});
+        } catch (err) { toast.error(err?.response?.data?.detail || 'Não foi possível aplicar o cupom.'); }
     };
 
     const subscribe = async (planId) => {
@@ -121,13 +134,16 @@ function Perfil() {
                             {assinatura.estado === 'trialing' && isOrgManager && (
                                 <div>
                                     <p>Assine para liberar os limites do seu plano:</p>
-                                    <label className={ui.field} style={{ maxWidth: 260 }}>Cupom de desconto<input className={ui.input} value={promo} onChange={(e) => { setPromo(e.target.value.toUpperCase()); setPromoInfo({}); }} placeholder="CÓDIGO" /></label>
+                                    {user?.organization?.cupom_pendente && (
+                                        <p className={ui.muted}>Cupom <strong>{user.organization.cupom_pendente.codigo}</strong> ({user.organization.cupom_pendente.nome}) reservado no cadastro: entra sozinho no pagamento.</p>
+                                    )}
+                                    <label className={ui.field} style={{ maxWidth: 260 }}>Cupom (desconto ou dias extras)<input className={ui.input} value={promo} onChange={(e) => { setPromo(e.target.value.toUpperCase()); setPromoInfo({}); }} placeholder="CÓDIGO" /></label>
                                     <div className={ui.btn_row} style={{ marginTop: 8 }}>
                                         {[billing.plano, ...otherPlans].filter(p => p.price !== 'Grátis').map((p) => (
                                             <span key={p.id} className={ui.btn_row}>
                                                 <button type="button" className={`${ui.btn} ${ui.btn_primary}`} onClick={() => subscribe(p.id)}>Assinar {p.name} — {p.price}/mês</button>
                                                 {promo.trim() && <button type="button" className={ui.btn} onClick={() => checkPromo(p.id)}>Aplicar cupom</button>}
-                                                {promoInfo[p.id]?.valid && <small style={{ display: 'block', color: 'var(--c-success)' }}>Com o cupom: R$ {Number(promoInfo[p.id].discounted).toLocaleString('pt-BR')} ({promoInfo[p.id].duration === 'once' ? 'na 1ª cobrança' : promoInfo[p.id].duration === 'forever' ? 'sempre' : `por ${promoInfo[p.id].duration_months} meses`})</small>}
+                                                {promoInfo[p.id]?.valid && promoInfo[p.id].kind !== 'trial' && <small style={{ display: 'block', color: 'var(--c-success)' }}>Com o cupom: R$ {Number(promoInfo[p.id].discounted).toLocaleString('pt-BR')} ({promoInfo[p.id].duration === 'once' ? 'na 1ª cobrança' : promoInfo[p.id].duration === 'forever' ? 'sempre' : `por ${promoInfo[p.id].duration_months} meses`})</small>}
                                             </span>
                                         ))}
                                     </div>

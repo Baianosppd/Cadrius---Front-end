@@ -7,10 +7,20 @@ import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import CobrancaModal from '../../components/integracoes/CobrancaModal';
 import ClientFile from '../../components/carteira/ClientFile';
-import { EMPTY_CONTACT, KINDS, channelStatus, contactBody, contactsApi, formatPhone } from '../../services/contacts';
+import { EMPTY_CONTACT, KINDS, birthdayToInput, channelStatus, contactBody, contactsApi, formatPhone } from '../../services/contacts';
+import { cnpjApi } from '../../services/cad223';
 
 function ContatoForm({ initial, onDone, onCancel, canDelete, onCharge, onFile }) {
-    const [form, setForm] = useState({ ...EMPTY_CONTACT, ...initial, tags: (initial?.tags || []).join(', ') });
+    const [form, setForm] = useState({ ...EMPTY_CONTACT, ...initial, tags: (initial?.tags || []).join(', '), birthday: birthdayToInput(initial?.birthday) });
+    const digits = String(form.document || '').replace(/\D/g, '');
+    const lookup = async () => {
+        try {
+            const d = await cnpjApi.lookup(digits);
+            setForm((f) => ({ ...f, name: f.name || d.nome_fantasia || d.razao_social, phone: f.phone || d.telefone, email: f.email || d.email,
+                notes: [f.notes, `${d.razao_social} — ${d.situacao}. ${d.atividade}. ${d.endereco} ${d.municipio}/${d.uf}`.trim()].filter(Boolean).join('\n') }));
+            toast.success(`Dados da Receita: ${d.razao_social} (${d.situacao}).`);
+        } catch (err) { toast.error(errorMessage(err)); }
+    };
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
     const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }));
@@ -44,11 +54,15 @@ function ContatoForm({ initial, onDone, onCancel, canDelete, onCharge, onFile })
                     </label>
                 </div>
                 <div className={styles.filters}>
-                    <label className={styles.field}>CPF ou CNPJ<input className={styles.input} value={form.document} onChange={set('document')} /></label>
+                    <label className={styles.field}>CPF ou CNPJ<input className={styles.input} value={form.document} onChange={set('document')} />
+                        {digits.length === 14 && <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} onClick={lookup}>Buscar na Receita</button>}</label>
                     <label className={styles.field}>E-mail<input className={styles.input} type="email" value={form.email} onChange={set('email')} /></label>
                     <label className={styles.field}>Telefone / WhatsApp (com DDD)<input className={styles.input} value={form.phone} onChange={set('phone')} /></label>
                 </div>
-                <label className={styles.field}>Etiquetas (separe por vírgula)<input className={styles.input} value={form.tags} onChange={set('tags')} /></label>
+                <div className={styles.filters}>
+                    <label className={styles.field} style={{ flex: 2 }}>Etiquetas (separe por vírgula)<input className={styles.input} value={form.tags} onChange={set('tags')} /></label>
+                    <label className={styles.field}>Aniversário (dia/mês)<input className={styles.input} value={form.birthday} onChange={set('birthday')} placeholder="06/03" maxLength={10} /></label>
+                </div>
                 <label className={styles.field}>Observações<textarea className={styles.textarea} value={form.notes} onChange={set('notes')} /></label>
                 <div className={styles.section_title} style={{ marginBottom: 0 }}>Consentimento para mensagens (LGPD)</div>
                 <div className={styles.btn_row}>

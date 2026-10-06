@@ -16,8 +16,11 @@ export const KINDS = [
 
 export const EMPTY_CONTACT = {
     name: '', kind: 'cliente', document: '', email: '', phone: '', tags: [], notes: '',
-    whatsapp_consent: false, email_consent: false, opted_out: false, consent_source: '',
+    whatsapp_consent: false, email_consent: false, opted_out: false, consent_source: '', birthday: '',
 };
+
+// CAD-223: aniversário guardado como "MM-DD" (sem ano); na tela mostramos "DD/MM"
+export const birthdayToInput = (v) => (v && /^\d{2}-\d{2}$/.test(v) ? `${v.slice(3)}/${v.slice(0, 2)}` : v || '');
 
 // "vip, trabalhista ; vip" → ['trabalhista', 'vip']
 export function parseTags(text) {
@@ -30,6 +33,7 @@ export function contactBody(form, original = EMPTY_CONTACT) {
         name: form.name.trim(), kind: form.kind, document: form.document.trim(), email: form.email.trim(),
         phone: form.phone.trim(), tags: Array.isArray(form.tags) ? form.tags : parseTags(form.tags), notes: form.notes,
         whatsapp_consent: !!form.whatsapp_consent, email_consent: !!form.email_consent, opted_out: !!form.opted_out,
+        birthday: (form.birthday || '').trim(),
     };
     const consentChanged = ['whatsapp_consent', 'email_consent', 'opted_out'].some((k) => !!form[k] !== !!original[k]);
     if (consentChanged && form.consent_source?.trim()) body.consent_source = form.consent_source.trim();

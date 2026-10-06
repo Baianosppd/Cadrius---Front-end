@@ -24,6 +24,12 @@ export default function Visao() {
                 {f && <StatCard title="Testes acabando (7 dias)" value={f.trials_terminando_em_7_dias} tone={f.trials_terminando_em_7_dias ? 'yellow' : undefined} />}
                 {data.fiscal && <StatCard title="Recebido no mês" value={brl(data.fiscal.total_brl)} note={`${data.fiscal.nf_pendentes} NF pendentes`}
                     tone={data.fiscal.nf_pendentes ? 'yellow' : undefined} />}
+                {f && <StatCard title="Inadimplentes" value={f.inadimplentes ?? 0} tone={f.inadimplentes ? 'red' : 'green'} note="Pagamento pendente ou restrito" />}
+                {data.conformidade && <StatCard title="Regras: cliente sem aprovação" value={data.conformidade.regras_cliente_sem_aprovacao}
+                    note={`${data.conformidade.regras_ligadas} regras ligadas em ${data.conformidade.escritorios_com_regras} escritório(s)`}
+                    tone={data.conformidade.regras_cliente_sem_aprovacao ? 'yellow' : 'green'} />}
+                {data.parametrizacoes_abertas != null && <StatCard title="Parametrizações em aberto" value={data.parametrizacoes_abertas}
+                    note={<Link to="/gestao/suporte">Ver fila</Link>} />}
             </div>
             <div className={styles.card}>
                 <div className={styles.section_title}>Assinaturas por estado</div>
@@ -43,6 +49,17 @@ export default function Visao() {
                     <div className={styles.kv}><span>Promoções ativas / usos</span><strong>{f.promocoes_ativas} / {f.usos_de_promocao}</strong></div>
                     <div className={styles.kv}><span>Pagantes por plano</span>
                         <strong>{Object.entries(f.assinantes_por_plano).map(([p, n]) => `${p}: ${n}`).join(' · ') || '—'}</strong></div>
+                </div>
+            )}
+            {f?.tendencia_12m && (
+                <div className={styles.table_wrap}>
+                    <table className={styles.table}>
+                        <thead><tr><th>Mês</th><th>Receita recebida</th><th>Escritórios novos</th><th>Cancelamentos</th><th>Churn</th></tr></thead>
+                        <tbody>{[...f.tendencia_12m].reverse().map((m) => (
+                            <tr key={m.mes}><td>{m.mes.split('-').reverse().join('/')}</td><td>{brl(m.receita_brl)}</td><td>{m.novos_escritorios}</td>
+                                <td>{m.cancelamentos}</td><td>{m.churn_pct}%</td></tr>
+                        ))}</tbody>
+                    </table>
                 </div>
             )}
             {!hasArea(areas, 'ti') && !hasArea(areas, 'financeiro') && <Banner tone="warn">Sem área atribuída.</Banner>}

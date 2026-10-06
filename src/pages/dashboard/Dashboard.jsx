@@ -13,9 +13,11 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FirstSteps from '../../components/painel/FirstSteps';
 import useAuth from '../../hooks/useAuth';
+import usePaymentReturn from '../../hooks/usePaymentReturn';
 import { greeting, todayLabel } from '../../services/onboarding';
 
 function Dashboard() {
+    usePaymentReturn();
     const navigate = useNavigate();
     const { user } = useAuth();
     const [dashStats, setDashStats] = useState(null);

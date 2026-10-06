@@ -28,6 +28,7 @@ export function individualPayload(f) {
         email: (f.email || '').trim(),
         senha: f.senha || '',
         plano_id: f.plano,
+        cupom: (f.cupom || '').trim().toUpperCase(),
         oab_numero: f.oab || '',
         oab_uf: f.uf || '',
         area_atuacao: AREAS[f.area] || '',
@@ -59,6 +60,7 @@ export function companyPayload(f) {
             cargo: f.gerenteCargo || '',
         },
         plano_id: f.plano,
+        cupom: (f.cupom || '').trim().toUpperCase(),
         ...legalFields(f.legal),
     };
 }

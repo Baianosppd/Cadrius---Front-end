@@ -19,7 +19,7 @@ function Item({ item, active, to, onNavigate }) {
 
 // Menu lateral do escritório (CAD-174): seções, rolagem própria e, no celular, gaveta com botão de fechar
 function Navbar({ onNavigate, onClose }) {
-    const { logout, isOrgManager, isStaff, isSolo, organization } = useAuth();
+    const { logout, isOrgManager, isStaff, isSolo, organization, access } = useAuth();
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const isActive = (path) => pathname === path || pathname.startsWith(`${path}/`);
@@ -33,7 +33,7 @@ function Navbar({ onNavigate, onClose }) {
                 {onClose && <button type="button" className={styles.close_btn} onClick={onClose} aria-label="Fechar menu"><FiX /></button>}
             </div>
             <div className={styles.scroll}>
-                {visibleMenu(isOrgManager, { solo: isSolo, maxUsers: organization?.max_users ?? 99 }).map((section) => (
+                {visibleMenu(isOrgManager, { solo: isSolo, maxUsers: organization?.max_users ?? 99, perms: access?.permissoes ?? null }).map((section) => (
                     <div key={section.section} className={styles.section}>
                         <div className={styles.section_label}>{section.section}</div>
                         <ul className={styles.nav_list}>

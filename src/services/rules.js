@@ -53,6 +53,7 @@ export function emptyAction(type, destinatarios = []) {
         case 'erp_call': return { type, params: { conector_id: '', operacao: '', dados: {} } };
         case 'team_chat': return { type, params: { canal: 'slack', mensagem: '' } };
         case 'send_message': return { type, params: { destinatario: destinatarios[0] || '', canal: 'melhor', assunto: '', mensagem: '' } };
+        case 'send_survey': return { type, params: { destinatario: 'cliente', canal: 'melhor', motivo: '', mensagem: '' } };   // CAD-223
         default: return { type, params: {} };
     }
 }
@@ -60,7 +61,8 @@ export function emptyAction(type, destinatarios = []) {
 // Ações válidas para o gatilho: envio a contato só quando o evento traz um contato; tarefa "na data do prazo" só se há prazo
 export function actionsFor(catalog, triggerId) {
     const trigger = catalog?.gatilhos?.find((g) => g.id === triggerId);
-    return (catalog?.acoes || []).filter((a) => !['send_whatsapp', 'send_email', 'send_message'].includes(a.id) || trigger?.destinatarios?.length);
+    return (catalog?.acoes || []).filter((a) => (!['send_whatsapp', 'send_email', 'send_message'].includes(a.id) || trigger?.destinatarios?.length)
+        && (a.id !== 'send_survey' || trigger?.destinatarios?.includes('cliente')));
 }
 
 export const triggerHasDeadline = (triggerId) => ['document_confirmed', 'deadline_soon', 'publication_new', 'calendar_event', 'email_received',
@@ -102,7 +104,15 @@ export function describeRule(rule, catalog) {
     return `Quando: ${g?.label || rule.gatilho_label || rule.gatilho} → ${labels.join(', ') || 'nenhuma ação'}`;
 }
 
-export const hasExternal = (rule) => (rule.acoes || []).some((a) => ['send_whatsapp', 'send_email', 'send_message', 'erp_call', 'team_chat'].includes(a.type));
+export const hasExternal = (rule) => (rule.acoes || []).some((a) => ['send_whatsapp', 'send_email', 'send_message', 'send_survey', 'erp_call', 'team_chat'].includes(a.type));
+
+// CAD-223: configuração numérica dos gatilhos de verificação diária
+export const DAILY_CONFIG = {
+    opportunity_stale: { key: 'dias', label: 'Dias sem mudar de etapa', min: 3, max: 90, def: 7 },
+    case_stale: { key: 'dias', label: 'Dias sem andamento', min: 15, max: 365, def: 60 },
+    contract_ending: { key: 'dias', label: 'Dias antes da última parcela', min: 1, max: 60, def: 15 },
+    monthly_goal: { key: 'dia', label: 'Dia do mês do aviso (às 9h)', min: 1, max: 28, def: 20 },
+};
 
 // Data ISO (AAAA-MM-DD) → DD/MM/AAAA, sem fuso
 export const brDate = (iso) => (iso ? String(iso).slice(0, 10).split('-').reverse().join('/') : '—');

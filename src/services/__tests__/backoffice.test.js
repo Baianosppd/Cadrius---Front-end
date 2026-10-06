@@ -36,7 +36,7 @@ describe('equipe e fiscal (CAD-170)', () => {
         expect(buildStaffBody({ email: 'a@b.com', areas: [], reason: 'Contratação nova' }).ok).toBe(false);
         expect(buildStaffBody({ email: 'a@b.com', areas: ['ti'], reason: 'curto' }).ok).toBe(false);
         expect(buildStaffBody({ email: ' Ana@Cadrius.IA.br ', areas: ['fiscal', 'xpto', 'ti'], reason: 'Contratação nova' }).body)
-            .toEqual({ email: 'ana@cadrius.ia.br', first_name: '', last_name: '', areas: ['ti', 'fiscal'], reason: 'Contratação nova' });
+            .toEqual({ email: 'ana@cadrius.ia.br', first_name: '', last_name: '', areas: ['ti', 'fiscal'], consulta: [], reason: 'Contratação nova' });
     });
 
     it('período padrão = mês corrente', async () => {

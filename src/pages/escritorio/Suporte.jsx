@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
 import { Banner, Empty, PageHeader, StatusPill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
 import useLoader from '../gestao/useLoader';
+import useAuth from '../../hooks/useAuth';
+import { MinhasParametrizacoes, NovaParametrizacao } from '../../components/suporte/Parametrizacao';
 import { CATEGORIES, STATUS, isActive, supportApi, ticketBody } from '../../services/support';
 
 export function Conversa({ messages, staffView = false }) {
@@ -99,14 +101,23 @@ function NovoChamado({ onDone, onCancel, pageUrl }) {
 export default function Suporte() {
     const [params, setParams] = useSearchParams();
     const current = params.get('chamado');
-    const [creating, setCreating] = useState(params.get('novo') === '1');
+    const [creating, setCreating] = useState(params.get('novo') === '1' ? 'chamado' : params.get('parametrizacao') === '1' ? 'param' : null);
     const { data, error, reload } = useLoader(supportApi.list, [current]);
+    const { isOrgManager } = useAuth();
     if (current) return <Chamado id={current} onBack={() => { setParams({}); reload(); }} />;
+    const opened = (id) => { setCreating(null); setParams({ chamado: id }); };
     return (
         <div className={styles.page}>
-            <PageHeader title="Suporte" subtitle="Fale com a equipe Cadrius"
-                actions={!creating && <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setCreating(true)}>Abrir chamado</button>} />
-            {creating && <NovoChamado pageUrl={params.get('de') || ''} onCancel={() => setCreating(false)} onDone={(id) => { setCreating(false); setParams({ chamado: id }); }} />}
+            <PageHeader title="Suporte" subtitle="Fale com a equipe Cadrius ou peça uma parametrização específica"
+                actions={!creating && (
+                    <div className={styles.btn_row}>
+                        <button type="button" className={styles.btn} onClick={() => setCreating('param')}>Pedir parametrização</button>
+                        <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setCreating('chamado')}>Abrir chamado</button>
+                    </div>
+                )} />
+            {creating === 'chamado' && <NovoChamado pageUrl={params.get('de') || ''} onCancel={() => setCreating(null)} onDone={opened} />}
+            {creating === 'param' && <NovaParametrizacao pageUrl={params.get('de') || ''} onCancel={() => setCreating(null)} onDone={opened} />}
+            {!creating && <MinhasParametrizacoes canApprove={isOrgManager} onOpen={(id) => setParams({ chamado: id })} />}
             {error && <Banner tone="error">{error}</Banner>}
             {!data && !error && <Empty>Carregando…</Empty>}
             {data && (

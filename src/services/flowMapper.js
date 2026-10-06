@@ -1,6 +1,5 @@
 // Tradução entre o canvas (React Flow: nós/arestas) e o contrato do back (Workflow: trigger + actions[]).
-// O back executa hoje: gatilhos (WhatsApp, e-mail, webhook externo) e ações WHATSAPP_EVOLUTION e WEBHOOK.
-// Os demais blocos aparecem na biblioteca como "em breve" e não podem ser salvos.
+// O back executa: gatilhos (WhatsApp, e-mail, webhook externo) e ações WHATSAPP_EVOLUTION, EMAIL_SMTP (CAD-224) e WEBHOOK.
 
 export const SUPPORTED = {
     // gatilhos → event_type
@@ -9,6 +8,7 @@ export const SUPPORTED = {
     webhook_in: { kind: 'trigger', event_type: 'Webhook Externo' },
     // ações → action_type
     send_whatsapp: { kind: 'action', action_type: 'WHATSAPP_EVOLUTION' },
+    send_email: { kind: 'action', action_type: 'EMAIL_SMTP' },
     webhook: { kind: 'action', action_type: 'WEBHOOK' },
 };
 
@@ -26,6 +26,7 @@ export const NODE_META = {
     email: { label: 'E-mail', description: 'E-mail recebido', type: 'trigger' },
     webhook_in: { label: 'Webhook externo', description: 'Recebe eventos de outros sistemas', type: 'trigger' },
     send_whatsapp: { label: 'Enviar WhatsApp', description: 'Enviar mensagem', type: 'action' },
+    send_email: { label: 'Enviar E-mail', description: 'Equipe ou cliente que autorizou', type: 'action' },
     webhook: { label: 'Chamar webhook', description: 'Enviar dados a um sistema externo', type: 'action' },
 };
 
@@ -61,6 +62,7 @@ export function validateFlow(nodes, edges) {
         for (const n of chain) {
             const c = n.data.config || {};
             if (n.data.subtype === 'send_whatsapp' && !(c.text || '').trim()) errors.push('“Enviar WhatsApp”: escreva o texto da mensagem.');
+            if (n.data.subtype === 'send_email' && !(c.body || '').trim()) errors.push('“Enviar E-mail”: escreva a mensagem.');
             if (n.data.subtype === 'webhook' && !/^https:\/\//i.test(c.url || '')) errors.push('“Chamar webhook”: informe uma URL https://.');
         }
     }
@@ -87,6 +89,12 @@ export function flowToWorkflow({ nodes, edges, title, active, connectionId }) {
                     payload_template: JSON.stringify({ number: c.number || '{{telefone}}', text: c.text }),
                 };
             }
+            if (n.data.subtype === 'send_email') {
+                return {
+                    action_type: 'EMAIL_SMTP',
+                    payload_template: JSON.stringify({ to: c.to || '{{email}}', subject: c.subject || '', body: c.body }),
+                };
+            }
             return {
                 action_type: 'WEBHOOK', endpoint_url: c.url, method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -110,9 +118,9 @@ export function workflowToFlow(workflow) {
         let config = {};
         try {
             const t = JSON.parse(a.payload_template || '{}');
-            config = sub === 'send_whatsapp'
-                ? { number: t.number === '{{telefone}}' ? '' : t.number, text: t.text }
-                : { url: a.endpoint_url, payload: a.payload_template };
+            if (sub === 'send_whatsapp') config = { number: t.number === '{{telefone}}' ? '' : t.number, text: t.text };
+            else if (sub === 'send_email') config = { to: t.to === '{{email}}' ? '' : t.to, subject: t.subject, body: t.body };
+            else config = { url: a.endpoint_url, payload: a.payload_template };
         } catch { config = { url: a.endpoint_url, payload: a.payload_template }; }
         const id = `action_${i}`;
         nodes.push({ id, type: 'custom', position: { x: 0, y: 0 }, data: { ...NODE_META[sub], subtype: sub, config } });

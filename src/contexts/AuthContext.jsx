@@ -69,21 +69,21 @@ export function AuthProvider({ children }) {
   async function login(username, password) {
     const response = await api.post("/auth/token/", { username, password });
     if (response.data.mfa_required) return { mfaToken: response.data.mfa_token };
-    await loginWithTokens(response.data.access, response.data.refresh);
-    return { mfaToken: null };
+    const me = await loginWithTokens(response.data.access, response.data.refresh);
+    return { mfaToken: null, user: me };
   }
 
   async function verifyMfa(mfaToken, code) {
     const data = await mfaApi.verify(mfaToken, code);
-    await loginWithTokens(data.access, data.refresh);
-    return data;
+    const me = await loginWithTokens(data.access, data.refresh);
+    return { ...data, user: me };
   }
 
   // Usado também pelo cadastro (o back já devolve access/refresh) e pelo login social
   async function loginWithTokens(access, refresh) {
     localStorage.setItem("access_token", access);
     localStorage.setItem("refresh_token", refresh);
-    await refreshUser();
+    return refreshUser();
   }
 
   async function logout() {
@@ -109,6 +109,9 @@ export function AuthProvider({ children }) {
         isOrgManager: role === "OWNER" || role === "ADMIN",
         // Advogado autônomo (CAD-222): conta pessoa física sozinha — telas sem linguagem de equipe
         isSolo: !!organization?.solo,
+        // Grupo de acesso (CAD-223): null = sem grupo (vale o cargo); senão a lista de permissões efetivas
+        access: user?.acessos ?? null,
+        can: (perm) => !user?.acessos || user.acessos.permissoes.includes(perm),
         isStaff: !!user?.is_staff,
         login,
         verifyMfa,

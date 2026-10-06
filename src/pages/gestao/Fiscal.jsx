@@ -88,6 +88,9 @@ function Recebimentos() {
                     <div className={styles.grid}>
                         <StatCard title="Recebido no período" value={brl(data.resumo.total_brl)} note={`${data.resumo.quantidade} recebimentos`} />
                         <StatCard title="NF pendentes" value={data.resumo.nf_pendentes} tone={data.resumo.nf_pendentes ? 'yellow' : 'green'} />
+                        {data.resumo.faturamento_12m && <StatCard title="Faturamento 12 meses (RBT12)" value={brl(data.resumo.faturamento_12m.rbt12_brl)}
+                            note={`${data.resumo.faturamento_12m.uso_do_limite_pct}% do limite do Simples`} tone={data.resumo.faturamento_12m.alerta ? 'yellow' : undefined} />}
+                        {data.resumo.faturamento_12m?.alerta && <Banner tone="warn">{data.resumo.faturamento_12m.alerta}</Banner>}
                         {Object.entries(data.resumo.por_tipo).map(([k, v]) => (
                             <StatCard key={k} title={k === 'subscription' ? 'Assinaturas' : 'Pacotes de créditos'} value={brl(v.total_brl)} note={`${v.quantidade} recebimentos`} />
                         ))}

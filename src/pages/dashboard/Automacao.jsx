@@ -13,10 +13,12 @@ import { FiFileText, FiZap, FiMail } from 'react-icons/fi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import tabs from '../../components/seguranca/seguranca.module.css';
 import RegrasTab from '../../components/automacao/RegrasTab.jsx';
+import ConformidadeTab from '../../components/automacao/ConformidadeTab.jsx';
 import ExecucoesTab from '../../components/automacao/ExecucoesTab.jsx';
 
 // Abas (CAD-172): fluxos com apps externos (webhooks) e regras internas do escritório, com aprovação e histórico
-const TABS = [['fluxos', 'Fluxos com apps'], ['regras', 'Regras do escritório'], ['aprovacoes', 'Aprovações'], ['historico', 'Histórico']];
+const TABS = [['fluxos', 'Fluxos com apps'], ['regras', 'Regras do escritório'], ['aprovacoes', 'Aprovações'], ['historico', 'Histórico'],
+    ['conformidade', 'Conformidade']];
 
 function Automacao() {
     const [search, setSearch] = useState('');
@@ -24,7 +26,7 @@ function Automacao() {
     const [workflows, setWorkflows] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const { isOrgManager, role } = useAuth();
+    const { isOrgManager, role, access } = useAuth();
     const [params, setParams] = useSearchParams();
     const tab = TABS.some(([k]) => k === params.get('aba')) ? params.get('aba') : 'fluxos';
 
@@ -69,9 +71,10 @@ function Automacao() {
                         className={`${tabs.tab} ${tab === k ? tabs.tab_active : ''}`} onClick={() => setParams({ aba: k })}>{label}</button>
                 ))}
             </div>
-            {tab === 'regras' && <RegrasTab canManage={isOrgManager} />}
+            {tab === 'regras' && <RegrasTab canManage={isOrgManager || !!access?.permissoes?.includes('automacoes.gerir')} />}
             {tab === 'aprovacoes' && <ExecucoesTab pendentes canApprove={role !== 'VIEWER'} />}
             {tab === 'historico' && <ExecucoesTab pendentes={false} />}
+            {tab === 'conformidade' && <ConformidadeTab />}
             {tab === 'fluxos' && (<>
             <AutomationToolbar
                 search={search}

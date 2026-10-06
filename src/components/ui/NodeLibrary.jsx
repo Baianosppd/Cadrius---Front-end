@@ -1,10 +1,6 @@
 import styles from './NodeLibrary.module.css';
 import { isSupported } from '../../services/flowMapper';
-import {
-    FiMessageSquare, FiMail, FiCalendar, FiZap,
-    FiSend, FiFileText, FiPlusSquare, FiSmartphone,
-    FiHardDrive, FiSlack, FiGitBranch, FiClock, FiLink
-} from 'react-icons/fi';
+import { FiMessageSquare, FiMail, FiSend, FiLink } from 'react-icons/fi';
 
 const nodeGroups = [
     {
@@ -14,8 +10,6 @@ const nodeGroups = [
             { type: 'trigger', subtype: 'whatsapp', label: 'WhatsApp', description: 'Mensagem recebida', icon: FiMessageSquare, color: '#16a34a', bg: '#dcfce7' },
             { type: 'trigger', subtype: 'email', label: 'E-mail', description: 'E-mail recebido', icon: FiMail, color: '#16a34a', bg: '#dcfce7' },
             { type: 'trigger', subtype: 'webhook_in', label: 'Webhook externo', description: 'Recebe eventos de outros sistemas', icon: FiLink, color: '#16a34a', bg: '#dcfce7' },
-            { type: 'trigger', subtype: 'projuris', label: 'Projuris', description: 'Evento no sistema', icon: FiFileText, color: '#16a34a', bg: '#dcfce7' },
-            { type: 'trigger', subtype: 'agendamento', label: 'Agendamento', description: 'Horário programado', icon: FiCalendar, color: '#16a34a', bg: '#dcfce7' },
         ],
     },
     {
@@ -24,19 +18,7 @@ const nodeGroups = [
         nodes: [
             { type: 'action', subtype: 'send_whatsapp', label: 'Enviar WhatsApp', description: 'Enviar mensagem', icon: FiSend, color: '#3b82f6', bg: '#dbeafe' },
             { type: 'action', subtype: 'webhook', label: 'Chamar webhook', description: 'Enviar dados a um sistema externo', icon: FiLink, color: '#3b82f6', bg: '#dbeafe' },
-            { type: 'action', subtype: 'send_email', label: 'Enviar E-mail', description: 'Enviar e-mail', icon: FiMail, color: '#3b82f6', bg: '#dbeafe' },
-            { type: 'action', subtype: 'criar_projuris', label: 'Criar no Projuris', description: 'Processo ou tarefa', icon: FiPlusSquare, color: '#3b82f6', bg: '#dbeafe' },
-            { type: 'action', subtype: 'send_sms', label: 'Enviar SMS', description: 'Notificação por SMS', icon: FiSmartphone, color: '#3b82f6', bg: '#dbeafe' },
-            { type: 'action', subtype: 'google_drive', label: 'Google Drive', description: 'Salvar arquivo', icon: FiHardDrive, color: '#3b82f6', bg: '#dbeafe' },
-            { type: 'action', subtype: 'slack', label: 'Slack', description: 'Notificar canal', icon: FiSlack, color: '#3b82f6', bg: '#dbeafe' },
-        ],
-    },
-    {
-        label: 'CONDIÇÕES',
-        color: '#f59e0b',
-        nodes: [
-            { type: 'condition', subtype: 'condicao', label: 'Condição', description: 'Ramificar fluxo', icon: FiGitBranch, color: '#f59e0b', bg: '#fef9c3' },
-            { type: 'condition', subtype: 'aguardar', label: 'Aguardar', description: 'Delay no fluxo', icon: FiClock, color: '#f59e0b', bg: '#fef9c3' },
+            { type: 'action', subtype: 'send_email', label: 'Enviar E-mail', description: 'Equipe ou cliente que autorizou', icon: FiMail, color: '#3b82f6', bg: '#dbeafe' },
         ],
     },
 ];
@@ -92,6 +74,10 @@ const NodeLibrary = () => {
                         </div>
                     </div>
                 ))}
+                <p className={styles.header_subtitle} style={{ padding: '0 4px' }}>
+                    Condições, horários, prazos e outros apps (Slack, Teams, SMS): use Automações → Regras, ou o bloco
+                    “Chamar webhook” para sistemas que recebem webhook.
+                </p>
             </div>
         </div>
     );
