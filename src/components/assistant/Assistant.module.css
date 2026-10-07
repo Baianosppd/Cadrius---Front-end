@@ -56,3 +56,20 @@
     .writer { grid-template-columns: 1fr; }
     .chat { max-height: none; }
 }
+/* CAD-226: documento escolhido para a conversa */
+.doc_search { display: flex; align-items: center; gap: 8px; color: var(--c-muted); margin-bottom: 10px; }
+.doc_list { display: grid; gap: 6px; max-height: 50vh; overflow-y: auto; margin-bottom: 12px; }
+.doc_item { display: flex; gap: 10px; align-items: flex-start; text-align: left; border: 1px solid var(--c-border); background: var(--c-surface);
+    color: var(--c-text); border-radius: 10px; padding: 10px 12px; cursor: pointer; font: inherit; }
+.doc_item:hover { border-color: var(--c-primary); }
+.doc_item span { display: grid; min-width: 0; }
+.doc_item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.doc_item small { color: var(--c-muted); }
+.doc_bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: var(--sp-2) var(--sp-3) 0; }
+.doc_chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px 4px 10px; border-radius: 999px; font-size: var(--fs-sm);
+    background: var(--c-primary-50); border: 1px solid var(--c-primary); color: var(--c-primary-700); max-width: 100%; }
+.doc_chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 260px; }
+.doc_chip button { border: none; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; padding: 2px; }
+.doc_ref { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; font-size: var(--fs-sm); opacity: .85; }
+.composer_wrap { border-top: 1px solid var(--c-border); }
+.composer_wrap .composer { border-top: none; }

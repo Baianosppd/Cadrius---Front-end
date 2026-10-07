@@ -7,8 +7,8 @@ export const assistantApi = {
     status: () => api.get(`${BASE}status/`).then((r) => r.data),
     list: () => api.get(`${BASE}conversations/`).then((r) => r.data),
     get: (id) => api.get(`${BASE}conversations/${id}/`).then((r) => r.data),
-    start: (mensagem) => api.post(`${BASE}conversations/`, { mensagem }).then((r) => r.data),
-    send: (id, mensagem) => api.post(`${BASE}conversations/${id}/`, { mensagem }).then((r) => r.data),
+    start: (mensagem, documentoId) => api.post(`${BASE}conversations/`, { mensagem, documento_id: documentoId || undefined }).then((r) => r.data),
+    send: (id, mensagem, documentoId) => api.post(`${BASE}conversations/${id}/`, { mensagem, documento_id: documentoId || undefined }).then((r) => r.data),
     remove: (id) => api.delete(`${BASE}conversations/${id}/`),
     decide: (actionId, decisao) => api.post(`${BASE}actions/${actionId}/decide/`, { decisao }).then((r) => r.data),
     write: (acao, texto, instrucoes = '') => api.post(`${BASE}write/`, { acao, texto, instrucoes }).then((r) => r.data),
@@ -64,6 +64,23 @@ export const SUGGESTIONS = [
     'Crie uma tarefa para amanhã às 10h: revisar contrato da Maria.',
     'Escreva um e-mail ao cliente explicando que a audiência foi remarcada.',
 ];
+
+// CAD-226: atalhos depois de escolher um documento
+export const DOC_ACTIONS = [
+    { label: 'Extrair os dados', prompt: 'Extraia os dados deste documento: partes, número do processo, datas, valores, prazos e pedidos.' },
+    { label: 'Montar plano de ação', prompt: 'Monte um plano de ação a partir deste documento, com etapas, responsáveis sugeridos e datas.' },
+    { label: 'Resumir', prompt: 'Resuma este documento em tópicos curtos para o cliente e para a equipe.' },
+    { label: 'Prazos e riscos', prompt: 'Quais prazos, riscos e pontos de atenção este documento traz?' },
+];
+
+const DOC_REF = /\n*\[documento:(\d+) "([^"\]]*)"\]\s*$/;
+
+// Separa o marcador que o back acrescenta à mensagem quando há documento escolhido
+export function splitDocRef(text) {
+    const m = String(text || '').match(DOC_REF);
+    if (!m) return { body: text, doc: null };
+    return { body: text.slice(0, m.index), doc: { id: Number(m[1]), nome: m[2] } };
+}
 
 export const PROVIDER_LABEL = {
     ANTHROPIC: 'Claude', OPENAI: 'OpenAI', GEMINI: 'Gemini', GROQ: 'Groq (Llama)', MISTRAL: 'Mistral',
