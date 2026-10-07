@@ -8,7 +8,8 @@ import { STEP_STATUS, describeRule, hasExternal, rulesApi } from '../../services
 import RuleEditor from './RuleEditor';
 import RuleFlowView from './RuleFlowView';
 import SugestoesIA from '../ia/SugestoesIA';
-import FaleSobreProcesso, { FaleSobreProcessoCta } from '../ia/FaleSobreProcesso';
+import FaleSobreProcesso from '../ia/FaleSobreProcesso';
+import FaleSobreProcessoCta from '../ia/FaleSobreProcessoCta';
 
 function Simulacao({ result, onClose, onEnable }) {
     return (

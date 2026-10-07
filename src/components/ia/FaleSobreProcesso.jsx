@@ -5,11 +5,9 @@ import { FiCheck, FiMessageCircle, FiMic, FiMicOff } from 'react-icons/fi';
 import ui from '../seguranca/seguranca.module.css';
 import { Banner, Pill, errorMessage } from '../seguranca/ui';
 import { brainApi } from '../../services/brain';
+import { markFaleSeen } from '../../services/onboarding';
 import s from './FaleSobreProcesso.module.css';
 
-const SEEN_KEY = 'cadrius.fale.visto';
-export function wasSeen() { try { return window.localStorage.getItem(SEEN_KEY) === '1'; } catch { return true; } }
-export function markSeen() { try { window.localStorage.setItem(SEEN_KEY, '1'); } catch { /* sem armazenamento */ } }
 
 const EXAMPLES = 'Ex.: "Trabalho com previdenciário, recebo muitas intimações por e-mail e perco tempo respondendo cliente que pergunta do processo. Toda sexta mando relatório aos clientes."';
 
@@ -44,7 +42,7 @@ export default function FaleSobreProcesso({ onClose }) {
     const [done, setDone] = useState({});
     const dict = useDictation((t) => setText((v) => `${v}${v && !v.endsWith(' ') ? ' ' : ''}${t.trim()}`));
 
-    useEffect(() => { brainApi.discoveryTopics().then((r) => setTopics(r.temas)).catch(() => setTopics([])); markSeen(); }, []);
+    useEffect(() => { brainApi.discoveryTopics().then((r) => setTopics(r.temas)).catch(() => setTopics([])); markFaleSeen(); }, []);
     useEffect(() => {
         const esc = (e) => e.key === 'Escape' && onClose();
         window.addEventListener('keydown', esc);
@@ -132,17 +130,6 @@ export default function FaleSobreProcesso({ onClose }) {
                     </>
                 )}
             </div>
-        </div>
-    );
-}
-
-// Cartão de entrada (Painel e Automações)
-export function FaleSobreProcessoCta({ onOpen, compact }) {
-    return (
-        <div className={s.cta}>
-            <div><strong>Fale sobre seu processo</strong>
-                {!compact && <span>Conte como o escritório trabalha e a IA indica as automações que mais aliviam a sua rotina.</span>}</div>
-            <button type="button" className={`${ui.btn} ${ui.btn_primary}`} onClick={onOpen}><FiMessageCircle aria-hidden="true" /> Começar</button>
         </div>
     );
 }

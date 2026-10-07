@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiCheckCircle, FiChevronRight, FiCircle, FiX } from 'react-icons/fi';
-import { dismiss, isDismissed, loadSteps } from '../../services/onboarding';
+import { dismiss, faleSeen, isDismissed, loadSteps } from '../../services/onboarding';
 import styles from './FirstSteps.module.css';
 import useAuth from '../../hooks/useAuth';
-import FaleSobreProcesso, { FaleSobreProcessoCta, wasSeen } from '../ia/FaleSobreProcesso';
+import FaleSobreProcesso from '../ia/FaleSobreProcesso';
+import FaleSobreProcessoCta from '../ia/FaleSobreProcessoCta';
 
 // "Primeiros passos" do Painel (CAD-219): progresso visível + atalho para cada passo
 export default function FirstSteps({ totalDocs }) {
@@ -19,7 +20,7 @@ export default function FirstSteps({ totalDocs }) {
             if (!live) return;
             setState(s);
             // Primeiro acesso (CAD-226): sem automação ligada, a entrevista abre uma vez sozinha para quem decide
-            if (isOrgManager && !wasSeen() && !s.steps.find((x) => x.key === 'regra')?.done) setFale(true);
+            if (isOrgManager && !faleSeen() && !s.steps.find((x) => x.key === 'regra')?.done) setFale(true);
         });
         return () => { live = false; };
     }, [hidden, totalDocs, isSolo, isOrgManager]);
