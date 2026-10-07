@@ -13,6 +13,15 @@ export const STEPS = [
 ];
 
 const KEY = 'cadrius.onboarding.dismissed';
+const FALE_KEY = 'cadrius.fale.visto';
+
+// "Fale sobre seu processo" (CAD-226) abre sozinho só uma vez
+export function faleSeen() {
+    try { return window.localStorage.getItem(FALE_KEY) === '1'; } catch { return true; }
+}
+export function markFaleSeen() {
+    try { window.localStorage.setItem(FALE_KEY, '1'); } catch { /* sem armazenamento */ }
+}
 
 export function isDismissed() {
     try { return window.localStorage.getItem(KEY) === '1'; } catch { return false; }

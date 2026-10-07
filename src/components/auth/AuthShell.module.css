@@ -30,3 +30,31 @@
     .main { align-items: flex-start; padding: 32px 16px; }
     .mobile_brand { display: block; }
 }
+/* CAD-226: mostrar senha, força da senha, etapas e conta em uso */
+.pwd_wrap { position: relative; }
+.pwd_input { padding-right: 44px !important; }
+.pwd_toggle { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; display: grid; place-items: center;
+    border: 0; background: none; color: var(--c-muted); cursor: pointer; border-radius: 6px; font-size: 18px; }
+.pwd_toggle:hover { color: var(--c-text); background: var(--c-surface-2); }
+.pwd_toggle:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 1px; }
+.strength { display: grid; gap: 6px; padding: var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--radius); background: var(--c-surface-2); }
+.strength_head { display: flex; justify-content: space-between; font-size: var(--fs-sm); color: var(--c-text-2); }
+.strength_bar { height: 6px; border-radius: 3px; background: var(--c-border); overflow: hidden; }
+.strength_bar span { display: block; height: 100%; border-radius: 3px; transition: width .2s; }
+.bar_low { background: var(--c-danger); }
+.bar_mid { background: var(--c-warning); }
+.bar_ok { background: var(--c-success); }
+.lvl_low { color: var(--c-danger); }
+.lvl_mid { color: var(--c-warning); }
+.lvl_ok { color: var(--c-success); }
+.match { font-size: var(--fs-sm); margin: -4px 0 0; }
+.steps { display: flex; gap: var(--sp-2); list-style: none; margin: 0; padding: 0; font-size: var(--fs-sm); color: var(--c-muted); }
+.steps li { display: flex; align-items: center; gap: 6px; }
+.steps li + li::before { content: ''; width: 18px; height: 1px; background: var(--c-border-2); margin-right: 4px; }
+.step_num { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--c-border-2); font-weight: 600; font-size: 12px; }
+.step_on { color: var(--c-ink); font-weight: 600; }
+.step_on .step_num { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+.step_done .step_num { background: var(--c-success); border-color: var(--c-success); color: #fff; }
+.account { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--c-text-2); background: var(--c-surface-2);
+    border: 1px solid var(--c-border); border-radius: 999px; padding: 4px 12px; align-self: flex-start; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.tip { font-size: var(--fs-sm); color: var(--c-muted); margin: 0; }

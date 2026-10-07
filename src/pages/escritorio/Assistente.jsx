@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { FiBriefcase, FiCheck, FiCpu, FiLink, FiMessageCircle, FiPlus, FiSend, FiSettings, FiTool, FiTrash2, FiX, FiZap } from 'react-icons/fi';
+import { FiBriefcase, FiCheck, FiCpu, FiFileText, FiLink, FiMessageCircle, FiPaperclip, FiPlus, FiSend, FiSettings, FiTool, FiTrash2, FiX, FiZap } from 'react-icons/fi';
+import { Link, useSearchParams } from 'react-router-dom';
 import styles from '../../components/seguranca/seguranca.module.css';
 import a from '../../components/assistant/Assistant.module.css';
 import { Banner, PageHeader, Pill, errorMessage } from '../../components/seguranca/ui';
 import RichText from '../../components/assistant/RichText';
 import TextTools from '../../components/assistant/TextTools';
-import { PROVIDER_LABEL, SUGGESTIONS, assistantApi } from '../../services/assistant';
+import { FALE_SOBRE_PROCESSO, PROVIDER_LABEL, SUGGESTIONS, assistantApi } from '../../services/assistant';
+import FaleSobreProcesso from '../../components/ia/FaleSobreProcesso';
+import DocPicker from '../../components/assistant/DocPicker';
+import { DOC_ACTIONS, splitDocRef } from '../../services/assistant';
 import { casesApi } from '../../services/rules';
 
 // Assistente de IA (CAD-221): pergunta, pesquisa nos dados do escritório, escreve e PROPÕE ações — que só rodam
@@ -46,11 +50,23 @@ function Chat({ status }) {
     const [busy, setBusy] = useState(false);
     const [pending, setPending] = useState('');
     const [caseStart, setCaseStart] = useState(false);
+    const [fale, setFale] = useState(false);
+    const [doc, setDoc] = useState(null);              // CAD-226: documento escolhido para a próxima mensagem
+    const [picking, setPicking] = useState(false);
+    const [params, setParams] = useSearchParams();
     const end = useRef(null);
     const input = useRef(null);
 
     const loadList = () => assistantApi.list().then(setList).catch(() => {});
     useEffect(() => { loadList(); }, []);
+    useEffect(() => {                                  // vindo de Documentos → "Usar no Assistente"
+        const id = params.get('documento');
+        if (!id) return;
+        setDoc({ id: Number(id), nome: params.get('nome') || `Documento ${id}` });
+        setConv(null);
+        const next = new URLSearchParams(params); next.delete('documento'); next.delete('nome');
+        setParams(next, { replace: true });
+    }, [params, setParams]);
     useEffect(() => { end.current?.scrollIntoView({ block: 'end' }); }, [conv, pending]);
 
     const open = async (id) => {
@@ -63,8 +79,10 @@ function Chat({ status }) {
         setPending(body);
         setText('');
         try {
-            const data = conv ? await assistantApi.send(conv.id, body) : await assistantApi.start(body);
+            const docId = doc?.id;
+            const data = conv ? await assistantApi.send(conv.id, body, docId) : await assistantApi.start(body, docId);
             setConv(data);
+            setDoc(null);
             loadList();
         } catch (e) {
             const data = e.response?.data;
@@ -117,6 +135,7 @@ function Chat({ status }) {
                 {conv?.modo === 'caso' && <Banner tone="info">Modo estratégia de caso{conv.processo ? ` — processo ${conv.processo}` : ''}: fatos, teses, provas,
                     riscos, cenários e plano de ação. Confira sempre as fontes citadas.</Banner>}
                 {conv?.modo === 'mcp' && <Banner tone="info">Pedidos feitos pelo Claude/ChatGPT através do conector. Confirme ou cancele cada um.</Banner>}
+                {fale && <FaleSobreProcesso onClose={() => setFale(false)} />}
                 {caseStart && <CaseStart onClose={() => setCaseStart(false)} onStarted={(c) => { setCaseStart(false); setConv(c); loadList(); }} />}
                 <div className={a.messages} aria-live="polite">
                     {!conv && !pending && (
@@ -126,6 +145,9 @@ function Chat({ status }) {
                             <div>Consulto contatos, processos, publicações, prazos e documentos do escritório; escrevo e reviso textos;
                                 e preparo tarefas, minutas e lançamentos para você confirmar.</div>
                             <div className={a.suggestions}>
+                                {status?.pode_configurar && (
+                                    <button type="button" className={`${a.suggestion} ${a.suggestion_main}`} onClick={() => setFale(true)}>{FALE_SOBRE_PROCESSO}</button>
+                                )}
                                 {SUGGESTIONS.map((s) => <button key={s} type="button" className={a.suggestion} onClick={() => send(s)} disabled={busy || status?.disponivel === false}>{s}</button>)}
                             </div>
                         </div>
@@ -134,7 +156,7 @@ function Chat({ status }) {
                         <div key={m.id} className={a.note}><FiCheck aria-hidden="true" /> {m.texto}</div>
                     ) : (
                         <div key={m.id} className={`${a.msg} ${m.papel === 'user' ? a.msg_user : a.msg_ai}`}>
-                            <div className={a.bubble}>{m.papel === 'user' ? m.texto : <RichText text={m.texto} />}</div>
+                            <div className={a.bubble}>{m.papel === 'user' ? <UserText text={m.texto} /> : <RichText text={m.texto} />}</div>
                             {m.papel === 'assistant' && (m.ferramentas.length > 0 || m.provedor) && (
                                 <div className={a.meta}>
                                     {m.ferramentas.map((t) => <span key={t} className={a.tool_chip}><FiTool aria-hidden="true" /> {toolLabel(t)}</span>)}
@@ -152,7 +174,20 @@ function Chat({ status }) {
                     )}
                     <div ref={end} />
                 </div>
+                {picking && <DocPicker onClose={() => setPicking(false)} onPick={(d) => { setDoc(d); setPicking(false); input.current?.focus(); }} />}
+                <div className={a.composer_wrap}>
+                {doc && (
+                    <div className={a.doc_bar}>
+                        <span className={a.doc_chip}><FiFileText aria-hidden="true" /><span title={doc.nome}>{doc.nome}</span>
+                            <button type="button" onClick={() => setDoc(null)} aria-label="Tirar o documento"><FiX aria-hidden="true" /></button></span>
+                        {DOC_ACTIONS.map((x) => (
+                            <button key={x.label} type="button" className={`${a.suggestion}`} disabled={busy || status?.disponivel === false} onClick={() => send(x.prompt)}>{x.label}</button>
+                        ))}
+                    </div>
+                )}
                 <form className={a.composer} onSubmit={(e) => { e.preventDefault(); send(); }}>
+                    <button type="button" className={styles.btn} onClick={() => setPicking(true)} aria-label="Usar um documento" title="Usar um documento"
+                        disabled={status?.disponivel === false}><FiPaperclip aria-hidden="true" /></button>
                     <textarea ref={input} className={styles.textarea} rows={1} value={text} maxLength={8000} aria-label="Mensagem ao assistente"
                         placeholder="Pergunte ou peça algo… (Enter envia, Shift+Enter quebra linha)" disabled={status?.disponivel === false}
                         onChange={(e) => setText(e.target.value)}
@@ -161,14 +196,26 @@ function Chat({ status }) {
                         <FiSend aria-hidden="true" />
                     </button>
                 </form>
+                </div>
             </section>
         </div>
     );
 }
 
+// Mensagem da pessoa: o marcador [documento:ID "nome"] vira um selo clicável
+function UserText({ text }) {
+    const { body, doc } = splitDocRef(text);
+    return (
+        <>
+            {body}
+            {doc && <div><Link className={a.doc_ref} to={`/documents/${doc.id}`}><FiFileText aria-hidden="true" /> {doc.nome}</Link></div>}
+        </>
+    );
+}
+
 const TOOL_LABELS = {
     buscar_contatos: 'Contatos', buscar_processos: 'Processos', publicacoes: 'Publicações', ler_publicacao: 'Publicação', agenda: 'Agenda',
-    buscar_documentos: 'Documentos', calcular_prazo: 'Cálculo de prazo', resumo_financeiro: 'Financeiro', memoria_do_escritorio: 'Memória do escritório',
+    buscar_documentos: 'Documentos', ler_documento: 'Leitura do documento', calcular_prazo: 'Cálculo de prazo', resumo_financeiro: 'Financeiro', memoria_do_escritorio: 'Memória do escritório',
     criar_tarefa: 'Tarefa', criar_contato: 'Contato', gerar_minuta: 'Minuta', lancar_despesa: 'Despesa', marcar_publicacao_revisada: 'Revisão',
     catalogo_de_automacao: 'Catálogo de automações', listar_regras: 'Regras', sugestoes_de_automacao: 'Sugestões', criar_regra: 'Nova automação',
     ativar_regra: 'Ligar automação', aceitar_sugestao: 'Sugestão', lembrar: 'Memória', perfil_do_escritorio: 'Perfil do escritório',

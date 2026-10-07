@@ -6,6 +6,7 @@ import styles from './Perfil.module.css';
 import ProfileInfo from '../../components/ui/ProfileInfo.jsx';
 import ChangePassword from '../../components/ui/ChangePassword.jsx';
 import MfaCard from '../../components/seguranca/MfaCard.jsx';
+import EmailSignatureCard from '../../components/email/EmailSignatureCard.jsx';
 import PlanCard from '../../components/ui/Cards/PlanCard.jsx';
 import { toast } from 'react-toastify';
 import ui from '../../components/seguranca/seguranca.module.css';
@@ -119,6 +120,7 @@ function Perfil() {
                     />
                     <ChangePassword onSave={(data) => console.log(data)} />
                     <MfaCard />
+                    <EmailSignatureCard />
                     {currentPlan && (
                         <PlanCard
                             currentPlan={currentPlan}
