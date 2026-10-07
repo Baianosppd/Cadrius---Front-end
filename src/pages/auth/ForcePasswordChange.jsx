@@ -2,19 +2,16 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import Title from '../../components/ui/Title';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Label from '../../components/ui/Label';
-import ContainerCard from '../../components/ui/ContainerCard';
 import FormGroup from '../../components/ui/FormGroup';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
 import { passwordChecks } from '../../services/passwordPolicy';
 import { homePath } from '../../services/home';
 
-import styles from './Remember.module.css';
-import { CourthouseScene } from '../../components/illustrations/LegalArt';
+import AuthShell, { authStyles as s } from '../../components/auth/AuthShell';
 
 // Troca obrigatória (CAD-221): a TI definiu uma senha temporária; o sistema só libera depois da troca.
 export default function ForcePasswordChange() {
@@ -48,48 +45,32 @@ export default function ForcePasswordChange() {
     };
 
     return (
-        <div className={styles.main_wrapper}>
-            <div className={styles.side_image}>
-                <CourthouseScene style={{ width: '100%', maxWidth: 460, height: 'auto' }} />
-            </div>
-            <div className={styles.side_form}>
-                <ContainerCard>
-                    <Title as="h1">Crie sua nova senha</Title>
-                    <p style={{ color: 'var(--c-muted)', fontSize: 'var(--fs-base)', lineHeight: 1.5 }}>
-                        A equipe de TI redefiniu sua senha. Por segurança, troque a senha temporária antes de continuar.
-                    </p>
-                    <form onSubmit={handleSubmit} noValidate className={styles.send}>
-                        <input type="text" name="username" autoComplete="username" value={user?.email || ''} readOnly hidden />
-                        <FormGroup>
-                            <Label htmlFor="pwd-current">Senha temporária</Label>
-                            <Input id="pwd-current" type="password" autoComplete="current-password" value={current}
-                                onChange={(e) => { setCurrent(e.target.value); setError(null); }} />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label htmlFor="pwd-new">Nova senha</Label>
-                            <Input id="pwd-new" type="password" autoComplete="new-password" value={password}
-                                onChange={(e) => { setPassword(e.target.value); setError(null); }} aria-describedby="pwd-rules" />
-                        </FormGroup>
-                        <ul id="pwd-rules" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 4, fontSize: 'var(--fs-sm)' }}>
-                            {checks.map((c) => (
-                                <li key={c.label} style={{ color: c.ok ? 'var(--c-success)' : 'var(--c-muted)' }}>
-                                    {c.ok ? '✓' : '○'} {c.label}
-                                </li>
-                            ))}
-                        </ul>
-                        <FormGroup>
-                            <Label htmlFor="pwd-confirm">Confirmar nova senha</Label>
-                            <Input id="pwd-confirm" type="password" autoComplete="new-password" value={confirm}
-                                onChange={(e) => { setConfirm(e.target.value); setError(null); }} />
-                        </FormGroup>
-                        {error && <p role="alert" style={{ color: 'var(--c-danger)', fontSize: 'var(--fs-base)' }}>{error}</p>}
-                        <Button type="submit" disabled={loading}>{loading ? 'Salvando…' : 'Salvar nova senha'}</Button>
-                    </form>
-                    <button type="button" onClick={logout} style={{ background: 'none', border: 0, color: 'var(--c-primary)', cursor: 'pointer' }}>
-                        Sair
-                    </button>
-                </ContainerCard>
-            </div>
-        </div>
+        <AuthShell eyebrow="Segurança" title="Crie sua nova senha"
+            subtitle="A equipe de TI redefiniu sua senha. Por segurança, troque a senha temporária antes de continuar."
+            footer={<button type="button" className={s.link} onClick={logout}>Sair</button>}>
+            <form onSubmit={handleSubmit} noValidate className={s.form}>
+                <input type="text" name="username" autoComplete="username" value={user?.email || ''} readOnly hidden />
+                <FormGroup>
+                    <Label htmlFor="pwd-current">Senha temporária</Label>
+                    <Input id="pwd-current" type="password" autoComplete="current-password" value={current}
+                        onChange={(e) => { setCurrent(e.target.value); setError(null); }} />
+                </FormGroup>
+                <FormGroup>
+                    <Label htmlFor="pwd-new">Nova senha</Label>
+                    <Input id="pwd-new" type="password" autoComplete="new-password" value={password}
+                        onChange={(e) => { setPassword(e.target.value); setError(null); }} aria-describedby="pwd-rules" />
+                </FormGroup>
+                <ul id="pwd-rules" className={s.checks}>
+                    {checks.map((c) => <li key={c.label} className={c.ok ? s.check_ok : s.check_todo}>{c.ok ? '✓' : '○'} {c.label}</li>)}
+                </ul>
+                <FormGroup>
+                    <Label htmlFor="pwd-confirm">Confirmar nova senha</Label>
+                    <Input id="pwd-confirm" type="password" autoComplete="new-password" value={confirm}
+                        onChange={(e) => { setConfirm(e.target.value); setError(null); }} />
+                </FormGroup>
+                {error && <p role="alert" className={s.error}>{error}</p>}
+                <Button type="submit" disabled={loading}>{loading ? 'Salvando…' : 'Salvar nova senha'}</Button>
+            </form>
+        </AuthShell>
     );
 }

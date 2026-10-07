@@ -95,3 +95,8 @@
     width: 16px;
     height: 16px;
 }
+/* CAD-225: no celular, opções em até 2 colunas */
+@media (max-width: 760px) {
+    .option_grid_3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .option_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

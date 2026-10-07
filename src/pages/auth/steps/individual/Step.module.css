@@ -406,3 +406,10 @@
     color: var(--c-primary);
     flex-shrink: 0;
 }
+/* CAD-225: no celular os campos lado a lado passavam da tela */
+.container { width: 100%; min-width: 0; }
+@media (max-width: 760px) {
+    .fields_grid, .social_buttons, .plans_grid { grid-template-columns: minmax(0, 1fr); }
+    .field, .field_full { min-width: 0; }
+    .title { font-size: 1.35rem; }
+}

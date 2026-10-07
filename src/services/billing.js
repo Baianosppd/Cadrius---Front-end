@@ -54,7 +54,7 @@ export function subscriptionNotice(assinatura, now = new Date()) {
     switch (assinatura.estado) {
         case 'trialing': {
             const d = trialDaysLeft(assinatura, now);
-            return { tone: 'info', text: `Período de teste: ${d} dia${d === 1 ? '' : 's'} restante${d === 1 ? '' : 's'} e ${assinatura.creditos_mensais} créditos de IA. Assine para liberar todo o plano.` };
+            return { tone: 'info', text: `Período de teste: ${d} dia${d === 1 ? '' : 's'} restante${d === 1 ? '' : 's'} e ${assinatura.creditos_restantes ?? assinatura.creditos_mensais} de ${assinatura.creditos_mensais} créditos de IA. Assine para liberar todo o plano.` };
         }
         case 'past_due':
             return { tone: 'warn', text: 'Não conseguimos cobrar sua assinatura. Atualize o pagamento para não pausar a IA e as automações.' };
@@ -69,5 +69,10 @@ export function subscriptionNotice(assinatura, now = new Date()) {
 
 export function creditsNotice(assinatura) {
     if (!assinatura || !assinatura.ia_ativa) return null;
-    return `${assinatura.creditos_mensais} créditos/mês${assinatura.creditos_avulsos ? ` + ${assinatura.creditos_avulsos} avulsos` : ''}`;
+    // CAD-225: mostra o uso real do mês (antes só o total, parecia que nada era descontado)
+    const used = assinatura.creditos_usados_mes;
+    const base = used == null
+        ? `${assinatura.creditos_mensais} créditos/mês`
+        : `${used} de ${assinatura.creditos_mensais} créditos usados este mês`;
+    return `${base}${assinatura.creditos_avulsos ? ` + ${assinatura.creditos_avulsos} avulsos disponíveis` : ''}`;
 }

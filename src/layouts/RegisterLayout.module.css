@@ -1,8 +1,12 @@
+/* CAD-225: a altura fixa com overflow escondido cortava a escolha "autônomo / escritório" e os passos do cadastro
+   em notebooks e celulares. Agora a moldura rola quando o conteúdo é maior que a tela. */
 .container {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     background-color: var(--c-surface-2);
 }
