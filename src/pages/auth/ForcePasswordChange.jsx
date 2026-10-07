@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
+import PasswordField from '../../components/auth/PasswordField';
+import PasswordStrength from '../../components/auth/PasswordStrength';
+import { FiUser } from 'react-icons/fi';
 import Label from '../../components/ui/Label';
 import FormGroup from '../../components/ui/FormGroup';
 import api from '../../services/api';
@@ -23,6 +25,10 @@ export default function ForcePasswordChange() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const checks = passwordChecks(password, { previous: current, email: user?.email });
+    const allOk = checks.every((c) => c.ok);
+    const matches = confirm.length > 0 && confirm === password;
+    const step = !current ? 1 : allOk && matches ? 3 : 2;
+    const stepClass = (n) => (step > n ? s.step_done : step === n ? s.step_on : '');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -46,30 +52,39 @@ export default function ForcePasswordChange() {
 
     return (
         <AuthShell eyebrow="Segurança" title="Crie sua nova senha"
-            subtitle="A equipe de TI redefiniu sua senha. Por segurança, troque a senha temporária antes de continuar."
+            subtitle="A equipe de TI criou uma senha temporária para você. Troque-a agora: leva menos de um minuto e só você saberá a nova."
             footer={<button type="button" className={s.link} onClick={logout}>Sair</button>}>
+            <ol className={s.steps} aria-label="Etapas">
+                <li className={stepClass(1)}><span className={s.step_num}>{step > 1 ? '✓' : 1}</span> Senha temporária</li>
+                <li className={stepClass(2)}><span className={s.step_num}>{step > 2 ? '✓' : 2}</span> Nova senha</li>
+                <li className={stepClass(3)}><span className={s.step_num}>3</span> Pronto</li>
+            </ol>
+            {user?.email && <span className={s.account}><FiUser aria-hidden="true" /> {user.email}</span>}
             <form onSubmit={handleSubmit} noValidate className={s.form}>
                 <input type="text" name="username" autoComplete="username" value={user?.email || ''} readOnly hidden />
                 <FormGroup>
-                    <Label htmlFor="pwd-current">Senha temporária</Label>
-                    <Input id="pwd-current" type="password" autoComplete="current-password" value={current}
+                    <Label htmlFor="pwd-current">Senha temporária (a que a TI passou)</Label>
+                    <PasswordField id="pwd-current" autoComplete="current-password" value={current} autoFocus
                         onChange={(e) => { setCurrent(e.target.value); setError(null); }} />
                 </FormGroup>
                 <FormGroup>
                     <Label htmlFor="pwd-new">Nova senha</Label>
-                    <Input id="pwd-new" type="password" autoComplete="new-password" value={password}
+                    <PasswordField id="pwd-new" autoComplete="new-password" value={password}
                         onChange={(e) => { setPassword(e.target.value); setError(null); }} aria-describedby="pwd-rules" />
                 </FormGroup>
-                <ul id="pwd-rules" className={s.checks}>
-                    {checks.map((c) => <li key={c.label} className={c.ok ? s.check_ok : s.check_todo}>{c.ok ? '✓' : '○'} {c.label}</li>)}
-                </ul>
+                <PasswordStrength checks={checks} />
                 <FormGroup>
                     <Label htmlFor="pwd-confirm">Confirmar nova senha</Label>
-                    <Input id="pwd-confirm" type="password" autoComplete="new-password" value={confirm}
+                    <PasswordField id="pwd-confirm" autoComplete="new-password" value={confirm} aria-describedby="pwd-match"
                         onChange={(e) => { setConfirm(e.target.value); setError(null); }} />
                 </FormGroup>
+                {confirm && (
+                    <p id="pwd-match" className={`${s.match} ${matches ? s.check_ok : s.error}`} aria-live="polite">
+                        {matches ? '✓ As senhas conferem' : 'As senhas ainda não conferem'}</p>
+                )}
                 {error && <p role="alert" className={s.error}>{error}</p>}
-                <Button type="submit" disabled={loading}>{loading ? 'Salvando…' : 'Salvar nova senha'}</Button>
+                <Button type="submit" disabled={loading || !current || !allOk || !matches}>{loading ? 'Salvando…' : 'Salvar nova senha e entrar'}</Button>
+                <p className={s.tip}>Dica: um gerenciador de senhas (do navegador ou do celular) cria e guarda uma senha forte para você.</p>
             </form>
         </AuthShell>
     );

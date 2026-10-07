@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import { FiAlertTriangle } from 'react-icons/fi';
 
 import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
+import PasswordField from '../../components/auth/PasswordField';
+import PasswordStrength from '../../components/auth/PasswordStrength';
 import Label from '../../components/ui/Label';
 import FormGroup from '../../components/ui/FormGroup';
 import AuthShell, { authStyles as s } from '../../components/auth/AuthShell';
@@ -62,17 +63,17 @@ function ResetPassword() {
             <form className={s.form} onSubmit={handleSubmit} noValidate>
                 <FormGroup>
                     <Label htmlFor="new-password">Nova senha</Label>
-                    <Input id="new-password" type="password" autoComplete="new-password" value={password} autoFocus aria-describedby="pwd-rules"
+                    <PasswordField id="new-password" autoComplete="new-password" value={password} autoFocus aria-describedby="pwd-rules"
                         onChange={(e) => { setPassword(e.target.value); setError(null); }} />
                 </FormGroup>
-                <ul id="pwd-rules" className={s.checks}>
-                    {checks.map((c) => <li key={c.label} className={c.ok ? s.check_ok : s.check_todo}>{c.ok ? '✓' : '○'} {c.label}</li>)}
-                </ul>
+                <PasswordStrength checks={checks} />
                 <FormGroup>
                     <Label htmlFor="confirm-password">Confirmar nova senha</Label>
-                    <Input id="confirm-password" type="password" autoComplete="new-password" value={confirm}
+                    <PasswordField id="confirm-password" autoComplete="new-password" value={confirm}
                         onChange={(e) => { setConfirm(e.target.value); setError(null); }} />
                 </FormGroup>
+                {confirm && <p className={`${s.match} ${confirm === password ? s.check_ok : s.error}`} aria-live="polite">
+                    {confirm === password ? '✓ As senhas conferem' : 'As senhas ainda não conferem'}</p>}
                 {error && <p role="alert" className={s.error}>{error}</p>}
                 <Button type="submit" disabled={loading}>{loading ? 'Salvando…' : 'Salvar nova senha'}</Button>
             </form>
