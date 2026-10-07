@@ -17,7 +17,10 @@ import ConformidadeTab from '../../components/automacao/ConformidadeTab.jsx';
 import ExecucoesTab from '../../components/automacao/ExecucoesTab.jsx';
 
 // Abas (CAD-172): fluxos com apps externos (webhooks) e regras internas do escritório, com aprovação e histórico
-const TABS = [['fluxos', 'Fluxos com apps'], ['regras', 'Regras do escritório'], ['aprovacoes', 'Aprovações'], ['historico', 'Histórico'],
+// 95 → "1 h 35 min"; 0 → "0 min"
+const fmtMinutes = (m) => { const h = Math.floor((m || 0) / 60); const r = (m || 0) % 60; return h ? `${h} h${r ? ` ${r} min` : ''}` : `${r} min`; };
+
+const TABS = [['regras', 'Regras do escritório'], ['fluxos', 'Fluxos com apps'], ['aprovacoes', 'Aprovações'], ['historico', 'Histórico'],
     ['conformidade', 'Conformidade']];
 
 function Automacao() {
@@ -28,7 +31,8 @@ function Automacao() {
     const navigate = useNavigate();
     const { isOrgManager, role, access } = useAuth();
     const [params, setParams] = useSearchParams();
-    const tab = TABS.some(([k]) => k === params.get('aba')) ? params.get('aba') : 'fluxos';
+    // CAD-227: começa pelas Regras (onde ficam as automações da IA e dos modelos prontos)
+    const tab = TABS.some(([k]) => k === params.get('aba')) ? params.get('aba') : 'regras';
 
     const load = useCallback(async () => {
         try {
@@ -58,12 +62,12 @@ function Automacao() {
     const stats = [
         { icon: FiFileText, iconColor: '#3b82f6', title: 'Automações ativas', value: automationStats ? String(automationStats.automacoes_ativas) : '—' },
         { icon: FiZap, iconColor: '#f59e0b', title: 'Total de execuções', value: automationStats ? String(automationStats.total_execucoes) : '—' },
-        { icon: FiMail, iconColor: '#10b981', title: 'Tempo economizado', value: automationStats ? String(automationStats.tempo_economizado) : '—' },
+        { icon: FiMail, iconColor: '#10b981', title: 'Tempo economizado (estimado)', value: automationStats ? fmtMinutes(automationStats.tempo_economizado_min ?? automationStats.tempo_economizado * 60) : '—' },
     ];
 
     return (
         <div className={styles.automacao_container}>
-            <PageHeader title="Automação de fluxo de trabalho" subtitle="Crie, ative e acompanhe as automações do escritório" />
+            <PageHeader title="Automações" subtitle="Regras e fluxos que fazem o trabalho repetitivo por você. Abra uma regra para ver o fluxo rodando." />
             <SummaryGroup stats={stats} />
             <div className={tabs.tabs} role="tablist" style={{ margin: '12px 0 16px' }}>
                 {TABS.map(([k, label]) => (

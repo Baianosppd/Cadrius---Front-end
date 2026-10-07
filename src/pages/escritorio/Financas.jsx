@@ -15,9 +15,9 @@ const todayIso = () => new Date().toISOString().slice(0, 10);
 
 function Period({ value, onChange }) {
     return (
-        <div className={styles.filters}>
-            <label className={styles.field}>De<input className={styles.input} type="date" value={value.inicio} onChange={(e) => onChange({ ...value, inicio: e.target.value })} /></label>
-            <label className={styles.field}>Até<input className={styles.input} type="date" value={value.fim} onChange={(e) => onChange({ ...value, fim: e.target.value })} /></label>
+        <div className={styles.filters} style={{ justifyContent: 'flex-start' }}>
+            <label className={styles.field} style={{ flex: '0 1 190px' }}>De<input className={styles.input} type="date" value={value.inicio} onChange={(e) => onChange({ ...value, inicio: e.target.value })} /></label>
+            <label className={styles.field} style={{ flex: '0 1 190px' }}>Até<input className={styles.input} type="date" value={value.fim} onChange={(e) => onChange({ ...value, fim: e.target.value })} /></label>
         </div>
     );
 }

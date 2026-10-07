@@ -79,6 +79,7 @@ export default function Integracoes() {
     const { data, error, reload } = useLoader(() => Promise.all([integrationsApi.catalog(), integrationsApi.connections(),
         api.get('sync-history/', { params: { page_size: 10 } }).then((r) => r.data).catch(() => [])]), []);
     const [query, setQuery] = useState('');
+    const [cat, setCat] = useState('');
     const [connecting, setConnecting] = useState(null);
     const [tests, setTests] = useState({});
     const test = async (conn) => {
@@ -97,54 +98,75 @@ export default function Integracoes() {
     const [catalog, connections, historyRaw] = data || [{ apps: [], categorias: [] }, [], []];
     const history = (historyRaw?.results ?? historyRaw ?? []).map((h) => ({ name: h.integration, description: h.description, time: h.time, status: h.status === 'sucesso' ? 'sucesso' : 'erro' }));
     const byApp = (app) => connections.filter((c) => c.app_name === app);
+    const labelOf = (appKey) => catalog.apps.find((a) => a.app === appKey)?.label || appKey;
+    const groups = groupByCategory(catalog, query).filter((g) => !cat || g.categoria === cat);
+    const counts = Object.fromEntries((catalog.categorias || []).map((c) => [c, catalog.apps.filter((a) => a.categoria === c).length]));
 
+    // CAD-227: antes eram 41 cartões com 29 botões azuis iguais. Agora: o que já está conectado em cima,
+    // filtro por categoria e uma lista compacta com o botão "Conectar" discreto.
     return (
         <div className={styles.page}>
             <PageHeader title="Integrações" subtitle="Conecte as ferramentas que o escritório já usa. Cada app tem um guia de onde pegar os dados." />
             <WhatsAppCard />
             <GoogleCalendarCard />
-            <label className={styles.field} style={{ maxWidth: 420 }}>Buscar app
-                <input className={styles.input} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Ex.: assinatura, boleto, WhatsApp" />
-            </label>
-            {!data && <Empty>Carregando…</Empty>}
-            {groupByCategory(catalog, query).map((g) => (
-                <section key={g.categoria} className={styles.stack} aria-label={g.categoria}>
-                    <div className={styles.section_title} style={{ marginBottom: 0 }}>{g.categoria}</div>
-                    <div className={styles.card_grid}>
+            {connections.length > 0 && (
+                <section className={styles.card} aria-labelledby="conectados-title">
+                    <div id="conectados-title" className={styles.section_title}>Conectados <Pill tone="green">{connections.length}</Pill></div>
+                    {connections.map((c) => (
+                        <div key={c.id} className={styles.list_row}>
+                            <div>
+                                <strong>{labelOf(c.app_name)}</strong>
+                                <div className={styles.muted} style={{ fontSize: '.85rem' }}>
+                                    {tests[c.id]?.ok && <FiCheckCircle color="#16a34a" aria-label="testada" />} {c.name}
+                                    {tests[c.id]?.ok === false && <span style={{ color: 'var(--c-danger)' }}> · {tests[c.id].mensagem}</span>}
+                                </div>
+                            </div>
+                            <span className={styles.btn_row}>
+                                {canWrite && <button type="button" className={`${styles.btn} ${styles.btn_sm}`} disabled={tests[c.id]?.busy} onClick={() => test(c)}>
+                                    {tests[c.id]?.busy ? 'Testando…' : 'Testar'}</button>}
+                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} style={{ color: 'var(--c-danger)' }} onClick={() => remove(c)}>Remover</button>
+                            </span>
+                        </div>
+                    ))}
+                </section>
+            )}
+            <section className={styles.card} aria-labelledby="catalogo-title">
+                <div className={styles.header_row} style={{ alignItems: 'flex-end', gap: 12 }}>
+                    <div id="catalogo-title" className={styles.section_title} style={{ margin: 0 }}>Apps disponíveis</div>
+                    <input className={styles.input} style={{ maxWidth: 320 }} value={query} onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Buscar: assinatura, boleto, WhatsApp…" aria-label="Buscar app" />
+                </div>
+                <div className={styles.btn_row} role="group" aria-label="Categorias" style={{ margin: '12px 0 4px', gap: 6 }}>
+                    <button type="button" className={`${styles.chip} ${!cat ? styles.chip_active : ''}`} aria-pressed={!cat} onClick={() => setCat('')}>Todos</button>
+                    {(catalog.categorias || []).map((c) => (
+                        <button key={c} type="button" className={`${styles.chip} ${cat === c ? styles.chip_active : ''}`} aria-pressed={cat === c}
+                            onClick={() => setCat(cat === c ? '' : c)}>{c} <span className={styles.muted}>{counts[c]}</span></button>
+                    ))}
+                </div>
+                {!data && <Empty>Carregando…</Empty>}
+                {groups.map((g) => (
+                    <div key={g.categoria} aria-label={g.categoria} role="group">
+                        {!cat && <div className={styles.eyebrow_label}>{g.categoria}</div>}
                         {g.apps.map((app) => {
                             const mine = byApp(app.app);
                             return (
-                                <div key={app.app} className={`${styles.card} ${styles.stack}`} style={{ gap: 8 }}>
-                                    <div className={styles.header_row} style={{ alignItems: 'center' }}>
-                                        <strong>{app.label}</strong>
-                                        {app.nativo ? <Pill tone="green">já ativo</Pill> : mine.length ? <Pill tone="green">conectado</Pill> : app.novo ? <Pill tone="blue">novo</Pill> : null}
+                                <div key={app.app} className={styles.list_row}>
+                                    <div>
+                                        <strong>{app.label}</strong>{' '}
+                                        {app.nativo ? <Pill tone="green">já ativo</Pill> : mine.length ? <Pill tone="green">conectado</Pill> : null}
+                                        <div className={`${styles.muted} ${styles.clamp2}`} style={{ fontSize: '.85rem' }}>{app.uso}</div>
                                     </div>
-                                    <p className={styles.muted} style={{ fontSize: '.85rem', flex: 1 }}>{app.uso}</p>
-                                    {mine.map((c) => (
-                                        <div key={c.id} className={styles.kv} style={{ alignItems: 'center' }}>
-                                            <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                                {tests[c.id]?.ok && <FiCheckCircle color="#16a34a" aria-label="testada" />} {c.name}
-                                            </span>
-                                            <span className={styles.btn_row}>
-                                                {canWrite && <button type="button" className={`${styles.btn} ${styles.btn_sm}`} disabled={tests[c.id]?.busy} onClick={() => test(c)}>
-                                                    {tests[c.id]?.busy ? 'Testando…' : 'Testar'}</button>}
-                                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} style={{ color: 'var(--c-danger)' }} onClick={() => remove(c)}>Remover</button>
-                                            </span>
-                                        </div>
-                                    ))}
-                                    {tests[mine[0]?.id]?.ok === false && <Banner tone="error">{tests[mine[0].id].mensagem}</Banner>}
                                     {canWrite && !app.nativo && (
-                                        <button type="button" className={`${styles.btn} ${mine.length ? '' : styles.btn_primary}`} onClick={() => setConnecting(app)}>
-                                            {mine.length ? 'Adicionar outra conexão' : 'Conectar'}
-                                        </button>
+                                        <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => setConnecting(app)}>
+                                            {mine.length ? 'Outra conta' : 'Conectar'}</button>
                                     )}
                                 </div>
                             );
                         })}
                     </div>
-                </section>
-            ))}
-            {data && groupByCategory(catalog, query).length === 0 && <Empty>Nenhum app encontrado para "{query}".</Empty>}
+                ))}
+                {data && groups.length === 0 && <Empty>Nenhum app encontrado{query ? ` para "${query}"` : ''}.</Empty>}
+            </section>
             <SyncHistory history={history} />
             {connecting && <Conectar app={connecting} onClose={() => setConnecting(null)}
                 onSaved={(conn) => { setConnecting(null); reload(); if (conn?.id) test(conn); }} />}
