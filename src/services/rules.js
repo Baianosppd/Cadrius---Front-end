@@ -5,6 +5,7 @@ export const rulesApi = {
     catalog: () => api.get('automations/catalog/').then((r) => r.data),
     templates: () => api.get('automations/templates/').then((r) => r.data),
     list: () => api.get('automations/rules/').then((r) => r.data),
+    get: (id) => api.get(`automations/rules/${id}/`).then((r) => r.data),
     create: (body) => api.post('automations/rules/', body).then((r) => r.data),
     fromTemplate: (modelo) => api.post('automations/rules/', { modelo }).then((r) => r.data),
     update: (id, body) => api.patch(`automations/rules/${id}/`, body).then((r) => r.data),
