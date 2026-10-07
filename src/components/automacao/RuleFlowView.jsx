@@ -5,6 +5,7 @@ import ui from '../seguranca/seguranca.module.css';
 import { Banner, Pill, errorMessage } from '../seguranca/ui';
 import { rulesApi } from '../../services/rules';
 import s from './RuleFlowView.module.css';
+import ShortcutPanel from './ShortcutPanel';
 
 const RUN_TONE = { success: 'green', partial: 'yellow', failed: 'red', skipped: 'gray', pending_approval: 'yellow', rejected: 'gray', expired: 'gray', scheduled: 'blue', running: 'blue' };
 const fmt = (d) => (d ? new Date(d).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '—');
@@ -100,6 +101,8 @@ export default function RuleFlowView({ ruleId, catalog, canManage, onClose, onEd
                     </div>
                 ))}
             </div>
+
+            {rule.gatilho === 'shortcut' && <ShortcutPanel rule={rule} canManage={canManage} />}
 
             {sim && (
                 <Banner tone="info">Simulação com {sim.origem === 'real' ? 'o evento real mais recente' : 'um evento de exemplo'}: <strong>{sim.evento}</strong>.

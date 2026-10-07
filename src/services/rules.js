@@ -13,6 +13,7 @@ export const rulesApi = {
     simulate: (id) => api.post(`automations/rules/${id}/simulate/`).then((r) => r.data),
     enable: (id, ativa) => api.post(`automations/rules/${id}/enable/`, { ativa }).then((r) => r.data),
     runs: (params) => api.get('automations/runs/', { params }).then((r) => r.data),
+    shortcut: (id) => api.post(`automations/rules/${id}/atalho/`).then((r) => r.data),      // CAD-226
     approve: (id) => api.post(`automations/runs/${id}/approve/`).then((r) => r.data),
     reject: (id, motivo) => api.post(`automations/runs/${id}/reject/`, { motivo }).then((r) => r.data),
 };
@@ -117,3 +118,25 @@ export const DAILY_CONFIG = {
 
 // Data ISO (AAAA-MM-DD) → DD/MM/AAAA, sem fuso
 export const brDate = (iso) => (iso ? String(iso).slice(0, 10).split('-').reverse().join('/') : '—');
+
+// CAD-226: como ligar o atalho em cada aparelho (o link sai em ShortcutPanel)
+export const SHORTCUT_GUIDES = {
+    apple: { label: 'Apple Watch e iPhone', steps: [
+        'No iPhone, abra o app Atalhos e toque em + para criar um atalho (ex.: "Cheguei ao fórum").',
+        'Opcional: adicione "Ditar texto" para falar o recado.',
+        'Adicione "Obter conteúdo de URL", cole o link, método POST, corpo JSON com o campo texto (o texto ditado) e origem = relógio.',
+        'Em detalhes do atalho, ligue "Mostrar no Apple Watch". Toque no relógio ou peça "E aí Siri, cheguei ao fórum".',
+    ] },
+    android: { label: 'Android e Wear OS', steps: [
+        'Instale o app gratuito "HTTP Shortcuts" (ou use o Tasker).',
+        'Crie um atalho: método POST, cole o link, corpo JSON {"texto": "…", "origem": "relógio"}.',
+        'Ponha o atalho na tela inicial ou no bloco (tile) do relógio Wear OS.',
+        'Para falar o recado, use a opção de pedir texto antes de enviar.',
+    ] },
+    voz: { label: 'Alexa, Google e botões', steps: [
+        'Crie um applet no IFTTT (ou automação no Home Assistant): "Se eu disser… à Alexa/Google".',
+        'Ação: Webhooks → Make a web request, método POST, cole o link, tipo application/json.',
+        'Botões inteligentes (Flic, Shelly) também chamam o link.',
+        'Dica: use regras que avisam a equipe ou criam tarefa. O atalho nunca manda mensagem a cliente.',
+    ] },
+};
