@@ -28,7 +28,9 @@ export const AGENDA_ALERTS = [
 export const GCAL_RESULTS = {
     ok: { tone: 'success', text: 'Google Calendar conectado!' },
     denied: { tone: 'error', text: 'Você cancelou a autorização no Google.' },
-    state_invalid: { tone: 'error', text: 'A sessão da conexão expirou. Tente conectar de novo.' },
+    state_invalid: { tone: 'error', text: 'A conexão expirou ou já foi usada. Clique em "Conectar" de novo e conclua em até 10 minutos.' },
+    redirect_mismatch: { tone: 'error', text: 'O endereço de retorno no Google Cloud não confere. Copie o "URI de redirecionamento" desta tela para o app do Google (Credenciais → seu ID do cliente) e tente de novo.' },
+    code_expired: { tone: 'error', text: 'A autorização do Google expirou antes de concluir. Clique em "Conectar" de novo.' },
     code_rejected: { tone: 'error', text: 'O Google recusou as credenciais do app. Confira o ID e o segredo do cliente.' },
     no_refresh_token: { tone: 'error', text: 'O Google não devolveu permissão de longa duração. Remova o acesso do Cadrius em myaccount.google.com/permissions e conecte de novo.' },
 };

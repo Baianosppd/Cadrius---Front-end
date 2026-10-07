@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FiCheckCircle } from 'react-icons/fi';
 
-import Title from '../../components/ui/Title';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Label from '../../components/ui/Label';
-import ContainerCard from '../../components/ui/ContainerCard';
 import FormGroup from '../../components/ui/FormGroup';
+import AuthShell, { authStyles as s } from '../../components/auth/AuthShell';
 import { requestPasswordReset, passwordResetError } from '../../services/passwordReset';
 
-import styles from './Remember.module.css';
-import { CourthouseScene } from '../../components/illustrations/LegalArt';
-
+// Recuperar acesso (CAD-225: mesmo padrão visual do login)
 function Remember() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
@@ -34,43 +32,32 @@ function Remember() {
     };
 
     return (
-        <div className={styles.main_wrapper}>
-            <div className={styles.side_image}>
-                <CourthouseScene style={{ width: "100%", maxWidth: 460, height: "auto" }} />
-            </div>
-
-            <div className={styles.side_form}>
-                <ContainerCard>
-                    <Title as="h1">Esqueceu a senha</Title>
-
-                    {sent ? (
-                        <div className={styles.send} role="status">
-                            <p>Se o e-mail estiver cadastrado, enviamos as instruções para redefinir a senha.
-                                O link vale por 1 hora. Confira também a caixa de spam.</p>
-                        </div>
-                    ) : (
-                        <div className={styles.send}>
-                            <form onSubmit={handleSubmit} noValidate>
-                                <FormGroup>
-                                    <Label>E-mail</Label>
-                                    <Input
-                                        type="email"
-                                        autoComplete="email"
-                                        placeholder="seu@email.com"
-                                        value={email}
-                                        onChange={(e) => { setEmail(e.target.value); setError(null); }}
-                                    />
-                                </FormGroup>
-                                {error && <p role="alert" style={{ color: 'var(--c-danger)', fontSize: '0.875rem' }}>{error}</p>}
-                                <Button type="submit" disabled={loading}>{loading ? 'Enviando…' : 'Enviar'}</Button>
-                            </form>
-                        </div>
-                    )}
-
-                    <Link to="/" style={{ fontSize: "var(--fs-sm)", fontWeight: 600, textDecoration: "none", alignSelf: "flex-start" }}>← Voltar para o login</Link>
-                </ContainerCard>
-            </div>
-        </div>
+        <AuthShell
+            eyebrow="Acesso"
+            title="Recuperar senha"
+            subtitle={sent ? null : 'Informe o e-mail da sua conta. Enviaremos um link para você criar uma nova senha.'}
+            footer={<><Link className={s.link} to="/">← Voltar para o login</Link><span className={s.muted}>O link vale por 1 hora</span></>}
+        >
+            {sent ? (
+                <>
+                    <div className={`${s.notice} ${s.notice_ok}`} role="status">
+                        <FiCheckCircle aria-hidden="true" />
+                        <span>Se <strong>{email.trim()}</strong> estiver cadastrado, enviamos as instruções. Confira também a caixa de spam.</span>
+                    </div>
+                    <button type="button" className={s.link} onClick={() => setSent(false)}>Usar outro e-mail</button>
+                </>
+            ) : (
+                <form className={s.form} onSubmit={handleSubmit} noValidate>
+                    <FormGroup>
+                        <Label htmlFor="reset-email">E-mail</Label>
+                        <Input id="reset-email" type="email" autoComplete="email" placeholder="seu@email.com" value={email} autoFocus
+                            onChange={(e) => { setEmail(e.target.value); setError(null); }} />
+                    </FormGroup>
+                    {error && <p role="alert" className={s.error}>{error}</p>}
+                    <Button type="submit" disabled={loading}>{loading ? 'Enviando…' : 'Enviar link'}</Button>
+                </form>
+            )}
+        </AuthShell>
     );
 }
 

@@ -50,7 +50,7 @@ describe('CAD-222', () => {
         expect(labels()).toContain('Equipe');
         expect(labels({ solo: true, maxUsers: 3 })).toContain('Convidar alguém');
         expect(labels({ solo: true, maxUsers: 1 })).not.toContain('Equipe');
-        expect(labels()).toContain('Plugins (Claude, ChatGPT)');
+        expect(labels()).toContain('Plugins de IA');
     });
     it('primeiros passos com linguagem de autônomo', async () => {
         const { computeSteps } = await import('../onboarding');

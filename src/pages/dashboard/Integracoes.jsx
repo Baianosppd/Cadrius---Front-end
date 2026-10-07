@@ -6,6 +6,7 @@ import { Banner, Empty, PageHeader, Pill, errorMessage } from '../../components/
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import GoogleCalendarCard from '../../components/common/GoogleCalendarCard.jsx';
+import WhatsAppCard from '../../components/common/WhatsAppCard.jsx';
 import SyncHistory from '../../components/ui/SyncHistory.jsx';
 import api from '../../services/api';
 import { groupByCategory, integrationsApi, missingFields } from '../../services/integrations';
@@ -100,6 +101,7 @@ export default function Integracoes() {
     return (
         <div className={styles.page}>
             <PageHeader title="Integrações" subtitle="Conecte as ferramentas que o escritório já usa. Cada app tem um guia de onde pegar os dados." />
+            <WhatsAppCard />
             <GoogleCalendarCard />
             <label className={styles.field} style={{ maxWidth: 420 }}>Buscar app
                 <input className={styles.input} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Ex.: assinatura, boleto, WhatsApp" />

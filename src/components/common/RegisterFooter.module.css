@@ -70,3 +70,8 @@
     width: 16px;
     height: 16px;
 }
+/* CAD-225: no celular os três botões se apertavam */
+@media (max-width: 760px) {
+    .footer { padding: 0 12px; gap: 8px; height: 64px; }
+    .prev_button { padding: 10px 12px; }
+}

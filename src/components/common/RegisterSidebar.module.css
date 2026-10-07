@@ -199,3 +199,12 @@
 .tip { background: var(--c-primary-50); border: 1px solid var(--c-info-bd); }
 .tip_title { color: var(--c-primary-700); }
 .tip_text { color: var(--c-text-2); }
+
+/* CAD-225: no celular a coluna de passos virava uma parede de 260px e cortava o formulário.
+   Agora fica no topo, compacta: título, progresso e só o passo atual. */
+@media (max-width: 760px) {
+    .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--c-border); padding: 12px 16px; overflow: visible; }
+    .top { gap: 10px; }
+    .step:not(.step_active) { display: none; }
+    .art_box, .tip { display: none; }
+}

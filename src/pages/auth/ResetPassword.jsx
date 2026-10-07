@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FiAlertTriangle } from 'react-icons/fi';
 
-import Title from '../../components/ui/Title';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Label from '../../components/ui/Label';
-import ContainerCard from '../../components/ui/ContainerCard';
 import FormGroup from '../../components/ui/FormGroup';
+import AuthShell, { authStyles as s } from '../../components/auth/AuthShell';
 import { confirmPasswordReset, parseResetFragment, passwordResetError } from '../../services/passwordReset';
+import { passwordChecks } from '../../services/passwordPolicy';
 
-import styles from './Remember.module.css';
-import { CourthouseScene } from '../../components/illustrations/LegalArt';
-
+// Criar nova senha pelo link do e-mail (CAD-225: mesmo padrão visual do login, regras da senha à vista)
 function ResetPassword() {
     const navigate = useNavigate();
     // Lê uma vez e já remove o token da barra de endereço (histórico/compartilhamento de tela).
@@ -25,10 +24,11 @@ function ResetPassword() {
     const [confirm, setConfirm] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const checks = passwordChecks(password).filter((c) => !/tempor/i.test(c.label));
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password.length < 8) return setError('A senha deve ter pelo menos 8 caracteres.');
+        if (!checks.every((c) => c.ok)) return setError('A nova senha ainda não atende a todos os requisitos.');
         if (password !== confirm) return setError('As senhas não conferem.');
         setLoading(true);
         setError(null);
@@ -43,44 +43,40 @@ function ResetPassword() {
         }
     };
 
+    const footer = <><Link className={s.link} to="/">← Voltar para o login</Link><Link className={s.link} to="/esqueceu-a-senha">Pedir novo link</Link></>;
+
+    if (!link) {
+        return (
+            <AuthShell eyebrow="Acesso" title="Link expirado ou inválido" footer={<Link className={s.link} to="/">← Voltar para o login</Link>}>
+                <div className={`${s.notice} ${s.notice_warn}`} role="alert">
+                    <FiAlertTriangle aria-hidden="true" />
+                    <span>Este link de redefinição não vale mais. Os links duram 1 hora e só podem ser usados uma vez. Peça um novo.</span>
+                </div>
+                <Button type="button" onClick={() => navigate('/esqueceu-a-senha')}>Pedir novo link</Button>
+            </AuthShell>
+        );
+    }
+
     return (
-        <div className={styles.main_wrapper}>
-            <div className={styles.side_image}>
-                <CourthouseScene style={{ width: "100%", maxWidth: 460, height: "auto" }} />
-            </div>
-
-            <div className={styles.side_form}>
-                <ContainerCard>
-                    <Title as="h1">Redefinir senha</Title>
-
-                    {!link ? (
-                        <div className={styles.send} role="alert">
-                            <p>Link inválido ou expirado. Solicite um novo.</p>
-                            <Link to="/esqueceu-a-senha">Solicitar novo link</Link>
-                        </div>
-                    ) : (
-                        <div className={styles.send}>
-                            <form onSubmit={handleSubmit} noValidate>
-                                <FormGroup>
-                                    <Label>Nova senha</Label>
-                                    <Input type="password" autoComplete="new-password" value={password}
-                                        onChange={(e) => { setPassword(e.target.value); setError(null); }} />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label>Confirmar nova senha</Label>
-                                    <Input type="password" autoComplete="new-password" value={confirm}
-                                        onChange={(e) => { setConfirm(e.target.value); setError(null); }} />
-                                </FormGroup>
-                                {error && <p role="alert" style={{ color: 'var(--c-danger)', fontSize: '0.875rem' }}>{error}</p>}
-                                <Button type="submit" disabled={loading}>{loading ? 'Salvando…' : 'Redefinir senha'}</Button>
-                            </form>
-                        </div>
-                    )}
-
-                    <Link to="/">Voltar ao login</Link>
-                </ContainerCard>
-            </div>
-        </div>
+        <AuthShell eyebrow="Acesso" title="Criar nova senha" subtitle="Escolha uma senha que você não usa em outros sites." footer={footer}>
+            <form className={s.form} onSubmit={handleSubmit} noValidate>
+                <FormGroup>
+                    <Label htmlFor="new-password">Nova senha</Label>
+                    <Input id="new-password" type="password" autoComplete="new-password" value={password} autoFocus aria-describedby="pwd-rules"
+                        onChange={(e) => { setPassword(e.target.value); setError(null); }} />
+                </FormGroup>
+                <ul id="pwd-rules" className={s.checks}>
+                    {checks.map((c) => <li key={c.label} className={c.ok ? s.check_ok : s.check_todo}>{c.ok ? '✓' : '○'} {c.label}</li>)}
+                </ul>
+                <FormGroup>
+                    <Label htmlFor="confirm-password">Confirmar nova senha</Label>
+                    <Input id="confirm-password" type="password" autoComplete="new-password" value={confirm}
+                        onChange={(e) => { setConfirm(e.target.value); setError(null); }} />
+                </FormGroup>
+                {error && <p role="alert" className={s.error}>{error}</p>}
+                <Button type="submit" disabled={loading}>{loading ? 'Salvando…' : 'Salvar nova senha'}</Button>
+            </form>
+        </AuthShell>
     );
 }
 

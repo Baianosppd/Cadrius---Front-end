@@ -22,7 +22,8 @@ describe('billing', () => {
 
     it('resume créditos mensais e avulsos', () => {
         expect(creditsNotice({ ia_ativa: true, creditos_mensais: 300, creditos_avulsos: 0 })).toBe('300 créditos/mês');
-        expect(creditsNotice({ ia_ativa: true, creditos_mensais: 300, creditos_avulsos: 40 })).toBe('300 créditos/mês + 40 avulsos');
+        expect(creditsNotice({ ia_ativa: true, creditos_mensais: 300, creditos_avulsos: 40 })).toBe('300 créditos/mês + 40 avulsos disponíveis');
+        expect(creditsNotice({ ia_ativa: true, creditos_mensais: 300, creditos_usados_mes: 12, creditos_avulsos: 0 })).toBe('12 de 300 créditos usados este mês');
         expect(creditsNotice({ ia_ativa: false })).toBeNull();
     });
 });

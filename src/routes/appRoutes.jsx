@@ -80,6 +80,7 @@ const Financas = lazy(() => import('../pages/escritorio/Financas'));
 const PortalCliente = lazy(() => import('../pages/portal/PortalCliente'));
 // CAD-223: captação e pesquisa de satisfação (públicas)
 const Captacao = lazy(() => import('../pages/portal/Captacao'));
+const WhatsAppPair = lazy(() => import('../pages/portal/WhatsAppPair'));
 const Pesquisa = lazy(() => import('../pages/portal/Pesquisa'));
 
 // Protege telas por papel: quem não tem permissão volta ao dashboard (o back também recusa com 403)
@@ -103,6 +104,7 @@ export default function AppRoutes() {
         {/* Portal do cliente: público, só com o link pessoal (CAD-175) */}
         <Route path="/portal/:token" element={<PortalCliente />} />
         <Route path="/captacao/:token" element={<Captacao />} />
+        <Route path="/whatsapp/:token" element={<WhatsAppPair />} />
         <Route path="/pesquisa/:token" element={<Pesquisa />} />
 
         {/* Rotas públicas */}

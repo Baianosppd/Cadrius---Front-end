@@ -20,3 +20,9 @@
     display: flex;
     justify-content: center;
 }
+/* CAD-225: celular — passos no topo e formulário na largura toda, com rolagem */
+.container { height: 100dvh; }
+@media (max-width: 760px) {
+    .body { flex-direction: column; overflow-y: auto; }
+    .content { overflow: visible; padding: 20px 16px; }
+}

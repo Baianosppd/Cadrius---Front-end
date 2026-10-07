@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../services/api.js';
 import { PageHeader } from '../../components/seguranca/ui';
 import styles from './GestaoEquipe.module.css';
@@ -10,22 +10,10 @@ import useAuth from '../../hooks/useAuth';
 import InviteMemberModal from '../../components/ui/InviteMemberModal.jsx';
 import { toast } from 'react-toastify';
 
-const mapMember = (member) => {
-    const name = `${member.first_name} ${member.last_name}`.trim() || member.email;
-    const nameParts = name.split(' ');
-    const initials = nameParts.length >= 2
-        ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase()
-        : nameParts[0][0].toUpperCase();
-    return {
-        initials,
-        name,
-        email: member.email,
-        isAdmin: ['administrador', 'owner'].includes(member.role),
-        permission: member.role,
-        creditsUsed: 0,
-        creditsTotal: 1000,
-    };
-};
+const mapMember = (m) => ({
+    ...m,
+    nome: `${m.first_name || ''} ${m.last_name || ''}`.trim() || m.email,
+});
 
 function GestaoEquipe() {
     const [activeTab, setActiveTab] = useState('funcionarios');
@@ -33,11 +21,13 @@ function GestaoEquipe() {
     const [showInviteModal, setShowInviteModal] = useState(false);
     const { isOrgManager } = useAuth();
 
-    useEffect(() => {
-        api.get('teams/members/')
-            .then(res => setMembers(res.data.map(mapMember)))
-            .catch(err => console.error('Erro ao carregar membros:', err));
+    const [summary, setSummary] = useState(null);
+    // CAD-225: uso real de créditos (por pessoa e do escritório)
+    const load = useCallback(() => {
+        api.get('teams/members/').then(res => setMembers(res.data.map(mapMember))).catch(err => console.error('Erro ao carregar membros:', err));
+        api.get('teams/credits/').then(res => setSummary(res.data)).catch(() => setSummary(null));
     }, []);
+    useEffect(() => { load(); }, [load]);
 
     const handleInvite = async (data) => {
         try {
@@ -46,6 +36,7 @@ function GestaoEquipe() {
                 role: data.role,
             });
             setMembers(prev => [...prev, mapMember(response.data)]);
+            load();
             setShowInviteModal(false);
             toast.success('Funcionário convidado com sucesso!');
         } catch (err) {
@@ -89,7 +80,10 @@ function GestaoEquipe() {
             {activeTab === 'funcionarios' && (
                 <TeamMembers
                     members={members}
+                    summary={summary}
+                    canManage={isOrgManager}
                     onInvite={() => setShowInviteModal(true)}
+                    onChanged={load}
                 />
             )}
 
