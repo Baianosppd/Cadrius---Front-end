@@ -5,7 +5,7 @@ import { Banner, Empty, Pill, StatCard, errorMessage, fmtDateTime } from '../seg
 import useLoader from '../../pages/gestao/useLoader';
 import { FiCalendar, FiChevronLeft, FiChevronRight, FiList } from 'react-icons/fi';
 import {
-    AUTO_CHANNELS, CHANNELS, CHANNEL_COLOR, CHANNEL_LABEL, LEVEL_TONE, STATUS, groupByDay, monthGrid, parseHashtags, toLocalInput,
+    AUTO_CHANNELS, IMAGE_SOURCE, CHANNELS, CHANNEL_COLOR, CHANNEL_LABEL, LEVEL_TONE, STATUS, groupByDay, monthGrid, parseHashtags, toLocalInput,
 } from '../../services/marketing';
 import PostPreview from './PostPreview';
 import useAuth from '../../hooks/useAuth';
@@ -76,10 +76,13 @@ function Editor({ api, id, canApprove, onClose, onChanged, brand }) {
     const [alertas, setAlertas] = useState(null);
     const [revisei, setRevisei] = useState(false);
     const [busy, setBusy] = useState(false);
+    const [imgBusy, setImgBusy] = useState('');
+    const [hint, setHint] = useState('');
     const timer = useRef(null);
     useEffect(() => {
         api.get(id).then((x) => {
             setP(x);
+            setHint(x.sugestao_imagem || '');
             setAlertas(x.alertas);
             setForm({ titulo: x.titulo, texto: x.texto, hashtags: (x.hashtags || []).map((t) => `#${t}`).join(' '), imagem_url: x.imagem_url, agendado_para: toLocalInput(x.agendado_para) });
         }).catch((err) => toast.error(errorMessage(err)));
@@ -100,6 +103,16 @@ function Editor({ api, id, canApprove, onClose, onChanged, brand }) {
             const x = await api.update(p.id, body);
             setP(x); setAlertas(x.alertas); toast.success(ok); onChanged();
         } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
+    };
+    const makeImage = async (modo) => {
+        setImgBusy(modo);
+        try {
+            const x = await api.image(p.id, { modo, sugestao_imagem: hint });
+            setP(x);
+            setForm((f) => ({ ...f, imagem_url: x.imagem_url }));
+            if (x.aviso) toast.info(x.aviso); else toast.success('Imagem pronta.');
+            onChanged();
+        } catch (err) { toast.error(errorMessage(err)); } finally { setImgBusy(''); }
     };
     const publishNow = async () => {
         setBusy(true);
@@ -147,9 +160,28 @@ function Editor({ api, id, canApprove, onClose, onChanged, brand }) {
                                 </label>
                             )}
                         </div>
-                        {p.sugestao_imagem && <p className={styles.muted} style={{ fontSize: '.84rem' }}>Sugestão de arte: {p.sugestao_imagem}</p>}
+                        <div className={styles.card} style={{ background: 'var(--c-surface-2)' }}>
+                            <div className={styles.section_title}>Imagem do post {p.imagem_origem && <Pill tone={p.imagem_origem === 'marca' ? 'gray' : 'blue'}>{IMAGE_SOURCE[p.imagem_origem]}</Pill>}</div>
+                            <label className={styles.field}>O que a imagem deve mostrar
+                                <textarea className={styles.textarea} rows={2} maxLength={500} value={hint} onChange={(e) => setHint(e.target.value)}
+                                    placeholder="Ex.: balança da justiça sobre mesa de madeira, luz natural" />
+                            </label>
+                            <div className={styles.btn_row} style={{ marginTop: 8 }}>
+                                <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={!!imgBusy || p.status === 'publicado'} onClick={() => makeImage('ia')}>
+                                    {imgBusy === 'ia' ? 'Gerando a imagem…' : form.imagem_url ? 'Gerar outra com IA' : 'Gerar imagem com IA'}</button>
+                                <button type="button" className={styles.btn} disabled={!!imgBusy || p.status === 'publicado'} onClick={() => makeImage('marca')}>
+                                    {imgBusy === 'marca' ? 'Montando…' : 'Arte da marca (sem IA)'}</button>
+                                {form.imagem_url && <a className={styles.btn} href={form.imagem_url} target="_blank" rel="noopener noreferrer" download>Baixar</a>}
+                            </div>
+                            <p className={styles.muted} style={{ fontSize: '.78rem', marginTop: 6 }}>A IA de imagem usa créditos e nunca recebe dado de cliente. A arte da marca
+                                usa a cor do escritório (Perfil → Assinatura dos e-mails) e não gasta créditos.</p>
+                        </div>
+                        {p.canal === 'video_curto' && (
+                            <Banner tone="info">Vídeo: o Cadrius entrega o roteiro com as cenas. Gere a imagem de cada cena aqui e monte o vídeo no CapCut,
+                                Canva ou Instagram Edits. A geração automática de vídeo está em estudo (veja o relatório da fase).</Banner>
+                        )}
                         {auto && (
-                            <label className={styles.field}>Imagem (URL pública https){p.canal === 'instagram' && ' — obrigatória no Instagram'}
+                            <label className={styles.field}>Ou cole o link de uma imagem sua (https){p.canal === 'instagram' && ' — o Instagram exige imagem'}
                                 <input className={styles.input} value={form.imagem_url} onChange={(e) => setForm({ ...form, imagem_url: e.target.value })} placeholder="https://…" />
                             </label>
                         )}
