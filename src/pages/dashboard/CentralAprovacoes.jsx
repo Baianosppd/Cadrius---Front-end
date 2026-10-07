@@ -234,7 +234,7 @@ export default function CentralAprovacoes() {
     return (
         <div className={styles.page}>
             <div>
-                <div className={styles.page_title}>IA do escritório</div>
+                <h1 className={styles.page_title}>IA do escritório</h1>
                 <div className={styles.page_subtitle}>O que a IA preparou para você decidir, o quanto ela pode fazer sozinha e o que ela já aprendeu</div>
             </div>
             <TabBar tabs={TABS} activeTab={tab} onTabChange={setTab} />

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import EmailVisualField from '../email/EmailVisualField';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
 import { Banner, errorMessage } from '../seguranca/ui';
@@ -72,6 +73,7 @@ function ActionFields({ action, onChange, trigger, vars }) {
                 </div>
                 {text('assunto', 'Assunto (se for por e-mail)', { max: 150 })}
                 {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
+                {p.canal !== 'whatsapp' && <EmailVisualField value={p.visual} onChange={(v) => set('visual', v)} assunto={p.assunto} mensagem={p.mensagem} />}
                 <p className={styles.muted}>Só envia por canal que o cliente autorizou (LGPD). Fora do horário comercial (8h às 20h, segunda a sábado)
                     o envio fica agendado para o próximo horário permitido.</p>
             </>);
@@ -99,6 +101,7 @@ function ActionFields({ action, onChange, trigger, vars }) {
                 </label>
                 {action.type === 'send_email' && text('assunto', 'Assunto', { max: 150 })}
                 {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
+                {action.type === 'send_email' && <EmailVisualField value={p.visual} onChange={(v) => set('visual', v)} assunto={p.assunto} mensagem={p.mensagem} />}
                 <p className={styles.muted}>Só envia a quem autorizou este canal no cadastro do contato (LGPD).</p>
             </>);
         case 'team_chat':
@@ -179,6 +182,14 @@ export default function RuleEditor({ catalog, rule, onDone, onCancel }) {
                 {form.gatilho === 'task_overdue' && (
                     <label className={styles.field}>Dias de atraso (0 = assim que passar do horário)
                         <input className={styles.input} type="number" min={0} max={30} value={form.gatilho_config.dias_atraso ?? 1} onChange={(e) => setCfg('dias_atraso', Number(e.target.value))} />
+                    </label>
+                )}
+                {form.gatilho === 'shortcut' && (
+                    <label className={styles.field}>Frases de voz que disparam a regra (separe por vírgula)
+                        <input className={styles.input} placeholder="cheguei ao fórum, estou no fórum"
+                            value={Array.isArray(form.gatilho_config.frases) ? form.gatilho_config.frases.join(', ') : (form.gatilho_config.frases || '')}
+                            onChange={(e) => setCfg('frases', e.target.value)} />
+                        <span className={styles.muted} style={{ fontWeight: 400 }}>Fale a frase no relógio ou celular (Relógio e voz). O que vier depois dela vira {'{{atalho.texto}}'}.</span>
                     </label>
                 )}
                 {DAILY_CONFIG[form.gatilho] && (

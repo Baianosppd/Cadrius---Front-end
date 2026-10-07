@@ -8,6 +8,7 @@ import useLoader from '../gestao/useLoader';
 import GoogleCalendarCard from '../../components/common/GoogleCalendarCard.jsx';
 import WhatsAppCard from '../../components/common/WhatsAppCard.jsx';
 import SyncHistory from '../../components/ui/SyncHistory.jsx';
+import AppLogo from '../../components/common/AppLogo.jsx';
 import api from '../../services/api';
 import { groupByCategory, integrationsApi, missingFields } from '../../services/integrations';
 
@@ -79,6 +80,7 @@ export default function Integracoes() {
     const { data, error, reload } = useLoader(() => Promise.all([integrationsApi.catalog(), integrationsApi.connections(),
         api.get('sync-history/', { params: { page_size: 10 } }).then((r) => r.data).catch(() => [])]), []);
     const [query, setQuery] = useState('');
+    const [cat, setCat] = useState('');
     const [connecting, setConnecting] = useState(null);
     const [tests, setTests] = useState({});
     const test = async (conn) => {
@@ -97,29 +99,50 @@ export default function Integracoes() {
     const [catalog, connections, historyRaw] = data || [{ apps: [], categorias: [] }, [], []];
     const history = (historyRaw?.results ?? historyRaw ?? []).map((h) => ({ name: h.integration, description: h.description, time: h.time, status: h.status === 'sucesso' ? 'sucesso' : 'erro' }));
     const byApp = (app) => connections.filter((c) => c.app_name === app);
+    const connected = new Set(connections.map((c) => c.app_name));
+    const groups = groupByCategory(catalog, query)
+        .map((g) => (cat === '__on' ? { ...g, apps: g.apps.filter((a) => connected.has(a.app)) } : g))
+        .filter((g) => g.apps.length && (!cat || cat === '__on' || g.categoria === cat));
+    const counts = Object.fromEntries((catalog.categorias || []).map((c) => [c, catalog.apps.filter((a) => a.categoria === c).length]));
 
+    // CAD-227: cartões com o logo de cada app; filtro por categoria e busca; "Conectar" discreto (antes eram 29 botões azuis)
     return (
         <div className={styles.page}>
             <PageHeader title="Integrações" subtitle="Conecte as ferramentas que o escritório já usa. Cada app tem um guia de onde pegar os dados." />
             <WhatsAppCard />
             <GoogleCalendarCard />
-            <label className={styles.field} style={{ maxWidth: 420 }}>Buscar app
-                <input className={styles.input} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Ex.: assinatura, boleto, WhatsApp" />
-            </label>
+            <div className={styles.header_row} style={{ alignItems: 'center', gap: 12 }}>
+                <div className={styles.btn_row} role="group" aria-label="Categorias" style={{ gap: 6 }}>
+                    <button type="button" className={`${styles.chip} ${!cat ? styles.chip_active : ''}`} aria-pressed={!cat} onClick={() => setCat('')}>Todos</button>
+                    {connections.length > 0 && (
+                        <button type="button" className={`${styles.chip} ${cat === '__on' ? styles.chip_active : ''}`} aria-pressed={cat === '__on'}
+                            onClick={() => setCat(cat === '__on' ? '' : '__on')}>Conectados <span className={styles.muted}>{new Set(connections.map((c) => c.app_name)).size}</span></button>
+                    )}
+                    {(catalog.categorias || []).map((c) => (
+                        <button key={c} type="button" className={`${styles.chip} ${cat === c ? styles.chip_active : ''}`} aria-pressed={cat === c}
+                            onClick={() => setCat(cat === c ? '' : c)}>{c} <span className={styles.muted}>{counts[c]}</span></button>
+                    ))}
+                </div>
+                <input className={styles.input} style={{ maxWidth: 300 }} value={query} onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Buscar: assinatura, boleto, WhatsApp…" aria-label="Buscar app" />
+            </div>
             {!data && <Empty>Carregando…</Empty>}
-            {groupByCategory(catalog, query).map((g) => (
+            {groups.map((g) => (
                 <section key={g.categoria} className={styles.stack} aria-label={g.categoria}>
-                    <div className={styles.section_title} style={{ marginBottom: 0 }}>{g.categoria}</div>
+                    {cat !== g.categoria && <div className={styles.section_title} style={{ marginBottom: 0 }}>{g.categoria}</div>}
                     <div className={styles.card_grid}>
                         {g.apps.map((app) => {
                             const mine = byApp(app.app);
                             return (
-                                <div key={app.app} className={`${styles.card} ${styles.stack}`} style={{ gap: 8 }}>
-                                    <div className={styles.header_row} style={{ alignItems: 'center' }}>
-                                        <strong>{app.label}</strong>
-                                        {app.nativo ? <Pill tone="green">já ativo</Pill> : mine.length ? <Pill tone="green">conectado</Pill> : app.novo ? <Pill tone="blue">novo</Pill> : null}
+                                <div key={app.app} className={`${styles.card} ${styles.stack}`} style={{ gap: 10 }}>
+                                    <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                                        <AppLogo app={app.app} label={app.label} />
+                                        <div style={{ minWidth: 0 }}>
+                                            <strong>{app.label}</strong>
+                                            <div>{app.nativo ? <Pill tone="green">já ativo</Pill> : mine.length ? <Pill tone="green">conectado</Pill> : null}</div>
+                                        </div>
                                     </div>
-                                    <p className={styles.muted} style={{ fontSize: '.85rem', flex: 1 }}>{app.uso}</p>
+                                    <p className={`${styles.muted} ${styles.clamp3}`} style={{ fontSize: '.85rem', flex: 1, margin: 0 }}>{app.uso}</p>
                                     {mine.map((c) => (
                                         <div key={c.id} className={styles.kv} style={{ alignItems: 'center' }}>
                                             <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -134,9 +157,8 @@ export default function Integracoes() {
                                     ))}
                                     {tests[mine[0]?.id]?.ok === false && <Banner tone="error">{tests[mine[0].id].mensagem}</Banner>}
                                     {canWrite && !app.nativo && (
-                                        <button type="button" className={`${styles.btn} ${mine.length ? '' : styles.btn_primary}`} onClick={() => setConnecting(app)}>
-                                            {mine.length ? 'Adicionar outra conexão' : 'Conectar'}
-                                        </button>
+                                        <button type="button" className={styles.btn} onClick={() => setConnecting(app)}>
+                                            {mine.length ? 'Adicionar outra conta' : 'Conectar'}</button>
                                     )}
                                 </div>
                             );
@@ -144,7 +166,7 @@ export default function Integracoes() {
                     </div>
                 </section>
             ))}
-            {data && groupByCategory(catalog, query).length === 0 && <Empty>Nenhum app encontrado para "{query}".</Empty>}
+            {data && groups.length === 0 && <Empty>Nenhum app encontrado{query ? ` para "${query}"` : ''}.</Empty>}
             <SyncHistory history={history} />
             {connecting && <Conectar app={connecting} onClose={() => setConnecting(null)}
                 onSaved={(conn) => { setConnecting(null); reload(); if (conn?.id) test(conn); }} />}

@@ -11,6 +11,8 @@ export function makeMarketingApi(base) {
         update: (id, body) => api.patch(`${base}conteudos/${id}/`, body).then((r) => r.data),
         remove: (id) => api.delete(`${base}conteudos/${id}/`),
         publish: (id) => api.post(`${base}conteudos/${id}/publicar/`).then((r) => r.data),
+        // CAD-226: imagem real do post (modo 'ia' ou 'marca')
+        image: (id, body) => api.post(`${base}conteudos/${id}/imagem/`, body).then((r) => r.data),
         campaigns: () => api.get(`${base}campanhas/`).then((r) => r.data),
         addCampaign: (body) => api.post(`${base}campanhas/`, body).then((r) => r.data),
         removeCampaign: (id) => api.delete(`${base}campanhas/${id}/`),
@@ -85,3 +87,6 @@ export function monthGrid(year, month, items = []) {
     }
     return weeks;
 }
+
+// CAD-226: de onde veio a imagem do post
+export const IMAGE_SOURCE = { openai: 'IA de imagem (OpenAI)', gemini: 'IA de imagem (Gemini)', marca: 'Arte da marca' };

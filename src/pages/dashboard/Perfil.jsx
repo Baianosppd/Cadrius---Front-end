@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './Perfil.module.css';
 
 import ProfileInfo from '../../components/ui/ProfileInfo.jsx';
 import ChangePassword from '../../components/ui/ChangePassword.jsx';
 import MfaCard from '../../components/seguranca/MfaCard.jsx';
+import EmailSignatureCard from '../../components/email/EmailSignatureCard.jsx';
 import PlanCard from '../../components/ui/Cards/PlanCard.jsx';
 import { toast } from 'react-toastify';
 import ui from '../../components/seguranca/seguranca.module.css';
@@ -23,6 +24,12 @@ function Perfil() {
     const [promoInfo, setPromoInfo] = useState({});   // planId → prévia do desconto
     const { isOrgManager } = useAuth();
     const navigate = useNavigate();
+    const [params, setParams] = useSearchParams();
+    // CAD-227: o perfil tinha 7 blocos numa coluna só (2.700 px). Agora são 4 abas curtas.
+    const TABS = [['dados', 'Meus dados'], ['seguranca', 'Senha e acesso'], ['emails', 'Assinatura de e-mail'], ['plano', 'Plano e créditos']];
+    const paid = ['payment', 'credits'].some((k) => params.get(k));
+    const tab = TABS.some(([k]) => k === params.get('aba')) ? params.get('aba') : paid ? 'plano' : 'dados';
+    const go = (k) => { const n = new URLSearchParams(params); n.set('aba', k); setParams(n, { replace: true }); };
 
     useEffect(() => {
         api.get('auth/user/')
@@ -100,12 +107,17 @@ function Perfil() {
 
     return (
         <div className={styles.perfil_container}>
-            <PageHeader title="Meu perfil" subtitle="Seus dados, senha, verificação em duas etapas e a assinatura do escritório" />
+            <PageHeader title="Meu perfil" subtitle="Seus dados, senha e acesso, assinatura dos e-mails e o plano do escritório" />
+            <div className={ui.tabs} role="tablist" aria-label="Seções do perfil">
+                {TABS.map(([k, label]) => (
+                    <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${ui.tab} ${tab === k ? ui.tab_active : ''}`} onClick={() => go(k)}>{label}</button>
+                ))}
+            </div>
             {!user ? (
                 <p className={ui.muted}>Carregando perfil…</p>
             ) : (
                 <>
-                    <ProfileInfo
+                    {tab === 'dados' && <ProfileInfo
                         user={{
                             nome: `${user.first_name} ${user.last_name}`.trim() || '—',
                             email: user.email || '—',
@@ -116,19 +128,19 @@ function Perfil() {
                         }}
                         onSave={handleSave}
                         onPhotoChange={handlePhotoChange}
-                    />
-                    <ChangePassword onSave={(data) => console.log(data)} />
-                    <MfaCard />
-                    {currentPlan && (
+                    />}
+                    {tab === 'seguranca' && <><ChangePassword onSave={() => {}} /><MfaCard /></>}
+                    {tab === 'emails' && <EmailSignatureCard />}
+                    {tab === 'plano' && currentPlan && (
                         <PlanCard
                             currentPlan={currentPlan}
                             otherPlans={otherPlans}
                             onManage={() => { }}
                         />
                     )}
-                    {assinatura && (
+                    {tab === 'plano' && assinatura && (
                         <section aria-label="Assinatura e créditos" className={`${ui.card} ${ui.stack}`}>
-                            <h2 className={ui.section_title}>Assinatura e créditos</h2>
+                            <h2 className={ui.section_title}>Situação e créditos</h2>
                             <p>Estado: <strong>{{ trialing: 'Em teste', active: 'Ativa', past_due: 'Pagamento pendente', restricted: 'Restrita', suspended: 'Suspensa', canceled: 'Cancelada' }[assinatura.estado] || assinatura.estado}</strong></p>
                             <p>{creditsNotice(assinatura) || 'IA pausada: regularize a assinatura.'}</p>
                             {assinatura.estado === 'trialing' && isOrgManager && (

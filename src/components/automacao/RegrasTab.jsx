@@ -1,11 +1,15 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
 import { Banner, Empty, Pill, errorMessage, fmtDateTime } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { STEP_STATUS, describeRule, hasExternal, rulesApi } from '../../services/rules';
 import RuleEditor from './RuleEditor';
+import RuleFlowView from './RuleFlowView';
 import SugestoesIA from '../ia/SugestoesIA';
+import FaleSobreProcesso from '../ia/FaleSobreProcesso';
+import FaleSobreProcessoCta from '../ia/FaleSobreProcessoCta';
 
 function Simulacao({ result, onClose, onEnable }) {
     return (
@@ -52,6 +56,15 @@ export default function RegrasTab({ canManage }) {
     const [editing, setEditing] = useState(null);
     const [sim, setSim] = useState(null);
     const [showTemplates, setShowTemplates] = useState(false);
+    const [fale, setFale] = useState(false);
+    const [params, setParams] = useSearchParams();
+    const openId = params.get('regra');
+    const openRule = (id) => {
+        const next = new URLSearchParams(params);
+        if (id) next.set('regra', id); else next.delete('regra');
+        setParams(next);
+        if (id) window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
     if (error) return <Banner tone="error">{error}</Banner>;
     if (!data) return <Empty>Carregando…</Empty>;
     const [rules, catalog, templates] = data;
@@ -82,7 +95,11 @@ export default function RegrasTab({ canManage }) {
 
     return (
         <div className={styles.stack}>
-            <SugestoesIA canManage={canManage} onAccepted={() => reload()} />
+            {openId && <RuleFlowView key={openId} ruleId={openId} catalog={catalog} canManage={canManage}
+                onClose={() => { openRule(null); reload(); }} onEdit={(r) => setEditing(r)} />}
+            {canManage && <FaleSobreProcessoCta onOpen={() => setFale(true)} />}
+            {fale && <FaleSobreProcesso onClose={() => { setFale(false); reload(); }} />}
+            <SugestoesIA canManage={canManage} onAccepted={(id) => { reload(); if (id) openRule(id); }} />
             <Banner tone="info">
                 Regras do escritório reagem a eventos do Cadrius (documento confirmado, andamento novo, prazo chegando, contato novo, agenda).
                 Toda regra nasce desligada, só liga depois de simulada, e mensagens para clientes esperam aprovação.
@@ -124,15 +141,17 @@ export default function RegrasTab({ canManage }) {
                                     </td>
                                     <td>{r.execucoes}<div className={styles.muted}>{r.ultima_execucao ? fmtDateTime(r.ultima_execucao) : 'nunca'}</div></td>
                                     <td>
-                                        {canManage && (
-                                            <div className={styles.btn_row}>
+                                        <div className={styles.btn_row}>
+                                            <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => openRule(r.id)}
+                                                aria-label={`Abrir o fluxo da regra ${r.nome}`}>Abrir</button>
+                                            {canManage && (<>
                                                 <button type="button" className={styles.btn} onClick={() => simulate(r)}>Simular</button>
                                                 <button type="button" className={styles.btn} onClick={() => toggle(r)}>{r.ativa ? 'Desligar' : 'Ligar'}</button>
                                                 <button type="button" className={styles.btn} onClick={() => setEditing(r)}>Editar</button>
                                                 <button type="button" className={`${styles.btn} ${styles.btn_danger}`}
                                                     onClick={() => window.confirm(`Excluir a regra "${r.nome}"?`) && act(() => rulesApi.remove(r.id), 'Regra excluída.')}>Excluir</button>
-                                            </div>
-                                        )}
+                                            </>)}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

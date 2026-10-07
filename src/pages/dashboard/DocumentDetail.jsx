@@ -121,6 +121,7 @@ export default function DocumentDetail() {
                         <button className={styles.secondary_button} onClick={reprocess} disabled={busy}><FiRefreshCw className={styles.button_icon} /> Ler novamente</button>
                     )}
                     <button className={styles.secondary_button} onClick={download}><FiDownload className={styles.button_icon} /> Baixar</button>
+                    <button className={styles.secondary_button} onClick={() => navigate(`/assistente?documento=${id}&nome=${encodeURIComponent(doc?.nome || '')}`)}>Usar no Assistente</button>
                     <button className={styles.secondary_button} onClick={() => navigate(`/minutas?fonte=documento&id=${id}`)}>Gerar minuta</button>
                     {doc?.nome?.toLowerCase().endsWith('.pdf') && <button className={styles.secondary_button} onClick={() => setSigning(true)}>Enviar para assinatura</button>}
                 </div>

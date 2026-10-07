@@ -1,23 +1,34 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiCheckCircle, FiChevronRight, FiCircle, FiX } from 'react-icons/fi';
-import { dismiss, isDismissed, loadSteps } from '../../services/onboarding';
+import { dismiss, faleSeen, isDismissed, loadSteps } from '../../services/onboarding';
 import styles from './FirstSteps.module.css';
 import useAuth from '../../hooks/useAuth';
+import FaleSobreProcesso from '../ia/FaleSobreProcesso';
+import FaleSobreProcessoCta from '../ia/FaleSobreProcessoCta';
 
 // "Primeiros passos" do Painel (CAD-219): progresso visível + atalho para cada passo
 export default function FirstSteps({ totalDocs }) {
     const [state, setState] = useState(null);
     const [hidden, setHidden] = useState(isDismissed);
-    const { isSolo } = useAuth();
+    const [fale, setFale] = useState(false);
+    const { isSolo, isOrgManager } = useAuth();
     useEffect(() => {
         if (hidden || totalDocs === undefined) return undefined;
         let live = true;
-        loadSteps(totalDocs, isSolo).then((s) => { if (live) setState(s); });
+        loadSteps(totalDocs, isSolo).then((s) => {
+            if (!live) return;
+            setState(s);
+            // Primeiro acesso (CAD-226): sem automação ligada, a entrevista abre uma vez sozinha para quem decide
+            if (isOrgManager && !faleSeen() && !s.steps.find((x) => x.key === 'regra')?.done) setFale(true);
+        });
         return () => { live = false; };
-    }, [hidden, totalDocs, isSolo]);
-    if (hidden || !state || state.done === state.total) return null;
+    }, [hidden, totalDocs, isSolo, isOrgManager]);
+    const modal = fale && <FaleSobreProcesso onClose={() => setFale(false)} />;
+    if (hidden || !state || state.done === state.total) return modal || null;
     return (
+        <>
+        {modal}
         <section className={styles.box} aria-labelledby="primeiros-passos">
             <div className={styles.head}>
                 <div>
@@ -26,6 +37,7 @@ export default function FirstSteps({ totalDocs }) {
                 </div>
                 <button type="button" className={styles.close} onClick={() => { dismiss(); setHidden(true); }} aria-label="Dispensar primeiros passos"><FiX /></button>
             </div>
+            {isOrgManager && <FaleSobreProcessoCta onOpen={() => setFale(true)} />}
             <div className={styles.bar} role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={state.pct} aria-label="Progresso">
                 <span style={{ width: `${state.pct}%` }} />
             </div>
@@ -41,5 +53,6 @@ export default function FirstSteps({ totalDocs }) {
                 ))}
             </ol>
         </section>
+        </>
     );
 }

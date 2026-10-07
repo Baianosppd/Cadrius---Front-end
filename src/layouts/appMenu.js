@@ -1,7 +1,7 @@
 // Menu do escritório agrupado por seção (CAD-174). Ordem = frequência de uso no dia a dia.
 import {
     FiActivity, FiBriefcase, FiCalendar, FiCheckCircle, FiCpu, FiMessageCircle, FiPackage, FiEdit3, FiHelpCircle, FiHome, FiInbox, FiLayers, FiLock,
-    FiDollarSign, FiMail, FiSettings, FiShield, FiTarget, FiTrendingUp, FiUpload, FiUsers, FiZap,
+    FiDollarSign, FiMail, FiSettings, FiShield, FiTarget, FiTrendingUp, FiUpload, FiUsers, FiWatch, FiZap,
 } from 'react-icons/fi';
 
 // CAD-225: menu mais curto — "Dia a dia" sempre aberto; os demais grupos abrem com um clique (e sozinhos na tela ativa)
@@ -10,6 +10,7 @@ export const APP_MENU = [
         section: 'Dia a dia', items: [
             { to: '/dashboard', label: 'Painel', icon: FiHome },
             { to: '/assistente', label: 'Assistente IA', icon: FiMessageCircle, module: 'ia' },
+            { to: '/relogio', label: 'Relógio e voz', icon: FiWatch },
             { to: '/publicacoes', label: 'Publicações', icon: FiInbox, module: 'processos' },
             { to: '/acompanhamento', label: 'Processos', icon: FiBriefcase, module: 'processos' },
             { to: '/agenda-forense', label: 'Agenda forense', icon: FiCalendar, module: 'processos' },
