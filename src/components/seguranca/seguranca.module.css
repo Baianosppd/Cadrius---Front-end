@@ -177,3 +177,27 @@
   .cal_day { min-height: 64px; padding: 3px; }
   .cal_item { font-size: 0; padding: 0; height: 6px; border-left-width: 0; background: var(--ch); }
 }
+/* CAD-227: rótulo de grupo em listas e texto limitado a 2 linhas */
+.eyebrow_label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--c-subtle); margin: 18px 0 2px; }
+.clamp2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* CAD-227: valores grandes não quebram ("R$" sozinho na linha) e encolhem em colunas estreitas */
+.card_value { white-space: nowrap; font-size: clamp(1.15rem, 1.1rem + 0.9vw, 1.75rem) !important; overflow: hidden; text-overflow: ellipsis; }
+.hint { font-size: var(--fs-sm); color: var(--c-text-2); }
+.hint summary { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; color: var(--c-primary-700); font-weight: 600; list-style: none; }
+.hint summary::-webkit-details-marker { display: none; }
+.hint_body { margin-top: 6px; padding: var(--sp-3); border-radius: var(--radius); background: var(--c-info-bg); border: 1px solid var(--c-info-bd); line-height: 1.5; }
+/* CAD-227: no celular a tabela vira cartões (cada célula mostra o rótulo da coluna via data-label) */
+@media (max-width: 640px) {
+    .table_stack thead { display: none; }
+    .table_stack, .table_stack tbody, .table_stack tr, .table_stack td { display: block; width: 100%; }
+    .table_stack tr { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--sp-2) var(--sp-3); margin-bottom: var(--sp-2); background: var(--c-surface); }
+    .table_stack td { border: none !important; padding: 4px 0 !important; display: flex; justify-content: space-between; gap: var(--sp-3); align-items: center; }
+    .table_stack td[data-label]::before { content: attr(data-label); color: var(--c-muted); font-size: var(--fs-sm); flex-shrink: 0; }
+    .table_stack td:first-child { display: block; }
+}
+/* CAD-227: alvos de toque de pelo menos 40 px no celular (filtros, botões pequenos) */
+@media (max-width: 640px) {
+    .chip { min-height: 40px; }
+    .btn_sm { min-height: 40px; }
+}
+.clamp3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }

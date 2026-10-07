@@ -43,7 +43,7 @@ export default function SubscriptionBanner() {
                 const c = COLORS[item.tone] || COLORS.info;
                 return (
                     <div key={item.id} role="status" style={{ background: c.background, color: c.color, borderBottom: `1px solid ${c.border}`, padding: '10px 24px', fontSize: '0.875rem', display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                        <span>{item.text} {item.link && <Link to="/perfil" style={{ color: 'inherit', fontWeight: 600 }}>Ver plano</Link>}</span>
+                        <span>{item.text} {item.link && <Link to="/perfil?aba=plano" style={{ color: 'inherit', fontWeight: 600 }}>Ver plano</Link>}</span>
                         {item.dismissible && <button type="button" aria-label="Dispensar aviso" onClick={() => dismiss(item.id)} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>✕</button>}
                     </div>
                 );

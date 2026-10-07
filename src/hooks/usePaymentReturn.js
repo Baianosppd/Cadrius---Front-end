@@ -24,6 +24,7 @@ export default function usePaymentReturn() {
             const hit = map[params.get(key)];
             if (hit) { toast[hit[0]](hit[1], { toastId: `${key}-${params.get(key)}` }); params.delete(key); shown = true; }
         });
+        if (shown && pathname === '/perfil') params.set('aba', 'plano');      // CAD-227: perfil em abas
         if (shown) navigate({ pathname, search: params.toString() }, { replace: true });
     }, [search, pathname, navigate]);
 }

@@ -36,6 +36,7 @@ export default function ExecucoesTab({ pendentes, canApprove, onChange }) {
                         <div className={styles.header_row}>
                             <div>
                                 <strong>{run.regra.nome}</strong> <Pill tone={tone}>{label}</Pill>
+                                {run.codigo_relogio && <span className={styles.muted} title="Diga ao relógio: aprovar e este código"> · código no relógio <strong>{run.codigo_relogio}</strong></span>}
                                 <div className={styles.muted}>{run.titulo} · {fmtDateTime(run.criada_em)}
                                     {run.decidido_por && ` · decidido por ${run.decidido_por}`}{run.observacao && ` (${run.observacao})`}</div>
                             </div>

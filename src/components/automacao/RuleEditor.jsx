@@ -184,6 +184,14 @@ export default function RuleEditor({ catalog, rule, onDone, onCancel }) {
                         <input className={styles.input} type="number" min={0} max={30} value={form.gatilho_config.dias_atraso ?? 1} onChange={(e) => setCfg('dias_atraso', Number(e.target.value))} />
                     </label>
                 )}
+                {form.gatilho === 'shortcut' && (
+                    <label className={styles.field}>Frases de voz que disparam a regra (separe por vírgula)
+                        <input className={styles.input} placeholder="cheguei ao fórum, estou no fórum"
+                            value={Array.isArray(form.gatilho_config.frases) ? form.gatilho_config.frases.join(', ') : (form.gatilho_config.frases || '')}
+                            onChange={(e) => setCfg('frases', e.target.value)} />
+                        <span className={styles.muted} style={{ fontWeight: 400 }}>Fale a frase no relógio ou celular (Relógio e voz). O que vier depois dela vira {'{{atalho.texto}}'}.</span>
+                    </label>
+                )}
                 {DAILY_CONFIG[form.gatilho] && (
                     <label className={styles.field}>{DAILY_CONFIG[form.gatilho].label}
                         <input className={styles.input} type="number" min={DAILY_CONFIG[form.gatilho].min} max={DAILY_CONFIG[form.gatilho].max}

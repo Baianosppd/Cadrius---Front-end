@@ -83,15 +83,15 @@ export default function TeamMembers({ members = [], summary, canManage, onInvite
                     )}
                 </div>
                 <div className={ui.table_wrap} style={{ marginTop: 12 }}>
-                    <table className={ui.table}>
+                    <table className={`${ui.table} ${ui.table_stack}`}>
                         <thead><tr><th>Pessoa</th><th>Cargo</th><th>Grupo de acesso</th><th>Créditos no mês</th><th><span className="sr-only">Ações</span></th></tr></thead>
                         <tbody>
                             {members.map((m) => (
                                 <tr key={m.id}>
                                     <td><strong>{m.nome}</strong><div className={ui.muted}>{m.email}</div></td>
-                                    <td><Pill tone={['owner', 'administrador'].includes(m.role) ? 'blue' : 'gray'}>{ROLE_LABEL[m.role] || m.role}</Pill></td>
-                                    <td>{m.grupo?.nome || <span className={ui.muted}>pelo cargo</span>}</td>
-                                    <td><UsageBar used={m.creditos_usados || 0} limit={m.creditos_limite} /></td>
+                                    <td data-label="Cargo"><Pill tone={['owner', 'administrador'].includes(m.role) ? 'blue' : 'gray'}>{ROLE_LABEL[m.role] || m.role}</Pill></td>
+                                    <td data-label="Grupo">{m.grupo?.nome || <span className={ui.muted}>pelo cargo</span>}</td>
+                                    <td data-label="Créditos no mês"><UsageBar used={m.creditos_usados || 0} limit={m.creditos_limite} /></td>
                                     <td>{canManage && <button type="button" className={`${ui.btn} ${ui.btn_sm}`} onClick={() => setEditing(m)}>Definir cota</button>}</td>
                                 </tr>
                             ))}

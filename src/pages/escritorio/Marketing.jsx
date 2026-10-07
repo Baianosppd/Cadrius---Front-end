@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, PageHeader } from '../../components/seguranca/ui';
+import { PageHeader } from '../../components/seguranca/ui';
+import InfoHint from '../../components/common/InfoHint';
 import MarketingStudio from '../../components/marketing/MarketingStudio';
 import { Captacao, Resultados } from '../../components/marketing/Captacao';
 import useAuth from '../../hooks/useAuth';
@@ -26,10 +27,10 @@ export default function Marketing() {
             </div>
             {tab === 'conteudo' && (
                 <>
-                    <Banner tone="info">
+                    <InfoHint summary="O que a OAB permite (Provimento 205/2021)">
                         O Provimento 205/2021 permite marketing jurídico informativo e sóbrio — sem preço, promessa de resultado ou chamada para contratar.
                         O verificador aponta riscos, mas a decisão final é sua. Só quem tem permissão de aprovar publica.
-                    </Banner>
+                    </InfoHint>
                     <MarketingStudio api={officeMarketingApi} scope="escritorio" canWrite={canWrite} canApprove={canApprove} />
                 </>
             )}
