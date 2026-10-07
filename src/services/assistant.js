@@ -52,6 +52,9 @@ export const WRITE_ACTIONS = [
     { key: 'extrair', label: 'Extrair dados (partes, prazos, valores)' },
 ];
 
+// Atalho especial (CAD-226): abre a entrevista "Fale sobre seu processo" em vez de mandar a frase ao chat
+export const FALE_SOBRE_PROCESSO = 'Fale sobre seu processo: indico automações para a sua rotina';
+
 export const SUGGESTIONS = [
     'Quais automações você sugere para o meu escritório?',
     'Crie uma automação: e-mail de intimação vira tarefa urgente e aviso.',

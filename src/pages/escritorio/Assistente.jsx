@@ -6,7 +6,8 @@ import a from '../../components/assistant/Assistant.module.css';
 import { Banner, PageHeader, Pill, errorMessage } from '../../components/seguranca/ui';
 import RichText from '../../components/assistant/RichText';
 import TextTools from '../../components/assistant/TextTools';
-import { PROVIDER_LABEL, SUGGESTIONS, assistantApi } from '../../services/assistant';
+import { FALE_SOBRE_PROCESSO, PROVIDER_LABEL, SUGGESTIONS, assistantApi } from '../../services/assistant';
+import FaleSobreProcesso from '../../components/ia/FaleSobreProcesso';
 import { casesApi } from '../../services/rules';
 
 // Assistente de IA (CAD-221): pergunta, pesquisa nos dados do escritório, escreve e PROPÕE ações — que só rodam
@@ -46,6 +47,7 @@ function Chat({ status }) {
     const [busy, setBusy] = useState(false);
     const [pending, setPending] = useState('');
     const [caseStart, setCaseStart] = useState(false);
+    const [fale, setFale] = useState(false);
     const end = useRef(null);
     const input = useRef(null);
 
@@ -117,6 +119,7 @@ function Chat({ status }) {
                 {conv?.modo === 'caso' && <Banner tone="info">Modo estratégia de caso{conv.processo ? ` — processo ${conv.processo}` : ''}: fatos, teses, provas,
                     riscos, cenários e plano de ação. Confira sempre as fontes citadas.</Banner>}
                 {conv?.modo === 'mcp' && <Banner tone="info">Pedidos feitos pelo Claude/ChatGPT através do conector. Confirme ou cancele cada um.</Banner>}
+                {fale && <FaleSobreProcesso onClose={() => setFale(false)} />}
                 {caseStart && <CaseStart onClose={() => setCaseStart(false)} onStarted={(c) => { setCaseStart(false); setConv(c); loadList(); }} />}
                 <div className={a.messages} aria-live="polite">
                     {!conv && !pending && (
@@ -126,6 +129,9 @@ function Chat({ status }) {
                             <div>Consulto contatos, processos, publicações, prazos e documentos do escritório; escrevo e reviso textos;
                                 e preparo tarefas, minutas e lançamentos para você confirmar.</div>
                             <div className={a.suggestions}>
+                                {status?.pode_configurar && (
+                                    <button type="button" className={`${a.suggestion} ${a.suggestion_main}`} onClick={() => setFale(true)}>{FALE_SOBRE_PROCESSO}</button>
+                                )}
                                 {SUGGESTIONS.map((s) => <button key={s} type="button" className={a.suggestion} onClick={() => send(s)} disabled={busy || status?.disponivel === false}>{s}</button>)}
                             </div>
                         </div>

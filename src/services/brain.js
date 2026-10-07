@@ -18,6 +18,9 @@ export const brainApi = {
     refreshSuggestions: () => api.post(`${BASE}suggestions/`).then((r) => r.data),
     acceptSuggestion: (id) => api.post(`${BASE}suggestions/${id}/accept/`).then((r) => r.data),
     dismissSuggestion: (id) => api.post(`${BASE}suggestions/${id}/dismiss/`).then((r) => r.data),
+    // CAD-226: "Fale sobre seu processo" (entrevista do primeiro acesso)
+    discoveryTopics: () => api.get(`${BASE}discovery/`).then((r) => r.data),
+    discover: (texto, temas) => api.post(`${BASE}discovery/`, { texto, temas }).then((r) => r.data),
     profile: (recalcular) => api.get(`${BASE}profile/`, { params: recalcular ? { recalcular: 1 } : {} }).then((r) => r.data),
     saveProfile: (body) => api.put(`${BASE}profile/`, body).then((r) => r.data),
     insights: (dias = 90) => api.get(`${BASE}insights/`, { params: { dias } }).then((r) => r.data),

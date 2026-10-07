@@ -36,6 +36,7 @@
 .suggestion { border: 1px solid var(--c-border-2); background: var(--c-surface); color: var(--c-text); border-radius: 999px; padding: 6px 12px;
     font: inherit; font-size: var(--fs-sm); cursor: pointer; }
 .suggestion:hover { border-color: var(--c-primary); color: var(--c-primary); }
+.suggestion_main { border-color: var(--c-primary); background: var(--c-primary-50); color: var(--c-primary-700); font-weight: 600; }
 .welcome { margin: auto; text-align: center; display: flex; flex-direction: column; gap: var(--sp-3); align-items: center; max-width: 560px; color: var(--c-text-2); }
 .welcome_title { font-size: var(--fs-xl); font-weight: 600; color: var(--c-ink); }
 .thinking { display: inline-flex; gap: 4px; }

@@ -8,6 +8,7 @@ import { STEP_STATUS, describeRule, hasExternal, rulesApi } from '../../services
 import RuleEditor from './RuleEditor';
 import RuleFlowView from './RuleFlowView';
 import SugestoesIA from '../ia/SugestoesIA';
+import FaleSobreProcesso, { FaleSobreProcessoCta } from '../ia/FaleSobreProcesso';
 
 function Simulacao({ result, onClose, onEnable }) {
     return (
@@ -54,6 +55,7 @@ export default function RegrasTab({ canManage }) {
     const [editing, setEditing] = useState(null);
     const [sim, setSim] = useState(null);
     const [showTemplates, setShowTemplates] = useState(false);
+    const [fale, setFale] = useState(false);
     const [params, setParams] = useSearchParams();
     const openId = params.get('regra');
     const openRule = (id) => {
@@ -94,7 +96,9 @@ export default function RegrasTab({ canManage }) {
         <div className={styles.stack}>
             {openId && <RuleFlowView key={openId} ruleId={openId} catalog={catalog} canManage={canManage}
                 onClose={() => { openRule(null); reload(); }} onEdit={(r) => setEditing(r)} />}
-            <SugestoesIA canManage={canManage} onAccepted={() => reload()} />
+            {canManage && <FaleSobreProcessoCta onOpen={() => setFale(true)} />}
+            {fale && <FaleSobreProcesso onClose={() => { setFale(false); reload(); }} />}
+            <SugestoesIA canManage={canManage} onAccepted={(id) => { reload(); if (id) openRule(id); }} />
             <Banner tone="info">
                 Regras do escritório reagem a eventos do Cadrius (documento confirmado, andamento novo, prazo chegando, contato novo, agenda).
                 Toda regra nasce desligada, só liga depois de simulada, e mensagens para clientes esperam aprovação.
