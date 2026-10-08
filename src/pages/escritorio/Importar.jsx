@@ -125,7 +125,7 @@ export default function Importar() {
                     <p>{result.summary.created} criados · {result.summary.updated} atualizados · {result.summary.skipped} sem mudança · {result.summary.errors} com erro.</p>
                     {result.errors.length > 0 && <Banner tone="warn">Linhas com erro: {result.errors.map((e) => `${e.row} (${e.errors.join(' ')})`).join('; ')}</Banner>}
                     <div className={styles.btn_row}>
-                        <Link className={`${styles.btn} ${styles.btn_primary}`} to={result.target === 'contacts' ? '/contatos' : '/processos'}>Ver {result.target === 'contacts' ? 'contatos' : 'processos'}</Link>
+                        <Link className={`${styles.btn} ${styles.btn_primary}`} to={result.target === 'contacts' ? '/contatos' : '/acompanhamento'}>Ver {result.target === 'contacts' ? 'contatos' : 'processos'}</Link>
                         <button type="button" className={styles.btn} onClick={reset}>Importar outra planilha</button>
                     </div>
                 </div>

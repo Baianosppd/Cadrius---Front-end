@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiArrowDown, FiArrowUp, FiX } from 'react-icons/fi';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import useLoader from './useLoader';
 import api from '../../services/api';
 
@@ -17,7 +17,7 @@ export default function IaAtividades() {
     const { data, error, reload } = useLoader(iaApi.get, []);
     const [editing, setEditing] = useState(null);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const name = Object.fromEntries(data.provedores.map((p) => [p.chave, p.nome]));
     const save = async (act, cadeia, usar_reservas) => {
         try { await iaApi.save(act, { cadeia, usar_reservas }); toast.success('Cadeia salva.'); setEditing(null); reload(); }

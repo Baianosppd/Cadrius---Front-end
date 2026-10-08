@@ -4,7 +4,7 @@ import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
 import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, StatCard, fmtDateTime, errorMessage } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill, StatCard } from '../../components/seguranca/ui';
 
 
 function Politica({ canEdit }) {
@@ -18,7 +18,7 @@ function Politica({ canEdit }) {
     }, []);
 
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!form) return <Empty>Carregando…</Empty>;
+    if (!form) return <Loading />;
 
     const toggleProvider = (p) => setForm((f) => ({
         ...f, allowed_providers: f.allowed_providers.includes(p) ? f.allowed_providers.filter((x) => x !== p) : [...f.allowed_providers, p],
@@ -108,7 +108,7 @@ function Confirmacoes() {
     };
 
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!items) return <Empty>Carregando…</Empty>;
+    if (!items) return <Loading />;
     return (
         <div className={styles.page}>
             {items.length === 0 ? <Empty>Nenhuma execução aguardando confirmação.</Empty> : (
@@ -140,7 +140,7 @@ function Atividade() {
     const [error, setError] = useState(null);
     useEffect(() => { api.get('ai/activity/').then((r) => setData(r.data)).catch((e) => setError(errorMessage(e))); }, []);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const s = data.summary;
     return (
         <div className={styles.page}>

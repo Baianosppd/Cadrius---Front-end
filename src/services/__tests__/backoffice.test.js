@@ -55,3 +55,14 @@ describe('cortesia do estúdio de mídia (CAD-231)', () => {
         expect(keys({ adicional_midia: { ativo: true, origem: 'plano' } })).toEqual(['grant_credits']);
     });
 });
+
+describe('rótulos da auditoria (CAD-233)', () => {
+    it('traduz as ações conhecidas e humaniza as demais', async () => {
+        const { auditLabel } = await import('../auditLabels');
+        expect(auditLabel('auth.login.success')).toBe('Entrada no sistema');
+        expect(auditLabel('finance.receivable_paid')).toBe('Recebimento confirmado');
+        expect(auditLabel('finance.algo_novo')).toBe('Finanças: algo novo');
+        expect(auditLabel('xyz')).toBe('xyz');
+        expect(auditLabel('')).toBe('—');
+    });
+});

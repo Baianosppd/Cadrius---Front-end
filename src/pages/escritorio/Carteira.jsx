@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, StatCard, errorMessage, fmtDate } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDate, Loading, PageHeader, Pill, StatCard } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import { AgreementForm, OpportunityForm } from '../../components/carteira/Forms';
@@ -19,7 +19,7 @@ function Funil({ canWrite, onOpenClient }) {
     const [contracting, setContracting] = useState(null);
     const [showClosed, setShowClosed] = useState(false);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const groups = groupByStage(data.resultados);
     const r = data.resumo;
     const move = async (o, etapa) => {
@@ -82,7 +82,7 @@ function AgreementDetail({ id, canManage, onClose, onChanged }) {
         <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Contrato" onClick={onClose}>
             <div className={styles.modal} style={{ maxWidth: 760, maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
                 {error && <Banner tone="error">{error}</Banner>}
-                {!data && !error && <Empty>Carregando…</Empty>}
+                {!data && !error && <Loading />}
                 {data && (
                     <>
                         <div className={styles.modal_title}>{data.titulo}</div>
@@ -124,7 +124,7 @@ function Contratos({ canWrite, canManage }) {
     const [creating, setCreating] = useState(false);
     const [open, setOpen] = useState(null);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.stack}>
             {canWrite && <div className={styles.btn_row}><button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setCreating(true)}>Novo contrato</button></div>}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import ActionModal from '../../components/gestao/ActionModal';
 import TempPasswordModal from '../../components/gestao/TempPasswordModal';
 import { backofficeApi, userActionsFor } from '../../services/backoffice';
@@ -33,7 +33,7 @@ export default function Usuarios() {
                 <button type="submit" className={styles.btn}>Buscar</button>
             </form>
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <div className={styles.table_wrap}>
                     <table className={styles.table}>

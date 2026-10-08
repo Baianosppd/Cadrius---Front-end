@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, errorMessage, fmtDate, fmtDateTime } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, Pill } from '../seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../../pages/gestao/useLoader';
 import { AgreementForm, OpportunityForm } from './Forms';
@@ -90,7 +90,7 @@ export default function ClientFile({ contact, onClose }) {
                     ))}
                 </div>
                 {error && <Banner tone="error">{error}</Banner>}
-                {!data && !error && <Empty>Carregando…</Empty>}
+                {!data && !error && <Loading />}
                 {data && tab === 'resumo' && (
                     <div className={styles.stack}>
                         {data.financeiro && (

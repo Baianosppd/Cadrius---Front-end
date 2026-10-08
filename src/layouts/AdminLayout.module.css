@@ -38,7 +38,6 @@
 .topbar { color: var(--c-muted); }
 
 /* CAD-232: grupos recolhíveis */
-.brand_name { display: inline-flex; align-items: center; gap: 8px; }
 .nav { display: flex; flex-direction: column; gap: 2px; }
 .group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px; }
 .group_label { font-size: .68rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .08em; padding: 8px 10px 4px; }
@@ -54,3 +53,6 @@
 .sub { display: flex; flex-direction: column; gap: 2px; margin-left: 17px; padding-left: 8px; border-left: 1px solid #1e293b; }
 .sub .link { font-size: .87rem; padding: 7px 10px; }
 @media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }
+.topbar_brand { display: none; margin-right: auto; }
+@media (max-width: 960px) { .topbar_brand { display: inline-flex; } }
+@media (max-width: 380px) { .topbar_email { display: none; } }

@@ -114,11 +114,13 @@
 .alta {
     background-color: var(--c-danger-bg);
     color: var(--c-danger);
+    border: 1px solid var(--c-danger-bd, transparent);
 }
 
 .media {
     background-color: var(--c-warning-bg);
-    color: #ca8a04;
+    color: var(--c-warning);
+    border: 1px solid var(--c-warning-bd);
 }
 
 .baixa {

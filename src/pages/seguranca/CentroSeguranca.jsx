@@ -2,9 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import api from '../../services/api';
 import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/seguranca/seguranca.module.css';
-import {
-    Banner, CHECK_STATUS, CONTROL_STATUS, Empty, PageHeader, Pill, ScoreBar, StatCard, StatusPill, fmtDate, errorMessage,
-} from '../../components/seguranca/ui';
+import { Banner, CHECK_STATUS, CONTROL_STATUS, Empty, errorMessage, fmtDate, Loading, PageHeader, Pill, ScoreBar, StatCard, StatusPill } from '../../components/seguranca/ui';
 
 const FW_LABEL = { iso27001: 'ISO/IEC 27001', iso27701: 'ISO/IEC 27701', lgpd: 'LGPD' };
 
@@ -26,7 +24,7 @@ function useLoad(url, params) {
 function Visao() {
     const { data, error } = useLoad('security/overview/');
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const { audit, alerts_open: al, ai } = data;
     return (
         <div className={styles.page}>
@@ -83,7 +81,7 @@ function Normas() {
                 </label>
             </div>
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <>
                     <div className={styles.card}>
@@ -126,7 +124,7 @@ function Normas() {
 function Postura() {
     const { data, error } = useLoad('security/checks/');
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.table_wrap}>
             <table className={styles.table}>
@@ -140,7 +138,7 @@ function Postura() {
 function Ropa() {
     const { data, error } = useLoad('security/ropa/');
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.page}>
             <p className={styles.muted}>Registro das operações de tratamento (LGPD art. 37 / ISO 27701 7.2.8).</p>

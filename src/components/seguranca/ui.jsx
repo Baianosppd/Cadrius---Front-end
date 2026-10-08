@@ -39,11 +39,11 @@ export function StatusPill({ map, value }) {
 }
 
 export function StatCard({ title, value, note, tone }) {
-    const color = { red: '#dc2626', green: '#16a34a', yellow: '#ca8a04' }[tone];
+    const color = { red: 'var(--c-danger)', green: 'var(--c-success)', yellow: 'var(--c-warning)' }[tone];
     return (
-        <div className={styles.card}>
+        <div className={`${styles.card} ${styles.stat_card}`}>
             <div className={styles.card_title}>{title}</div>
-            <div className={styles.card_value} style={color ? { color } : undefined}>{value}</div>
+            <div className={styles.card_value} style={color ? { color } : undefined} title={typeof value === 'string' ? value : undefined}>{value}</div>
             {note && <div className={styles.card_note}>{note}</div>}
         </div>
     );
@@ -66,6 +66,16 @@ export function Banner({ tone = 'info', children }) {
 
 // Estado vazio. Com "title", vira um estado vazio ilustrado com a próxima ação (CAD-219): explica o que aparece ali
 // e oferece o primeiro passo, em vez de uma tela em branco.
+// CAD-233: carregamento com barras (em vez de "Carregando…" solto); quem usa leitor de tela ouve "Carregando".
+export function Loading({ lines = 3 }) {
+    return (
+        <div className={styles.loading} role="status" aria-live="polite">
+            <span className={styles.sr_only}>Carregando…</span>
+            {Array.from({ length: lines }, (_, i) => <span key={i} className={styles.skeleton} style={{ width: `${[92, 74, 58, 84][i % 4]}%` }} />)}
+        </div>
+    );
+}
+
 export function Empty({ children = 'Nada para mostrar.', title, action }) {
     if (!title) return <div className={styles.empty}>{children}</div>;
     return (

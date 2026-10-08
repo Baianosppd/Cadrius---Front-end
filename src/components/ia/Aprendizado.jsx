@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, StatCard } from '../seguranca/ui';
+import { Banner, Empty, Loading, StatCard } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { LEARNING_KIND, MEMORY_KIND, brainApi, formatMinutes } from '../../services/brain';
 
@@ -9,7 +9,7 @@ export default function Aprendizado() {
     const [dias, setDias] = useState(90);
     const { data, error } = useLoader(() => brainApi.insights(dias), [dias]);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const kinds = Object.entries(data.por_tipo || {});
     return (
         <div className={styles.stack}>

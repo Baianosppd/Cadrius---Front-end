@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import { PUB_STATUS, confidenceTone, confirmBody, publicationsApi } from '../../services/publications';
@@ -148,7 +148,7 @@ export default function Publicacoes() {
                 ))}
             </div>
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && data.resultados.length === 0 && <Empty>{status === 'nova' ? 'Nenhuma publicação nova. As OABs são consultadas a cada 3 horas.' : 'Nada aqui.'}</Empty>}
             {data && data.resultados.length > 0 && (
                 <div className={styles.table_wrap}>

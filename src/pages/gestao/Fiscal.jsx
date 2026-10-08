@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, StatCard, StatusPill, errorMessage, fmtDate, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, PageHeader, StatCard, StatusPill } from '../../components/seguranca/ui';
 import { NF_MANUAL, NF_STATUS, backofficeApi, monthRange } from '../../services/backoffice';
 import { NfseModal, Obrigacoes } from '../../components/gestao/FiscalF';
 import { brl } from '../../services/financeiro';
@@ -82,7 +82,7 @@ function Recebimentos() {
                 </label>
             </div>
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <>
                     <div className={styles.grid}>

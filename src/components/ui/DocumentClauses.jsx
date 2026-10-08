@@ -3,7 +3,7 @@ import { FiAlertTriangle } from 'react-icons/fi';
 
 const priorityConfig = {
     Alta: { bg: 'var(--c-danger-bg)', color: 'var(--c-danger)' },
-    Média: { bg: 'var(--c-warning-bg)', color: '#ca8a04' },
+    Média: { bg: 'var(--c-warning-bg)', color: 'var(--c-warning)' },
     Baixa: { bg: 'var(--c-success-bg)', color: 'var(--c-success)' },
 };
 

@@ -3,8 +3,9 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/seguranca/seguranca.module.css';
+import { auditLabel } from '../../services/auditLabels';
 import {
-    ALERT_STATUS, Banner, Empty, OUTCOME, PageHeader, SEVERITY, StatCard, StatusPill, fmtDateTime, errorMessage,
+    ALERT_STATUS, Banner, Empty, Loading, OUTCOME, PageHeader, SEVERITY, StatCard, StatusPill, fmtDateTime, errorMessage,
 } from '../../components/seguranca/ui';
 
 const PREFIXES = [
@@ -18,7 +19,7 @@ function Resumo() {
     const [error, setError] = useState(null);
     useEffect(() => { api.get('audit/summary/').then((r) => setS(r.data)).catch((e) => setError(errorMessage(e))); }, []);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!s) return <Empty>Carregando…</Empty>;
+    if (!s) return <Loading />;
     return (
         <div className={styles.page}>
             <div className={styles.grid}>
@@ -31,7 +32,7 @@ function Resumo() {
             <div className={styles.section_title}>Ações mais frequentes</div>
             <div className={styles.card}>
                 {Object.keys(s.by_action).length === 0 ? <Empty /> : Object.entries(s.by_action).map(([action, n]) => (
-                    <div key={action} className={styles.kv}><span className={styles.mono}>{action}</span><strong>{n}</strong></div>
+                    <div key={action} className={styles.kv}><span title={action}>{auditLabel(action)}</span><strong>{n}</strong></div>
                 ))}
             </div>
         </div>
@@ -97,7 +98,7 @@ function Eventos() {
                         {rows.map((e) => (
                             <tr key={e.seq}>
                                 <td className={styles.mono}>{e.seq}</td><td>{fmtDateTime(e.occurred_at)}</td>
-                                <td>{e.actor_label || e.actor_type}</td><td className={styles.mono}>{e.action}</td>
+                                <td>{e.actor_label || e.actor_type}</td><td title={e.action}>{auditLabel(e.action)}</td>
                                 <td className={styles.muted}>{e.target_type ? `${e.target_type} ${e.target_id}` : '—'}</td>
                                 <td><StatusPill map={OUTCOME} value={e.outcome} /></td>
                                 <td className={styles.mono}>{e.ip || '—'}</td><td className={styles.muted}>{e.reason || '—'}</td>

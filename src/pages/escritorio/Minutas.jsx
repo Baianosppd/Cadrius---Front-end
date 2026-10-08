@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import api from '../../services/api';
 import useLoader from '../gestao/useLoader';
@@ -71,7 +71,7 @@ function Editor({ id, canWrite, canManage, onChange }) {
     const [busy, setBusy] = useState(false);
     const ref = useRef(null);
     useEffect(() => { minutasApi.get(id).then((x) => { setD(x); setText(x.conteudo); }).catch((err) => toast.error(errorMessage(err))); }, [id]);
-    if (!d) return <Empty>Carregando…</Empty>;
+    if (!d) return <Loading />;
     const pending = countPending(text);
     const dirty = text !== d.conteudo;
     const save = async (extra = {}) => {
@@ -148,7 +148,7 @@ export default function Minutas() {
                     <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tab_active : ''}`} onClick={() => go(k)}>{label}</button>
                 ))}
             </div>
-            {!data && <Empty>Carregando…</Empty>}
+            {!data && <Loading />}
             {data && tab === 'modelos' && <ModelosTab templates={tpl.modelos} vars={tpl.variaveis || []} canManage={isOrgManager}
                 onUse={(modelo) => setCreating({ modelo })} onChanged={reload} />}
             {tab === 'minutas' && <p className={styles.muted} style={{ margin: 0 }}>Minuta é rascunho: confira fatos, datas e fundamentos. O que faltar aparece como [COMPLETAR: …].</p>}

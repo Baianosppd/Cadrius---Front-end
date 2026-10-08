@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, CHECK_STATUS, Empty, PageHeader, Pill, StatCard, StatusPill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, CHECK_STATUS, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill, StatCard, StatusPill } from '../../components/seguranca/ui';
 import { CONFIG_LABEL, MIN_REASON, backofficeApi } from '../../services/backoffice';
 import useLoader from './useLoader';
 
@@ -42,7 +42,7 @@ function KillSwitch({ ia, onChanged }) {
 export default function Sistema() {
     const { data, error, reload, loading } = useLoader(backofficeApi.health);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const { servicos: s, fila, config, ia_global: ia, verificacoes } = data;
     const failing = verificacoes.filter((v) => v.status === 'fail');
     return (

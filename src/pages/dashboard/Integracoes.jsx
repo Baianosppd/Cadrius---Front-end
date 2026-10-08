@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { FiCheckCircle, FiExternalLink, FiX } from 'react-icons/fi';
 import { SiGoogle } from 'react-icons/si';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, errorMessage } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import GoogleCalendarCard from '../../components/common/GoogleCalendarCard.jsx';
@@ -176,7 +176,7 @@ export default function Integracoes() {
                 <input className={styles.input} style={{ maxWidth: 300 }} value={query} onChange={(e) => setQuery(e.target.value)}
                     placeholder="Buscar app" aria-label="Buscar app" />
             </div>
-            {!data && <Empty>Carregando…</Empty>}
+            {!data && <Loading />}
 
             {(showGoogle || showWa) && (
                 <section className={styles.stack} aria-label="Principais">

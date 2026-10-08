@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import { contactsApi } from '../../services/contacts';
@@ -43,17 +43,17 @@ export default function Acompanhamento() {
                 </form>
             )}
             {clients.length === 0 && data && <Banner tone="info">Cadastre os clientes em <Link to="/contatos">Contatos</Link> para vinculá-los aos processos.</Banner>}
-            {!data && <Empty>Carregando…</Empty>}
+            {!data && <Loading />}
             {data && cases.length === 0 && <Empty title="Nenhum processo acompanhado">Informe o número CNJ acima: o Cadrius consulta o DataJud a cada hora e avisa os andamentos novos.</Empty>}
             {cases.length > 0 && (
                 <div className={styles.table_wrap}>
-                    <table className={styles.table}>
+                    <table className={`${styles.table} ${styles.table_stack}`}>
                         <thead><tr><th>Processo</th><th>Cliente</th><th>Última consulta</th><th></th></tr></thead>
                         <tbody>
                             {cases.map((c) => (
                                 <tr key={c.id}>
                                     <td><strong className={styles.mono}>{c.cnj}</strong> <Pill tone="blue">{c.tribunal}</Pill><div className={styles.muted}>{c.label}</div></td>
-                                    <td>
+                                    <td data-label="Cliente">
                                         {canWrite ? (
                                             <select className={styles.select} value={c.cliente?.id || ''} aria-label={`Cliente de ${c.cnj}`}
                                                 onChange={(e) => act(`cli-${c.id}`, () => casesApi.update(c.id, { cliente_id: e.target.value || null }), 'Cliente atualizado.')}>
@@ -63,7 +63,7 @@ export default function Acompanhamento() {
                                             </select>
                                         ) : (c.cliente?.nome || '—')}
                                     </td>
-                                    <td>{c.last_checked_at ? fmtDateTime(c.last_checked_at) : 'ainda não consultado'}
+                                    <td data-label="Última consulta">{c.last_checked_at ? fmtDateTime(c.last_checked_at) : 'ainda não consultado'}
                                         {c.last_error && <div className={styles.muted}>{c.last_error}</div>}</td>
                                     <td>{canWrite && (
                                         <div className={styles.btn_row}>

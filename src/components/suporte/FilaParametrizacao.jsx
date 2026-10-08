@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, StatusPill, errorMessage, fmtDate, fmtDateTime } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, StatusPill } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { STAFF_STAGE_NEXT, STAGES, brl, customizationApi } from '../../services/cad223';
 
@@ -11,7 +11,7 @@ export default function FilaParametrizacao({ onOpenTicket }) {
     const { data, error, reload } = useLoader(() => customizationApi.staffList(etapa), [etapa]);
     const [editing, setEditing] = useState(null);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.stack}>
             <div className={styles.btn_row}>

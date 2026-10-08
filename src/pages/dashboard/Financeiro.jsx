@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, StatCard, errorMessage } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, Loading, Pill, StatCard } from '../../components/seguranca/ui';
 import {
     STATUSES, TIERS, adminApi, apiErrors, brl, formToBody, toLocalInput,
 } from '../../services/financeiro';
@@ -164,7 +164,7 @@ function Crud({ spec }) {
     };
 
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!rows) return <Empty>Carregando…</Empty>;
+    if (!rows) return <Loading />;
     return (
         <div className={styles.page}>
             <Banner tone="info">{spec.note}</Banner>
@@ -203,7 +203,7 @@ function Resumo() {
         adminApi.priceHistory().then(setHistory).catch(() => setHistory([]));
     }, []);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const st = data.organizacoes_por_estado;
     return (
         <div className={styles.page}>

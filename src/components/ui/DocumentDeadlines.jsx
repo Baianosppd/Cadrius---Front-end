@@ -3,7 +3,7 @@ import { FiClock } from 'react-icons/fi';
 
 const deadlineColor = (days) => {
     if (days <= 15) return { bg: 'var(--c-danger-bg)', color: 'var(--c-danger)' };
-    if (days <= 30) return { bg: 'var(--c-warning-bg)', color: '#ca8a04' };
+    if (days <= 30) return { bg: 'var(--c-warning-bg)', color: 'var(--c-warning)' };
     return { bg: 'var(--c-success-bg)', color: 'var(--c-success)' };
 };
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import s from './Portal.module.css';
 import { brl, portalApi } from '../../services/carteira';
+import { BrandMark } from '../../components/brand/BrandLogo';
 
 const date = (v) => (v ? new Date(v).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : '');
 const day = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
@@ -59,6 +60,7 @@ export default function PortalCliente() {
                     </section>
                 ))}
                 <p className={s.muted}>As explicações são simplificadas e não substituem a orientação do seu advogado. Este link é pessoal: não o compartilhe.</p>
+                <footer className={s.powered}><BrandMark size={16} /> Feito com Cadrius</footer>
             </div>
         </main>
     );

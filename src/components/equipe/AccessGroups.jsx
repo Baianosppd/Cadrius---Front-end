@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiEdit2, FiPlus, FiShield, FiTrash2 } from 'react-icons/fi';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, errorMessage } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, Loading, Pill } from '../seguranca/ui';
 import { accessApi, fromMatrix, toMatrix } from '../../services/cad223';
 import useLoader from '../../pages/gestao/useLoader';
 
@@ -24,7 +24,7 @@ export function AccessGroups() {
     };
 
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!cat) return <Empty>Carregando…</Empty>;
+    if (!cat) return <Loading />;
     const usedPresets = new Set(groups.map((g) => g.nome));
     return (
         <div className={styles.stack}>
@@ -174,7 +174,7 @@ function GroupEditor({ cat, group, onClose, onSaved }) {
 export function AccessReference() {
     const { data: cat, error } = useLoader(() => accessApi.catalog(), []);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!cat) return <Empty>Carregando…</Empty>;
+    if (!cat) return <Loading />;
     return (
         <div className={styles.stack}>
             {cat.meu_acesso && <Banner tone="info">Você está no grupo <strong>{cat.meu_acesso.grupo}</strong>.</Banner>}

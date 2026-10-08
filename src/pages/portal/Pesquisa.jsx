@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import s from './Portal.module.css';
 import { leadsApi } from '../../services/cad223';
+import { BrandMark } from '../../components/brand/BrandLogo';
 
 const err = (e, fb) => e?.response?.data?.detail || fb;
 
@@ -36,6 +37,7 @@ export default function Pesquisa() {
                         </div>
                     )}
                 </section>
+                <footer className={s.powered}><BrandMark size={16} /> Feito com Cadrius</footer>
             </div>
         </main>
     );

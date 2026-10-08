@@ -5,7 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/seguranca/seguranca.module.css';
 import Markdown from '../../components/seguranca/Markdown';
-import { Banner, Empty, PageHeader, Pill, fmtDate, fmtDateTime, errorMessage } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 
 const KIND = { terms: 'Termos de Uso', privacy: 'Política de Privacidade', ciencia: 'Termo de Ciência', cookies: 'Cookies' };
 const REQUEST_TYPES = [
@@ -29,7 +29,7 @@ function Aceites() {
         api.get('legal/documents/').then((r) => setDocs(r.data)).catch(() => setDocs([]));
     }, []);
 
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.page}>
             {data.pending.length > 0 && <Banner tone="warn">Há {data.pending.length} documento(s) novo(s) aguardando seu aceite.</Banner>}
@@ -151,7 +151,7 @@ function MeusDados() {
 function Suboperadores() {
     const [list, setList] = useState(null);
     useEffect(() => { api.get('legal/subprocessors/').then((r) => setList(r.data)).catch(() => setList([])); }, []);
-    if (!list) return <Empty>Carregando…</Empty>;
+    if (!list) return <Loading />;
     return (
         <div className={styles.page}>
             <p className={styles.muted}>Empresas que tratam dados em nosso nome (LGPD art. 9º — transparência).</p>
