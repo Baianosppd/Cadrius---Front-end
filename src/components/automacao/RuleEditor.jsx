@@ -3,7 +3,7 @@ import EmailVisualField from '../email/EmailVisualField';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
 import { Banner, errorMessage } from '../seguranca/ui';
-import { DAILY_CONFIG, actionsFor, emptyAction, insertVariable, ruleBody, ruleToForm, rulesApi, triggerHasDeadline } from '../../services/rules';
+import { DAILY_CONFIG, actionsFor, emptyAction, insertVariable, producedVars, ruleBody, ruleToForm, rulesApi, triggerHasDeadline } from '../../services/rules';
 
 // Texto com botões de variáveis: clicar insere {{variavel}} onde está o cursor
 function TemplateText({ label, value, onChange, vars, multiline, max }) {
@@ -28,7 +28,7 @@ function TemplateText({ label, value, onChange, vars, multiline, max }) {
     );
 }
 
-function ActionFields({ action, onChange, trigger, vars }) {
+function ActionFields({ action, onChange, trigger, vars, catalog }) {
     const p = action.params;
     const set = (k, v) => onChange({ ...action, params: { ...p, [k]: v } });
     const text = (k, label, opts = {}) => <TemplateText label={label} value={p[k]} onChange={(v) => set(k, v)} vars={vars} {...opts} />;
@@ -122,9 +122,98 @@ function ActionFields({ action, onChange, trigger, vars }) {
                 </div>
                 <p className={styles.muted}>Chamadas ao ERP sempre esperam aprovação de alguém da equipe.</p>
             </>);
+        // ---------------------------------------------------------------- CAD-230: processamento e Google
+        case 'calcular':
+            return (<>
+                <div className={styles.filters}>
+                    <label className={styles.field}>Nome do resultado
+                        <input className={styles.input} value={p.nome} placeholder="multa" maxLength={30}
+                            onChange={(e) => set('nome', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '_'))} /></label>
+                    <label className={styles.field}>Mostrar como
+                        <select className={styles.select} value={p.formato} onChange={(e) => set('formato', e.target.value)}>
+                            <option value="moeda">Moeda (R$)</option><option value="numero">Número</option>
+                            <option value="inteiro">Inteiro</option><option value="percentual">Percentual</option>
+                        </select></label>
+                </div>
+                {text('expressao', 'Conta', { max: 400 })}
+                <p className={styles.muted}>Ex.: <code>{'{{honorario.valor}} * 2% + {{honorario.valor}} * 0,033% * {{honorario.dias_atraso}}'}</code>.
+                    Vírgula para decimais e ";" entre argumentos. Funções: {catalog?.processamento?.funcoes}.
+                    Use nos passos seguintes como <code>{`{{calc.${p.nome || 'nome'}}}`}</code>.</p>
+            </>);
+        case 'tabela':
+            return (<>
+                <div className={styles.filters}>
+                    <label className={styles.field}>Nome da tabela
+                        <input className={styles.input} value={p.nome} placeholder="abertos" maxLength={30}
+                            onChange={(e) => set('nome', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '_'))} /></label>
+                    <label className={styles.field}>Dados
+                        <select className={styles.select} value={p.fonte} onChange={(e) => set('fonte', e.target.value)}>
+                            {Object.entries(catalog?.processamento?.fontes || {}).map(([k, label]) => <option key={k} value={k}>{label}</option>)}
+                        </select></label>
+                    <label className={styles.field}>Máximo de linhas
+                        <input className={styles.input} type="number" min={1} max={200} value={p.limite ?? 50} onChange={(e) => set('limite', e.target.value)} /></label>
+                </div>
+                {trigger.destinatarios.includes('cliente') && (
+                    <label className={styles.check_row}><input type="checkbox" checked={!!p.do_cliente} onChange={(e) => set('do_cliente', e.target.checked)} /> Só do cliente do evento</label>
+                )}
+                <p className={styles.muted}>A tabela existe só durante a execução. Use <code>{`{{tabela.${p.nome || 'nome'}.texto}}`}</code> numa mensagem,
+                    <code>{`.total`}</code> e <code>{`.quantidade`}</code> em contas e condições, ou copie para uma planilha do Google.</p>
+            </>);
+        case 'google_planilha':
+            return (<>
+                {text('planilha', 'Nome da planilha no seu Google Drive', { max: 100 })}
+                <label className={styles.field}>Copiar uma tabela temporária (opcional)
+                    <input className={styles.input} value={p.tabela} placeholder="abertos" onChange={(e) => set('tabela', e.target.value.toLowerCase())} /></label>
+                {!p.tabela && text('colunas', 'Colunas da linha (Coluna=valor; Coluna=valor)', { max: 2000 })}
+                <p className={styles.muted}>Na 1ª vez o Cadrius cria a planilha (com cabeçalho); depois só acrescenta linhas. Usa o Google do responsável
+                    do evento ou de quem criou a regra (Integrações → Google).</p>
+            </>);
+        case 'google_evento':
+            return (<>
+                {text('titulo', 'Título do compromisso', { max: 255 })}
+                {text('descricao', 'Descrição', { multiline: true })}
+                <div className={styles.filters}>
+                    <label className={styles.field}>Data
+                        <select className={styles.select} value={p.quando} onChange={(e) => set('quando', e.target.value)}>
+                            <option value="dias_uteis">Dias úteis a partir do evento</option>
+                            {triggerHasDeadline(trigger.id) && <option value="prazo">Antes da data do prazo</option>}
+                        </select></label>
+                    {p.quando === 'prazo'
+                        ? <label className={styles.field}>Dias úteis antes<input className={styles.input} type="number" min={0} max={30} value={p.antecedencia ?? 0} onChange={(e) => set('antecedencia', e.target.value)} /></label>
+                        : <label className={styles.field}>Dias úteis (0 = hoje)<input className={styles.input} type="number" min={0} max={60} value={p.dias ?? 0} onChange={(e) => set('dias', e.target.value)} /></label>}
+                    <label className={styles.field}>Hora<input className={styles.input} type="time" value={p.hora || '09:00'} onChange={(e) => set('hora', e.target.value)} /></label>
+                    <label className={styles.field}>Duração (min)<input className={styles.input} type="number" min={5} max={1440} value={p.duracao_min ?? 60} onChange={(e) => set('duracao_min', e.target.value)} /></label>
+                </div>
+            </>);
         default:
             return null;
     }
+}
+
+// CAD-230: "Só fazer este passo se…" (vale para resultados de cálculo e tabelas dos passos anteriores)
+function StepCondition({ action, onChange, vars, operadores }) {
+    const c = action.somente_se;
+    if (!c) {
+        return <button type="button" className={styles.btn} style={{ fontSize: 12 }}
+            onClick={() => onChange({ ...action, somente_se: { field: vars[vars.length - 1]?.chave || '', op: 'gt', value: '' } })}>+ Só fazer se…</button>;
+    }
+    const set = (k, v) => onChange({ ...action, somente_se: { ...c, [k]: v } });
+    return (
+        <div className={styles.filters} aria-label="Condição do passo">
+            <label className={styles.field}>Só se
+                <select className={styles.select} value={c.field} onChange={(e) => set('field', e.target.value)}>
+                    {vars.map((v) => <option key={v.chave} value={v.chave}>{v.label}</option>)}
+                </select></label>
+            <label className={styles.field}>Regra
+                <select className={styles.select} value={c.op} onChange={(e) => set('op', e.target.value)}>
+                    {operadores.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
+                </select></label>
+            {!['exists', 'not_exists'].includes(c.op) && (
+                <label className={styles.field}>Valor<input className={styles.input} value={c.value || ''} onChange={(e) => set('value', e.target.value)} /></label>
+            )}
+            <button type="button" className={styles.btn} onClick={() => { const { somente_se: _drop, ...rest } = action; onChange(rest); }}>Tirar condição</button>
+        </div>
+    );
 }
 
 export default function RuleEditor({ catalog, rule, onDone, onCancel }) {
@@ -272,7 +361,8 @@ export default function RuleEditor({ catalog, rule, onDone, onCancel }) {
                             <strong>{i + 1}. {catalog.acoes.find((x) => x.id === a.type)?.label}</strong>
                             <button type="button" className={styles.btn} onClick={() => set('acoes', form.acoes.filter((_, j) => j !== i))}>Remover</button>
                         </div>
-                        <ActionFields action={a} trigger={trigger} vars={vars} onChange={(x) => setAction(i, x)} />
+                        <ActionFields action={a} trigger={trigger} vars={[...vars, ...producedVars(form.acoes, i)]} catalog={catalog} onChange={(x) => setAction(i, x)} />
+                        <StepCondition action={a} vars={[...vars, ...producedVars(form.acoes, i)]} operadores={catalog.operadores} onChange={(x) => setAction(i, x)} />
                     </div>
                 ))}
                 <div className={styles.btn_row}>

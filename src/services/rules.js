@@ -43,6 +43,7 @@ export const STEP_STATUS = {
     planejado: ['Vai executar', 'blue'], feito: ['Feito', 'green'], erro: ['Erro', 'red'], bloqueado: ['Bloqueado', 'red'],
     aguardando: ['Aguardando aprovação', 'yellow'], recusado: ['Recusado', 'gray'], expirado: ['Expirado', 'gray'],
     agendado: ['Agendado para o horário comercial', 'blue'],
+    pulado: ['Pulado (condição do passo)', 'gray'],                               // CAD-230
 };
 
 // Parâmetros iniciais de cada ação no editor
@@ -56,6 +57,11 @@ export function emptyAction(type, destinatarios = []) {
         case 'team_chat': return { type, params: { canal: 'slack', mensagem: '' } };
         case 'send_message': return { type, params: { destinatario: destinatarios[0] || '', canal: 'melhor', assunto: '', mensagem: '' } };
         case 'send_survey': return { type, params: { destinatario: 'cliente', canal: 'melhor', motivo: '', mensagem: '' } };   // CAD-223
+        // CAD-230: processamento e Google
+        case 'calcular': return { type, params: { nome: '', expressao: '', formato: 'moeda' } };
+        case 'tabela': return { type, params: { nome: '', fonte: 'honorarios_em_aberto', do_cliente: false, limite: 50 } };
+        case 'google_planilha': return { type, params: { planilha: '', tabela: '', colunas: '' } };
+        case 'google_evento': return { type, params: { titulo: '', descricao: '', quando: 'dias_uteis', dias: 1, hora: '09:00', duracao_min: 60 } };
         default: return { type, params: {} };
     }
 }
@@ -65,6 +71,23 @@ export function actionsFor(catalog, triggerId) {
     const trigger = catalog?.gatilhos?.find((g) => g.id === triggerId);
     return (catalog?.acoes || []).filter((a) => (!['send_whatsapp', 'send_email', 'send_message'].includes(a.id) || trigger?.destinatarios?.length)
         && (a.id !== 'send_survey' || trigger?.destinatarios?.includes('cliente')));
+}
+
+// CAD-230: variáveis que os passos ANTERIORES (calcular, tabela) oferecem ao passo i
+export function producedVars(acoes, upTo) {
+    const out = [];
+    (acoes || []).slice(0, upTo).forEach((a) => {
+        const nome = (a.params?.nome || '').trim();
+        if (!nome) return;
+        if (a.type === 'calcular') {
+            out.push({ chave: `calc.${nome}`, label: `Resultado de "${nome}"` }, { chave: `calc.${nome}_valor`, label: `"${nome}" como número (para comparar)` });
+        }
+        if (a.type === 'tabela') {
+            out.push({ chave: `tabela.${nome}.texto`, label: `Lista "${nome}" (texto)` }, { chave: `tabela.${nome}.quantidade`, label: `Quantas linhas em "${nome}"` },
+                { chave: `tabela.${nome}.total`, label: `Total em R$ de "${nome}"` });
+        }
+    });
+    return out;
 }
 
 export const triggerHasDeadline = (triggerId) => ['document_confirmed', 'deadline_soon', 'publication_new', 'calendar_event', 'email_received',
@@ -78,8 +101,10 @@ export function ruleBody(form) {
         conditions: (form.condicoes || []).filter((c) => c.field && c.op).map((c) => ({ field: c.field, op: c.op, value: c.value ?? '' })),
         actions: (form.acoes || []).map((a) => {
             const params = { ...a.params };
-            for (const k of ['dias', 'antecedencia', 'conector_id']) if (params[k] !== undefined && params[k] !== '') params[k] = Number(params[k]);
-            return { type: a.type, params };
+            for (const k of ['dias', 'antecedencia', 'conector_id', 'limite', 'duracao_min']) if (params[k] !== undefined && params[k] !== '') params[k] = Number(params[k]);
+            const out = { type: a.type, params };
+            if (a.somente_se?.field && a.somente_se?.op) out.somente_se = a.somente_se;   // CAD-230: passo condicional
+            return out;
         }),
     };
 }
