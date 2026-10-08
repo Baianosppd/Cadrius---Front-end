@@ -134,6 +134,10 @@
   .header_row > .btn_row > .btn { flex: 1 1 auto; }
   .card { padding: var(--sp-4); }
   .card_value { font-size: 1.5rem; }
+  /* CAD-231: indicadores em 2 colunas; o último ímpar ocupa a linha (nada de cartão "órfão" pela metade) */
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
+  .grid > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .tab { padding: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); }
   .table th, .table td { padding: var(--sp-2) var(--sp-3); }
   .overlay { padding: 0; align-items: flex-end; }
   .modal { max-width: 100%; max-height: 92dvh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: var(--sp-5) var(--sp-4) calc(var(--sp-4) + env(safe-area-inset-bottom)); }
