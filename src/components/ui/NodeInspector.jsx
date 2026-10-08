@@ -42,7 +42,7 @@ export default function NodeInspector({ node, connections, connectionId, onConne
                 <>
                     <label className={styles.field}>Para (e-mail)
                         <input className={styles.input} placeholder="{{email}}" value={cfg.to || ''} onChange={(e) => set({ to: e.target.value })} />
-                        <span>Vazio usa {'{{email}}'} do evento. Só envia para a equipe ou para cliente que autorizou e-mail (LGPD).</span>
+                        <span>Vazio usa {'{{email}}'} do evento.</span>
                     </label>
                     <label className={styles.field}>Assunto
                         <input className={styles.input} placeholder="Atualização do seu processo" value={cfg.subject || ''} onChange={(e) => set({ subject: e.target.value })} />

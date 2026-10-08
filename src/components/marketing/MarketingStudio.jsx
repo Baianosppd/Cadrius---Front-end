@@ -147,7 +147,7 @@ function Editor({ api, id, canApprove, onClose, onChanged, brand, addon }) {
                     </div>
                     <div className={styles.stack}>
                         <div className={styles.card} style={{ background: 'var(--c-surface-2)' }}>
-                            <div className={styles.section_title}>Verificador (OAB e LGPD)</div>
+                            <div className={styles.section_title}>Verificador OAB</div>
                             <Alertas alertas={alertas} />
                             {blocking && canApprove && (
                                 <label className={styles.check_row} style={{ marginTop: 10 }}>
@@ -245,7 +245,7 @@ function Criar({ api, scope, ideas, campaigns, onCreated }) {
                     </label>
                 )}
                 <label className={styles.check_row}><input type="checkbox" checked={form.usar_ia} onChange={(e) => setForm({ ...form, usar_ia: e.target.checked })} />
-                    Escrever com IA {scope === 'escritorio' && '(usa créditos; segue as regras da OAB e o perfil do escritório)'}</label>
+                    Escrever com IA</label>
                 <button className={`${styles.btn} ${styles.btn_primary}`} disabled={busy}>{busy ? 'Gerando…' : 'Gerar rascunho'}</button>
             </form>
             <div className={`${styles.card} ${styles.stack}`}>

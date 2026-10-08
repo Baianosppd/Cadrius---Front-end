@@ -179,7 +179,7 @@ export default function MediaStudio({ api, p, hint, setHint, brandColor, onPiece
                             onClick={() => run('arte', { modo: 'marca', estilo: style, foto_id: style === 'foto' ? chosen : null })}>
                             {busy === 'arte' ? 'Montando…' : 'Usar esta arte'}</button>
                     </div>
-                    <span className={styles.muted} style={{ fontSize: '.78rem' }}>Usa a cor e a logo do escritório (Perfil → Assinatura dos e-mails). Não gasta créditos.</span>
+                    <span className={styles.muted} style={{ fontSize: '.78rem' }}>Com a cor e a logo do escritório. Sem custo.</span>
                 </div>
             )}
 
@@ -190,8 +190,7 @@ export default function MediaStudio({ api, p, hint, setHint, brandColor, onPiece
                         <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={!!busy || disabled || !chosen}
                             onClick={() => run('foto', { modo: 'foto', foto_id: chosen })}>{busy === 'foto' ? 'Preparando…' : 'Usar a foto no post'}</button>
                     </div>
-                    <span className={styles.muted} style={{ fontSize: '.78rem' }}>JPEG, PNG ou WebP até 8 MB. Removemos a localização e os dados da câmera.
-                        Use só fotos que o escritório pode publicar.</span>
+                    <span className={styles.muted} style={{ fontSize: '.78rem' }}>JPEG, PNG ou WebP até 8 MB.</span>
                 </div>
             )}
 
@@ -209,7 +208,6 @@ export default function MediaStudio({ api, p, hint, setHint, brandColor, onPiece
                             onClick={() => run('ia', { modo: 'ia', sugestao_imagem: hint, referencias: refs })}>
                             {busy === 'ia' ? 'Gerando a imagem…' : p.imagem_url ? 'Gerar outra com IA' : 'Gerar imagem com IA'}</button>
                     </div>
-                    <span className={styles.muted} style={{ fontSize: '.78rem' }}>Gemini (Nano Banana). Usa créditos só quando a imagem é entregue e nunca recebe dado de cliente.</span>
                     <VideoBlock api={api} p={p} onPiece={onPiece} photos={photos} disabled={disabled} />
                 </div>
             )}

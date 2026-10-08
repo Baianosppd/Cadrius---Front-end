@@ -29,3 +29,15 @@
   .node { flex-basis: auto; }
   .arrow { flex-basis: 24px; transform: rotate(90deg); }
 }
+
+/* CAD-232: canvas do React Flow */
+.canvas :global(.react-flow__node) .node { box-sizing: border-box; }
+.canvas { margin-top: var(--sp-3); border: 1px solid var(--c-border); border-radius: var(--radius-lg); background: var(--c-surface-2); overflow: hidden; }
+.canvas :global(.react-flow__handle) { opacity: 0; width: 6px; height: 6px; }
+.canvas :global(.react-flow__controls) { box-shadow: var(--shadow-sm); border-radius: 8px; overflow: hidden; }
+.canvas :global(.react-flow__controls-button) { background: var(--c-surface); border-bottom-color: var(--c-border); color: var(--c-text-2); }
+.canvas :global(.react-flow__controls-button svg) { fill: currentColor; }
+.canvas :global(.react-flow__background) { color: var(--c-border-2); }
+.node_live.trigger { box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-primary) 18%, transparent), var(--shadow-sm); }
+.clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.canvas .node { overflow: hidden; }

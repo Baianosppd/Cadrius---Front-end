@@ -28,10 +28,7 @@ export function AccessGroups() {
     const usedPresets = new Set(groups.map((g) => g.nome));
     return (
         <div className={styles.stack}>
-            <Banner tone="info">
-                Dono e administrador têm acesso total. Quem fica <strong>sem grupo</strong> segue o cargo (membro faz o dia a dia, sem
-                financeiro e sem configurações; "somente leitura" só consulta). Quem entra num grupo só vê os módulos marcados.
-            </Banner>
+            <p className={styles.muted} style={{ margin: 0 }}>Dono e administrador veem tudo; quem entra num grupo vê só os módulos marcados.</p>
 
             <section className={styles.card}>
                 <div className={styles.section_title}>Quem acessa o quê</div>

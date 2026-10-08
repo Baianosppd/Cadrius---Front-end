@@ -23,7 +23,7 @@ export default function Assistente() {
     useEffect(() => { loadStatus(); }, []);
     return (
         <div className={styles.page}>
-            <PageHeader title="Assistente IA" subtitle="Você confirma antes de qualquer mudança"
+            <PageHeader title="Assistente IA" subtitle="Pergunte, peça e delegue"
                 actions={status?.pode_configurar && (
                     <button type="button" className={styles.btn} onClick={() => setConfig(true)}><FiSettings aria-hidden="true" /> Configurações</button>
                 )} />
@@ -142,8 +142,7 @@ function Chat({ status }) {
                         <div className={a.welcome}>
                             <FiCpu size={28} aria-hidden="true" color="var(--c-primary)" />
                             <div className={a.welcome_title}>Como posso ajudar?</div>
-                            <div>Consulto contatos, processos, publicações, prazos e documentos do escritório; escrevo e reviso textos;
-                                e preparo tarefas, minutas e lançamentos para você confirmar.</div>
+                            <div>Processos, prazos, clientes, documentos, minutas e tarefas: é só pedir.</div>
                             <div className={a.suggestions}>
                                 {status?.pode_configurar && (
                                     <button type="button" className={`${a.suggestion} ${a.suggestion_main}`} onClick={() => setFale(true)}>{FALE_SOBRE_PROCESSO}</button>

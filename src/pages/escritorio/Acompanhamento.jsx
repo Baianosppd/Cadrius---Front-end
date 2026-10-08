@@ -29,7 +29,7 @@ export default function Acompanhamento() {
     const clients = contacts.resultados || [];
     return (
         <div className={styles.page}>
-            <PageHeader title="Processos acompanhados" subtitle="Andamentos do DataJud a cada hora" />
+            <PageHeader title="Processos" subtitle="Andamentos do DataJud a cada hora" />
             {canWrite && (
                 <form className={styles.filters} onSubmit={add}>
                     <label className={styles.field}>Nº do processo (CNJ)<input className={styles.input} value={form.cnj} onChange={(e) => setForm({ ...form, cnj: e.target.value })} placeholder="0000000-00.0000.0.00.0000" required /></label>

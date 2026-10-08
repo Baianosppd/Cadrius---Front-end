@@ -132,7 +132,7 @@ export default function DocumentDetail() {
                     <strong>{status.label}</strong>{ex.message ? ` — ${ex.message}` : ''}
                     {ex.confidence != null && <> · confiança da IA {ex.confidence}%</>}
                     {ex.ocr_used && <> · lido por OCR (confira com atenção)</>}
-                    {ex.status === 'review' && <div style={{ marginTop: 6 }}>A IA pode errar. Nada vira tarefa ou prazo até você confirmar.</div>}
+                    {ex.status === 'review' && <div style={{ marginTop: 6 }}>Confira e confirme para criar as tarefas e prazos.</div>}
                     {ex.status === 'confirmed' && ex.reviewed_by && <div>Revisado por {ex.reviewed_by}.</div>}
                 </div>
             )}

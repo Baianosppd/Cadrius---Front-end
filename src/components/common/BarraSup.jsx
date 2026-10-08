@@ -36,7 +36,7 @@ function BarraSup({ nome, onMenu, menuOpen }) {
                         <FiMenu size={22} />
                     </button>
                 )}
-                <span className={styles.brand_mobile}>Cadrius</span>
+                <span className={styles.brand_mobile}><img src="/favicon.svg" alt="" width="24" height="24" style={{ borderRadius: 6, verticalAlign: "-6px", marginRight: 6 }} />Cadrius</span>
             </div>
 
             <button type="button" className={styles.search_trigger} onClick={openPalette} aria-label="Buscar (Ctrl+K)" aria-keyshortcuts="Control+K Meta+K">

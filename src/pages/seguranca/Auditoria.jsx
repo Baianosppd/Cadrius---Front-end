@@ -175,7 +175,7 @@ export default function Auditoria() {
     const [tab, setTab] = useState('resumo');
     return (
         <div className={styles.page}>
-            <PageHeader title="Auditoria do escritório" subtitle="Quem fez o quê, quando e de onde" />
+            <PageHeader title="Auditoria" subtitle="Quem fez o quê, quando e de onde" />
             <TabBar tabs={[{ id: 'resumo', label: 'Resumo' }, { id: 'eventos', label: 'Eventos' }, { id: 'alertas', label: 'Alertas' }]} activeTab={tab} onTabChange={setTab} />
             {tab === 'resumo' && <Resumo />}
             {tab === 'eventos' && <Eventos />}

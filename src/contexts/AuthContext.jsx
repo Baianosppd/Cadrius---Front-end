@@ -66,8 +66,9 @@ export function AuthProvider({ children }) {
   }, [refreshUser]);
 
   // Com verificação em duas etapas ativa o back devolve um desafio em vez dos tokens (CAD-169)
-  async function login(username, password) {
-    const response = await api.post("/auth/token/", { username, password });
+  // CAD-232: "Manter conectado" marcado = sessão de 30 dias que se renova a cada uso; desmarcado = 1 dia
+  async function login(username, password, lembrar = true) {
+    const response = await api.post("/auth/token/", { username, password, lembrar });
     if (response.data.mfa_required) return { mfaToken: response.data.mfa_token };
     const me = await loginWithTokens(response.data.access, response.data.refresh);
     return { mfaToken: null, user: me };
