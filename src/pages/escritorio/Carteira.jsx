@@ -160,7 +160,7 @@ export default function Carteira() {
     const [client, setClient] = useState(null);
     return (
         <div className={styles.page}>
-            <PageHeader title="Carteira de clientes" subtitle="Do primeiro contato ao contrato: funil de captação e honorários" />
+            <PageHeader title="Carteira de clientes" subtitle="Funil de captação e contratos" />
             <div className={styles.tabs} role="tablist">
                 {TABS.map(([k, label]) => (
                     <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tab_active : ''}`} onClick={() => setTab(k)}>{label}</button>

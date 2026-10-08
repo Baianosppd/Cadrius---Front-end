@@ -165,7 +165,7 @@ export default function CentroSeguranca() {
     const [tab, setTab] = useState('visao');
     return (
         <div className={styles.page}>
-            <PageHeader title="Centro de Segurança" subtitle="Monitoramento de segurança da informação e conformidade (ISO 27001, ISO 27701 e LGPD) — equipe Cadrius." />
+            <PageHeader title="Centro de Segurança" subtitle="ISO 27001, ISO 27701 e LGPD" />
             <TabBar
                 tabs={[{ id: 'visao', label: 'Visão geral' }, { id: 'normas', label: 'Normas' }, { id: 'postura', label: 'Postura técnica' }, { id: 'ropa', label: 'RoPA (LGPD)' }]}
                 activeTab={tab} onTabChange={setTab}

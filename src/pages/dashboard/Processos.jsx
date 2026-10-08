@@ -163,7 +163,7 @@ function Processos() {
 
     return (
         <div className={styles.processos_container}>
-            <PageHeader title="Processos por e-mail" subtitle="Intimações e mensagens lidas da caixa de entrada do escritório, com prazos sugeridos pela IA" />
+            <PageHeader title="Processos por e-mail" subtitle="Intimações lidas do e-mail do escritório" />
 
             <div className={`${styles.main_grid_layout} ${suggestionItems?.length ? '' : styles.single}`}>
 

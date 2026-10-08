@@ -19,7 +19,7 @@ export default function Marketing() {
     const [tab, setTab] = useState('conteudo');
     return (
         <div className={styles.page}>
-            <PageHeader title="Marketing" subtitle="Conteúdo informativo, captação com consentimento e resultados — dentro das regras da OAB" />
+            <PageHeader title="Marketing" subtitle="Conteúdo e captação dentro das regras da OAB" />
             <div className={styles.tabs} role="tablist">
                 {TABS.map(([k, label]) => (
                     <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tab_active : ''}`} onClick={() => setTab(k)}>{label}</button>

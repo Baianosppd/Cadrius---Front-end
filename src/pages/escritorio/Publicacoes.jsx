@@ -139,7 +139,7 @@ export default function Publicacoes() {
     const { data, error, reload } = useLoader(() => publicationsApi.list({ status, pagina: page }), [status, page]);
     return (
         <div className={styles.page}>
-            <PageHeader title="Publicações" subtitle="Intimações do Diário de Justiça Eletrônico Nacional (DJEN) pela OAB, com triagem sugerida" />
+            <PageHeader title="Publicações" subtitle="Intimações do DJEN pela OAB" />
             <Oabs canManage={isOrgManager} onChecked={reload} />
             <div className={styles.tabs} role="tablist">
                 {PUB_STATUS.map(([k, label]) => (

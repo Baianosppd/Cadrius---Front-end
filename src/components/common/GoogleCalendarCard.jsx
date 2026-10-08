@@ -11,7 +11,7 @@ const chip = { display: 'inline-flex', gap: 6, alignItems: 'center' };
 
 // CAD-230: uma conexão Google só (Agenda + Planilhas + Documentos). Com o app do Cadrius no servidor, a pessoa só clica em
 // "Conectar Google"; o app próprio do escritório continua possível em "Avançado".
-export default function GoogleCalendarCard() {
+export default function GoogleCalendarCard({ embedded = false }) {
     const [st, setSt] = useState(null);
     const [form, setForm] = useState({ client_id: '', client_secret: '', share_details: true, event_minutes: 30 });
     const [busy, setBusy] = useState(false);
@@ -49,8 +49,8 @@ export default function GoogleCalendarCard() {
     const docsOk = st.recursos?.planilhas_documentos;
 
     return (
-        <section aria-label="Google" className={`${ui.card} ${ui.stack}`}>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <section aria-label="Google" className={embedded ? ui.stack : `${ui.card} ${ui.stack}`}>
+            <div style={{ display: embedded ? 'none' : 'flex', gap: 12, alignItems: 'center' }}>
                 <span aria-hidden="true" style={{ width: 44, height: 44, borderRadius: 10, display: 'grid', placeItems: 'center', background: '#fff', border: '1px solid var(--c-border)', flexShrink: 0 }}>
                     <SiGoogle size={22} color="#4285F4" />
                 </span>
@@ -64,6 +64,7 @@ export default function GoogleCalendarCard() {
                 </div>
             </div>
 
+            {embedded && <span className={ui.muted} style={{ fontSize: '.85rem' }}>{active ? `Conectado${st.google_email ? ` como ${st.google_email}` : ''}` : 'Uma conexão só, na sua própria conta Google'}</span>}
             <div className={ui.btn_row} style={{ gap: 8 }}>
                 <span className={ui.chip} style={chip}><SiGooglecalendar color="#1a73e8" aria-hidden="true" /> Agenda: ler, criar e alterar{active ? ' ✓' : ''}</span>
                 <span className={ui.chip} style={chip}><SiGooglesheets color="#0f9d58" aria-hidden="true" /> Planilhas{active && docsOk ? ' ✓' : ''}</span>

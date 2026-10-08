@@ -104,7 +104,7 @@ export default function Contatos() {
     const { data, error, reload } = useLoader(() => contactsApi.list(query), [query.q, query.kind, query.tag]);
     return (
         <div className={styles.page}>
-            <PageHeader title="Contatos" subtitle="Clientes, partes, testemunhas e parceiros — a base das automações"
+            <PageHeader title="Contatos" subtitle="Clientes, partes e parceiros"
                 actions={canWrite && (<>
                     <Link to="/importar" className={styles.btn}>Importar planilha</Link>
                     <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setEditing({})}>Novo contato</button>

@@ -122,7 +122,7 @@ function Perfil() {
 
     return (
         <div className={styles.perfil_container}>
-            <PageHeader title="Meu perfil" subtitle="Seus dados, senha e acesso, assinatura dos e-mails e o plano do escritório" />
+            <PageHeader title="Meu perfil" />
             <div className={ui.tabs} role="tablist" aria-label="Seções do perfil">
                 {TABS.map(([k, label]) => (
                     <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${ui.tab} ${tab === k ? ui.tab_active : ''}`} onClick={() => go(k)}>{label}</button>

@@ -21,7 +21,7 @@ export default function Usuarios() {
     };
     return (
         <div className={styles.page}>
-            <PageHeader title="Usuários" subtitle="Contas de todos os escritórios: acesso, bloqueios e sessões" />
+            <PageHeader title="Usuários" subtitle="Acesso, bloqueios e sessões" />
             <form className={styles.filters} onSubmit={(e) => { e.preventDefault(); setQuery((q) => ({ ...q, q: term.trim() })); }}>
                 <label className={styles.field}>E-mail ou nome
                     <input className={styles.input} value={term} onChange={(e) => setTerm(e.target.value)} placeholder="ana@ ou Ana Souza" />

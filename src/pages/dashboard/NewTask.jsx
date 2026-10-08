@@ -55,7 +55,7 @@ function NewTask() {
     return (
         <div className={styles.container}>
             <BackButton label="Voltar para Dashboard" to="/dashboard" />
-            <PageHeader title="Adicionar Nova Tarefa" subtitle="Crie uma tarefa manualmente ou escolha uma sugestão da IA" />
+            <PageHeader title="Nova tarefa" />
             <div className={styles.content}>
                 <div className={styles.left}>
                     <TaskForm

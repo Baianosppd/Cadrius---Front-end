@@ -23,6 +23,12 @@ export default function EmailSignatureCard() {
     const preview = async (look = vis?.visual) => {
         try { setHtml((await emailApi.preview({ assunto: 'Prévia', visual: look })).html); } catch (e) { toast.error(errorMessage(e)); }
     };
+    const logoFile = useRef(null);
+    // CAD-231: logo da empresa, no topo de todos os e-mails do escritório (dono/admin)
+    const pickLogo = async (e) => {
+        try { const img = await readSignatureImage(e.target.files?.[0]); setVis((v) => ({ ...v, logo: img })); } catch (err) { toast.error(err.message); }
+        e.target.value = '';
+    };
     const pick = async (e) => {
         try { const img = await readSignatureImage(e.target.files?.[0]); setSig((s) => ({ ...s, imagem: img })); } catch (err) { toast.error(err.message); }
         e.target.value = '';
@@ -31,7 +37,7 @@ export default function EmailSignatureCard() {
         setBusy(true);
         try {
             setSig(await emailApi.saveSignature(sig));
-            if (vis?.pode_editar) setVis(await emailApi.saveVisual({ visual: vis.visual, cor: vis.cor }));
+            if (vis?.pode_editar) setVis(await emailApi.saveVisual({ visual: vis.visual, cor: vis.cor, logo: vis.logo || '' }));
             toast.success('Assinatura salva. Ela entra nos e-mails que você enviar pelo Cadrius.');
             preview();
         } catch (e) { toast.error(errorMessage(e)); } finally { setBusy(false); }
@@ -58,6 +64,16 @@ export default function EmailSignatureCard() {
             </div>
             {vis?.pode_editar && (
                 <div className={ui.stack}>
+                    <div className={ui.field}>Logo da empresa</div>
+                    <div className={ui.btn_row} style={{ alignItems: 'center' }}>
+                        {vis.logo
+                            ? <img src={vis.logo} alt="Logo da empresa" style={{ maxHeight: 48, maxWidth: 180, border: '1px solid var(--c-border)', borderRadius: 6, background: '#fff', padding: 4 }} />
+                            : <span className={ui.muted}>Sem logo: o topo do e-mail mostra o nome do escritório.</span>}
+                        <input ref={logoFile} type="file" accept="image/png,image/jpeg" hidden onChange={pickLogo} />
+                        <button type="button" className={ui.btn} onClick={() => logoFile.current?.click()}><FiImage aria-hidden="true" /> {vis.logo ? 'Trocar logo' : 'Enviar logo'}</button>
+                        {vis.logo && <button type="button" className={ui.btn} onClick={() => setVis({ ...vis, logo: '' })}><FiTrash2 aria-hidden="true" /> Tirar logo</button>}
+                    </div>
+                    <span className={ui.muted}>Entra no topo de todos os e-mails do escritório, em qualquer visual. PNG ou JPG até 200 KB, de preferência com fundo transparente.</span>
                     <div className={ui.field}>Visual dos e-mails do escritório</div>
                     <div className={ui.btn_row} role="radiogroup" aria-label="Visual dos e-mails">
                         {vis.opcoes.map((o) => (
@@ -78,7 +94,7 @@ export default function EmailSignatureCard() {
                 </div>
             )}
             <div className={ui.btn_row}>
-                <button type="button" className={`${ui.btn} ${ui.btn_primary}`} onClick={save} disabled={busy}>{busy ? 'Salvando…' : 'Salvar assinatura'}</button>
+                <button type="button" className={`${ui.btn} ${ui.btn_primary}`} onClick={save} disabled={busy}>{busy ? 'Salvando…' : vis?.pode_editar ? 'Salvar assinatura e visual' : 'Salvar assinatura'}</button>
                 <button type="button" className={ui.btn} onClick={() => preview()}><FiEye aria-hidden="true" /> Ver como fica</button>
             </div>
             {html && <EmailFrame html={html} height={420} />}

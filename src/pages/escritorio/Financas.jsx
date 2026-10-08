@@ -238,7 +238,7 @@ export default function Financas() {
     const [tab, setTab] = useState(tabs[0][0]);
     return (
         <div className={styles.page}>
-            <PageHeader title="Finanças do escritório" subtitle="Honorários a receber, cobranças, custas e o resultado do mês" />
+            <PageHeader title="Finanças do escritório" subtitle="Receitas, cobranças e despesas" />
             {!seesFinance && <Banner tone="info">Você pode lançar despesas e custas. Valores a receber e o painel são vistos pelos donos, administradores e por quem tem o acesso "Financeiro".</Banner>}
             <div className={styles.tabs} role="tablist">
                 {tabs.map(([k, label]) => (

@@ -45,7 +45,7 @@ function Notificacoes() {
         <div className={styles.Notificacoes_container}>
             {!selectedNotification ? (
                 <>
-                    <PageHeader title="Notificações" subtitle="Acompanhe todas as atualizações do sistema"
+                    <PageHeader title="Notificações"
                         actions={notifications.some((n) => !n.read) && <button type="button" className={ui.btn} onClick={markAll}>Marcar todas como lidas</button>} />
                     {loading ? <p className={ui.muted}>Carregando…</p> : notifications.length === 0 ? <div className={ui.empty}>Nenhuma notificação por enquanto.</div> : (
                         <NotificationList notifications={notifications} onSelect={open} />

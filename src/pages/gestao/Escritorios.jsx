@@ -81,7 +81,7 @@ export default function Escritorios() {
     };
     return (
         <div className={styles.page}>
-            <PageHeader title="Escritórios" subtitle="Clientes da plataforma, assinatura, créditos e equipe" />
+            <PageHeader title="Escritórios" subtitle="Assinatura, créditos e equipe" />
             <form className={styles.filters} onSubmit={(e) => { e.preventDefault(); set({ q: term.trim() }); }}>
                 <label className={styles.field}>Buscar por nome
                     <input className={styles.input} value={term} onChange={(e) => setTerm(e.target.value)} placeholder="Nome do escritório" />

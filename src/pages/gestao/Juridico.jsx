@@ -37,7 +37,7 @@ export default function Juridico() {
     const sc = set(setC, c);
     return (
         <div className={styles.page}>
-            <PageHeader title="Jurídico" subtitle="Calendário forense nacional: suspensões de prazo e serviços dos tribunais" />
+            <PageHeader title="Jurídico" subtitle="Suspensões de prazo dos tribunais" />
             <Banner tone="info">Cadastre só com o <strong>link do ato oficial</strong> (portaria, certidão ou aviso do tribunal). A suspensão entra na contagem de
                 prazos de todos os escritórios e avisa, pelo gatilho "Suspensão de prazos no tribunal", quem tem processo ali. Suspensão só de uma comarca
                 aparece como aviso, mas não entra na contagem automática.</Banner>

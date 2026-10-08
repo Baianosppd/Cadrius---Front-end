@@ -35,7 +35,7 @@ export default function Ciberseguranca() {
 
     return (
         <div className={styles.page}>
-            <PageHeader title="Cibersegurança" subtitle="Monitoramento do sistema e do servidor em tempo real — equipe de TI"
+            <PageHeader title="Cibersegurança" subtitle="Sistema e servidor em tempo real"
                 actions={(
                     <span className={styles.btn_row}>
                         <label className={styles.check_row}>

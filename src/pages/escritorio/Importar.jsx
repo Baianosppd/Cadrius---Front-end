@@ -56,7 +56,7 @@ export default function Importar() {
 
     return (
         <div className={styles.page}>
-            <PageHeader title="Importar dados" subtitle="Traga contatos e processos de planilhas (CSV ou Excel). Nada é gravado antes da sua confirmação." />
+            <PageHeader title="Importar dados" subtitle="Contatos e processos de planilhas" />
             {error && <Banner tone="error">{error}</Banner>}
 
             {!job && (

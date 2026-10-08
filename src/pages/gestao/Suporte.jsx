@@ -64,7 +64,7 @@ export default function SuporteGestao() {
     if (view === 'param') {
         return (
             <div className={styles.page}>
-                <PageHeader title="Suporte" subtitle="Pedidos de parametrização dos escritórios: analisar, propor, executar e entregar" />
+                <PageHeader title="Suporte" subtitle="Pedidos de parametrização" />
                 {tabs}
                 <FilaParametrizacao onOpenTicket={setCurrent} />
             </div>

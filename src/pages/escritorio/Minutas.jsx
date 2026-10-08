@@ -8,10 +8,11 @@ import api from '../../services/api';
 import useLoader from '../gestao/useLoader';
 import { countPending, docxName, downloadBlob, minutasApi, nextPending } from '../../services/publications';
 import AIWriteMenu from '../../components/assistant/AIWriteMenu';
+import ModelosTab from '../../components/minutas/ModelosTab';
 
 // Minutas sobre documentos e publicações (CAD-173): sempre rascunho, com os trechos da fonte que foram usados
 function NovaMinuta({ templates, initial, onCreated, onCancel }) {
-    const [form, setForm] = useState({ modelo: templates[0]?.chave || '', fonte: initial.fonte || '', fonte_id: initial.id || '', usar_ia: false });
+    const [form, setForm] = useState({ modelo: initial.modelo || templates[0]?.chave || '', fonte: initial.fonte || '', fonte_id: initial.id || '', usar_ia: false });
     const [docs, setDocs] = useState([]);
     const [busy, setBusy] = useState(false);
     useEffect(() => {
@@ -64,7 +65,7 @@ function NovaMinuta({ templates, initial, onCreated, onCancel }) {
     );
 }
 
-function Editor({ id, canWrite, onChange }) {
+function Editor({ id, canWrite, canManage, onChange }) {
     const [d, setD] = useState(null);
     const [text, setText] = useState('');
     const [busy, setBusy] = useState(false);
@@ -99,6 +100,10 @@ function Editor({ id, canWrite, onChange }) {
                 <div className={styles.btn_row}>
                     {pending > 0 && <button type="button" className={styles.btn} onClick={jump}>Próxima pendência ({pending})</button>}
                     <button type="button" className={styles.btn} onClick={download} disabled={dirty}>Baixar .docx</button>
+                    {canManage && <button type="button" className={styles.btn} title="Guardar este texto como modelo do escritório para reusar"
+                        onClick={() => minutasApi.addTemplate({ nome: d.titulo.slice(0, 120), corpo: text, tipo: 'outro' })
+                            .then(() => { toast.success('Salvo em Modelos do escritório.'); onChange(); })
+                            .catch((err) => toast.error(errorMessage(err)))}>Salvar como modelo</button>}
                 </div>
             </div>
             {d.aviso && <Banner tone="warn">{d.aviso}</Banner>}
@@ -123,7 +128,7 @@ function Editor({ id, canWrite, onChange }) {
 }
 
 export default function Minutas() {
-    const { role } = useAuth();
+    const { role, isOrgManager } = useAuth();
     const canWrite = role !== 'VIEWER';
     const [params, setParams] = useSearchParams();
     const { data, error, reload } = useLoader(() => Promise.all([minutasApi.list(), minutasApi.templates()]), []);
@@ -131,14 +136,23 @@ export default function Minutas() {
     const fromQuery = params.get('fonte') ? { fonte: params.get('fonte'), id: params.get('id') } : (params.get('nova') ? {} : null);
     const [creating, setCreating] = useState(fromQuery);
     if (error) return <div className={styles.page}><Banner tone="error">{error}</Banner></div>;
-    const [drafts, tpl] = data || [[], { modelos: [] }];
+    const [drafts, tpl] = data || [[], { modelos: [], variaveis: [] }];
+    const tab = params.get('aba') === 'modelos' ? 'modelos' : 'minutas';
+    const go = (k) => { const n = new URLSearchParams(params); n.set('aba', k); setParams(n, { replace: true }); };
     return (
         <div className={styles.page}>
-            <PageHeader title="Minutas" subtitle="Rascunhos sobre publicações e documentos, a partir dos modelos do Cadrius ou do escritório"
+            <PageHeader title="Minutas" subtitle="Rascunhos a partir dos seus modelos"
                 actions={canWrite && <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setCreating({})}>Nova minuta</button>} />
-            <Banner tone="info">Minuta é rascunho: confira fatos, datas e fundamentos. Campos sem informação aparecem como [COMPLETAR: …].</Banner>
+            <div className={styles.tabs} role="tablist" aria-label="Minutas">
+                {[['minutas', `Minutas${drafts.length ? ` (${drafts.length})` : ''}`], ['modelos', `Modelos${tpl.modelos.length ? ` (${tpl.modelos.length})` : ''}`]].map(([k, label]) => (
+                    <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tab_active : ''}`} onClick={() => go(k)}>{label}</button>
+                ))}
+            </div>
             {!data && <Empty>Carregando…</Empty>}
-            <div className={styles.two_col}>
+            {data && tab === 'modelos' && <ModelosTab templates={tpl.modelos} vars={tpl.variaveis || []} canManage={isOrgManager}
+                onUse={(modelo) => setCreating({ modelo })} onChanged={reload} />}
+            {tab === 'minutas' && <p className={styles.muted} style={{ margin: 0 }}>Minuta é rascunho: confira fatos, datas e fundamentos. O que faltar aparece como [COMPLETAR: …].</p>}
+            {tab === 'minutas' && <div className={styles.two_col}>
                 <div>
                     {data && drafts.length === 0 && <Empty title="Nenhuma minuta ainda">Gere a primeira a partir de uma publicação, de um documento ou de um modelo do escritório.</Empty>}
                     {drafts.map((d) => (
@@ -150,9 +164,9 @@ export default function Minutas() {
                         </div>
                     ))}
                 </div>
-                <div>{selected ? <Editor key={selected} id={selected} canWrite={canWrite} onChange={(gone) => { if (gone) setSelected(null); reload(); }} />
+                <div>{selected ? <Editor key={selected} id={selected} canWrite={canWrite} canManage={isOrgManager} onChange={(gone) => { if (gone) setSelected(null); reload(); }} />
                     : data && <Empty>Escolha uma minuta à esquerda ou crie uma nova.</Empty>}</div>
-            </div>
+            </div>}
             {creating && data && <NovaMinuta templates={tpl.modelos} initial={creating}
                 onCancel={() => { setCreating(null); setParams({}); }}
                 onCreated={(d) => { setCreating(null); setParams({}); setSelected(d.id); reload(); }} />}

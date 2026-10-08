@@ -72,7 +72,7 @@ function Dashboard() {
 
     return (
         <div className={styles.dashboard_container}>
-            <PageHeader title={`${greeting()}${user?.first_name ? `, ${user.first_name}` : ""}`} subtitle={`${todayLabel()} · o resumo do dia: tarefas, documentos e o que a IA preparou`} />
+            <PageHeader title={`${greeting()}${user?.first_name ? `, ${user.first_name}` : ""}`} subtitle={todayLabel()} />
 
             <FirstSteps totalDocs={dashStats ? Number(dashStats.total_documentos || 0) : undefined} />
 

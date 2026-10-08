@@ -7,7 +7,7 @@ import { cadriusMarketingApi } from '../../services/marketing';
 export default function GestaoMarketing() {
     return (
         <div className={styles.page}>
-            <PageHeader title="Marketing da Cadrius" subtitle="Conteúdo, campanhas e indicadores para trazer novos escritórios" />
+            <PageHeader title="Marketing da Cadrius" subtitle="Campanhas para novos escritórios" />
             <MarketingStudio api={cadriusMarketingApi} scope="cadrius" canWrite canApprove />
         </div>
     );

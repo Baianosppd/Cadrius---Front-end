@@ -124,7 +124,7 @@ export default function Equipe() {
     const [editing, setEditing] = useState(null);
     return (
         <div className={styles.page}>
-            <PageHeader title="Equipe Cadrius" subtitle="Contas da Gestão por área, com acesso total ou só de consulta"
+            <PageHeader title="Equipe Cadrius" subtitle="Contas da Gestão por área"
                 actions={!creating && <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setCreating(true)}>Nova conta</button>} />
             {creating && <NovaConta onCancel={() => setCreating(false)} onDone={() => { setCreating(false); reload(); }} />}
             {error && <Banner tone="error">{error}</Banner>}

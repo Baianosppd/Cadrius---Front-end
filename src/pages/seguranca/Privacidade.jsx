@@ -218,7 +218,7 @@ export default function Privacidade() {
     ];
     return (
         <div className={styles.page}>
-            <PageHeader title="Privacidade e dados" subtitle="Seus direitos como titular (LGPD), termos aceitos e controle dos seus dados." />
+            <PageHeader title="Privacidade e dados" subtitle="Seus direitos e seus dados (LGPD)" />
             <TabBar tabs={tabs} activeTab={tab} onTabChange={setTab} />
             {tab === 'aceites' && <Aceites />}
             {tab === 'dados' && <MeusDados />}

@@ -28,7 +28,7 @@ export default function IaAtividades() {
     };
     return (
         <div className={styles.page}>
-            <PageHeader title="IA por atividade" subtitle="Cada tipo de trabalho com a IA que mais rende nele — e reservas se ela cair" />
+            <PageHeader title="IA por atividade" subtitle="A melhor IA para cada trabalho" />
             <Banner tone="info"><ul style={{ margin: 0, paddingLeft: 18 }}>{data.regras.map((r) => <li key={r}>{r}</li>)}</ul></Banner>
             <div className={styles.card_grid}>
                 {data.atividades.map((a) => (
