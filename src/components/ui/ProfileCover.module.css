@@ -4,7 +4,7 @@
     position: relative; height: 180px; background-size: cover; background-position: center;
     background-color: var(--c-primary-solid);
 }
-.cover_actions { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.cover_actions { position: absolute; right: 12px; top: 12px; z-index: 2; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .ghost {
     display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 12px; border-radius: 8px; cursor: pointer;
     border: 1px solid rgba(255, 255, 255, .55); background: rgba(15, 23, 42, .45); color: #fff; font: inherit; font-size: .85rem;
@@ -61,7 +61,8 @@
 
 @media (max-width: 640px) {
     .cover { height: 140px; }
-    .identity { padding: 0 16px 16px; gap: 12px; margin-top: -36px; }
+    .identity { padding: 0 16px 16px; gap: 8px; margin-top: -40px; flex-direction: column; align-items: flex-start; }
+    .who { padding-bottom: 0; }
     .avatar { width: 80px; height: 80px; }
     .editor { padding: 14px 16px 16px; }
 }
