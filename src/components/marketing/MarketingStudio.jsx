@@ -5,9 +5,11 @@ import { Banner, Empty, Pill, StatCard, errorMessage, fmtDateTime } from '../seg
 import useLoader from '../../pages/gestao/useLoader';
 import { FiCalendar, FiChevronLeft, FiChevronRight, FiList } from 'react-icons/fi';
 import {
-    AUTO_CHANNELS, IMAGE_SOURCE, CHANNELS, CHANNEL_COLOR, CHANNEL_LABEL, LEVEL_TONE, STATUS, groupByDay, monthGrid, parseHashtags, toLocalInput,
+    AUTO_CHANNELS, CHANNELS, CHANNEL_COLOR, CHANNEL_LABEL, LEVEL_TONE, STATUS, groupByDay, monthGrid, parseHashtags, toLocalInput,
 } from '../../services/marketing';
 import PostPreview from './PostPreview';
+import MediaStudio from './MediaStudio';
+import { mediaAddon } from '../../services/billing';
 import useAuth from '../../hooks/useAuth';
 import AIWriteMenu from '../assistant/AIWriteMenu';
 
@@ -70,13 +72,12 @@ function Alertas({ alertas }) {
 }
 
 // Editor de um conteúdo: texto, verificador ao vivo, imagem, agenda e ações de aprovação/publicação
-function Editor({ api, id, canApprove, onClose, onChanged, brand }) {
+function Editor({ api, id, canApprove, onClose, onChanged, brand, addon }) {
     const [p, setP] = useState(null);
     const [form, setForm] = useState(null);
     const [alertas, setAlertas] = useState(null);
     const [revisei, setRevisei] = useState(false);
     const [busy, setBusy] = useState(false);
-    const [imgBusy, setImgBusy] = useState('');
     const [hint, setHint] = useState('');
     const timer = useRef(null);
     useEffect(() => {
@@ -104,15 +105,10 @@ function Editor({ api, id, canApprove, onClose, onChanged, brand }) {
             setP(x); setAlertas(x.alertas); toast.success(ok); onChanged();
         } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
-    const makeImage = async (modo) => {
-        setImgBusy(modo);
-        try {
-            const x = await api.image(p.id, { modo, sugestao_imagem: hint });
-            setP(x);
-            setForm((f) => ({ ...f, imagem_url: x.imagem_url }));
-            if (x.aviso) toast.info(x.aviso); else toast.success('Imagem pronta.');
-            onChanged();
-        } catch (err) { toast.error(errorMessage(err)); } finally { setImgBusy(''); }
+    const onPiece = (x) => {
+        setP((old) => ({ ...old, ...x }));
+        setForm((f) => ({ ...f, imagem_url: x.imagem_url }));
+        onChanged();
     };
     const publishNow = async () => {
         setBusy(true);
@@ -160,30 +156,18 @@ function Editor({ api, id, canApprove, onClose, onChanged, brand }) {
                                 </label>
                             )}
                         </div>
-                        <div className={styles.card} style={{ background: 'var(--c-surface-2)' }}>
-                            <div className={styles.section_title}>Imagem do post {p.imagem_origem && <Pill tone={p.imagem_origem === 'marca' ? 'gray' : 'blue'}>{IMAGE_SOURCE[p.imagem_origem]}</Pill>}</div>
-                            <label className={styles.field}>O que a imagem deve mostrar
-                                <textarea className={styles.textarea} rows={2} maxLength={500} value={hint} onChange={(e) => setHint(e.target.value)}
-                                    placeholder="Ex.: balança da justiça sobre mesa de madeira, luz natural" />
-                            </label>
-                            <div className={styles.btn_row} style={{ marginTop: 8 }}>
-                                <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={!!imgBusy || p.status === 'publicado'} onClick={() => makeImage('ia')}>
-                                    {imgBusy === 'ia' ? 'Gerando a imagem…' : form.imagem_url ? 'Gerar outra com IA' : 'Gerar imagem com IA'}</button>
-                                <button type="button" className={styles.btn} disabled={!!imgBusy || p.status === 'publicado'} onClick={() => makeImage('marca')}>
-                                    {imgBusy === 'marca' ? 'Montando…' : 'Arte da marca (sem IA)'}</button>
-                                {form.imagem_url && <a className={styles.btn} href={form.imagem_url} target="_blank" rel="noopener noreferrer" download>Baixar</a>}
-                            </div>
-                            <p className={styles.muted} style={{ fontSize: '.78rem', marginTop: 6 }}>A IA de imagem usa créditos e nunca recebe dado de cliente. A arte da marca
-                                usa a cor do escritório (Perfil → Assinatura dos e-mails) e não gasta créditos.</p>
-                        </div>
-                        {p.canal === 'video_curto' && (
-                            <Banner tone="info">Vídeo: o Cadrius entrega o roteiro com as cenas. Gere a imagem de cada cena aqui e monte o vídeo no CapCut,
-                                Canva ou Instagram Edits. A geração automática de vídeo está em estudo (veja o relatório da fase).</Banner>
+                        <MediaStudio api={api} p={p} hint={hint} setHint={setHint} brandColor="var(--c-primary-solid)" addon={addon}
+                            disabled={p.status === 'publicado'} onPiece={onPiece} />
+                        {p.canal === 'video_curto' && !addon?.ativo && (
+                            <p className={styles.muted} style={{ fontSize: '.8rem' }}>Vídeo: o Cadrius entrega o roteiro com as cenas. Monte no CapCut, Canva ou
+                                Instagram Edits, ou gere o vídeo com IA no Estúdio de mídia (adicional).</p>
                         )}
                         {auto && (
-                            <label className={styles.field}>Ou cole o link de uma imagem sua (https){p.canal === 'instagram' && ' — o Instagram exige imagem'}
-                                <input className={styles.input} value={form.imagem_url} onChange={(e) => setForm({ ...form, imagem_url: e.target.value })} placeholder="https://…" />
-                            </label>
+                            <details>
+                                <summary className={styles.muted} style={{ cursor: 'pointer', fontSize: '.85rem' }}>Usar o link de uma imagem (https){p.canal === 'instagram' && ' · o Instagram exige imagem'}</summary>
+                                <input className={styles.input} style={{ marginTop: 8 }} aria-label="Link da imagem" value={form.imagem_url}
+                                    onChange={(e) => setForm({ ...form, imagem_url: e.target.value })} placeholder="https://…" />
+                            </details>
                         )}
                         <div className={styles.section_title}>Como vai aparecer</div>
                         <PostPreview channel={p.canal} brand={brand} title={form.titulo} text={form.texto} hashtags={form.hashtags}
@@ -376,6 +360,15 @@ export default function MarketingStudio({ api, scope, canWrite, canApprove }) {
     const extra = useLoader(() => Promise.all([api.ideas(), api.campaigns()]), []);
     const [ideas, campaigns] = extra.data || [null, []];
     const counts = list.data?.contagem || {};
+    // CAD-231: adicional de mídia com IA (a Gestão Cadrius sempre pode)
+    const [addon, setAddon] = useState(scope === 'cadrius' ? { ativo: true } : null);
+    useEffect(() => {
+        if (scope === 'cadrius') return;
+        mediaAddon.status().then(setAddon).catch(() => setAddon({ ativo: false }));
+        const q = new URLSearchParams(window.location.search).get('addon');
+        if (q === 'success') toast.success('Adicional contratado. Assim que o pagamento confirmar, a IA de imagem e vídeo libera aqui.');
+        if (q) window.history.replaceState(null, '', window.location.pathname);
+    }, [scope]);
     return (
         <div className={styles.stack}>
             <div className={styles.tabs} role="tablist">
@@ -427,7 +420,7 @@ export default function MarketingStudio({ api, scope, canWrite, canApprove }) {
             {tab === 'criar' && <Criar api={api} scope={scope} ideas={ideas} campaigns={campaigns} onCreated={(id) => { list.reload(); setOpen(id); setTab('agenda'); }} />}
             {tab === 'campanhas' && <Campanhas api={api} campaigns={campaigns} reload={extra.reload} />}
             {tab === 'indicadores' && <Indicadores api={api} />}
-            {open && <Editor api={api} id={open} brand={brand} canApprove={canApprove} onClose={() => setOpen(null)} onChanged={() => list.reload()} />}
+            {open && <Editor api={api} id={open} brand={brand} addon={addon} canApprove={canApprove} onClose={() => setOpen(null)} onChanged={() => list.reload()} />}
         </div>
     );
 }

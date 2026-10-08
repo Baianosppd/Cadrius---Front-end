@@ -83,6 +83,9 @@ export const ORG_ACTIONS = {
         fields: [{ name: 'credits', label: 'Créditos (1 a 10.000)', min: 1, max: 10000, initial: 50 },
             { name: 'valid_days', label: 'Validade em dias (1 a 365)', min: 1, max: 365, initial: 90 }],
     },
+    // CAD-231: adicional "Estúdio de mídia com IA" como cortesia
+    media_addon_on: { area: 'financeiro', label: 'Liberar estúdio de mídia com IA (cortesia)', fields: [{ name: 'days', label: 'Dias (0 = sem prazo)', min: 0, max: 365, initial: 30 }] },
+    media_addon_off: { area: 'financeiro', label: 'Encerrar cortesia do estúdio de mídia', danger: true, fields: [] },
     deactivate: { area: 'ti', label: 'Desativar escritório', danger: true, fields: [] },
     activate: { area: 'ti', label: 'Reativar escritório', fields: [] },
 };
@@ -108,6 +111,8 @@ export function orgActionsFor(areas, org) {
         .filter(([, a]) => hasArea(areas, a.area))
         .filter(([key]) => (key === 'deactivate' ? org?.ativo : key === 'activate' ? !org?.ativo : true))
         .filter(([key]) => key !== 'extend_trial' || org?.estado_registrado === 'trialing')
+        .filter(([key]) => key !== 'media_addon_on' || (org?.adicional_midia && !org.adicional_midia.ativo))
+        .filter(([key]) => key !== 'media_addon_off' || org?.adicional_midia?.origem === 'cortesia')
         .map(([key, a]) => ({ key, ...a }));
 }
 

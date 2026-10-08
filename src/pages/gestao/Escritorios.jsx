@@ -39,6 +39,12 @@ function Detalhe({ id, areas, onClose, onChanged }) {
                     <div className={styles.section_title}>Créditos</div>
                     <div className={styles.kv}><span>Usados no mês</span><strong>{data.creditos.mes_usados} / {data.creditos.mes_limite}</strong></div>
                     <div className={styles.kv}><span>Avulsos disponíveis</span><strong>{data.creditos.avulsos_disponiveis}</strong></div>
+                    {data.adicional_midia && (
+                        <div className={styles.kv}><span>Estúdio de mídia com IA</span><strong>
+                            {data.adicional_midia.incluido_no_plano ? 'Incluído no plano' : data.adicional_midia.ativo
+                                ? `${data.adicional_midia.origem === 'cortesia' ? 'Cortesia' : 'Contratado'}${data.adicional_midia.termina_em ? ` até ${fmtDate(data.adicional_midia.termina_em)}` : ''}`
+                                : 'Não contratado'}</strong></div>
+                    )}
                     {data.lotes.map((l, i) => (
                         <div key={i} className={styles.kv}><span>{l.origem === 'cortesia' ? 'Cortesia' : 'Compra'} · expira {fmtDate(l.expira)}</span>
                             <strong>{l.restantes}/{l.creditos}</strong></div>
