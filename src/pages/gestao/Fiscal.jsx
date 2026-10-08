@@ -131,7 +131,7 @@ export default function Fiscal() {
     const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get('aba') === 'obrigacoes' ? 'obrigacoes' : 'recebimentos'));
     return (
         <div className={styles.page}>
-            <PageHeader title="Fiscal" subtitle="Recebimentos da Cadrius, notas fiscais (NFS-e) e calendário de obrigações" />
+            <PageHeader title="Fiscal" subtitle="Recebimentos, NFS-e e obrigações" />
             <div className={styles.tabs} role="tablist">
                 {TABS.map(([k, label]) => (
                     <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tab_active : ''}`} onClick={() => setTab(k)}>{label}</button>

@@ -8,7 +8,7 @@ import useAuth from '../../hooks/useAuth';
 import { PAIRING_STEPS, formatPairingCode, whatsappApi } from '../../services/whatsapp';
 
 // WhatsApp do escritório sem servidor próprio (CAD-225): número → QR code ou código → conectado.
-export default function WhatsAppCard() {
+export default function WhatsAppCard({ embedded = false }) {
     const { isOrgManager } = useAuth();
     const { data, reload } = useLoader(() => whatsappApi.status(), []);
     const [numero, setNumero] = useState('');
@@ -48,9 +48,9 @@ export default function WhatsAppCard() {
 
     if (!data || !data.disponivel) return null;          // sem servidor hospedado: segue valendo a conexão manual (Evolution própria) abaixo
     return (
-        <section className={ui.card} aria-labelledby="wa-title">
+        <section className={embedded ? '' : ui.card} aria-labelledby="wa-title">
             <div className={ui.btn_row} style={{ justifyContent: 'space-between' }}>
-                <div id="wa-title" className={ui.section_title}><FiSmartphone aria-hidden="true" /> WhatsApp do escritório</div>
+                <div id="wa-title" className={ui.section_title} style={embedded ? { display: 'none' } : undefined}><FiSmartphone aria-hidden="true" /> WhatsApp do escritório</div>
                 {data.conectado ? <Pill tone="green">Conectado</Pill> : <Pill tone="gray">Não conectado</Pill>}
             </div>
             {data.conectado ? (

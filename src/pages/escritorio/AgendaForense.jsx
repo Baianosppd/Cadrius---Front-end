@@ -112,7 +112,7 @@ export default function AgendaForense() {
     const { isOrgManager } = useAuth();
     return (
         <div className={styles.page}>
-            <PageHeader title="Agenda forense" subtitle="Prazos em dias úteis com feriados, recesso e o calendário do seu tribunal" />
+            <PageHeader title="Agenda forense" subtitle="Prazos em dias úteis por tribunal" />
             <Calculadora />
             <SuspensoesTribunais />
             <Feriados canManage={isOrgManager} />

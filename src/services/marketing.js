@@ -13,6 +13,16 @@ export function makeMarketingApi(base) {
         publish: (id) => api.post(`${base}conteudos/${id}/publicar/`).then((r) => r.data),
         // CAD-226: imagem real do post (modo 'ia' ou 'marca')
         image: (id, body) => api.post(`${base}conteudos/${id}/imagem/`, body).then((r) => r.data),
+        // CAD-231: fotos do escritório (todos os planos) e vídeo com IA (adicional de mídia)
+        photos: () => api.get(`${base}fotos/`).then((r) => r.data),
+        uploadPhoto: (file) => {
+            const fd = new FormData();
+            fd.append('arquivo', file);
+            return api.post(`${base}fotos/`, fd, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
+        },
+        removePhoto: (id) => api.delete(`${base}fotos/${id}/`),
+        video: (id) => api.get(`${base}conteudos/${id}/video/`).then((r) => r.data),
+        startVideo: (id, body) => api.post(`${base}conteudos/${id}/video/`, body).then((r) => r.data),
         campaigns: () => api.get(`${base}campanhas/`).then((r) => r.data),
         addCampaign: (body) => api.post(`${base}campanhas/`, body).then((r) => r.data),
         removeCampaign: (id) => api.delete(`${base}campanhas/${id}/`),
@@ -89,4 +99,13 @@ export function monthGrid(year, month, items = []) {
 }
 
 // CAD-226: de onde veio a imagem do post
-export const IMAGE_SOURCE = { openai: 'IA de imagem (OpenAI)', gemini: 'IA de imagem (Gemini)', marca: 'Arte da marca' };
+export const IMAGE_SOURCE = { openai: 'IA (OpenAI)', gemini: 'IA (Gemini)', marca: 'Arte pronta', foto: 'Foto do escritório' };
+
+// CAD-231: modelos de arte pronta (sem IA, todos os planos). "foto" usa uma foto do escritório como fundo.
+export const ART_STYLES = [
+    ['destaque', 'Destaque', 'Título grande na cor da marca'],
+    ['citacao', 'Citação', 'Frase em destaque, fundo claro'],
+    ['dica', 'Dica', 'Faixa "Dica" e texto direto'],
+    ['foto', 'Com foto', 'Sua foto com o título por cima'],
+];
+export const MAX_REFS = 3;

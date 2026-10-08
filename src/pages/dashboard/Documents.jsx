@@ -66,7 +66,7 @@ function Documents() {
 
     return (
         <div className={styles.documents_container}>
-            <PageHeader title="Documentos" subtitle="Gerencie e analise seus documentos jurídicos" />
+            <PageHeader title="Documentos" subtitle="Envie e a IA lê para você" />
             <DropZone onFileSelect={handleFiles} />
             {uploading && <p style={{ padding: '8px 0' }}>Enviando…</p>}
             <DocumentList

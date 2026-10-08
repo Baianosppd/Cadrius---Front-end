@@ -76,3 +76,10 @@ export function creditsNotice(assinatura) {
         : `${used} de ${assinatura.creditos_mensais} créditos usados este mês`;
     return `${base}${assinatura.creditos_avulsos ? ` + ${assinatura.creditos_avulsos} avulsos disponíveis` : ''}`;
 }
+
+// CAD-231: adicional "Estúdio de mídia com IA" (imagem e vídeo no Marketing). Incluído no Enterprise.
+export const mediaAddon = {
+    status: () => api.get(`${BASE}addons/midia/`).then((r) => r.data),
+    checkout: () => api.post(`${BASE}addons/midia/checkout/`).then((r) => { window.location.href = r.data.checkout_url; }),
+    cancel: () => api.post(`${BASE}addons/midia/cancelar/`).then((r) => r.data),
+};

@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './Perfil.module.css';
 
 import ProfileInfo from '../../components/ui/ProfileInfo.jsx';
+import ProfileCover from '../../components/ui/ProfileCover.jsx';
 import ChangePassword from '../../components/ui/ChangePassword.jsx';
 import MfaCard from '../../components/seguranca/MfaCard.jsx';
 import EmailSignatureCard from '../../components/email/EmailSignatureCard.jsx';
@@ -22,7 +23,7 @@ function Perfil() {
     const [packs, setPacks] = useState([]);
     const [promo, setPromo] = useState('');
     const [promoInfo, setPromoInfo] = useState({});   // planId → prévia do desconto
-    const { isOrgManager } = useAuth();
+    const { isOrgManager, refreshUser } = useAuth();
     const navigate = useNavigate();
     const [params, setParams] = useSearchParams();
     // CAD-227: o perfil tinha 7 blocos numa coluna só (2.700 px). Agora são 4 abas curtas.
@@ -86,18 +87,32 @@ function Perfil() {
     };
 
 
-    const handlePhotoChange = async (file) => {
+    // CAD-230: foto e capa vão para um envio próprio; o perfil devolve um link que continua valendo ao recarregar
+    const uploadImage = async (kind, file) => {
         try {
             const formData = new FormData();
-            formData.append('profile_picture', file);  // 👈 era foto
-            const response = await api.patch('auth/profile/', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
+            formData.append('arquivo', file);
+            const response = await api.post(`auth/profile/imagem/${kind}/`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             setUser(response.data);
-            toast.success('Foto atualizada com sucesso!');
+            refreshUser?.().catch(() => {});
+            toast.success(kind === 'foto' ? 'Foto atualizada.' : 'Capa atualizada.');
         } catch (err) {
-            toast.error('Erro ao atualizar foto. Tente novamente.');
+            toast.error(err?.response?.data?.detail || 'Não foi possível enviar a imagem.');
         }
+    };
+    const removeImage = async (kind) => {
+        try {
+            const response = await api.delete(`auth/profile/imagem/${kind}/`);
+            setUser(response.data);
+            refreshUser?.().catch(() => {});
+        } catch (err) { toast.error(err?.response?.data?.detail || 'Não foi possível remover.'); }
+    };
+    const saveCover = async (data) => {
+        try {
+            const response = await api.patch('auth/profile/', data);
+            setUser(response.data);
+            toast.success('Capa salva.');
+        } catch (err) { toast.error('Não foi possível salvar a capa.'); }
     };
 
     const assinatura = billing?.assinatura;
@@ -107,7 +122,7 @@ function Perfil() {
 
     return (
         <div className={styles.perfil_container}>
-            <PageHeader title="Meu perfil" subtitle="Seus dados, senha e acesso, assinatura dos e-mails e o plano do escritório" />
+            <PageHeader title="Meu perfil" />
             <div className={ui.tabs} role="tablist" aria-label="Seções do perfil">
                 {TABS.map(([k, label]) => (
                     <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${ui.tab} ${tab === k ? ui.tab_active : ''}`} onClick={() => go(k)}>{label}</button>
@@ -117,6 +132,7 @@ function Perfil() {
                 <p className={ui.muted}>Carregando perfil…</p>
             ) : (
                 <>
+                    {tab === 'dados' && <ProfileCover user={user} onUpload={uploadImage} onRemove={removeImage} onSaveCover={saveCover} />}
                     {tab === 'dados' && <ProfileInfo
                         user={{
                             nome: `${user.first_name} ${user.last_name}`.trim() || '—',
@@ -127,7 +143,6 @@ function Perfil() {
                             iniciais: user.initials || '??',
                         }}
                         onSave={handleSave}
-                        onPhotoChange={handlePhotoChange}
                     />}
                     {tab === 'seguranca' && <><ChangePassword onSave={() => {}} /><MfaCard /></>}
                     {tab === 'emails' && <EmailSignatureCard />}

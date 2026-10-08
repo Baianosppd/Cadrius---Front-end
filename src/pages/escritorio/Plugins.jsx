@@ -13,7 +13,7 @@ export default function Plugins() {
     useEffect(() => { load(); }, [load]);
     return (
         <div className={styles.page}>
-            <PageHeader title="Plugins" subtitle="Use o Cadrius de dentro do Claude ou do ChatGPT e conecte a conta de IA do seu escritório." />
+            <PageHeader title="Plugins" subtitle="Cadrius dentro do Claude e do ChatGPT" />
             {error && <Banner tone="error">{error}</Banner>}
             {!data && !error && <Empty>Carregando…</Empty>}
             {data && (

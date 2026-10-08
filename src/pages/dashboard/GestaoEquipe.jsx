@@ -63,7 +63,7 @@ function GestaoEquipe() {
 
     return (
         <div className={styles.GestaoEquipe_container}>
-            <PageHeader title="Equipe" subtitle="Pessoas do escritório, perfis de acesso e uso de créditos de IA" />
+            <PageHeader title="Equipe" subtitle="Pessoas, acessos e créditos de IA" />
             {showInviteModal && (
                 <InviteMemberModal
                     onClose={() => setShowInviteModal(false)}

@@ -14,6 +14,9 @@ export const gcal = {
     settings: (body) => api.patch(`${BASE}settings/`, body).then((r) => r.data),
     events: (params) => api.get(`${BASE}events/`, { params }).then((r) => r.data),
     updateEvent: (id, body) => api.patch(`${BASE}events/${id}/`, body).then((r) => r.data),
+    // CAD-230: criar e cancelar direto no Google Agenda
+    createEvent: (body) => api.post(`${BASE}events/`, body).then((r) => r.data),
+    cancelEvent: (id) => api.delete(`${BASE}events/${id}/`),
 };
 
 export const EVENT_KINDS = [['prazo', 'Prazo'], ['audiencia', 'Audiência'], ['pericia', 'Perícia / diligência'], ['reuniao', 'Reunião / atendimento'],
@@ -26,12 +29,12 @@ export const AGENDA_ALERTS = [
 ];
 
 export const GCAL_RESULTS = {
-    ok: { tone: 'success', text: 'Google Calendar conectado!' },
+    ok: { tone: 'success', text: 'Google conectado! Agenda, Planilhas e Documentos liberados.' },
     denied: { tone: 'error', text: 'Você cancelou a autorização no Google.' },
     state_invalid: { tone: 'error', text: 'A conexão expirou ou já foi usada. Clique em "Conectar" de novo e conclua em até 10 minutos.' },
     redirect_mismatch: { tone: 'error', text: 'O endereço de retorno no Google Cloud não confere. Copie o "URI de redirecionamento" desta tela para o app do Google (Credenciais → seu ID do cliente) e tente de novo.' },
     code_expired: { tone: 'error', text: 'A autorização do Google expirou antes de concluir. Clique em "Conectar" de novo.' },
-    code_rejected: { tone: 'error', text: 'O Google recusou as credenciais do app. Confira o ID e o segredo do cliente.' },
+    code_rejected: { tone: 'error', text: 'O Google recusou a conexão. Tente de novo; se continuar, fale com o suporte do Cadrius.' },
     no_refresh_token: { tone: 'error', text: 'O Google não devolveu permissão de longa duração. Remova o acesso do Cadrius em myaccount.google.com/permissions e conecte de novo.' },
 };
 

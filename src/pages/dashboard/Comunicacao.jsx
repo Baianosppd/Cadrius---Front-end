@@ -109,7 +109,7 @@ function Comunicacao() {
 
     return (
         <div className={styles.comunicacao_container}>
-            <PageHeader title="Comunicação" subtitle="E-mails e mensagens recebidos pelos canais conectados" />
+            <PageHeader title="Comunicação" subtitle="Mensagens dos canais conectados" />
 
             <div className={styles.main_box}>
 

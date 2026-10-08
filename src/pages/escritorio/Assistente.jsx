@@ -23,7 +23,7 @@ export default function Assistente() {
     useEffect(() => { loadStatus(); }, []);
     return (
         <div className={styles.page}>
-            <PageHeader title="Assistente IA" subtitle="Pergunte, pesquise nos dados do escritório, escreva, automatize e peça ações — você confirma antes de qualquer mudança."
+            <PageHeader title="Assistente IA" subtitle="Você confirma antes de qualquer mudança"
                 actions={status?.pode_configurar && (
                     <button type="button" className={styles.btn} onClick={() => setConfig(true)}><FiSettings aria-hidden="true" /> Configurações</button>
                 )} />

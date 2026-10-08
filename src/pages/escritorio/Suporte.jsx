@@ -108,7 +108,7 @@ export default function Suporte() {
     const opened = (id) => { setCreating(null); setParams({ chamado: id }); };
     return (
         <div className={styles.page}>
-            <PageHeader title="Suporte" subtitle="Fale com a equipe Cadrius ou peça uma parametrização específica"
+            <PageHeader title="Suporte" subtitle="Fale com a equipe Cadrius"
                 actions={!creating && (
                     <div className={styles.btn_row}>
                         <button type="button" className={styles.btn} onClick={() => setCreating('param')}>Pedir parametrização</button>

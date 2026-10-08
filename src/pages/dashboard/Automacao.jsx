@@ -67,7 +67,7 @@ function Automacao() {
 
     return (
         <div className={styles.automacao_container}>
-            <PageHeader title="Automações" subtitle="Regras e fluxos que fazem o trabalho repetitivo por você. Abra uma regra para ver o fluxo rodando." />
+            <PageHeader title="Automações" subtitle="O trabalho repetitivo, feito por regras" />
             <SummaryGroup stats={stats} />
             <div className={tabs.tabs} role="tablist" style={{ margin: '12px 0 16px' }}>
                 {TABS.map(([k, label]) => (

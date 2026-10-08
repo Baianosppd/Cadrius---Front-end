@@ -177,7 +177,7 @@ export default function IASegura() {
     const tabs = [{ id: 'politica', label: 'Política' }, ...(isOrgManager ? [{ id: 'fila', label: 'Confirmações' }, { id: 'uso', label: 'Uso' }] : [])];
     return (
         <div className={styles.page}>
-            <PageHeader title="IA segura" subtitle="Quanto a IA pode fazer sozinha, quem aprova e o que ela já fez." />
+            <PageHeader title="IA segura" subtitle="Limites, aprovações e histórico da IA" />
             <TabBar tabs={tabs} activeTab={tab} onTabChange={setTab} />
             {tab === 'politica' && <Politica canEdit={isOrgManager} />}
             {tab === 'fila' && <Confirmacoes />}

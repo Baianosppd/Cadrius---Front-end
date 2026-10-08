@@ -45,3 +45,13 @@ describe('equipe e fiscal (CAD-170)', () => {
         expect(monthRange(new Date(2024, 1, 10)).end).toBe('2024-02-29');
     });
 });
+
+describe('cortesia do estúdio de mídia (CAD-231)', () => {
+    it('só oferece ligar quando está desligado e desligar quando é cortesia', async () => {
+        const { orgActionsFor } = await import('../backoffice');
+        const keys = (org) => orgActionsFor(['financeiro'], { ativo: true, estado_registrado: 'active', ...org }).map((a) => a.key);
+        expect(keys({ adicional_midia: { ativo: false } })).toContain('media_addon_on');
+        expect(keys({ adicional_midia: { ativo: true, origem: 'cortesia' } })).toEqual(['grant_credits', 'media_addon_off']);
+        expect(keys({ adicional_midia: { ativo: true, origem: 'plano' } })).toEqual(['grant_credits']);
+    });
+});

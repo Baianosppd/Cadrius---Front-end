@@ -25,7 +25,21 @@ export const minutasApi = {
     templates: () => api.get('minutas/modelos/').then((r) => r.data),
     addTemplate: (body) => api.post('minutas/modelos/', body).then((r) => r.data),
     removeTemplate: (id) => api.delete(`minutas/modelos/${id}/`),
+    // CAD-231: importar modelo do escritório (Word, PDF, texto) e editar
+    importTemplate: (file) => {
+        const fd = new FormData();
+        fd.append('arquivo', file);
+        return api.post('minutas/modelos/importar/', fd, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
+    },
+    updateTemplate: (id, body) => api.patch(`minutas/modelos/${id}/`, body).then((r) => r.data),
 };
+
+// Variáveis de um corpo de modelo ({{cliente.nome}}, {{campo.valor_da_causa}})
+export const templateFields = (body) => [...new Set([...(body || '').matchAll(/\{\{\s*([a-z_][a-z0-9_.]*)\s*\}\}/g)].map((m) => m[1]))];
+export const fieldLabel = (key, vars = []) => vars.find((v) => v.chave === key)?.label
+    || (key.startsWith('campo.') ? key.slice(6).replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase()) : key);
+export const TEMPLATE_KINDS = [['peticao', 'Petição'], ['contrato', 'Contrato'], ['procuracao', 'Procuração'], ['notificacao', 'Notificação'],
+    ['comunicado', 'Comunicado ao cliente'], ['outro', 'Outro']];
 
 export const PUB_STATUS = [['nova', 'Novas'], ['confirmada', 'Confirmadas'], ['descartada', 'Descartadas']];
 

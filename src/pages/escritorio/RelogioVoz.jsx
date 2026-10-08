@@ -98,7 +98,7 @@ export default function RelogioVoz() {
     if (error) return <div className={ui.page}><Banner tone="error">{error}</Banner></div>;
     return (
         <div className={ui.page}>
-            <PageHeader title="Relógio e voz" subtitle="Aprove envios, pergunte a agenda, anote lembretes e dispare atalhos falando, do relógio ou do celular."
+            <PageHeader title="Relógio e voz" subtitle="Comandos de voz e aprovação pelo relógio"
                 actions={data && <button type="button" className={`${ui.btn} ${ui.btn_primary}`} onClick={() => setAdding(true)}><FiPlus aria-hidden="true" /> Adicionar aparelho</button>} />
             <div className={s.benefits}>
                 <div className={s.benefit}><FiCheckCircle aria-hidden="true" /><div><strong>Aprove pelo relógio</strong><span>Diga "pendências" e "aprovar" com o código. Na audiência, sem abrir o computador.</span></div></div>

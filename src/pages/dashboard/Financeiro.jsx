@@ -241,7 +241,7 @@ export default function Financeiro() {
         <div className={styles.page}>
             <div>
                 <div className={styles.page_title}>Financeiro</div>
-                <div className={styles.page_subtitle}>Preços, pacotes, promoções e informes aos clientes (equipe Cadrius)</div>
+                <div className={styles.page_subtitle}>Preços, pacotes e promoções</div>
             </div>
             <TabBar tabs={TABS} activeTab={tab} onTabChange={setTab} />
             {tab === 'resumo' ? <Resumo /> : <Crud key={tab} spec={RESOURCES[tab]} />}
