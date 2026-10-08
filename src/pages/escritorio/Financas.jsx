@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, StatCard, errorMessage, fmtDate } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDate, Loading, PageHeader, Pill, StatCard } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import { ExpenseForm, ReceivableForm } from '../../components/carteira/Forms';
@@ -29,7 +29,7 @@ function Painel() {
         <div className={styles.stack}>
             <Period value={period} onChange={setPeriod} />
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <>
                     <div className={styles.grid}>
@@ -147,7 +147,7 @@ function AReceber() {
                 <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setCreating(true)}>Novo lançamento</button>
             </div>
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <div className={styles.table_wrap}>
                     <table className={styles.table}>

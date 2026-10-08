@@ -59,6 +59,24 @@ function Chat({ status }) {
 
     const loadList = () => assistantApi.list().then(setList).catch(() => {});
     useEffect(() => { loadList(); }, []);
+    useEffect(() => {                                  // CAD-233: vindo de "Nova tarefa" → pedido já escrito
+        const t = params.get('texto');
+        if (!t) return;
+        setConv(null);
+        setText(t.slice(0, 2000));
+        const next = new URLSearchParams(params); next.delete('texto');
+        setParams(next, { replace: true });
+        setTimeout(() => input.current?.focus(), 0);
+    }, [params, setParams]);
+    useEffect(() => {                                  // CAD-233: vindo de "Nova tarefa" → pedido já escrito
+        const t = params.get('texto');
+        if (!t) return;
+        setConv(null);
+        setText(t.slice(0, 2000));
+        const next = new URLSearchParams(params); next.delete('texto');
+        setParams(next, { replace: true });
+        setTimeout(() => input.current?.focus(), 0);
+    }, [params, setParams]);
     useEffect(() => {                                  // vindo de Documentos → "Usar no Assistente"
         const id = params.get('documento');
         if (!id) return;

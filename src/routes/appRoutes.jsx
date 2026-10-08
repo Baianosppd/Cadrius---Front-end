@@ -14,7 +14,6 @@ import ForcePasswordChange from "../pages/auth/ForcePasswordChange";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Automacao from "../pages/dashboard/Automacao";
 import Processos from "../pages/dashboard/Processos";
-import Comunicacao from "../pages/dashboard/Comunicacao";
 import Integracoes from "../pages/dashboard/Integracoes";
 import Perfil from "../pages/dashboard/Perfil";
 import UnderConstruction from '../pages/dashboard/UnderConstruction';
@@ -30,6 +29,7 @@ import SelectType from '../pages/auth/SelectType';
 import RegisterIndividual from '../pages/auth/RegisterIndividual';
 
 import RegisterEmpresa from '../pages/auth/RegisterEmpresa';
+import { BrandMark } from '../components/brand/BrandLogo';
 
 
 // Carregamento sob demanda: o editor de fluxos (React Flow) e o visualizador de PDF são pesados
@@ -100,7 +100,7 @@ export default function AppRoutes() {
 
   return (
     <BrowserRouter>
-      <Suspense fallback={<div style={{ padding: 32, textAlign: "center" }}>Carregando…</div>}>
+      <Suspense fallback={<div className="app-loading" role="status" aria-label="Carregando"><BrandMark size={44} /></div>}>
       <Routes>
         {/* Portal do cliente: público, só com o link pessoal (CAD-175) */}
         <Route path="/portal/:token" element={<PortalCliente />} />
@@ -136,7 +136,7 @@ export default function AppRoutes() {
 
 
           <Route path="/processos" element={<Processos />} />
-          <Route path="/comunicacao" element={<Comunicacao />} />
+          <Route path="/comunicacao" element={<Navigate to="/processos" replace />} />
 
 
           <Route path="/equipe" element={<GestaoEquipe />} />

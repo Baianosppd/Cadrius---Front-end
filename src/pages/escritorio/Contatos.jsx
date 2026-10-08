@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, errorMessage } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../gestao/useLoader';
 import CobrancaModal from '../../components/integracoes/CobrancaModal';
@@ -127,10 +127,10 @@ export default function Contatos() {
                 </div>
             )}
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <div className={styles.table_wrap}>
-                    <table className={styles.table}>
+                    <table className={`${styles.table} ${styles.table_stack}`}>
                         <thead><tr><th>Nome</th><th>Tipo</th><th>Contato</th><th>Mensagens</th><th>Etiquetas</th></tr></thead>
                         <tbody>
                             {data.resultados.length === 0 && <tr><td colSpan={5}><Empty title="Sua carteira começa aqui">Cadastre os clientes ou importe a planilha do sistema antigo: eles viram destinatários das automações e do portal.</Empty></td></tr>}
@@ -138,11 +138,11 @@ export default function Contatos() {
                                 const ch = channelStatus(c);
                                 return (
                                     <tr key={c.id} onClick={() => canWrite && setEditing(c)} style={{ cursor: canWrite ? 'pointer' : 'default' }}>
-                                        <td><strong>{c.name}</strong><div className={styles.muted}>{c.document || '—'}</div></td>
-                                        <td>{c.kind_label}</td>
-                                        <td>{c.email || '—'}<div className={styles.muted}>{formatPhone(c.phone)}</div></td>
-                                        <td><Pill tone={ch.tone}>{ch.label}</Pill></td>
-                                        <td>{c.tags.map((t) => <Pill key={t} tone="blue">{t}</Pill>)}</td>
+                                        <td><strong>{c.name}</strong>{c.document && <div className={styles.muted}>{c.document}</div>}</td>
+                                        <td data-label="Tipo">{c.kind_label}</td>
+                                        <td data-label="Contato">{c.email || '—'}<div className={styles.muted}>{formatPhone(c.phone)}</div></td>
+                                        <td data-label="Mensagens"><Pill tone={ch.tone}>{ch.label}</Pill></td>
+                                        <td data-label={c.tags.length ? 'Etiquetas' : undefined}>{c.tags.map((t) => <Pill key={t} tone="blue">{t}</Pill>)}</td>
                                     </tr>
                                 );
                             })}

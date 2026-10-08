@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiDownload, FiTrash2 } from 'react-icons/fi';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, StatCard, errorMessage, fmtDate } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDate, Loading, Pill, StatCard } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { brl, financeApi } from '../../services/cad223';
 import { EXPENSE_CATEGORIES } from '../../services/carteira';
@@ -17,7 +17,7 @@ export function FluxoCaixa() {
     const [semanas, setSemanas] = useState(12);
     const { data, error } = useLoader(() => financeApi.cashFlow(semanas), [semanas]);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const max = Math.max(1, ...data.semanas.flatMap((s) => [s.entradas, s.saidas]));
     return (
         <div className={styles.stack}>
@@ -58,7 +58,7 @@ export function Indicadores({ canEdit }) {
         try { await financeApi.saveConfig({ meta_mensal: meta }); setMeta(''); toast.success('Meta salva.'); reload(); } catch (e) { toast.error(errorMessage(e)); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const g = data.meta;
     const maxDre = Math.max(1, ...data.dre.meses.flatMap((m) => [m.receitas, m.despesas]));
     return (
@@ -141,7 +141,7 @@ export function FiscalEscritorio({ canEdit }) {
         } catch (e) { toast.error(errorMessage(e)); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const c = data.config;
     const est = data.estimativa;
     return (
@@ -224,7 +224,7 @@ export function DespesasFixas({ canEdit }) {
         try { await financeApi.removeRecurring(r.id); reload(); } catch (err) { toast.error(errorMessage(err)); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.stack}>
             <Banner tone="info">Aluguel, sistemas, contador, internet… O Cadrius lança cada despesa no dia escolhido de todo mês (e ela entra no fluxo de caixa e no gatilho "Despesa lançada"). Total ativo: <strong>{brl(data.total_mensal_centavos)}</strong>/mês.</Banner>

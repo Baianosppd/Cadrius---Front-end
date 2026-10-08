@@ -1,6 +1,6 @@
 import { Link, useOutletContext } from 'react-router-dom';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, StatCard, StatusPill } from '../../components/seguranca/ui';
+import { Banner, Empty, Loading, PageHeader, StatCard, StatusPill } from '../../components/seguranca/ui';
 import { SUB_STATE, backofficeApi, hasArea } from '../../services/backoffice';
 import { brl } from '../../services/financeiro';
 import useLoader from './useLoader';
@@ -9,7 +9,7 @@ export default function Visao() {
     const { areas } = useOutletContext();
     const { data, error, reload } = useLoader(backofficeApi.overview);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const { escritorios: e, usuarios: u, ti, financeiro: f } = data;
     return (
         <div className={styles.page}>

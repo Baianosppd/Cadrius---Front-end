@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, errorMessage, fmtDateTime } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { RUN_STATUS, STEP_STATUS, rulesApi } from '../../services/rules';
 
@@ -24,7 +24,7 @@ export default function ExecucoesTab({ pendentes, canApprove, onChange }) {
         }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     if (data.length === 0) return <Empty>{pendentes ? 'Nada aguardando aprovação.' : 'Nenhuma execução ainda.'}</Empty>;
     return (
         <div>

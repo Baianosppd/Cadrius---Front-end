@@ -19,6 +19,7 @@ import styles from './Login.module.css';
 import EnvSwitch from '../../components/common/EnvSwitch';
 import ThemeToggle from '../../components/common/ThemeToggle';
 import { CourthouseScene } from '../../components/illustrations/LegalArt';
+import BrandLogo from '../../components/brand/BrandLogo';
 
 function Login() {
     // e-mail trazido pelo seletor de ambiente (?email=), nunca a senha
@@ -91,7 +92,7 @@ function Login() {
         <div className={styles.main_wrapper}>
             {/* Lado esquerdo escuro */}
             <div className={styles.side_dark}>
-                <h1 className={styles.dark_title}>Cadrius</h1>
+                <h1 className={styles.dark_title}><BrandLogo size={48} tone="light" /></h1>
                 <p className={styles.dark_subtitle}>Automação inteligente para escritórios jurídicos modernos</p>
                 <ul className={styles.dark_points}>
                     <li>Publicações do DJEN e prazos em dias úteis</li>
@@ -105,7 +106,7 @@ function Login() {
             <div className={styles.side_form}>
                 <div className={styles.form_tools}><ThemeToggle /></div>
                 <div className={styles.form_container}>
-                    <div className={styles.mobile_brand} aria-hidden="true">Cadrius</div>
+                    <div className={styles.mobile_brand} aria-hidden="true"><BrandLogo size={34} /></div>
                     <h2 className={styles.form_title}>Entrar</h2>
                     <p className={styles.form_subtitle}>Acesse sua conta para continuar</p>
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, StatCard, StatusPill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, StatCard, StatusPill } from '../../components/seguranca/ui';
 import { Conversa } from '../escritorio/Suporte';
 import { PRIORITY, STAFF_STATUS, supportApi } from '../../services/support';
 import useLoader from './useLoader';
@@ -17,7 +17,7 @@ function Detalhe({ id, onBack }) {
         try { await fn(); setText(''); reload(); } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.page}>
             <PageHeader title={`#${data.id} · ${data.subject}`} subtitle={`${data.organization} · ${data.opened_by} · ${data.category_label}${data.page_url ? ` · tela ${data.page_url}` : ''}`}
@@ -94,7 +94,7 @@ export default function SuporteGestao() {
                     <input type="checkbox" checked={filters.mine === '1'} onChange={(e) => setFilters((f) => ({ ...f, mine: e.target.checked ? '1' : '' }))} /> Só os meus</label>
             </div>
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <div className={styles.table_wrap}>
                     <table className={styles.table}>

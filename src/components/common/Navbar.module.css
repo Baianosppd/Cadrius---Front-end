@@ -27,6 +27,6 @@
 .logout_link { background: none; border: none; width: 100%; cursor: pointer; font: inherit; display: flex; align-items: center; gap: var(--sp-3); padding: 0 var(--sp-3); min-height: 36px; color: var(--c-muted); font-weight: 500; border-radius: var(--radius); }
 .logout_link:hover { background-color: var(--c-danger-bg); color: var(--c-danger); }
 
-/* CAD-232: símbolo do Cadrius ao lado do nome (o mesmo do ícone da aba) */
-.sidebar_title { display: inline-flex; align-items: center; gap: 8px; }
-.brand_mark { border-radius: 7px; flex-shrink: 0; }
+/* CAD-233: logotipo (símbolo + nome) no topo do menu */
+.sidebar_title { display: inline-flex; align-items: center; color: var(--c-ink); }
+.sidebar_title:hover { opacity: .9; }

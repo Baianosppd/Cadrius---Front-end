@@ -178,3 +178,9 @@ input[type=file]::file-selector-button {
   font: inherit; font-size: var(--fs-sm); font-weight: 600; cursor: pointer;
 }
 input[type=file]::file-selector-button:hover { background: var(--c-surface-3); }
+
+/* CAD-233: carregamento entre telas — o símbolo do Cadrius pulsando no centro */
+.app-loading { min-height: 60vh; display: grid; place-items: center; }
+.app-loading svg { animation: brandPulse 1.2s ease-in-out infinite; }
+@keyframes brandPulse { 0%, 100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.08); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .app-loading svg { animation: none; } }

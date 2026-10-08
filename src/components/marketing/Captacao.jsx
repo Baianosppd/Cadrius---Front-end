@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiCopy, FiTrash2 } from 'react-icons/fi';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, StatCard, errorMessage } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, Loading, Pill, StatCard } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { brl, leadsApi } from '../../services/cad223';
 
@@ -48,7 +48,7 @@ export function Captacao({ canWrite }) {
                 </form>
             )}
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && data.length === 0 && <Empty title="Nenhum formulário ainda">Crie um e coloque o link no site, no Google ou na bio do Instagram.</Empty>}
             {data && data.length > 0 && (
                 <div className={styles.table_wrap}>
@@ -105,7 +105,7 @@ export function Resultados() {
     const [dias, setDias] = useState(180);
     const { data, error } = useLoader(() => leadsApi.results(dias), [dias]);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const sat = data.satisfacao;
     return (
         <div className={styles.stack}>

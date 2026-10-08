@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, errorMessage, fmtDateTime } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { STEP_STATUS, describeRule, hasExternal, rulesApi } from '../../services/rules';
 import RuleEditor from './RuleEditor';
@@ -66,7 +66,7 @@ export default function RegrasTab({ canManage }) {
         if (id) window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const [rules, catalog, templates] = data;
 
     const act = async (fn, ok) => {
@@ -120,7 +120,7 @@ export default function RegrasTab({ canManage }) {
             {rules.length === 0 && <Empty title="Nenhuma regra ainda">Comece por um modelo pronto: toda regra nasce desligada e só liga depois de simulada.</Empty>}
             {rules.length > 0 && (
                 <div className={styles.table_wrap}>
-                    <table className={styles.table}>
+                    <table className={`${styles.table} ${styles.table_stack}`}>
                         <thead><tr><th>Regra</th><th>Situação</th><th>Execuções</th><th></th></tr></thead>
                         <tbody>
                             {rules.map((r) => (
@@ -130,21 +130,21 @@ export default function RegrasTab({ canManage }) {
                                         <div className={styles.muted}>{describeRule(r, catalog)}</div>
                                         {hasExternal(r) && <Pill tone={r.exige_aprovacao ? 'blue' : 'orange'}>{r.exige_aprovacao ? 'envio com aprovação' : 'envio automático'}</Pill>}
                                     </td>
-                                    <td>
+                                    <td data-label="Situação">
                                         <Pill tone={r.ativa ? 'green' : 'gray'}>{r.ativa ? 'Ligada' : 'Desligada'}</Pill>
                                         {!r.simulada && <div className={styles.muted}>precisa simular</div>}
                                         {r.pendentes > 0 && <div><Pill tone="yellow">{r.pendentes} aguardando aprovação</Pill></div>}
                                     </td>
-                                    <td>{r.execucoes}<div className={styles.muted}>{r.ultima_execucao ? fmtDateTime(r.ultima_execucao) : 'nunca'}</div></td>
-                                    <td>
-                                        <div className={styles.btn_row}>
-                                            <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => openRule(r.id)}
+                                    <td data-label="Execuções">{r.execucoes}<div className={styles.muted}>{r.ultima_execucao ? fmtDateTime(r.ultima_execucao) : 'nunca'}</div></td>
+                                    <td className={styles.td_actions}>
+                                        <div className={styles.btn_row} style={{ gap: 4 }}>
+                                            <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_primary}`} onClick={() => openRule(r.id)}
                                                 aria-label={`Abrir o fluxo da regra ${r.nome}`}>Abrir</button>
                                             {canManage && (<>
-                                                <button type="button" className={styles.btn} onClick={() => simulate(r)}>Simular</button>
-                                                <button type="button" className={styles.btn} onClick={() => toggle(r)}>{r.ativa ? 'Desligar' : 'Ligar'}</button>
-                                                <button type="button" className={styles.btn} onClick={() => setEditing(r)}>Editar</button>
-                                                <button type="button" className={`${styles.btn} ${styles.btn_danger}`}
+                                                <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => toggle(r)}>{r.ativa ? 'Desligar' : 'Ligar'}</button>
+                                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} onClick={() => simulate(r)}>Simular</button>
+                                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} onClick={() => setEditing(r)}>Editar</button>
+                                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} style={{ color: 'var(--c-danger)' }}
                                                     onClick={() => window.confirm(`Excluir a regra "${r.nome}"?`) && act(() => rulesApi.remove(r.id), 'Regra excluída.')}>Excluir</button>
                                             </>)}
                                         </div>

@@ -206,3 +206,32 @@
     .btn_sm { min-height: 40px; }
 }
 .clamp3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* CAD-233: indicador nunca corta o valor ("R$ 21.60…"): a fonte acompanha a largura do cartão */
+.stat_card { container-type: inline-size; }
+.stat_card .card_value { font-size: clamp(1.05rem, 12cqi, 1.75rem) !important; }
+
+/* CAD-233: tabela que vira lista de cartões no celular (cada célula com o rótulo da coluna em data-label) */
+@media (max-width: 640px) {
+  .table_wrap:has(> .table_stack) { background: transparent; border: none; box-shadow: none; overflow: visible; }
+  .table_stack thead { display: none; }
+  .table_stack, .table_stack tbody, .table_stack tr, .table_stack td { display: block; width: 100%; }
+  .table_stack tr { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); padding: var(--sp-3) var(--sp-4);
+    margin-bottom: var(--sp-3); box-shadow: var(--shadow-sm); }
+  .table_stack tbody tr:hover { background: var(--c-surface); }
+  .table_stack td { border: none !important; padding: 4px 0 !important; }
+  .table_stack td[data-label]::before { content: attr(data-label); display: block; font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--c-subtle); margin-bottom: 2px; }
+  .table_stack td[colspan] { padding: 0 !important; }
+}
+.sr_only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* CAD-233: carregamento */
+.loading { display: grid; gap: 10px; padding: var(--sp-5); background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); }
+.skeleton { height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--c-surface-3) 0%, var(--c-surface-2) 50%, var(--c-surface-3) 100%);
+  background-size: 200% 100%; animation: shimmer 1.3s ease-in-out infinite; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+/* CAD-233: coluna de ações compacta (uma linha no computador; quebra no celular) */
+.td_actions { width: 1%; white-space: nowrap; }
+.td_actions > div { flex-wrap: nowrap; }
+@media (max-width: 640px) { .td_actions { width: auto; white-space: normal; } .td_actions > div { flex-wrap: wrap; } }

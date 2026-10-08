@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import { AREAS, AREA_LABEL, MIN_REASON, backofficeApi, buildStaffBody } from '../../services/backoffice';
 import useLoader from './useLoader';
 
@@ -128,7 +128,7 @@ export default function Equipe() {
                 actions={!creating && <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setCreating(true)}>Nova conta</button>} />
             {creating && <NovaConta onCancel={() => setCreating(false)} onDone={() => { setCreating(false); reload(); }} />}
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <div className={styles.table_wrap}>
                     <table className={styles.table}>

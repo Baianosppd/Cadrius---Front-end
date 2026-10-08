@@ -6,6 +6,7 @@ import styles from './BarraSup.module.css';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
 import ThemeToggle from './ThemeToggle';
+import BrandLogo from '../brand/BrandLogo';
 
 // Disparado quando o usuário lê notificações (atualiza o número do sino sem esperar o polling)
 // eslint-disable-next-line react-refresh/only-export-components
@@ -36,7 +37,7 @@ function BarraSup({ nome, onMenu, menuOpen }) {
                         <FiMenu size={22} />
                     </button>
                 )}
-                <span className={styles.brand_mobile}><img src="/favicon.svg" alt="" width="24" height="24" style={{ borderRadius: 6, verticalAlign: "-6px", marginRight: 6 }} />Cadrius</span>
+                <span className={styles.brand_mobile}><BrandLogo size={26} /></span>
             </div>
 
             <button type="button" className={styles.search_trigger} onClick={openPalette} aria-label="Buscar (Ctrl+K)" aria-keyshortcuts="Control+K Meta+K">

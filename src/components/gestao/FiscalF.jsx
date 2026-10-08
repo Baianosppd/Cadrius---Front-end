@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, StatusPill, errorMessage, fmtDate, fmtDateTime } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, StatusPill } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { NF_STATUS, OBLIGATION_STATUS, backofficeApi } from '../../services/backoffice';
 
@@ -84,7 +84,7 @@ export function Obrigacoes() {
         try { await backofficeApi.fiscalObligationUpdate(editing); toast.success('Obrigação atualizada.'); setEditing(null); reload(); } catch (err) { toast.error(errorMessage(err)); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.stack}>
             <Banner tone="info">Prazos-padrão a <strong>validar com o contador</strong> (mudam por norma e por município). Dia útil considera fins de semana e feriados nacionais. A equipe Fiscal recebe aviso 5 dias e 1 dia antes.</Banner>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, errorMessage } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, Loading, Pill } from '../seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../../pages/gestao/useLoader';
 import { brainApi } from '../../services/brain';
@@ -16,7 +16,7 @@ export default function PerfilEscritorio() {
         if (data) setForm({ areas: data.areas, tom: data.tom, publico: data.publico, cidade: data.cidade, assinatura: data.assinatura, redes: data.redes || {} });
     }, [data]);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data || !form) return <Empty>Carregando…</Empty>;
+    if (!data || !form) return <Loading />;
     const calc = data.calculado || {};
     const toggleArea = (id) => setForm((f) => ({ ...f, areas: f.areas.includes(id) ? f.areas.filter((a) => a !== id) : [...f.areas, id] }));
     const save = async (e) => {

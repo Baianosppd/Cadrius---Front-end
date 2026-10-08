@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, StatusPill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, StatusPill } from '../../components/seguranca/ui';
 import useLoader from '../gestao/useLoader';
 import useAuth from '../../hooks/useAuth';
 import { MinhasParametrizacoes, NovaParametrizacao } from '../../components/suporte/Parametrizacao';
@@ -31,7 +31,7 @@ function Chamado({ id, onBack }) {
         try { await fn(); if (ok) toast.success(ok); setText(''); reload(); } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.page}>
             <PageHeader title={`#${data.id} · ${data.subject}`} subtitle={`${data.category_label} · aberto em ${fmtDateTime(data.created_at)}`}
@@ -119,7 +119,7 @@ export default function Suporte() {
             {creating === 'param' && <NovaParametrizacao pageUrl={params.get('de') || ''} onCancel={() => setCreating(null)} onDone={opened} />}
             {!creating && <MinhasParametrizacoes canApprove={isOrgManager} onOpen={(id) => setParams({ chamado: id })} />}
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <div className={styles.table_wrap}>
                     <table className={styles.table}>

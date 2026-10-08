@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, StatusPill, fmtDate, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, fmtDate, fmtDateTime, Loading, PageHeader, Pill, StatusPill } from '../../components/seguranca/ui';
 import ActionModal from '../../components/gestao/ActionModal';
 import { SUB_STATE, backofficeApi, orgActionsFor } from '../../services/backoffice';
 import useLoader from './useLoader';
@@ -11,7 +11,7 @@ function Detalhe({ id, areas, onClose, onChanged }) {
     const { data, error, reload } = useLoader(() => backofficeApi.organization(id), [id]);
     const [action, setAction] = useState(null);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const run = async (body) => {
         await backofficeApi.orgAction(id, body);
         toast.success('Ação registrada.');
@@ -102,7 +102,7 @@ export default function Escritorios() {
             </form>
             {selected && <Detalhe id={selected} areas={areas} onClose={() => setSelected(null)} onChanged={reload} />}
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <div className={styles.table_wrap}>
                     <table className={styles.table}>

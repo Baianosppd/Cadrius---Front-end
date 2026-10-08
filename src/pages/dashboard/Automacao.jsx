@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import useAuth from '../../hooks/useAuth';
-import { errorMessage } from '../../components/seguranca/ui';
+import { errorMessage, Loading } from '../../components/seguranca/ui';
 import api from '../../services/api.js';
 import styles from './Automacao.module.css';
 
@@ -85,7 +85,7 @@ function Automacao() {
                 onSearchChange={setSearch}
                 onCreateClick={() => navigate('/editor')}
             />
-            {loading ? <p style={{ padding: 16 }}>Carregando…</p> : (
+            {loading ? <Loading /> : (
                 <AutomationList
                     workflows={workflows}
                     search={search}

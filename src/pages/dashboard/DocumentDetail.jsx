@@ -13,7 +13,7 @@ import {
 
 const TONES = {
     info: { background: 'var(--c-primary-50)', color: 'var(--c-primary-700)', border: '#bfdbfe' },
-    warn: { background: 'var(--c-warning-bg)', color: '#92400e', border: '#fde68a' },
+    warn: { background: 'var(--c-warning-bg)', color: 'var(--c-warning)', border: 'var(--c-warning-bd)' },
     success: { background: 'var(--c-success-bg)', color: 'var(--c-success)', border: '#bbf7d0' },
     danger: { background: 'var(--c-danger-bg)', color: 'var(--c-danger)', border: '#fecaca' },
 };

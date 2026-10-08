@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, ScoreBar, StatCard } from '../seguranca/ui';
+import { Banner, Empty, Loading, Pill, ScoreBar, StatCard } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { complianceApi } from '../../services/cad223';
 
@@ -10,7 +10,7 @@ const TONE = { alto: 'red', medio: 'yellow', baixo: 'gray' };
 export default function ConformidadeTab() {
     const { data, error } = useLoader(() => complianceApi.get(), []);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.stack}>
             <div className={styles.grid}>

@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { FiBell, FiCheckCircle, FiCopy, FiMic, FiPlus, FiWatch, FiZap } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import ui from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import useLoader from '../gestao/useLoader';
 import { DEVICE_GUIDES, NOTIFY_GUIDE, QUICK_TRIES, VOICE_COMMANDS, devicesApi } from '../../services/devices';
 import s from './RelogioVoz.module.css';
@@ -110,7 +110,7 @@ export default function RelogioVoz() {
                     <div id="meus-ap" className={ui.section_title} style={{ margin: 0 }}>Meus aparelhos</div>
                     {data?.pendentes > 0 && <Pill tone="yellow">{data.pendentes} envio(s) aguardando aprovação</Pill>}
                 </div>
-                {!data && <Empty>Carregando…</Empty>}
+                {!data && <Loading />}
                 {data && data.aparelhos.length === 0 && (
                     <Empty title="Nenhum aparelho ainda">Adicione o relógio ou o celular: leva 3 minutos e o passo a passo aparece na tela.</Empty>
                 )}

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiCheck, FiCopy, FiKey, FiLink, FiTrash2 } from 'react-icons/fi';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
 import { assistantApi, connectorSteps, pluginsApi } from '../../services/assistant';
 
 // Plugins (CAD-222): usar o Cadrius de dentro do Claude/ChatGPT (conector MCP) e a conta de IA do próprio escritório.
@@ -15,7 +15,7 @@ export default function Plugins() {
         <div className={styles.page}>
             <PageHeader title="Plugins" subtitle="Cadrius dentro do Claude e do ChatGPT" />
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Empty>Carregando…</Empty>}
+            {!data && !error && <Loading />}
             {data && (
                 <>
                     <Connector data={data} reload={load} />

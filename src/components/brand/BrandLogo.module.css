@@ -1,0 +1,12 @@
+/* CAD-233: logotipo do Cadrius */
+.logo { display: inline-flex; align-items: center; gap: calc(var(--logo-size) * .32); line-height: 1; color: var(--c-ink); min-width: 0; }
+.mark { flex-shrink: 0; display: block; border-radius: calc(var(--logo-size) * .23); box-shadow: 0 1px 2px rgba(10, 36, 99, .25); }
+.name {
+  font-family: var(--font-brand); font-weight: 700; font-size: calc(var(--logo-size) * .78); letter-spacing: -0.02em; color: inherit;
+  white-space: nowrap;
+}
+.light { color: #fff; }
+.badge {
+  font-family: var(--font-ui); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 3px 7px;
+  border-radius: 999px; background: color-mix(in srgb, currentColor 14%, transparent); color: inherit; opacity: .9;
+}

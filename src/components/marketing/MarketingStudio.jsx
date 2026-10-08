@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, StatCard, errorMessage, fmtDateTime } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill, StatCard } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { FiCalendar, FiChevronLeft, FiChevronRight, FiList } from 'react-icons/fi';
 import {
@@ -315,7 +315,7 @@ function Campanhas({ api, campaigns, reload }) {
 function Indicadores({ api }) {
     const { data, error } = useLoader(() => api.growth(), []);
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const max = Math.max(1, ...data.por_semana.map((w) => w.cadastros));
     return (
         <div className={styles.stack}>

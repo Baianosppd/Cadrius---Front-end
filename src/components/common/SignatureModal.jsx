@@ -5,6 +5,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { FiX, FiCheckCircle } from 'react-icons/fi';
 import styles from './SignatureModal.module.css';
+import BrandLogo from '../brand/BrandLogo';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -46,7 +47,7 @@ const SignatureModal = ({ doc, onClose }) => {
                     <>
                         <div className={styles.header}>
                             <div>
-                                <p className={styles.header_title}>Cadrius</p>
+                                <p className={styles.header_title}><BrandLogo size={22} /></p>
                                 <p className={styles.header_subtitle}>Assinatura Digital</p>
                             </div>
                             <button className={styles.close_button} onClick={onClose}>

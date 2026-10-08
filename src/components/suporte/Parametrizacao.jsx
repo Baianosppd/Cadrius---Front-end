@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, StatusPill, errorMessage, fmtDate, fmtDateTime } from '../seguranca/ui';
+import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, StatusPill } from '../seguranca/ui';
 import useLoader from '../../pages/gestao/useLoader';
 import { STAGES, brl, customizationApi } from '../../services/cad223';
 
@@ -57,7 +57,7 @@ export function MinhasParametrizacoes({ canApprove, onOpen }) {
         try { await customizationApi.decide(r.id, d); toast.success(d === 'aprovar' ? 'Proposta aprovada.' : 'Pedido cancelado.'); reload(); } catch (e) { toast.error(errorMessage(e)); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     if (data.resultados.length === 0) return null;
     return (
         <div className={styles.stack}>

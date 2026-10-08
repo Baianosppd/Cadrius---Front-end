@@ -4,6 +4,7 @@ import api from '../../services/api.js';
 import ui from '../../components/seguranca/seguranca.module.css';
 import styles from './Notificacoes.module.css';
 import { NOTIFICATIONS_CHANGED } from '../../components/common/BarraSup.jsx';
+import { Empty, Loading } from '../../components/seguranca/ui';
 
 import PageHeader from '../../components/ui/PageHearder.jsx';
 import NotificationList from '../../components/ui/NotificationList.jsx';
@@ -47,7 +48,7 @@ function Notificacoes() {
                 <>
                     <PageHeader title="Notificações"
                         actions={notifications.some((n) => !n.read) && <button type="button" className={ui.btn} onClick={markAll}>Marcar todas como lidas</button>} />
-                    {loading ? <p className={ui.muted}>Carregando…</p> : notifications.length === 0 ? <div className={ui.empty}>Nenhuma notificação por enquanto.</div> : (
+                    {loading ? <Loading /> : notifications.length === 0 ? <Empty title="Tudo em dia">Avisos de prazos, publicações e automações aparecem aqui.</Empty> : (
                         <NotificationList notifications={notifications} onSelect={open} />
                     )}
                 </>

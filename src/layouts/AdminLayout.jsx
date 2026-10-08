@@ -3,12 +3,13 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { FiActivity, FiArrowLeft, FiChevronDown, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import { AREA_LABEL, backofficeApi } from '../services/backoffice';
-import { errorMessage } from '../components/seguranca/ui';
+import { Loading, errorMessage } from '../components/seguranca/ui';
 import ConsentModal from '../components/seguranca/ConsentModal';
 import MfaSetup from '../components/seguranca/MfaSetup';
 import styles from './AdminLayout.module.css';
 import { visibleSections } from './adminMenu';
 import ThemeToggle from '../components/common/ThemeToggle';
+import BrandLogo from '../components/brand/BrandLogo';
 
 const OPEN_KEY = 'cadrius.gestao.menu.open';
 const readOpen = () => { try { return JSON.parse(localStorage.getItem(OPEN_KEY) || '[]'); } catch { return []; } };
@@ -80,7 +81,7 @@ export default function AdminLayout() {
     return (
         <div className={styles.layout}>
             <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebar_open : ''}`} id="menu-gestao">
-                <div className={styles.brand}><span className={styles.brand_name}><img src="/favicon.svg" alt="" width="24" height="24" /> Gestão Cadrius</span>
+                <div className={styles.brand}><BrandLogo size={28} tone="light" badge="Gestão" />
                     {menuOpen && <button type="button" className={styles.close_btn} onClick={() => setMenuOpen(false)} aria-label="Fechar menu"><FiX /></button>}
                 </div>
                 <div className={styles.brand_sub}>Área interna da equipe Cadrius</div>
@@ -98,6 +99,7 @@ export default function AdminLayout() {
                 <div className={styles.topbar}>
                     <button type="button" className={styles.menu_btn} onClick={() => setMenuOpen(true)} aria-label="Abrir menu"
                         aria-expanded={menuOpen} aria-controls="menu-gestao"><FiMenu /></button>
+                    <span className={styles.topbar_brand}><BrandLogo size={24} badge="Gestão" /></span>
                     <span className={styles.topbar_note}><FiActivity /> Ambiente administrativo: toda ação fica registrada na trilha de auditoria.</span>
                     <span className={styles.topbar_right}><ThemeToggle /><span className={styles.topbar_email}>{user?.email}</span></span>
                 </div>
@@ -114,7 +116,7 @@ export default function AdminLayout() {
                                 onClick={async () => { await logout(); navigate('/', { replace: true }); }}>Sair e entrar de novo</button>
                         </div>
                     )}
-                    {!me.error && !me.data && !me.mfa && <div className={styles.denied}>Carregando…</div>}
+                    {!me.error && !me.data && !me.mfa && <div className={styles.page_inner}><Loading lines={4} /></div>}
                     {me.data && <div className={styles.page_inner}><Outlet context={{ areas }} /></div>}
                 </main>
             </div>

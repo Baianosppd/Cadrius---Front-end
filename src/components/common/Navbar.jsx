@@ -5,6 +5,7 @@ import styles from './Navbar.module.css';
 import useAuth from '../../hooks/useAuth';
 import { HELP_ITEM, STAFF_ITEM, visibleMenu } from '../../layouts/appMenu';
 import EnvBadge from './EnvBadge';
+import BrandLogo from '../brand/BrandLogo';
 
 function Item({ item, active, to, onNavigate }) {
     const Icon = item.icon;
@@ -61,8 +62,7 @@ function Navbar({ onNavigate, onClose }) {
     return (
         <nav className={styles.sidebar} aria-label="Menu principal">
             <div className={styles.logo_container}>
-                <Link to="/dashboard" className={styles.sidebar_title} onClick={onNavigate}>
-                    <img src="/favicon.svg" alt="" width="26" height="26" className={styles.brand_mark} />Cadrius</Link>
+                <Link to="/dashboard" className={styles.sidebar_title} onClick={onNavigate} aria-label="Cadrius, ir para o painel"><BrandLogo size={30} /></Link>
                 <EnvBadge />
                 {onClose && <button type="button" className={styles.close_btn} onClick={onClose} aria-label="Fechar menu"><FiX /></button>}
             </div>

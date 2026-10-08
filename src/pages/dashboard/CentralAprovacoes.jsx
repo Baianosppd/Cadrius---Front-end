@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, errorMessage } from '../../components/seguranca/ui';
+import { Banner, Empty, errorMessage, Loading, Pill } from '../../components/seguranca/ui';
 import useAuth from '../../hooks/useAuth';
 import PerfilEscritorio from '../../components/ia/PerfilEscritorio';
 import Aprendizado from '../../components/ia/Aprendizado';
@@ -28,11 +28,11 @@ function Aprovacoes() {
         try { await brainApi.decideProposal(id, decision); toast.success('Decisão registrada.'); reload(); } catch (e) { toast.error(errorMessage(e)); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const nothing = !data.document_reviews.length && !data.rules_proposed.length && !data.autonomy_proposals.length && !data.automation_executions_pending;
     return (
         <div className={styles.page}>
-            {nothing && <Empty>Nada aguardando decisão.</Empty>}
+            {nothing && <Empty title="Nada esperando você">Quando a IA preparar algo que precisa da sua decisão, aparece aqui.</Empty>}
 
             {data.document_reviews.length > 0 && (
                 <section>
@@ -103,7 +103,7 @@ function Autonomia() {
         try { await brainApi.setAutonomy(kind, mode); toast.success('Autonomia atualizada.'); reload(); } catch (e) { toast.error(errorMessage(e)); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.page}>
             {role !== 'OWNER' && <p className={styles.muted}>Só o dono do escritório altera estes níveis.</p>}
@@ -145,7 +145,7 @@ function Regras() {
         try { await brainApi.decideRule(id, decision); reload(); } catch (e) { toast.error(errorMessage(e)); }
     };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     const LABEL = { proposed: ['Proposta', 'yellow'], active: ['Ativa', 'green'], disabled: ['Desligada', 'gray'] };
     return (
         <div className={styles.page}>
@@ -186,7 +186,7 @@ function Memoria() {
     };
     const search = async (e) => { e.preventDefault(); try { setFound(await brainApi.searchMemory(query)); } catch (err) { toast.error(errorMessage(err)); } };
     if (error) return <Banner tone="error">{error}</Banner>;
-    if (!data) return <Empty>Carregando…</Empty>;
+    if (!data) return <Loading />;
     return (
         <div className={styles.page}>
             <form onSubmit={search} style={{ display: 'flex', gap: 8 }}>
