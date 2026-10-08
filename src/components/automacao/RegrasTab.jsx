@@ -100,10 +100,6 @@ export default function RegrasTab({ canManage }) {
             {canManage && <FaleSobreProcessoCta onOpen={() => setFale(true)} />}
             {fale && <FaleSobreProcesso onClose={() => { setFale(false); reload(); }} />}
             <SugestoesIA canManage={canManage} onAccepted={(id) => { reload(); if (id) openRule(id); }} />
-            <Banner tone="info">
-                Regras do escritório reagem a eventos do Cadrius (documento confirmado, andamento novo, prazo chegando, contato novo, agenda).
-                Toda regra nasce desligada, só liga depois de simulada, e mensagens para clientes esperam aprovação.
-            </Banner>
             {canManage && (
                 <div className={styles.btn_row} style={{ margin: '12px 0' }}>
                     <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setShowTemplates((v) => !v)}>Usar um modelo pronto</button>

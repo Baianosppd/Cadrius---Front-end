@@ -111,7 +111,6 @@ function Confirmacoes() {
     if (!items) return <Empty>Carregando…</Empty>;
     return (
         <div className={styles.page}>
-            <Banner tone="info">Ações disparadas por automações criadas pela IA só são executadas depois da sua confirmação (humano no circuito).</Banner>
             {items.length === 0 ? <Empty>Nenhuma execução aguardando confirmação.</Empty> : (
                 <div className={styles.table_wrap}>
                     <table className={styles.table}>

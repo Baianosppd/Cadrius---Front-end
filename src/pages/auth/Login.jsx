@@ -24,7 +24,7 @@ function Login() {
     // e-mail trazido pelo seletor de ambiente (?email=), nunca a senha
     const [username, setUsername] = useState(() => new URLSearchParams(window.location.search).get('email') || '');
     const [password, setPassword] = useState('');
-    const [lembrar, setLembrar] = useState(false);
+    const [lembrar, setLembrar] = useState(true);
     const [error, setError] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
 
@@ -39,7 +39,7 @@ function Login() {
         e.preventDefault();
         setError(null);
         try {
-            const { mfaToken: challenge, user: me } = await login(username, password);
+            const { mfaToken: challenge, user: me } = await login(username, password, lembrar);
             if (challenge) {
                 setMfaToken(challenge);
                 return;

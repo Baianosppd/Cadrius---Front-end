@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { FiFilter, FiPlay, FiPower, FiZap, FiCheckSquare, FiX } from 'react-icons/fi';
+import { FiPlay, FiPower, FiX } from 'react-icons/fi';
 import ui from '../seguranca/seguranca.module.css';
 import { Banner, Pill, errorMessage } from '../seguranca/ui';
 import { rulesApi } from '../../services/rules';
 import s from './RuleFlowView.module.css';
 import ShortcutPanel from './ShortcutPanel';
+import RuleCanvas from './RuleCanvas';
 
 const RUN_TONE = { success: 'green', partial: 'yellow', failed: 'red', skipped: 'gray', pending_approval: 'yellow', rejected: 'gray', expired: 'gray', scheduled: 'blue', running: 'blue' };
 const fmt = (d) => (d ? new Date(d).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '—');
@@ -52,6 +53,21 @@ export default function RuleFlowView({ ruleId, catalog, canManage, onClose, onEd
         catch (err) { toast.error(errorMessage(err)); }
     };
 
+    const statusTone = (st) => (st === 'feito' ? 'green' : st === 'falhou' ? 'red' : 'yellow');
+    const steps = !rule ? [] : [
+        { kind: 'trigger', title: 'Quando', label: labelTrigger,
+            details: Object.keys(rule.gatilho_config || {}).length ? [Object.entries(rule.gatilho_config).map(([k, v]) => `${k}: ${v}`).join(' · ')] : [] },
+        ...((rule.condicoes || []).length ? [{
+            kind: 'condition', title: 'Se',
+            details: rule.condicoes.map((c) => `${c.field} ${labelOp(c.op)} ${Array.isArray(c.value) ? c.value.join(', ') : (c.value ?? '')}`),
+            pill: sim ? { tone: sim.condicoes_atendidas ? 'green' : 'gray', text: sim.condicoes_atendidas ? 'atendidas na simulação' : 'não atendidas' } : null,
+        }] : []),
+        ...(rule.acoes || []).map((a, i) => ({
+            kind: 'action', title: `Faça ${i + 1}`, label: labelAction(a.type), details: [describeParams(a.params)].filter(Boolean),
+            status: stepStatus(i), pill: stepStatus(i) ? { tone: statusTone(stepStatus(i)), text: stepStatus(i) } : null,
+        })),
+    ];
+
     if (error && !rule) return <Banner tone="error">{error}</Banner>;
     if (!rule) return <p className={ui.muted}>Carregando o fluxo…</p>;
     const live = rule.ativa;
@@ -73,34 +89,7 @@ export default function RuleFlowView({ ruleId, catalog, canManage, onClose, onEd
                 </div>
             </div>
 
-            <div className={s.flow} role="list" aria-label="Etapas da regra" style={{ marginTop: 12 }}>
-                <div className={`${s.node} ${s.trigger}`} role="listitem">
-                    <span className={s.kind}><FiZap aria-hidden="true" /> Quando</span>
-                    <span className={s.label}>{labelTrigger}</span>
-                    {Object.keys(rule.gatilho_config || {}).length > 0 && <span className={s.detail}>{Object.entries(rule.gatilho_config).map(([k, v]) => `${k}: ${v}`).join(' · ')}</span>}
-                </div>
-                {(rule.condicoes || []).length > 0 && (
-                    <>
-                        <div className={`${s.arrow} ${live ? s.arrow_live : ''}`} aria-hidden="true" />
-                        <div className={`${s.node} ${s.condition}`} role="listitem">
-                            <span className={s.kind}><FiFilter aria-hidden="true" /> Se</span>
-                            {rule.condicoes.map((c, i) => <span key={i} className={s.detail}>{c.field} {labelOp(c.op)} {Array.isArray(c.value) ? c.value.join(', ') : (c.value ?? '')}</span>)}
-                            {sim && <Pill tone={sim.condicoes_atendidas ? 'green' : 'gray'}>{sim.condicoes_atendidas ? 'atendidas na simulação' : 'não atendidas na simulação'}</Pill>}
-                        </div>
-                    </>
-                )}
-                {(rule.acoes || []).map((a, i) => (
-                    <div key={i} style={{ display: 'contents' }}>
-                        <div className={`${s.arrow} ${live ? s.arrow_live : ''}`} aria-hidden="true" />
-                        <div className={`${s.node} ${s.action} ${stepStatus(i) ? s[`st_${stepStatus(i)}`] || '' : ''}`} role="listitem">
-                            <span className={s.kind}><FiCheckSquare aria-hidden="true" /> Faça {i + 1}</span>
-                            <span className={s.label}>{labelAction(a.type)}</span>
-                            <span className={s.detail}>{describeParams(a.params)}</span>
-                            {stepStatus(i) && <Pill tone={stepStatus(i) === 'feito' ? 'green' : stepStatus(i) === 'falhou' ? 'red' : 'yellow'}>{stepStatus(i)}</Pill>}
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <RuleCanvas live={live} steps={steps} />
 
             {rule.gatilho === 'shortcut' && <ShortcutPanel rule={rule} canManage={canManage} />}
 

@@ -31,11 +31,7 @@ export function Captacao({ canWrite }) {
     };
     return (
         <div className={styles.stack}>
-            <Banner tone="info">
-                Cada envio vira <strong>contato</strong> (origem "formulário") e <strong>oportunidade</strong> no funil, e dispara o gatilho
-                "Contato pelo formulário de captação". O visitante precisa concordar com o uso dos dados (LGPD); WhatsApp e e-mail só ficam
-                autorizados se ele marcar. Mantenha o texto informativo (Provimento OAB 205/2021).
-            </Banner>
+            <p className={styles.muted} style={{ margin: 0 }}>Cada envio vira contato e oportunidade no funil, com o consentimento do visitante.</p>
             {canWrite && (
                 <form className={styles.card} onSubmit={create}>
                     <div className={styles.section_title}>Novo formulário</div>

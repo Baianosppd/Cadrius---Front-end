@@ -74,8 +74,7 @@ function ActionFields({ action, onChange, trigger, vars, catalog }) {
                 {text('assunto', 'Assunto (se for por e-mail)', { max: 150 })}
                 {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
                 {p.canal !== 'whatsapp' && <EmailVisualField value={p.visual} onChange={(v) => set('visual', v)} assunto={p.assunto} mensagem={p.mensagem} />}
-                <p className={styles.muted}>Só envia por canal que o cliente autorizou (LGPD). Fora do horário comercial (8h às 20h, segunda a sábado)
-                    o envio fica agendado para o próximo horário permitido.</p>
+                <p className={styles.muted}>Fora do horário comercial, o envio sai no próximo horário permitido.</p>
             </>);
         case 'send_survey':
             return (<>
@@ -102,7 +101,7 @@ function ActionFields({ action, onChange, trigger, vars, catalog }) {
                 {action.type === 'send_email' && text('assunto', 'Assunto', { max: 150 })}
                 {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
                 {action.type === 'send_email' && <EmailVisualField value={p.visual} onChange={(v) => set('visual', v)} assunto={p.assunto} mensagem={p.mensagem} />}
-                <p className={styles.muted}>Só envia a quem autorizou este canal no cadastro do contato (LGPD).</p>
+                <p className={styles.muted}>Só para quem autorizou este canal.</p>
             </>);
         case 'team_chat':
             return (<>

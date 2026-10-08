@@ -32,7 +32,6 @@ function Aprovacoes() {
     const nothing = !data.document_reviews.length && !data.rules_proposed.length && !data.autonomy_proposals.length && !data.automation_executions_pending;
     return (
         <div className={styles.page}>
-            <Banner tone="info">Aqui ficam as decisões que a IA preparou e dependem de você. Nada importante acontece sem a sua aprovação.</Banner>
             {nothing && <Empty>Nada aguardando decisão.</Empty>}
 
             {data.document_reviews.length > 0 && (
@@ -107,8 +106,7 @@ function Autonomia() {
     if (!data) return <Empty>Carregando…</Empty>;
     return (
         <div className={styles.page}>
-            <Banner tone="info">Defina o quanto a IA pode fazer sozinha em cada tipo de ação. Ações de alto impacto (R4) <strong>sempre</strong> dependem do advogado e não podem ser automatizadas.
-                {role !== 'OWNER' && ' Apenas o dono do escritório altera estes níveis.'}</Banner>
+            {role !== 'OWNER' && <p className={styles.muted}>Só o dono do escritório altera estes níveis.</p>}
             <div className={styles.table_wrap}>
                 <table className={styles.table}>
                     <thead><tr><th>Ação</th><th>Risco</th><th>Nível</th><th>Últimos 60 dias</th><th>Rumo à autonomia</th></tr></thead>
@@ -151,10 +149,6 @@ function Regras() {
     const LABEL = { proposed: ['Proposta', 'yellow'], active: ['Ativa', 'green'], disabled: ['Desligada', 'gray'] };
     return (
         <div className={styles.page}>
-            <Banner tone="info">
-                Regras aprendidas com o trabalho da equipe: correções repetidas na leitura de documentos e trocas de termos que vocês
-                sempre fazem nas minutas e posts (vocabulário do escritório). Só valem depois de aprovadas e podem ser desligadas quando quiser.
-            </Banner>
             {data.length === 0 && <Empty>Ainda não há regras. Elas aparecem quando a mesma correção ou troca de termo se repete.</Empty>}
             {data.map((r) => (
                 <div key={r.id} style={{ ...card, display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -195,7 +189,6 @@ function Memoria() {
     if (!data) return <Empty>Carregando…</Empty>;
     return (
         <div className={styles.page}>
-            <Banner tone="info">A memória é só do seu escritório (cifrada e isolada). Modelos de peça e leituras aprovadas ajudam a IA a seguir o seu estilo — sem treinar modelos de terceiros.</Banner>
             <form onSubmit={search} style={{ display: 'flex', gap: 8 }}>
                 <input style={{ flex: 1, padding: 8, border: '1px solid var(--c-border-2)', borderRadius: 6 }} placeholder="Buscar na memória (ex.: contestação horas extras)" value={query} onChange={(e) => setQuery(e.target.value)} />
                 <button type="submit">Buscar</button>

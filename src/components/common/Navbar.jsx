@@ -61,7 +61,8 @@ function Navbar({ onNavigate, onClose }) {
     return (
         <nav className={styles.sidebar} aria-label="Menu principal">
             <div className={styles.logo_container}>
-                <Link to="/dashboard" className={styles.sidebar_title} onClick={onNavigate}>Cadrius</Link>
+                <Link to="/dashboard" className={styles.sidebar_title} onClick={onNavigate}>
+                    <img src="/favicon.svg" alt="" width="26" height="26" className={styles.brand_mark} />Cadrius</Link>
                 <EnvBadge />
                 {onClose && <button type="button" className={styles.close_btn} onClick={onClose} aria-label="Fechar menu"><FiX /></button>}
             </div>

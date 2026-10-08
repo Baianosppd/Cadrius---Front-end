@@ -35,17 +35,25 @@ api.interceptors.request.use((config) => {
 // (com ROTATE_REFRESH_TOKENS/blacklist, usar o mesmo refresh duas vezes derrubaria a sessão).
 let refreshPromise = null;
 
+// CAD-232: o refresh token agora é renovado a cada uso (sessão de 30 dias com "Manter conectado"). Com várias abas
+// abertas, duas abas renovando juntas derrubariam a sessão: a trava do navegador (Web Locks) deixa uma de cada vez, e
+// quem chega depois aproveita o token que a outra aba acabou de gravar.
+async function doRefresh(usedRefresh) {
+    const current = localStorage.getItem('refresh_token');
+    if (!current) throw new Error('Refresh token não encontrado');
+    if (current !== usedRefresh && localStorage.getItem('access_token')) return localStorage.getItem('access_token');
+    const res = await axios.post(`${BASE_URL}auth/token/refresh/`, { refresh: current });
+    localStorage.setItem('access_token', res.data.access);
+    if (res.data.refresh) localStorage.setItem('refresh_token', res.data.refresh);
+    return res.data.access;
+}
+
 function refreshAccessToken() {
     if (!refreshPromise) {
-        const refresh = localStorage.getItem('refresh_token');
-        if (!refresh) return Promise.reject(new Error('Refresh token não encontrado'));
-        refreshPromise = axios
-            .post(`${BASE_URL}auth/token/refresh/`, { refresh })
-            .then((res) => {
-                localStorage.setItem('access_token', res.data.access);
-                if (res.data.refresh) localStorage.setItem('refresh_token', res.data.refresh);
-                return res.data.access;
-            })
+        const usedRefresh = localStorage.getItem('refresh_token');
+        if (!usedRefresh) return Promise.reject(new Error('Refresh token não encontrado'));
+        const run = () => doRefresh(usedRefresh);
+        refreshPromise = (navigator.locks?.request ? navigator.locks.request('cadrius-refresh', run) : run())
             .finally(() => { refreshPromise = null; });
     }
     return refreshPromise;

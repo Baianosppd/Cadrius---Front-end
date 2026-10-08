@@ -1,14 +1,60 @@
 import { useEffect, useState } from 'react';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { FiActivity, FiArrowLeft, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { FiActivity, FiArrowLeft, FiChevronDown, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import { AREA_LABEL, backofficeApi } from '../services/backoffice';
 import { errorMessage } from '../components/seguranca/ui';
 import ConsentModal from '../components/seguranca/ConsentModal';
 import MfaSetup from '../components/seguranca/MfaSetup';
 import styles from './AdminLayout.module.css';
-import { visibleMenu } from './adminMenu';
+import { visibleSections } from './adminMenu';
 import ThemeToggle from '../components/common/ThemeToggle';
+
+const OPEN_KEY = 'cadrius.gestao.menu.open';
+const readOpen = () => { try { return JSON.parse(localStorage.getItem(OPEN_KEY) || '[]'); } catch { return []; } };
+
+function MenuLink({ item, onNavigate }) {
+    return (
+        <NavLink to={item.to} end={item.end} onClick={onNavigate} className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>
+            <item.icon aria-hidden="true" /> {item.label}
+        </NavLink>
+    );
+}
+
+// CAD-232: menu da Gestão em grupos recolhíveis (como o do escritório); o grupo da tela atual abre sozinho
+function AdminMenu({ areas, onNavigate }) {
+    const { pathname } = useLocation();
+    const [open, setOpen] = useState(readOpen);
+    const toggle = (name) => setOpen((prev) => {
+        const next = prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name];
+        try { localStorage.setItem(OPEN_KEY, JSON.stringify(next)); } catch { /* preferência só deste navegador */ }
+        return next;
+    });
+    const isActive = (item) => (item.end ? pathname === item.to : pathname === item.to || pathname.startsWith(`${item.to}/`));
+    return visibleSections(areas).map((s) => {
+        if (!s.collapsible) {
+            return (
+                <div key={s.section} className={styles.group}>
+                    {!s.single && <div className={styles.group_label}>{s.section}</div>}
+                    {s.items.map((item) => <MenuLink key={item.to} item={item} onNavigate={onNavigate} />)}
+                </div>
+            );
+        }
+        const hasActive = s.items.some(isActive);
+        const expanded = hasActive || open.includes(s.section);
+        const id = `gestao-${s.section.toLowerCase().replace(/\W+/g, '-')}`;
+        return (
+            <div key={s.section} className={styles.group}>
+                <button type="button" className={`${styles.group_btn} ${hasActive ? styles.group_active : ''}`} aria-expanded={expanded}
+                    aria-controls={id} onClick={() => toggle(s.section)}>
+                    <s.icon aria-hidden="true" /> <span>{s.section}</span>
+                    <FiChevronDown className={`${styles.chevron} ${expanded ? styles.chevron_open : ''}`} aria-hidden="true" />
+                </button>
+                {expanded && <div id={id} className={styles.sub}>{s.items.map((item) => <MenuLink key={item.to} item={item} onNavigate={onNavigate} />)}</div>}
+            </div>
+        );
+    });
+}
 
 export default function AdminLayout() {
     const { user, logout } = useAuth();
@@ -34,16 +80,12 @@ export default function AdminLayout() {
     return (
         <div className={styles.layout}>
             <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebar_open : ''}`} id="menu-gestao">
-                <div className={styles.brand}>Gestão Cadrius
+                <div className={styles.brand}><span className={styles.brand_name}><img src="/favicon.svg" alt="" width="24" height="24" /> Gestão Cadrius</span>
                     {menuOpen && <button type="button" className={styles.close_btn} onClick={() => setMenuOpen(false)} aria-label="Fechar menu"><FiX /></button>}
                 </div>
                 <div className={styles.brand_sub}>Área interna da equipe Cadrius</div>
                 <div className={styles.areas}>{areas.map((a) => <span key={a} className={styles.area}>{AREA_LABEL[a] || a}</span>)}</div>
-                {visibleMenu(areas).map((item) => (
-                    <NavLink key={item.to} to={item.to} end={item.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>
-                        <item.icon /> {item.label}
-                    </NavLink>
-                ))}
+                <nav className={styles.nav} aria-label="Menu da Gestão"><AdminMenu areas={areas} onNavigate={() => setMenuOpen(false)} /></nav>
                 <div className={styles.spacer} />
                 <Link to="/dashboard" className={styles.footer_btn}><FiArrowLeft /> Voltar ao app</Link>
                 <button type="button" className={styles.footer_btn} onClick={async () => { await logout(); navigate('/', { replace: true }); }}>

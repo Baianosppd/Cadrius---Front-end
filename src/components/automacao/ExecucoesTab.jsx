@@ -28,7 +28,7 @@ export default function ExecucoesTab({ pendentes, canApprove, onChange }) {
     if (data.length === 0) return <Empty>{pendentes ? 'Nada aguardando aprovação.' : 'Nenhuma execução ainda.'}</Empty>;
     return (
         <div>
-            {pendentes && <Banner tone="info">Confira o texto e o destinatário. Aprovações expiram em 7 dias. O consentimento é conferido de novo na hora do envio.</Banner>}
+            {pendentes && <Banner tone="info">Aprovações expiram em 7 dias.</Banner>}
             {data.map((run) => {
                 const [label, tone] = RUN_STATUS[run.status] || [run.status, 'gray'];
                 return (

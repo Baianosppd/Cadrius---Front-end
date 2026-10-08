@@ -55,7 +55,7 @@ function NovaMinuta({ templates, initial, onCreated, onCancel }) {
                     )}
                 </div>
                 <label className={styles.check_row}><input type="checkbox" checked={form.usar_ia} onChange={(e) => setForm({ ...form, usar_ia: e.target.checked })} disabled={!form.fonte} />
-                    Melhorar com IA (usa créditos; o texto da fonte vai mascarado e só ficam citações que existem na fonte)</label>
+                    Melhorar com IA</label>
                 <div className={styles.btn_row}>
                     <button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy || !form.modelo}>{busy ? 'Gerando…' : 'Gerar rascunho'}</button>
                     <button type="button" className={styles.btn} onClick={onCancel}>Cancelar</button>

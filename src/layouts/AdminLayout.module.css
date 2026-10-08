@@ -36,3 +36,21 @@
 
 .topbar_right { display: inline-flex; align-items: center; gap: var(--sp-2); min-width: 0; }
 .topbar { color: var(--c-muted); }
+
+/* CAD-232: grupos recolhíveis */
+.brand_name { display: inline-flex; align-items: center; gap: 8px; }
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px; }
+.group_label { font-size: .68rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .08em; padding: 8px 10px 4px; }
+.group_btn {
+  display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; color: #cbd5e1; background: none; border: none;
+  font: inherit; font-size: .9rem; cursor: pointer; text-align: left; width: 100%;
+}
+.group_btn:hover { background: #1e293b; color: #fff; }
+.group_btn span { flex: 1; }
+.group_active { color: #fff; font-weight: 600; }
+.chevron { transition: transform .15s; opacity: .7; }
+.chevron_open { transform: rotate(180deg); }
+.sub { display: flex; flex-direction: column; gap: 2px; margin-left: 17px; padding-left: 8px; border-left: 1px solid #1e293b; }
+.sub .link { font-size: .87rem; padding: 7px 10px; }
+@media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }
