@@ -53,7 +53,7 @@ function ResetPassword() {
                     <FiAlertTriangle aria-hidden="true" />
                     <span>Este link de redefinição não vale mais. Os links duram 1 hora e só podem ser usados uma vez. Peça um novo.</span>
                 </div>
-                <Button type="button" onClick={() => navigate('/esqueceu-a-senha')}>Pedir novo link</Button>
+                <Button variant="primary" size="lg" block onClick={() => navigate('/esqueceu-a-senha')}>Pedir novo link</Button>
             </AuthShell>
         );
     }
@@ -75,7 +75,7 @@ function ResetPassword() {
                 {confirm && <p className={`${s.match} ${confirm === password ? s.check_ok : s.error}`} aria-live="polite">
                     {confirm === password ? '✓ As senhas conferem' : 'As senhas ainda não conferem'}</p>}
                 {error && <p role="alert" className={s.error}>{error}</p>}
-                <Button type="submit" disabled={loading}>{loading ? 'Salvando…' : 'Salvar nova senha'}</Button>
+                <Button type="submit" variant="primary" size="lg" block loading={loading} loadingLabel="Salvando…">Salvar nova senha</Button>
             </form>
         </AuthShell>
     );

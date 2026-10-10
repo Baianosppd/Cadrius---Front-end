@@ -83,7 +83,7 @@ export default function ForcePasswordChange() {
                         {matches ? '✓ As senhas conferem' : 'As senhas ainda não conferem'}</p>
                 )}
                 {error && <p role="alert" className={s.error}>{error}</p>}
-                <Button type="submit" disabled={loading || !current || !allOk || !matches}>{loading ? 'Salvando…' : 'Salvar nova senha e entrar'}</Button>
+                <Button type="submit" variant="primary" size="lg" block disabled={!current || !allOk || !matches} loading={loading} loadingLabel="Salvando…">Salvar nova senha e entrar</Button>
                 <p className={s.tip}>Dica: um gerenciador de senhas (do navegador ou do celular) cria e guarda uma senha forte para você.</p>
             </form>
         </AuthShell>

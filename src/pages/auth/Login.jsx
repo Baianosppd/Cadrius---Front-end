@@ -140,7 +140,7 @@ function Login() {
                                 <Input type="text" inputMode="numeric" autoComplete="one-time-code" autoFocus placeholder="123456"
                                     value={mfaCode} onChange={(e) => { setMfaCode(e.target.value); setError(null); }} />
                             </FormGroup>
-                            <Button type="submit">Verificar</Button>
+                            <Button type="submit" variant="primary" size="lg" block>Verificar</Button>
                             <button type="button" className={styles.forgot_link} style={{ background: 'none', border: 'none', marginTop: 12, cursor: 'pointer' }}
                                 onClick={() => { setMfaToken(null); setMfaCode(''); setError(null); }}>Voltar</button>
                             {error && <div className={styles.credentials_invalid}>{error}</div>}
@@ -199,7 +199,7 @@ function Login() {
                             </Link>
                         </div>
 
-                        <Button type="submit">Entrar</Button>
+                        <Button type="submit" variant="primary" size="lg" block>Entrar</Button>
 
                         {error && (
                             <div className={styles.credentials_invalid}>

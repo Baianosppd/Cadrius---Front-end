@@ -54,7 +54,7 @@ function Remember() {
                             onChange={(e) => { setEmail(e.target.value); setError(null); }} />
                     </FormGroup>
                     {error && <p role="alert" className={s.error}>{error}</p>}
-                    <Button type="submit" disabled={loading}>{loading ? 'Enviando…' : 'Enviar link'}</Button>
+                    <Button type="submit" variant="primary" size="lg" block loading={loading} loadingLabel="Enviando…">Enviar link</Button>
                 </form>
             )}
         </AuthShell>

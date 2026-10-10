@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../ui/ui.module.css';
-import { Banner, FormModal, Modal, MoneyInput } from '../ui';
+import { Banner, Button, FormModal, Modal, MoneyInput } from '../ui';
 import useSubmit from '../../hooks/useSubmit';
 import { integrationsApi } from '../../services/integrations';
 
@@ -24,10 +24,10 @@ export default function CobrancaModal({ contact, onClose }) {
     // Depois de gerar: mesma janela, agora só com o resultado
     if (result) return (
         <Modal title={title} onClose={onClose}
-            footer={<button type="button" className={styles.btn} onClick={onClose}>Fechar</button>}>
+            footer={<Button onClick={onClose}>Fechar</Button>}>
             <Banner tone="ok">Cobrança criada no Asaas ({result.status}). Ela já aparece em <Link to="/financas">Finanças → A receber</Link> e recebe baixa sozinha quando o webhook estiver configurado.</Banner>
-            {result.link && <a className={`${styles.btn} ${styles.btn_primary}`} href={result.link} target="_blank" rel="noreferrer noopener">Abrir fatura para enviar ao cliente</a>}
-            {result.boleto && <a className={styles.btn} href={result.boleto} target="_blank" rel="noreferrer noopener">Boleto (PDF)</a>}
+            {result.link && <Button as="a" variant="primary" href={result.link} target="_blank" rel="noreferrer noopener">Abrir fatura para enviar ao cliente</Button>}
+            {result.boleto && <Button as="a" href={result.boleto} target="_blank" rel="noreferrer noopener">Boleto (PDF)</Button>}
         </Modal>
     );
 
