@@ -1,6 +1,6 @@
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Pill, fmtDate } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, Pill, fmtDate } from '../ui/ui';
+import useLoader from '../../hooks/useLoader';
 import { courtsApi } from '../../services/cad223';
 
 // CAD-223: suspensões de prazo/indisponibilidades cadastradas pela Cadrius (já entram na contagem) e serviços dos tribunais.

@@ -11,15 +11,15 @@ import ResetPassword from "../pages/auth/ResetPassword";
 import GoogleCallback from "../pages/auth/GoogleCallback";
 import ForcePasswordChange from "../pages/auth/ForcePasswordChange";
 
-import Dashboard from "../pages/dashboard/Dashboard";
-import Automacao from "../pages/dashboard/Automacao";
-import Processos from "../pages/dashboard/Processos";
-import Integracoes from "../pages/dashboard/Integracoes";
-import Perfil from "../pages/dashboard/Perfil";
-import UnderConstruction from '../pages/dashboard/UnderConstruction';
-import GestaoEquipe from "../pages/dashboard/GestaoEquipe";
-import Notificacoes from "../pages/dashboard/Notificacoes";
-import NewTask from "../pages/dashboard/NewTask";
+import Dashboard from "../pages/escritorio/dia-a-dia/Dashboard";
+import Automacao from "../pages/escritorio/producao/Automacao";
+import Processos from "../pages/escritorio/legado/Processos";
+import Integracoes from "../pages/escritorio/configuracoes/Integracoes";
+import Perfil from "../pages/escritorio/conta/Perfil";
+import UnderConstruction from '../pages/escritorio/legado/UnderConstruction';
+import GestaoEquipe from "../pages/escritorio/configuracoes/GestaoEquipe";
+import Notificacoes from "../pages/escritorio/conta/Notificacoes";
+import NewTask from "../pages/escritorio/legado/NewTask";
 
 import EditorLayout from '../layouts/EditorLayout';
 import AdminLayout from '../layouts/AdminLayout';
@@ -39,15 +39,15 @@ function RedirectKeepQuery({ to }) {
   return <Navigate to={`${to}${search}`} replace />;
 }
 
-const FlowEditor = lazy(() => import('../pages/dashboard/FlowEditor'));
-const Documents = lazy(() => import('../pages/dashboard/Documents'));
-const DocumentDetail = lazy(() => import('../pages/dashboard/DocumentDetail'));
-const CentralAprovacoes = lazy(() => import('../pages/dashboard/CentralAprovacoes'));
-const Financeiro = lazy(() => import('../pages/dashboard/Financeiro'));
-const Privacidade = lazy(() => import('../pages/seguranca/Privacidade'));
-const Auditoria = lazy(() => import('../pages/seguranca/Auditoria'));
-const IASegura = lazy(() => import('../pages/seguranca/IASegura'));
-const CentroSeguranca = lazy(() => import('../pages/seguranca/CentroSeguranca'));
+const FlowEditor = lazy(() => import('../pages/escritorio/producao/FlowEditor'));
+const Documents = lazy(() => import('../pages/escritorio/dia-a-dia/Documents'));
+const DocumentDetail = lazy(() => import('../pages/escritorio/dia-a-dia/DocumentDetail'));
+const CentralAprovacoes = lazy(() => import('../pages/escritorio/configuracoes/CentralAprovacoes'));
+const Financeiro = lazy(() => import('../pages/gestao/Financeiro'));
+const Privacidade = lazy(() => import('../pages/escritorio/seguranca/Privacidade'));
+const Auditoria = lazy(() => import('../pages/escritorio/seguranca/Auditoria'));
+const IASegura = lazy(() => import('../pages/escritorio/seguranca/IASegura'));
+const CentroSeguranca = lazy(() => import('../pages/gestao/CentroSeguranca'));
 // Gestão Cadrius (TI e Financeiro) — CAD-168
 const GestaoVisao = lazy(() => import('../pages/gestao/Visao'));
 const GestaoEscritorios = lazy(() => import('../pages/gestao/Escritorios'));
@@ -57,27 +57,27 @@ const GestaoEquipeCadrius = lazy(() => import('../pages/gestao/Equipe'));
 const GestaoFiscal = lazy(() => import('../pages/gestao/Fiscal'));
 const GestaoSuporte = lazy(() => import('../pages/gestao/Suporte'));
 // Fase B (CAD-171): contatos, importação e suporte
-const Contatos = lazy(() => import('../pages/escritorio/Contatos'));
-const Importar = lazy(() => import('../pages/escritorio/Importar'));
-const Suporte = lazy(() => import('../pages/escritorio/Suporte'));
+const Contatos = lazy(() => import('../pages/escritorio/producao/Contatos'));
+const Importar = lazy(() => import('../pages/escritorio/configuracoes/Importar'));
+const Suporte = lazy(() => import('../pages/escritorio/conta/Suporte'));
 // Fase C (CAD-172): agenda forense e processos acompanhados
-const AgendaForense = lazy(() => import('../pages/escritorio/AgendaForense'));
-const Acompanhamento = lazy(() => import('../pages/escritorio/Acompanhamento'));
+const AgendaForense = lazy(() => import('../pages/escritorio/dia-a-dia/AgendaForense'));
+const Acompanhamento = lazy(() => import('../pages/escritorio/dia-a-dia/Acompanhamento'));
 // Fase D (CAD-173): publicações do DJEN e minutas
-const Publicacoes = lazy(() => import('../pages/escritorio/Publicacoes'));
-const Minutas = lazy(() => import('../pages/escritorio/Minutas'));
+const Publicacoes = lazy(() => import('../pages/escritorio/dia-a-dia/Publicacoes'));
+const Minutas = lazy(() => import('../pages/escritorio/producao/Minutas'));
 // CAD-174: marketing (escritório e Cadrius)
-const Marketing = lazy(() => import('../pages/escritorio/Marketing'));
+const Marketing = lazy(() => import('../pages/escritorio/clientes/Marketing'));
 const GestaoMarketing = lazy(() => import('../pages/gestao/Marketing'));
 const GestaoCiber = lazy(() => import('../pages/gestao/Ciberseguranca'));
 const GestaoJuridico = lazy(() => import('../pages/gestao/Juridico'));
 const GestaoIA = lazy(() => import('../pages/gestao/IaAtividades'));
-const Assistente = lazy(() => import('../pages/escritorio/Assistente'));
-const RelogioVoz = lazy(() => import('../pages/escritorio/RelogioVoz'));
-const Plugins = lazy(() => import('../pages/escritorio/Plugins'));
+const Assistente = lazy(() => import('../pages/escritorio/dia-a-dia/Assistente'));
+const RelogioVoz = lazy(() => import('../pages/escritorio/dia-a-dia/RelogioVoz'));
+const Plugins = lazy(() => import('../pages/escritorio/configuracoes/Plugins'));
 // CAD-175: carteira de clientes, finanças do escritório e portal do cliente
-const Carteira = lazy(() => import('../pages/escritorio/Carteira'));
-const Financas = lazy(() => import('../pages/escritorio/Financas'));
+const Carteira = lazy(() => import('../pages/escritorio/clientes/Carteira'));
+const Financas = lazy(() => import('../pages/escritorio/clientes/Financas'));
 const PortalCliente = lazy(() => import('../pages/portal/PortalCliente'));
 // CAD-223: captação e pesquisa de satisfação (públicas)
 const Captacao = lazy(() => import('../pages/portal/Captacao'));

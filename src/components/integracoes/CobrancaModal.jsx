@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, errorMessage } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { Banner, errorMessage } from '../ui/ui';
 import { integrationsApi } from '../../services/integrations';
 
 // Cobrança de honorários pelo Asaas (CAD-174): boleto/Pix para um contato com CPF/CNPJ

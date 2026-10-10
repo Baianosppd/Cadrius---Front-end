@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiCopy } from 'react-icons/fi';
-import styles from '../seguranca/seguranca.module.css';
+import styles from '../ui/ui.module.css';
 import a from './Assistant.module.css';
-import { Banner, errorMessage } from '../seguranca/ui';
+import { Banner, errorMessage } from '../ui/ui';
 import { PROVIDER_LABEL, WRITE_ACTIONS, assistantApi } from '../../services/assistant';
 
 const FIELD_LABEL = { partes: 'Partes', processo_cnj: 'Processo', tribunal: 'Tribunal', datas: 'Datas', prazos: 'Prazos', valores: 'Valores',

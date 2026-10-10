@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, Loading, Pill } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, errorMessage, Loading, Pill } from '../ui/ui';
 import useAuth from '../../hooks/useAuth';
-import useLoader from '../../pages/gestao/useLoader';
+import useLoader from '../../hooks/useLoader';
 import { brainApi } from '../../services/brain';
 
 // Perfil do escritório (CAD-174): o que a IA usa para escrever "do jeito do escritório" em minutas e marketing

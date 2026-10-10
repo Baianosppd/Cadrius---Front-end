@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, StatusPill } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, StatusPill } from '../ui/ui';
+import useLoader from '../../hooks/useLoader';
 import { STAGES, brl, customizationApi } from '../../services/cad223';
 
 // Pedido de parametrização (CAD-223): o escritório descreve algo específico; a Cadrius analisa, propõe e só executa após o "aprovo".

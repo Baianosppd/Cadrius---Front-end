@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiEdit3 } from 'react-icons/fi';
-import styles from '../seguranca/seguranca.module.css';
-import { errorMessage } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { errorMessage } from '../ui/ui';
 import { WRITE_ACTIONS, assistantApi } from '../../services/assistant';
 
 // "Escrever com IA" para qualquer campo de texto (CAD-221): propõe o novo texto; a pessoa escolhe substituir ou descartar.

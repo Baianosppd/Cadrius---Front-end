@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiEdit2, FiPlus, FiShield, FiTrash2 } from 'react-icons/fi';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, Loading, Pill } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, errorMessage, Loading, Pill } from '../ui/ui';
 import { accessApi, fromMatrix, toMatrix } from '../../services/cad223';
-import useLoader from '../../pages/gestao/useLoader';
+import useLoader from '../../hooks/useLoader';
 
 // Grupos de acesso (CAD-223): o dono/admin decide o que cada pessoa da equipe vê e altera.
 export function AccessGroups() {

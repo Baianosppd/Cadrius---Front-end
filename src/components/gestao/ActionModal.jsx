@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, errorMessage } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { Banner, errorMessage } from '../ui/ui';
 import { MIN_REASON, buildActionBody } from '../../services/backoffice';
 
 // Confirmação de ação administrativa: motivo obrigatório (vai para a auditoria) + campos numéricos da ação

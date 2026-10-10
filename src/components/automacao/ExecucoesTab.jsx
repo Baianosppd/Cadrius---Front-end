@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill } from '../ui/ui';
+import useLoader from '../../hooks/useLoader';
 import { RUN_STATUS, STEP_STATUS, rulesApi } from '../../services/rules';
 
 // pendentes=true: fila de aprovação (o que vai sair para clientes/ERP); false: histórico das execuções

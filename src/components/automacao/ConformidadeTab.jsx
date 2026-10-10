@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Loading, Pill, ScoreBar, StatCard } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, Loading, Pill, ScoreBar, StatCard } from '../ui/ui';
+import useLoader from '../../hooks/useLoader';
 import { complianceApi } from '../../services/cad223';
 
 const TONE = { alto: 'red', medio: 'yellow', baixo: 'gray' };

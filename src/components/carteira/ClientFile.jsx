@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, Pill } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, Pill } from '../ui/ui';
 import useAuth from '../../hooks/useAuth';
-import useLoader from '../../pages/gestao/useLoader';
+import useLoader from '../../hooks/useLoader';
 import { AgreementForm, OpportunityForm } from './Forms';
 import { AGREEMENT_STATUS, REC_STATUS, brl, carteiraApi, portalApi } from '../../services/carteira';
 

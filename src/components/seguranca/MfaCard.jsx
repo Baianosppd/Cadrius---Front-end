@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from './seguranca.module.css';
-import { Banner, Pill, errorMessage } from './ui';
+import styles from '../ui/ui.module.css';
+import { Banner, Pill, errorMessage } from '../ui/ui';
 import MfaSetup, { RecoveryCodes } from './MfaSetup';
 import useAuth from '../../hooks/useAuth';
 import { mfaApi } from '../../services/mfa';

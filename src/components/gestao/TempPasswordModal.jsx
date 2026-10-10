@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FiCheck, FiCopy } from 'react-icons/fi';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { Banner } from '../ui/ui';
 
 // Senha temporária (CAD-221): aparece UMA vez. A TI repassa por canal seguro; a pessoa troca no próximo acesso.
 export default function TempPasswordModal({ email, password, onClose }) {

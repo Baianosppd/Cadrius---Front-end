@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiPlay, FiPower, FiX } from 'react-icons/fi';
-import ui from '../seguranca/seguranca.module.css';
-import { Banner, Pill, errorMessage } from '../seguranca/ui';
+import ui from '../ui/ui.module.css';
+import { Banner, Pill, errorMessage } from '../ui/ui';
 import { rulesApi } from '../../services/rules';
 import s from './RuleFlowView.module.css';
 import ShortcutPanel from './ShortcutPanel';

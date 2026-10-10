@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FiEye } from 'react-icons/fi';
-import ui from '../seguranca/seguranca.module.css';
+import ui from '../ui/ui.module.css';
 import EmailPreview from './EmailPreview';
 import { VISUAL_OPTIONS } from '../../services/emailVisual';
 

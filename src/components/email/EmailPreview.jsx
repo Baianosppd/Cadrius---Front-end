@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import ui from '../seguranca/seguranca.module.css';
-import { Banner, errorMessage } from '../seguranca/ui';
+import ui from '../ui/ui.module.css';
+import { Banner, errorMessage } from '../ui/ui';
 import { emailApi } from '../../services/emailVisual';
 
 // Prévia do e-mail como o cliente vai receber (CAD-226). Mostrada num iframe isolado, sem scripts.

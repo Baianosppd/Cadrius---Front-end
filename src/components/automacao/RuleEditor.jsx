@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 import EmailVisualField from '../email/EmailVisualField';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, errorMessage } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { Banner, errorMessage } from '../ui/ui';
 import { DAILY_CONFIG, actionsFor, emptyAction, insertVariable, producedVars, ruleBody, ruleToForm, rulesApi, triggerHasDeadline } from '../../services/rules';
 
 // Texto com botões de variáveis: clicar insere {{variavel}} onde está o cursor

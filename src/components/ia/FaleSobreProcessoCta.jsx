@@ -1,5 +1,5 @@
 import { FiMessageCircle } from 'react-icons/fi';
-import ui from '../seguranca/seguranca.module.css';
+import ui from '../ui/ui.module.css';
 import s from './FaleSobreProcesso.module.css';
 
 // Cartão de entrada (Painel e Automações)

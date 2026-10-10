@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
+import styles from '../../components/ui/ui.module.css';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/ui/ui';
 import { AREAS, AREA_LABEL, MIN_REASON, backofficeApi, buildStaffBody } from '../../services/backoffice';
-import useLoader from './useLoader';
+import useLoader from '../../hooks/useLoader';
 
 // CAD-223: cada área com nível — sem acesso, só consulta (lê, não altera) ou total
 function AreaChecks({ value, onChange }) {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import styles from './seguranca.module.css';
-import { Banner, errorMessage } from './ui';
+import styles from '../ui/ui.module.css';
+import { Banner, errorMessage } from '../ui/ui';
 import useAuth from '../../hooks/useAuth';
 import { mfaApi, recoveryCodesText, svgDataUri } from '../../services/mfa';
 

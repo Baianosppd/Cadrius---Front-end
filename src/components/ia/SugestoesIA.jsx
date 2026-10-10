@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Pill, errorMessage } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Pill, errorMessage } from '../ui/ui';
+import useLoader from '../../hooks/useLoader';
 import { brainApi } from '../../services/brain';
 
 // Fase E (CAD-174): a IA observa o escritório e sugere automações prontas. Aceitar cria a regra DESLIGADA (simule e ligue).

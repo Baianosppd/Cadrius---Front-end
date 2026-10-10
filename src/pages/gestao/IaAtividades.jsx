@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiArrowDown, FiArrowUp, FiX } from 'react-icons/fi';
-import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
-import useLoader from './useLoader';
+import styles from '../../components/ui/ui.module.css';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../components/ui/ui';
+import useLoader from '../../hooks/useLoader';
 import api from '../../services/api';
 
 const iaApi = {

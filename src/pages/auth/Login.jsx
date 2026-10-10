@@ -16,8 +16,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import styles from './Login.module.css';
-import EnvSwitch from '../../components/common/EnvSwitch';
-import ThemeToggle from '../../components/common/ThemeToggle';
+import EnvSwitch from '../../components/layout/EnvSwitch';
+import ThemeToggle from '../../components/layout/ThemeToggle';
 import { CourthouseScene } from '../../components/illustrations/LegalArt';
 import BrandLogo from '../../components/brand/BrandLogo';
 

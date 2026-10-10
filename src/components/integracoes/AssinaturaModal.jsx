@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, errorMessage } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { Banner, errorMessage } from '../ui/ui';
 import { contactsApi } from '../../services/contacts';
 import { integrationsApi } from '../../services/integrations';
 

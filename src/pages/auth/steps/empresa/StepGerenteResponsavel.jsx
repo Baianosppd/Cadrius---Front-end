@@ -1,4 +1,4 @@
-import LegalAcceptance from '../../../../components/common/LegalAcceptance';
+import LegalAcceptance from '../../../../components/auth/LegalAcceptance';
 import styles from '../individual/Step.module.css';
 import { FiUser } from 'react-icons/fi';
 

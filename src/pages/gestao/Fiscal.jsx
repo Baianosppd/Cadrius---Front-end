@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, PageHeader, StatCard, StatusPill } from '../../components/seguranca/ui';
+import styles from '../../components/ui/ui.module.css';
+import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, PageHeader, StatCard, StatusPill } from '../../components/ui/ui';
 import { NF_MANUAL, NF_STATUS, backofficeApi, monthRange } from '../../services/backoffice';
 import { NfseModal, Obrigacoes } from '../../components/gestao/FiscalF';
 import { brl } from '../../services/financeiro';
-import useLoader from './useLoader';
+import useLoader from '../../hooks/useLoader';
 
 function RegistrarNF({ payment, onDone, onCancel }) {
     const [form, setForm] = useState({ status: 'issued', number: '', issued_at: new Date().toISOString().slice(0, 10), note: '', reason: '' });

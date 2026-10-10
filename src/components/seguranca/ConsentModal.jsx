@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import api, { CONSENT_REQUIRED_EVENT } from '../../services/api';
-import styles from './seguranca.module.css';
-import { Banner, errorMessage } from './ui';
+import styles from '../ui/ui.module.css';
+import { Banner, errorMessage } from '../ui/ui';
 import Markdown from './Markdown';
 
 const KIND_LABEL = { terms: 'Termos de Uso', privacy: 'Política de Privacidade', ciencia: 'Termo de Ciência do Uso de Dados' };

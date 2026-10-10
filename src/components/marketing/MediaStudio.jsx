@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiPlus, FiX, FiZap } from 'react-icons/fi';
-import styles from '../seguranca/seguranca.module.css';
+import styles from '../ui/ui.module.css';
 import s from './MediaStudio.module.css';
-import { Pill, errorMessage } from '../seguranca/ui';
+import { Pill, errorMessage } from '../ui/ui';
 import { ART_STYLES, IMAGE_SOURCE, MAX_REFS } from '../../services/marketing';
 import { mediaAddon } from '../../services/billing';
 

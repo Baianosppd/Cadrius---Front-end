@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill, StatCard } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill, StatCard } from '../ui/ui';
+import useLoader from '../../hooks/useLoader';
 import { FiCalendar, FiChevronLeft, FiChevronRight, FiList } from 'react-icons/fi';
 import {
     AUTO_CHANNELS, CHANNELS, CHANNEL_COLOR, CHANNEL_LABEL, LEVEL_TONE, STATUS, groupByDay, monthGrid, parseHashtags, toLocalInput,

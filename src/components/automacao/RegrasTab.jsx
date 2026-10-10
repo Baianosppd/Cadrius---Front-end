@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill } from '../ui/ui';
+import useLoader from '../../hooks/useLoader';
 import { STEP_STATUS, describeRule, hasExternal, rulesApi } from '../../services/rules';
 import RuleEditor from './RuleEditor';
 import RuleFlowView from './RuleFlowView';

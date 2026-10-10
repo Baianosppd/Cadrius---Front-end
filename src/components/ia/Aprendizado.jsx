@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Loading, StatCard } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, Loading, StatCard } from '../ui/ui';
+import useLoader from '../../hooks/useLoader';
 import { LEARNING_KIND, MEMORY_KIND, brainApi, formatMinutes } from '../../services/brain';
 
 // Painel de aprendizado (CAD-174): quanto a IA acerta por tipo de tarefa e o que ela já guardou do escritório

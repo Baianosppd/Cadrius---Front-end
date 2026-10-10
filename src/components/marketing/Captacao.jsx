@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiCopy, FiTrash2 } from 'react-icons/fi';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, Loading, Pill, StatCard } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, errorMessage, Loading, Pill, StatCard } from '../ui/ui';
+import useLoader from '../../hooks/useLoader';
 import { brl, leadsApi } from '../../services/cad223';
 
 const publicUrl = (path) => `${window.location.origin}${path}`;

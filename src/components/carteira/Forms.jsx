@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, errorMessage } from '../seguranca/ui';
+import styles from '../ui/ui.module.css';
+import { Banner, errorMessage } from '../ui/ui';
 import { contactsApi } from '../../services/contacts';
 import { casesApi } from '../../services/rules';
 import {

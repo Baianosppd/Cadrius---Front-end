@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, fmtDateTime, Loading, PageHeader, Pill } from '../../components/seguranca/ui';
+import styles from '../../components/ui/ui.module.css';
+import { Banner, Empty, fmtDateTime, Loading, PageHeader, Pill } from '../../components/ui/ui';
 import ActionModal from '../../components/gestao/ActionModal';
 import TempPasswordModal from '../../components/gestao/TempPasswordModal';
 import { backofficeApi, userActionsFor } from '../../services/backoffice';
-import useLoader from './useLoader';
+import useLoader from '../../hooks/useLoader';
 
 export default function Usuarios() {
     const [term, setTerm] = useState('');
