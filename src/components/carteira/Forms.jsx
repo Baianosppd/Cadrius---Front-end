@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../ui/ui.module.css';
-import { Banner, errorMessage } from '../ui/ui';
+import { Banner } from '../ui';
+import { errorMessage } from '../../utils/format';
 import { contactsApi } from '../../services/contacts';
 import { casesApi } from '../../services/rules';
 import {

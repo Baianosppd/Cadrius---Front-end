@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FiFileText, FiSearch } from 'react-icons/fi';
 import ui from '../ui/ui.module.css';
 import api from '../../services/api';
-import { errorMessage } from '../ui/ui';
+import { errorMessage } from '../../utils/format';
 import a from './Assistant.module.css';
 
 // Escolher um documento do escritório para a IA usar na conversa (CAD-226)

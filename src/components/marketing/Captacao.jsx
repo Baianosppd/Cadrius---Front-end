@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiCopy, FiTrash2 } from 'react-icons/fi';
 import styles from '../ui/ui.module.css';
-import { Banner, Empty, errorMessage, Loading, Pill, StatCard } from '../ui/ui';
+import { Banner, Empty, Loading, Pill, StatCard } from '../ui';
+import { errorMessage } from '../../utils/format';
 import useLoader from '../../hooks/useLoader';
 import { brl, leadsApi } from '../../services/cad223';
 

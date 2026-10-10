@@ -3,7 +3,8 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { CONNECTION_APPS } from '../../services/connections';
 import styles from '../ui/ui.module.css';
-import { Banner, errorMessage } from '../ui/ui';
+import { Banner } from '../ui';
+import { errorMessage } from '../../utils/format';
 
 // Cria uma conexão (POST /api/v1/connections/). O segredo é enviado uma única vez e nunca mais exibido.
 export default function ConnectionModal({ appKey, onClose, onSaved }) {

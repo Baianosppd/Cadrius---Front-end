@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../services/api.js';
-import { PageHeader } from '../../../components/ui/ui';
+import { PageHeader } from '../../../components/ui';
 import styles from './GestaoEquipe.module.css';
 
 import TabBar from '../../../components/ui/TabBar.jsx';

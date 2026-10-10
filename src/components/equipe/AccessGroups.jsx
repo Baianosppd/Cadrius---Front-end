@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiEdit2, FiPlus, FiShield, FiTrash2 } from 'react-icons/fi';
 import styles from '../ui/ui.module.css';
-import { Banner, Empty, errorMessage, Loading, Pill } from '../ui/ui';
+import { Banner, Empty, Loading, Pill } from '../ui';
+import { errorMessage } from '../../utils/format';
 import { accessApi, fromMatrix, toMatrix } from '../../services/cad223';
 import useLoader from '../../hooks/useLoader';
 

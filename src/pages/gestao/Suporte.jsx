@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/ui/ui.module.css';
-import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, StatCard, StatusPill } from '../../components/ui/ui';
+import { Banner, Empty, Loading, PageHeader, StatCard, StatusPill } from '../../components/ui';
+import { errorMessage, fmtDateTime } from '../../utils/format';
 import { Conversa } from '../escritorio/conta/Suporte';
 import { PRIORITY, STAFF_STATUS, supportApi } from '../../services/support';
 import useLoader from '../../hooks/useLoader';

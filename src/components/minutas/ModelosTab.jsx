@@ -2,7 +2,8 @@ import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiUpload, FiPlus, FiFileText } from 'react-icons/fi';
 import styles from '../ui/ui.module.css';
-import { Banner, Empty, Pill, errorMessage } from '../ui/ui';
+import { Banner, Empty, Pill } from '../ui';
+import { errorMessage } from '../../utils/format';
 import { TEMPLATE_KINDS, fieldLabel, minutasApi, templateFields } from '../../services/publications';
 
 const kindLabel = (k) => TEMPLATE_KINDS.find(([id]) => id === k)?.[1] || 'Outro';

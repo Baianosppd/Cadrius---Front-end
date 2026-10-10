@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { SiGoogle, SiGooglecalendar, SiGooglesheets, SiGoogledocs } from 'react-icons/si';
 import { gcal, gcalResult, GCAL_STATUS_LABEL } from '../../services/gcal';
-import { errorMessage } from '../ui/ui';
+import { errorMessage } from '../../utils/format';
 import ui from '../ui/ui.module.css';
 import AgendaGoogleEvents from './AgendaGoogleEvents';
 

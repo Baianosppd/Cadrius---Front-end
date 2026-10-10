@@ -4,7 +4,7 @@ import api from '../../../services/api.js';
 import ui from '../../../components/ui/ui.module.css';
 import styles from './Notificacoes.module.css';
 import { NOTIFICATIONS_CHANGED } from '../../../components/layout/BarraSup.jsx';
-import { Empty, Loading } from '../../../components/ui/ui';
+import { Empty, Loading } from '../../../components/ui';
 
 import PageHeader from '../../../components/ui/PageHearder.jsx';
 import NotificationList from '../../../components/notificacoes/NotificationList.jsx';

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { errorMessage } from '../components/ui/ui';
+import { errorMessage } from '../utils/format';
 
 // Carrega dados com recarga manual (reload) e cancelamento ao desmontar
 export default function useLoader(fn, deps = []) {

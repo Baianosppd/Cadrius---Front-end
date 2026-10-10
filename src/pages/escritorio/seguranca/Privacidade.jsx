@@ -5,7 +5,8 @@ import useAuth from '../../../hooks/useAuth';
 import TabBar from '../../../components/ui/TabBar';
 import styles from '../../../components/ui/ui.module.css';
 import Markdown from '../../../components/seguranca/Markdown';
-import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, PageHeader, Pill } from '../../../components/ui/ui';
+import { Banner, Empty, Loading, PageHeader, Pill } from '../../../components/ui';
+import { errorMessage, fmtDate, fmtDateTime } from '../../../utils/format';
 
 const KIND = { terms: 'Termos de Uso', privacy: 'Política de Privacidade', ciencia: 'Termo de Ciência', cookies: 'Cookies' };
 const REQUEST_TYPES = [

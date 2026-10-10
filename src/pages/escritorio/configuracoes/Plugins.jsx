@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiCheck, FiCopy, FiKey, FiLink, FiTrash2 } from 'react-icons/fi';
 import styles from '../../../components/ui/ui.module.css';
-import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill } from '../../../components/ui/ui';
+import { Banner, Empty, Loading, PageHeader, Pill } from '../../../components/ui';
+import { errorMessage, fmtDateTime } from '../../../utils/format';
 import { assistantApi, connectorSteps, pluginsApi } from '../../../services/assistant';
 
 // Plugins (CAD-222): usar o Cadrius de dentro do Claude/ChatGPT (conector MCP) e a conta de IA do próprio escritório.

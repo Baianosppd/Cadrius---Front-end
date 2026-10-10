@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styles from '../ui/ui.module.css';
-import { Banner, errorMessage } from '../ui/ui';
+import { Banner } from '../ui';
+import { errorMessage } from '../../utils/format';
 import useAuth from '../../hooks/useAuth';
 import { mfaApi, recoveryCodesText, svgDataUri } from '../../services/mfa';
 

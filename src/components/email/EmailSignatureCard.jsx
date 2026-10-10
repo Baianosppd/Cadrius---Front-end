@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiEye, FiImage, FiTrash2 } from 'react-icons/fi';
 import ui from '../ui/ui.module.css';
-import { errorMessage } from '../ui/ui';
+import { errorMessage } from '../../utils/format';
 import { emailApi, readSignatureImage } from '../../services/emailVisual';
 import { EmailFrame } from './EmailPreview';
 

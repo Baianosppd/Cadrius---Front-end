@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/ui/ui.module.css';
-import { Banner, CHECK_STATUS, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill, StatCard, StatusPill } from '../../components/ui/ui';
+import { Banner, CHECK_STATUS, Empty, Loading, PageHeader, Pill, StatCard, StatusPill } from '../../components/ui';
+import { errorMessage, fmtDateTime } from '../../utils/format';
 import { CONFIG_LABEL, MIN_REASON, backofficeApi } from '../../services/backoffice';
 import useLoader from '../../hooks/useLoader';
 

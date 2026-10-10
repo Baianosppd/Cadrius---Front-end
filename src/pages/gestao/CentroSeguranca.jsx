@@ -2,7 +2,8 @@ import { Fragment, useEffect, useState } from 'react';
 import api from '../../services/api';
 import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/ui/ui.module.css';
-import { Banner, CHECK_STATUS, CONTROL_STATUS, Empty, errorMessage, fmtDate, Loading, PageHeader, Pill, ScoreBar, StatCard, StatusPill } from '../../components/ui/ui';
+import { Banner, CHECK_STATUS, CONTROL_STATUS, Empty, Loading, PageHeader, Pill, ScoreBar, StatCard, StatusPill } from '../../components/ui';
+import { errorMessage, fmtDate } from '../../utils/format';
 
 const FW_LABEL = { iso27001: 'ISO/IEC 27001', iso27701: 'ISO/IEC 27701', lgpd: 'LGPD' };
 

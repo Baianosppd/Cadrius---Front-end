@@ -10,7 +10,7 @@ import { getAutoLayout } from '../../../components/automacao/FlowAutoLayout';
 import api from '../../../services/api.js';
 import { toast } from 'react-toastify';
 import { flowToWorkflow, validateFlow, workflowToFlow } from '../../../services/flowMapper';
-import { errorMessage } from '../../../components/ui/ui';
+import { errorMessage } from '../../../utils/format';
 
 const COLORS = {
     trigger: { color: 'var(--c-success)', bg: '#dcfce7' },

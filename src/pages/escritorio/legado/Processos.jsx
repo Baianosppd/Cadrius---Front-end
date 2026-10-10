@@ -7,7 +7,7 @@ import styles from './Processos.module.css';
 import Card from '../../../components/ui/Card';
 import TextoCarregando from "../../../components/ui/TextoCarregando";
 import StatusBadge from '../../../components/ui/StatusBadge';
-import { PageHeader } from '../../../components/ui/ui';
+import { PageHeader } from '../../../components/ui';
 
 // --- Componente Auxiliar: Sugestões da IA ---
 function AISuggestions({ suggestions }) {

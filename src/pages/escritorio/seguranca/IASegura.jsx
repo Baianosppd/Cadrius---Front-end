@@ -4,7 +4,8 @@ import api from '../../../services/api';
 import useAuth from '../../../hooks/useAuth';
 import TabBar from '../../../components/ui/TabBar';
 import styles from '../../../components/ui/ui.module.css';
-import { Banner, Empty, errorMessage, fmtDateTime, Loading, PageHeader, Pill, StatCard } from '../../../components/ui/ui';
+import { Banner, Empty, Loading, PageHeader, Pill, StatCard } from '../../../components/ui';
+import { errorMessage, fmtDateTime } from '../../../utils/format';
 
 
 function Politica({ canEdit }) {

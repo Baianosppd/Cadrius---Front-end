@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Background, BackgroundVariant, Controls, Handle, Position, ReactFlow, ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { FiCheckSquare, FiFilter, FiZap } from 'react-icons/fi';
-import { Pill } from '../ui/ui';
+import { Pill } from '../ui';
 import s from './RuleFlowView.module.css';
 
 const ICON = { trigger: FiZap, condition: FiFilter, action: FiCheckSquare };

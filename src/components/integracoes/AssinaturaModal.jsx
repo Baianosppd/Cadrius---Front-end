@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../ui/ui.module.css';
-import { Banner, errorMessage } from '../ui/ui';
+import { Banner } from '../ui';
+import { errorMessage } from '../../utils/format';
 import { contactsApi } from '../../services/contacts';
 import { integrationsApi } from '../../services/integrations';
 

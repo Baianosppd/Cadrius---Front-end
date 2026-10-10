@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styles from '../ui/ui.module.css';
-import { Banner, Empty, Loading, StatCard } from '../ui/ui';
+import { Banner, Empty, Loading, StatCard } from '../ui';
 import useLoader from '../../hooks/useLoader';
 import { LEARNING_KIND, MEMORY_KIND, brainApi, formatMinutes } from '../../services/brain';
 

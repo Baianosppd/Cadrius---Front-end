@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../../components/ui/ui.module.css';
-import { Banner, Empty, errorMessage, fmtDate, Loading, PageHeader, Pill, StatCard } from '../../../components/ui/ui';
+import { Banner, Empty, Loading, PageHeader, Pill, StatCard } from '../../../components/ui';
+import { errorMessage, fmtDate } from '../../../utils/format';
 import useAuth from '../../../hooks/useAuth';
 import useLoader from '../../../hooks/useLoader';
 import { AgreementForm, OpportunityForm } from '../../../components/carteira/Forms';

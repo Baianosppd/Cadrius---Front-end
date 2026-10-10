@@ -4,9 +4,8 @@ import api from '../../../services/api';
 import TabBar from '../../../components/ui/TabBar';
 import styles from '../../../components/ui/ui.module.css';
 import { auditLabel } from '../../../services/auditLabels';
-import {
-    ALERT_STATUS, Banner, Empty, Loading, OUTCOME, PageHeader, SEVERITY, StatCard, StatusPill, fmtDateTime, errorMessage,
-} from '../../../components/ui/ui';
+import { ALERT_STATUS, Banner, Empty, Loading, OUTCOME, PageHeader, SEVERITY, StatCard, StatusPill } from '../../../components/ui';
+import { fmtDateTime, errorMessage } from '../../../utils/format';
 
 const PREFIXES = [
     ['', 'Todas as ações'], ['auth.', 'Acesso (login, logout)'], ['workflow.', 'Automações'], ['ai.', 'IA'],

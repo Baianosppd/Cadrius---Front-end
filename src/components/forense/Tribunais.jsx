@@ -1,5 +1,6 @@
 import styles from '../ui/ui.module.css';
-import { Banner, Empty, Pill, fmtDate } from '../ui/ui';
+import { Banner, Empty, Pill } from '../ui';
+import { fmtDate } from '../../utils/format';
 import useLoader from '../../hooks/useLoader';
 import { courtsApi } from '../../services/cad223';
 

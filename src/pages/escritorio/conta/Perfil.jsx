@@ -11,7 +11,7 @@ import EmailSignatureCard from '../../../components/email/EmailSignatureCard.jsx
 import PlanCard from '../../../components/perfil/PlanCard.jsx';
 import { toast } from 'react-toastify';
 import ui from '../../../components/ui/ui.module.css';
-import { PageHeader } from '../../../components/ui/ui';
+import { PageHeader } from '../../../components/ui';
 import useAuth from '../../../hooks/useAuth';
 import usePaymentReturn from '../../../hooks/usePaymentReturn';
 import { getCurrentPlan, getCreditPacks, startCreditCheckout, creditsNotice, validatePromo, startSubscriptionCheckout, redeemPromo } from '../../../services/billing';

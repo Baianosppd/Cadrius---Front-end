@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../../components/ui/ui.module.css';
-import { Banner, Empty, Pill, PageHeader, errorMessage } from '../../../components/ui/ui';
+import { Banner, Empty, Pill, PageHeader } from '../../../components/ui';
+import { errorMessage } from '../../../utils/format';
 import useAuth from '../../../hooks/useAuth';
 import useLoader from '../../../hooks/useLoader';
 import { brDate, forenseApi } from '../../../services/rules';

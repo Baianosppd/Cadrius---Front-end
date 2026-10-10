@@ -4,7 +4,8 @@ import { FiBriefcase, FiCheck, FiCpu, FiFileText, FiLink, FiMessageCircle, FiPap
 import { Link, useSearchParams } from 'react-router-dom';
 import styles from '../../../components/ui/ui.module.css';
 import a from '../../../components/assistant/Assistant.module.css';
-import { Banner, PageHeader, Pill, errorMessage } from '../../../components/ui/ui';
+import { Banner, PageHeader, Pill } from '../../../components/ui';
+import { errorMessage } from '../../../utils/format';
 import RichText from '../../../components/assistant/RichText';
 import TextTools from '../../../components/assistant/TextTools';
 import { FALE_SOBRE_PROCESSO, PROVIDER_LABEL, SUGGESTIONS, assistantApi } from '../../../services/assistant';

@@ -1,5 +1,5 @@
 import styles from '../../components/ui/ui.module.css';
-import { PageHeader } from '../../components/ui/ui';
+import { PageHeader } from '../../components/ui';
 import MarketingStudio from '../../components/marketing/MarketingStudio';
 import { cadriusMarketingApi } from '../../services/marketing';
 

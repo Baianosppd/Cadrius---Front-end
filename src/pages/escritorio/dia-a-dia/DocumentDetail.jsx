@@ -6,7 +6,7 @@ import { FiDownload, FiRefreshCw } from 'react-icons/fi';
 import styles from './DocumentDetail.module.css';
 import BackButton from '../../../components/layout/BackButton';
 import useAuth from '../../../hooks/useAuth';
-import { errorMessage } from '../../../components/ui/ui';
+import { errorMessage } from '../../../utils/format';
 import {
     DOC_TYPES, EXTRACTION_STATUS, documentsApi, fieldsForConfirm, isBusy, normalizeFields,
 } from '../../../services/documents';

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiUserPlus } from 'react-icons/fi';
 import ui from '../ui/ui.module.css';
-import { Banner, Pill, StatCard, errorMessage } from '../ui/ui';
+import { Banner, Pill, StatCard } from '../ui';
+import { errorMessage } from '../../utils/format';
 import api from '../../services/api';
 
 const ROLE_LABEL = { owner: 'Dono', administrador: 'Administrador', advogado_pleno: 'Membro', membro: 'Membro', member: 'Membro', viewer: 'Somente leitura', leitor: 'Somente leitura' };

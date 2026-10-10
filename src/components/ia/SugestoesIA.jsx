@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../ui/ui.module.css';
-import { Banner, Pill, errorMessage } from '../ui/ui';
+import { Banner, Pill } from '../ui';
+import { errorMessage } from '../../utils/format';
 import useLoader from '../../hooks/useLoader';
 import { brainApi } from '../../services/brain';
 

@@ -3,7 +3,8 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { FiActivity, FiArrowLeft, FiChevronDown, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import { AREA_LABEL, backofficeApi } from '../services/backoffice';
-import { Loading, errorMessage } from '../components/ui/ui';
+import { Loading } from '../components/ui';
+import { errorMessage } from '../utils/format';
 import ConsentModal from '../components/seguranca/ConsentModal';
 import MfaSetup from '../components/seguranca/MfaSetup';
 import styles from './AdminLayout.module.css';

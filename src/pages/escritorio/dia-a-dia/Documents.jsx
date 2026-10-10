@@ -6,7 +6,7 @@ import styles from './Documents.module.css';
 import PageHeader from '../../../components/ui/PageHearder.jsx';
 import DropZone from '../../../components/documentos/DropZone.jsx';
 import DocumentList from '../../../components/documentos/DocumentList.jsx';
-import { errorMessage } from '../../../components/ui/ui';
+import { errorMessage } from '../../../utils/format';
 
 const MAX_BYTES = 10 * 1024 * 1024; // igual ao limite anunciado na tela
 const ALLOWED = ['pdf', 'doc', 'docx'];

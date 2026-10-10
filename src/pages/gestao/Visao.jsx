@@ -1,6 +1,6 @@
 import { Link, useOutletContext } from 'react-router-dom';
 import styles from '../../components/ui/ui.module.css';
-import { Banner, Empty, Loading, PageHeader, StatCard, StatusPill } from '../../components/ui/ui';
+import { Banner, Empty, Loading, PageHeader, StatCard, StatusPill } from '../../components/ui';
 import { SUB_STATE, backofficeApi, hasArea } from '../../services/backoffice';
 import { brl } from '../../services/financeiro';
 import useLoader from '../../hooks/useLoader';

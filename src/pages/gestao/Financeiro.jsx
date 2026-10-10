@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import TabBar from '../../components/ui/TabBar';
 import styles from '../../components/ui/ui.module.css';
-import { Banner, Empty, errorMessage, Loading, Pill, StatCard } from '../../components/ui/ui';
+import { Banner, Empty, Loading, Pill, StatCard } from '../../components/ui';
+import { errorMessage } from '../../utils/format';
 import {
     STATUSES, TIERS, adminApi, apiErrors, brl, formToBody, toLocalInput,
 } from '../../services/financeiro';

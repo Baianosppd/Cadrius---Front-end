@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiCopy, FiWatch } from 'react-icons/fi';
 import ui from '../ui/ui.module.css';
-import { Banner, errorMessage } from '../ui/ui';
+import { Banner } from '../ui';
+import { errorMessage } from '../../utils/format';
 import { SHORTCUT_GUIDES, rulesApi } from '../../services/rules';
 
 // Gatilho "Atalho" (CAD-226): link secreto da regra + passo a passo para relógio, celular e voz

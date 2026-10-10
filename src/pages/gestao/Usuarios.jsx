@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/ui/ui.module.css';
-import { Banner, Empty, fmtDateTime, Loading, PageHeader, Pill } from '../../components/ui/ui';
+import { Banner, Empty, Loading, PageHeader, Pill } from '../../components/ui';
+import { fmtDateTime } from '../../utils/format';
 import ActionModal from '../../components/gestao/ActionModal';
 import TempPasswordModal from '../../components/gestao/TempPasswordModal';
 import { backofficeApi, userActionsFor } from '../../services/backoffice';

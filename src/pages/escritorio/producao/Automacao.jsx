@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import useAuth from '../../../hooks/useAuth';
-import { errorMessage, Loading } from '../../../components/ui/ui';
+import { Loading } from '../../../components/ui';
+import { errorMessage } from '../../../utils/format';
 import api from '../../../services/api.js';
 import styles from './Automacao.module.css';
 
