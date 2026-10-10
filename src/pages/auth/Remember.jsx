@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FiCheckCircle } from 'react-icons/fi';
 
 import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
+import Input from '../../components/legado/AuthInput';
 import Label from '../../components/ui/Label';
 import FormGroup from '../../components/ui/FormGroup';
 import AuthShell, { authStyles as s } from '../../components/auth/AuthShell';

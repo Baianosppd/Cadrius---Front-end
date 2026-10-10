@@ -1,6 +1,6 @@
 // src/components/ui/Checkbox.jsx
 import React from 'react';
-import styles from './CheckBox.module.css';
+import styles from './AuthCheckBox.module.css';
 
 const Checkbox = ({ label, id, className, ...props }) => {
     return (

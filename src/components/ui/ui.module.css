@@ -64,6 +64,12 @@
 .textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
 .check_row { display: flex; gap: var(--sp-2); align-items: center; font-size: var(--fs-base); color: var(--c-text-2); min-height: 32px; }
 .check_row input { width: 16px; height: 16px; accent-color: var(--c-primary); flex-shrink: 0; }
+/* Campo grande (telas de login/cadastro), dica e erro do <Field> */
+.input_lg { min-height: 46px; padding: 10px 14px; font-size: var(--fs-md); }
+.input[aria-invalid], .select[aria-invalid], .textarea[aria-invalid] { border-color: var(--c-danger); }
+.input[aria-invalid]:focus, .select[aria-invalid]:focus, .textarea[aria-invalid]:focus { box-shadow: 0 0 0 3px var(--c-danger-bd); }
+.field_hint { font-size: var(--fs-xs); font-weight: 400; color: var(--c-muted); }
+.field_error { font-size: var(--fs-xs); font-weight: 500; color: var(--c-danger); }
 
 /* ---------- Botões ---------- */
 .btn { border: 1px solid var(--c-border-2); background: var(--c-surface); border-radius: var(--radius); padding: 0 var(--sp-4); min-height: var(--control-h); font: inherit; font-size: var(--fs-base); font-weight: 600; cursor: pointer; color: var(--c-text-2); display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2); text-decoration: none; white-space: nowrap; transition: background .15s, border-color .15s, color .15s, box-shadow .15s; box-shadow: var(--shadow-sm); }

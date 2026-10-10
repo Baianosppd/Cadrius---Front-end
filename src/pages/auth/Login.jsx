@@ -6,10 +6,10 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 
 import useAuth from '../../hooks/useAuth';
-import Input from '../../components/ui/Input';
+import Input from '../../components/legado/AuthInput';
 import Label from '../../components/ui/Label';
 import Button from '../../components/ui/Button';
-import Checkbox from '../../components/ui/CheckBox';
+import Checkbox from '../../components/legado/AuthCheckBox';
 import FormGroup from '../../components/ui/FormGroup';
 
 import { toast } from 'react-toastify';
