@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../../components/ui/ui.module.css';
-import { Banner, Empty, Loading, PageHeader, Pill } from '../../../components/ui';
+import { Banner, Button, Checkbox, Empty, Field, FilterBar, FormModal, Input, Loading, PageHeader, Pill, Row, Select, Stack, Tabs, Textarea } from '../../../components/ui';
 import { errorMessage, fmtDateTime } from '../../../utils/format';
 import useAuth from '../../../hooks/useAuth';
 import api from '../../../services/api';
@@ -30,39 +30,31 @@ function NovaMinuta({ templates, initial, onCreated, onCancel }) {
         } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true">
-            <form className={styles.modal} onSubmit={submit}>
-                <div className={styles.modal_title}>Nova minuta</div>
-                <label className={styles.field}>Modelo
-                    <select className={styles.select} value={form.modelo} onChange={(e) => setForm({ ...form, modelo: e.target.value })}>
-                        {templates.map((t) => <option key={t.chave} value={t.chave}>{t.nome}{t.do_escritorio ? ' (do escritório)' : ''}</option>)}
-                    </select>
-                </label>
-                <div className={styles.filters}>
-                    <label className={styles.field}>Sobre
-                        <select className={styles.select} value={form.fonte} onChange={(e) => setForm({ ...form, fonte: e.target.value, fonte_id: '' })}>
-                            <option value="">Nada (só o modelo)</option><option value="publicacao">Uma publicação</option><option value="documento">Um documento</option>
-                        </select>
-                    </label>
-                    {form.fonte === 'documento' && (
-                        <label className={styles.field} style={{ flex: 2 }}>Documento
-                            <select className={styles.select} value={form.fonte_id} onChange={(e) => setForm({ ...form, fonte_id: e.target.value })} required>
-                                <option value="">Escolha…</option>{docs.map((d) => <option key={d.id} value={d.id}>{d.nome}</option>)}
-                            </select>
-                        </label>
-                    )}
-                    {form.fonte === 'publicacao' && (
-                        <label className={styles.field}>Nº da publicação<input className={styles.input} value={form.fonte_id} onChange={(e) => setForm({ ...form, fonte_id: e.target.value })} required /></label>
-                    )}
-                </div>
-                <label className={styles.check_row}><input type="checkbox" checked={form.usar_ia} onChange={(e) => setForm({ ...form, usar_ia: e.target.checked })} disabled={!form.fonte} />
-                    Melhorar com IA</label>
-                <div className={styles.btn_row}>
-                    <button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy || !form.modelo}>{busy ? 'Gerando…' : 'Gerar rascunho'}</button>
-                    <button type="button" className={styles.btn} onClick={onCancel}>Cancelar</button>
-                </div>
-            </form>
-        </div>
+        <FormModal title="Nova minuta" size="lg" onClose={onCancel} onSubmit={submit} busy={busy} submitLabel="Gerar rascunho" busyLabel="Gerando…">
+            <Field label="Modelo">
+                <Select value={form.modelo} onChange={(e) => setForm({ ...form, modelo: e.target.value })} required>
+                    {templates.map((t) => <option key={t.chave} value={t.chave}>{t.nome}{t.do_escritorio ? ' (do escritório)' : ''}</option>)}
+                </Select>
+            </Field>
+            <FilterBar>
+                <Field label="Sobre">
+                    <Select value={form.fonte} onChange={(e) => setForm({ ...form, fonte: e.target.value, fonte_id: '' })}>
+                        <option value="">Nada (só o modelo)</option><option value="publicacao">Uma publicação</option><option value="documento">Um documento</option>
+                    </Select>
+                </Field>
+                {form.fonte === 'documento' && (
+                    <Field label="Documento" className={styles.flex_2}>
+                        <Select value={form.fonte_id} onChange={(e) => setForm({ ...form, fonte_id: e.target.value })} required>
+                            <option value="">Escolha…</option>{docs.map((d) => <option key={d.id} value={d.id}>{d.nome}</option>)}
+                        </Select>
+                    </Field>
+                )}
+                {form.fonte === 'publicacao' && (
+                    <Field label="Nº da publicação"><Input value={form.fonte_id} onChange={(e) => setForm({ ...form, fonte_id: e.target.value })} required /></Field>
+                )}
+            </FilterBar>
+            <Checkbox checked={form.usar_ia} onChange={(e) => setForm({ ...form, usar_ia: e.target.checked })} disabled={!form.fonte}>Melhorar com IA</Checkbox>
+        </FormModal>
     );
 }
 
@@ -92,39 +84,41 @@ function Editor({ id, canWrite, canManage, onChange }) {
         catch (err) { toast.error(errorMessage(err)); }
     };
     return (
-        <div>
+        <Stack>
             <div className={styles.header_row}>
                 <div>
                     <strong>{d.titulo}</strong> <Pill tone={d.status === 'revisada' ? 'green' : 'yellow'}>{d.status}</Pill> {d.ia && <Pill tone="blue">IA {d.ia}</Pill>}
                     <div className={styles.muted}>por {d.autor} · {fmtDateTime(d.atualizada_em)}{d.revisada_por && ` · revisada por ${d.revisada_por}`}</div>
                 </div>
-                <div className={styles.btn_row}>
-                    {pending > 0 && <button type="button" className={styles.btn} onClick={jump}>Próxima pendência ({pending})</button>}
-                    <button type="button" className={styles.btn} onClick={download} disabled={dirty}>Baixar .docx</button>
-                    {canManage && <button type="button" className={styles.btn} title="Guardar este texto como modelo do escritório para reusar"
+                <Row>
+                    {pending > 0 && <Button onClick={jump}>Próxima pendência ({pending})</Button>}
+                    <Button onClick={download} disabled={dirty} title={dirty ? 'Salve antes de baixar' : undefined}>Baixar .docx</Button>
+                    {canManage && <Button title="Guardar este texto como modelo do escritório para reusar"
                         onClick={() => minutasApi.addTemplate({ nome: d.titulo.slice(0, 120), corpo: text, tipo: 'outro' })
                             .then(() => { toast.success('Salvo em Modelos do escritório.'); onChange(); })
-                            .catch((err) => toast.error(errorMessage(err)))}>Salvar como modelo</button>}
-                </div>
+                            .catch((err) => toast.error(errorMessage(err)))}>Salvar como modelo</Button>}
+                </Row>
             </div>
             {d.aviso && <Banner tone="warn">{d.aviso}</Banner>}
-            <textarea ref={ref} className={styles.textarea} style={{ minHeight: 420, width: '100%', boxSizing: 'border-box', fontFamily: 'Georgia, serif', fontSize: 15 }} value={text}
+            <Textarea ref={ref} className={styles.doc_editor} value={text}
                 onChange={(e) => setText(e.target.value)} readOnly={!canWrite} aria-label="Texto da minuta" />
             {canWrite && (
-                <div className={styles.btn_row}>
-                    <button type="button" className={styles.btn} disabled={busy || !dirty} onClick={() => save()}>Salvar</button>
+                <Row>
+                    <Button disabled={busy || !dirty} onClick={() => save()}>Salvar</Button>
                     <AIWriteMenu value={text} onApply={setText} />
-                    <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy || pending > 0 || d.status === 'revisada' && !dirty}
-                        title={pending ? 'Complete os trechos [COMPLETAR] antes' : ''} onClick={() => save({ status: 'revisada' })}>Marcar como revisada</button>
-                    <button type="button" className={`${styles.btn} ${styles.btn_danger}`} onClick={() => window.confirm('Excluir esta minuta?') && minutasApi.remove(id).then(() => onChange(true))}>Excluir</button>
-                </div>
+                    <Button variant="primary" disabled={busy || pending > 0 || (d.status === 'revisada' && !dirty)}
+                        title={pending ? 'Complete os trechos [COMPLETAR] antes' : ''} onClick={() => save({ status: 'revisada' })}>Marcar como revisada</Button>
+                    <Button variant="danger" onClick={() => window.confirm('Excluir esta minuta?') && minutasApi.remove(id).then(() => onChange(true))}>Excluir</Button>
+                </Row>
             )}
-            <div className={styles.section_title}>Trechos da fonte usados</div>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Trechos da fonte usados</div>
             {d.citacoes.length === 0 && <Empty>Minuta sem fonte.</Empty>}
-            {d.citacoes.map((c, i) => (
-                <div key={i} className={styles.doc_text} style={{ marginBottom: 6 }}>“{c.trecho}” <div className={styles.muted}>{c.origem} {c.conferido && '· conferido na fonte'}</div></div>
-            ))}
-        </div>
+            <Stack gap={2}>
+                {d.citacoes.map((c, i) => (
+                    <div key={i} className={styles.doc_text}>“{c.trecho}” <div className={styles.muted}>{c.origem} {c.conferido && '· conferido na fonte'}</div></div>
+                ))}
+            </Stack>
+        </Stack>
     );
 }
 
@@ -140,31 +134,32 @@ export default function Minutas() {
     const [drafts, tpl] = data || [[], { modelos: [], variaveis: [] }];
     const tab = params.get('aba') === 'modelos' ? 'modelos' : 'minutas';
     const go = (k) => { const n = new URLSearchParams(params); n.set('aba', k); setParams(n, { replace: true }); };
+    const tabs = [
+        { id: 'minutas', label: 'Minutas', count: drafts.length || undefined },
+        { id: 'modelos', label: 'Modelos', count: tpl.modelos.length || undefined },
+    ];
     return (
         <div className={styles.page}>
             <PageHeader title="Minutas" subtitle="Rascunhos a partir dos seus modelos"
-                actions={canWrite && <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setCreating({})}>Nova minuta</button>} />
-            <div className={styles.tabs} role="tablist" aria-label="Minutas">
-                {[['minutas', `Minutas${drafts.length ? ` (${drafts.length})` : ''}`], ['modelos', `Modelos${tpl.modelos.length ? ` (${tpl.modelos.length})` : ''}`]].map(([k, label]) => (
-                    <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tab_active : ''}`} onClick={() => go(k)}>{label}</button>
-                ))}
-            </div>
+                actions={canWrite && <Button variant="primary" onClick={() => setCreating({})}>Nova minuta</Button>} />
+            <Tabs tabs={tabs} value={tab} onChange={go} aria-label="Minutas" />
             {!data && <Loading />}
             {data && tab === 'modelos' && <ModelosTab templates={tpl.modelos} vars={tpl.variaveis || []} canManage={isOrgManager}
                 onUse={(modelo) => setCreating({ modelo })} onChanged={reload} />}
-            {tab === 'minutas' && <p className={styles.muted} style={{ margin: 0 }}>Minuta é rascunho: confira fatos, datas e fundamentos. O que faltar aparece como [COMPLETAR: …].</p>}
-            {tab === 'minutas' && <div className={styles.two_col}>
-                <div>
+            {tab === 'minutas' && <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>Minuta é rascunho: confira fatos, datas e fundamentos. O que faltar aparece como [COMPLETAR: …].</p>}
+            {tab === 'minutas' && <div className={`${styles.two_col} ${styles.align_start}`}>
+                <Stack gap={2}>
                     {data && drafts.length === 0 && <Empty title="Nenhuma minuta ainda">Gere a primeira a partir de uma publicação, de um documento ou de um modelo do escritório.</Empty>}
                     {drafts.map((d) => (
-                        <div key={d.id} className={styles.card} style={{ marginBottom: 6, cursor: 'pointer', borderColor: selected === d.id ? 'var(--c-primary)' : undefined }}
-                            onClick={() => setSelected(d.id)}>
+                        <div key={d.id} className={`${styles.card} ${styles.clickable} ${selected === d.id ? styles.card_active : ''}`}
+                            role="button" tabIndex={0} aria-pressed={selected === d.id}
+                            onClick={() => setSelected(d.id)} onKeyDown={(e) => e.key === 'Enter' && setSelected(d.id)}>
                             <strong>{d.titulo}</strong>
                             <div className={styles.muted}>{fmtDateTime(d.atualizada_em)} · <Pill tone={d.status === 'revisada' ? 'green' : 'yellow'}>{d.status}</Pill>
                                 {d.pendencias > 0 && <> <Pill tone="orange">{d.pendencias} a completar</Pill></>}</div>
                         </div>
                     ))}
-                </div>
+                </Stack>
                 <div>{selected ? <Editor key={selected} id={selected} canWrite={canWrite} canManage={isOrgManager} onChange={(gone) => { if (gone) setSelected(null); reload(); }} />
                     : data && <Empty>Escolha uma minuta à esquerda ou crie uma nova.</Empty>}</div>
             </div>}

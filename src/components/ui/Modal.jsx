@@ -23,10 +23,14 @@ export default function Modal({ open = true, onClose, title, size = 'md', footer
         return () => { document.body.style.overflow = overflow; anterior?.focus?.(); };
     }, [open]);
 
-    // Esc fecha (menos enquanto está salvando)
+    // Esc fecha (menos enquanto está salvando). Com um modal aberto por cima de outro, só o de cima fecha.
     useEffect(() => {
         if (!open) return;
-        const onKey = (e) => { if (e.key === 'Escape' && !busy) onClose?.(); };
+        const onKey = (e) => {
+            if (e.key !== 'Escape' || busy) return;
+            const abertos = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
+            if (abertos[abertos.length - 1] === boxRef.current) onClose?.();
+        };
         document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
     }, [open, busy, onClose]);

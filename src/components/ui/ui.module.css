@@ -291,5 +291,11 @@
 .w_fit { width: fit-content; }
 /* Chip de sugestão com texto longo (ex.: frases de exemplo que abrem o Assistente) */
 .chip_wide { justify-content: flex-start; text-align: left; white-space: normal; padding: var(--sp-2) var(--sp-3); text-decoration: none; min-height: 36px; }
+/* Cartão selecionável (ex.: lista de minutas): o selecionado ganha a borda da cor principal */
+.card_active { border-color: var(--c-primary); }
+/* Editor de peça jurídica: fonte de documento e área alta */
+.doc_editor { min-height: 420px; font-family: Georgia, serif; font-size: 15px; }
+/* Texto proposto pela IA (pré-visualização longa com rolagem) */
+.ai_preview { white-space: pre-wrap; max-height: 55vh; overflow: auto; font-size: var(--fs-md); line-height: 1.55; }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }

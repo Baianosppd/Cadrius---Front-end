@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiUpload, FiPlus, FiFileText } from 'react-icons/fi';
 import styles from '../ui/ui.module.css';
-import { Banner, Empty, Pill } from '../ui';
+import { Banner, Button, Empty, Field, FilterBar, FormModal, Input, Pill, Row, Select, Stack, Textarea } from '../ui';
 import { errorMessage } from '../../utils/format';
 import { TEMPLATE_KINDS, fieldLabel, minutasApi, templateFields } from '../../services/publications';
 
@@ -30,47 +30,41 @@ function ModeloForm({ initial, vars, onSaved, onCancel }) {
         } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Modelo de minuta">
-            <form className={styles.modal} style={{ maxWidth: 980 }} onSubmit={save}>
-                <div className={styles.modal_title}>{initial.id ? 'Editar modelo' : initial.importado ? 'Conferir modelo importado' : 'Novo modelo'}</div>
-                {initial.importado && (
-                    <Banner tone="info">Confira o texto. As marcações do arquivo ([CLIENTE], «vara», &lt;&lt;DATA&gt;&gt;…) viraram campos.
-                        Os campos que o Cadrius conhece são preenchidos sozinhos; os demais pedem para completar ao gerar a minuta.</Banner>
-                )}
-                <div className={styles.filters}>
-                    <label className={styles.field} style={{ flex: 2 }}>Nome
-                        <input className={styles.input} required minLength={3} maxLength={120} value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></label>
-                    <label className={styles.field}>Tipo
-                        <select className={styles.select} value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value })}>
-                            {TEMPLATE_KINDS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
-                        </select></label>
-                </div>
-                <div className={styles.two_col} style={{ alignItems: 'start' }}>
-                    <label className={styles.field}>Texto do modelo
-                        <textarea ref={ref} className={styles.textarea} required minLength={10} maxLength={30000} value={form.corpo}
-                            style={{ minHeight: 360, fontFamily: 'Georgia, serif', fontSize: 15 }} onChange={(e) => setForm({ ...form, corpo: e.target.value })} />
-                    </label>
-                    <div className={styles.stack} style={{ gap: 8 }}>
-                        <div className={styles.field}>Campos deste modelo ({fields.length})</div>
-                        <div className={styles.btn_row} style={{ gap: 4 }}>
-                            {fields.length === 0 && <span className={styles.muted}>Nenhum ainda.</span>}
-                            {fields.map((f) => <Pill key={f} tone={f.startsWith('campo.') ? 'yellow' : 'green'}>{fieldLabel(f, vars)}</Pill>)}
-                        </div>
-                        <div className={styles.field}>Inserir campo do Cadrius</div>
-                        <div className={styles.btn_row} style={{ gap: 4 }}>
-                            {vars.map((v) => (
-                                <button key={v.chave} type="button" className={`${styles.btn} ${styles.btn_sm}`} title={`{{${v.chave}}}`} onClick={() => insert(v.chave)}>{v.label}</button>
-                            ))}
-                        </div>
-                        <span className={styles.muted}>Verde: preenchido sozinho. Amarelo: campo do seu modelo, pedido ao gerar.</span>
-                    </div>
-                </div>
-                <div className={styles.btn_row}>
-                    <button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy}>{busy ? 'Salvando…' : 'Salvar modelo'}</button>
-                    <button type="button" className={styles.btn} onClick={onCancel}>Cancelar</button>
-                </div>
-            </form>
-        </div>
+        <FormModal size="xl" onClose={onCancel} onSubmit={save} busy={busy} submitLabel="Salvar modelo"
+            title={initial.id ? 'Editar modelo' : initial.importado ? 'Conferir modelo importado' : 'Novo modelo'}>
+            {initial.importado && (
+                <Banner tone="info">Confira o texto. As marcações do arquivo ([CLIENTE], «vara», &lt;&lt;DATA&gt;&gt;…) viraram campos.
+                    Os campos que o Cadrius conhece são preenchidos sozinhos; os demais pedem para completar ao gerar a minuta.</Banner>
+            )}
+            <FilterBar>
+                <Field label="Nome" className={styles.flex_2}>
+                    <Input required minLength={3} maxLength={120} value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} />
+                </Field>
+                <Field label="Tipo">
+                    <Select value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value })}>
+                        {TEMPLATE_KINDS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+                    </Select>
+                </Field>
+            </FilterBar>
+            <div className={`${styles.two_col} ${styles.align_start}`}>
+                <Field label="Texto do modelo">
+                    <Textarea ref={ref} className={styles.doc_editor} required minLength={10} maxLength={30000} value={form.corpo}
+                        onChange={(e) => setForm({ ...form, corpo: e.target.value })} />
+                </Field>
+                <Stack gap={2}>
+                    <div className={styles.field}>Campos deste modelo ({fields.length})</div>
+                    <Row gap={1}>
+                        {fields.length === 0 && <span className={styles.muted}>Nenhum ainda.</span>}
+                        {fields.map((f) => <Pill key={f} tone={f.startsWith('campo.') ? 'yellow' : 'green'}>{fieldLabel(f, vars)}</Pill>)}
+                    </Row>
+                    <div className={styles.field}>Inserir campo do Cadrius</div>
+                    <Row gap={1}>
+                        {vars.map((v) => <Button key={v.chave} size="sm" title={`{{${v.chave}}}`} onClick={() => insert(v.chave)}>{v.label}</Button>)}
+                    </Row>
+                    <span className={styles.muted}>Verde: preenchido sozinho. Amarelo: campo do seu modelo, pedido ao gerar.</span>
+                </Stack>
+            </div>
+        </FormModal>
     );
 }
 
@@ -94,49 +88,49 @@ export default function ModelosTab({ templates, vars, canManage, onUse, onChange
         try { await minutasApi.removeTemplate(t.id); toast.success('Modelo excluído.'); onChanged(); } catch (err) { toast.error(errorMessage(err)); }
     };
     return (
-        <div className={styles.stack}>
+        <Stack>
             {canManage && (
-                <div className={styles.btn_row}>
+                <Row>
                     <input ref={file} type="file" accept=".docx,.pdf,.txt,.md" hidden onChange={pick} />
-                    <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy} onClick={() => file.current?.click()}>
-                        <FiUpload aria-hidden="true" /> {busy ? 'Lendo arquivo…' : 'Importar modelo (Word, PDF ou texto)'}</button>
-                    <button type="button" className={styles.btn} onClick={() => setEditing({ nome: '', tipo: 'outro', corpo: '' })}><FiPlus aria-hidden="true" /> Escrever modelo</button>
-                </div>
+                    <Button variant="primary" icon={FiUpload} loading={busy} loadingLabel="Lendo arquivo…" onClick={() => file.current?.click()}>
+                        Importar modelo (Word, PDF ou texto)</Button>
+                    <Button icon={FiPlus} onClick={() => setEditing({ nome: '', tipo: 'outro', corpo: '' })}>Escrever modelo</Button>
+                </Row>
             )}
-            <div className={styles.section_title} style={{ marginBottom: 0 }}>Do escritório</div>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Do escritório</div>
             {own.length === 0 && <Empty title="Nenhum modelo do escritório">Importe as peças que vocês já usam: o Cadrius reconhece os campos e preenche com os dados do processo, do cliente e do escritório.</Empty>}
             <div className={styles.card_grid}>
                 {own.map((t) => (
-                    <div key={t.chave} className={`${styles.card} ${styles.stack}`} style={{ gap: 8 }}>
-                        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                    <Stack key={t.chave} gap={2} className={styles.card}>
+                        <Row gap={3} wrap={false}>
                             <FiFileText aria-hidden="true" size={22} color="var(--c-primary)" />
-                            <strong className={styles.clamp2} style={{ minWidth: 0 }}>{t.nome}</strong>
-                        </div>
-                        <div className={styles.btn_row} style={{ gap: 4 }}><Pill tone="blue">{kindLabel(t.tipo)}</Pill><Pill tone="gray">{(t.campos || []).length} campos</Pill></div>
-                        <p className={`${styles.muted} ${styles.clamp3}`} style={{ fontSize: '.85rem', margin: 0, flex: 1 }}>{t.corpo}</p>
-                        <div className={styles.btn_row}>
-                            <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_primary}`} onClick={() => onUse(t.chave)}>Usar</button>
-                            {canManage && <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => setEditing(t)}>Editar</button>}
-                            {canManage && <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} style={{ color: 'var(--c-danger)' }} onClick={() => remove(t)}>Excluir</button>}
-                        </div>
-                    </div>
+                            <strong className={`${styles.clamp2} ${styles.flex_1}`}>{t.nome}</strong>
+                        </Row>
+                        <Row gap={1}><Pill tone="blue">{kindLabel(t.tipo)}</Pill><Pill tone="gray">{(t.campos || []).length} campos</Pill></Row>
+                        <p className={`${styles.muted} ${styles.clamp3} ${styles.mt_0} ${styles.mb_0} ${styles.flex_1}`}>{t.corpo}</p>
+                        <Row>
+                            <Button size="sm" variant="primary" onClick={() => onUse(t.chave)}>Usar</Button>
+                            {canManage && <Button size="sm" onClick={() => setEditing(t)}>Editar</Button>}
+                            {canManage && <Button size="sm" variant="danger" onClick={() => remove(t)}>Excluir</Button>}
+                        </Row>
+                    </Stack>
                 ))}
             </div>
-            <div className={styles.section_title} style={{ marginBottom: 0 }}>Prontos do Cadrius</div>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Prontos do Cadrius</div>
             <div className={styles.card_grid}>
                 {builtin.map((t) => (
-                    <div key={t.chave} className={`${styles.card} ${styles.stack}`} style={{ gap: 8 }}>
+                    <Stack key={t.chave} gap={2} className={styles.card}>
                         <strong className={styles.clamp2}>{t.nome}</strong>
                         <div><Pill tone="gray">{kindLabel(t.tipo)}</Pill></div>
-                        <div className={styles.btn_row}>
-                            <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => onUse(t.chave)}>Usar</button>
-                            {canManage && <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`}
-                                onClick={() => setEditing({ nome: `${t.nome} (cópia)`, tipo: t.tipo, corpo: t.corpo })}>Copiar e ajustar</button>}
-                        </div>
-                    </div>
+                        <Row>
+                            <Button size="sm" onClick={() => onUse(t.chave)}>Usar</Button>
+                            {canManage && <Button size="sm" variant="ghost"
+                                onClick={() => setEditing({ nome: `${t.nome} (cópia)`, tipo: t.tipo, corpo: t.corpo })}>Copiar e ajustar</Button>}
+                        </Row>
+                    </Stack>
                 ))}
             </div>
             {editing && <ModeloForm initial={editing} vars={vars} onCancel={() => setEditing(null)} onSaved={() => { setEditing(null); onChanged(); }} />}
-        </div>
+        </Stack>
     );
 }
