@@ -1,5 +1,6 @@
 import styles from './EditorHeader.module.css';
 import { FiSave, FiUpload, FiLayout } from 'react-icons/fi';
+import { Button } from '../ui';
 
 const EditorHeader = ({
     title,
@@ -19,8 +20,7 @@ const EditorHeader = ({
                 <div className={styles.title_wrapper}>
                     {onTitleChange ? (
                         <input
-                            className={styles.title}
-                            style={{ border: '1px solid transparent', background: 'transparent', minWidth: 220 }}
+                            className={`${styles.title} ${styles.title_input}`}
                             value={title}
                             maxLength={255}
                             aria-label="Nome do fluxo"
@@ -30,10 +30,9 @@ const EditorHeader = ({
                         <h1 className={styles.title}>{title || 'Novo Fluxo'}</h1>
                     )}
                     <span
-                        className={`${styles.status} ${active ? styles.status_active : styles.status_inactive}`}
+                        className={`${styles.status} ${active ? styles.status_active : styles.status_inactive} ${onToggleActive ? styles.status_clickable : ''}`}
                         role={onToggleActive ? 'button' : undefined}
                         tabIndex={onToggleActive ? 0 : undefined}
-                        style={onToggleActive ? { cursor: 'pointer' } : undefined}
                         onClick={onToggleActive}
                         onKeyDown={(e) => onToggleActive && (e.key === 'Enter' || e.key === ' ') && onToggleActive()}
                     >
@@ -52,11 +51,11 @@ const EditorHeader = ({
                     <span>Gatilhos: {nodeCount.triggers}</span>
                 </div>
                 <div className={styles.counter}>
-                    <span className={styles.counter_dot} style={{ backgroundColor: '#3b82f6' }} />
+                    <span className={styles.counter_dot} style={{ backgroundColor: 'var(--c-info)' }} />
                     <span>Ações: {nodeCount.actions}</span>
                 </div>
                 <div className={styles.counter}>
-                    <span className={styles.counter_dot} style={{ backgroundColor: '#f59e0b' }} />
+                    <span className={styles.counter_dot} style={{ backgroundColor: 'var(--c-warning)' }} />
                     <span>Condições: {nodeCount.conditions}</span>
                 </div>
                 <div className={styles.counter}>
@@ -66,18 +65,9 @@ const EditorHeader = ({
             </div>
 
             <div className={styles.right}>
-                <button className={styles.button_secondary} onClick={onAutoLayout}>
-                    <FiLayout className={styles.button_icon} />
-                    Organizar
-                </button>
-                <button className={styles.button_secondary} onClick={onImport}>
-                    <FiUpload className={styles.button_icon} />
-                    Importar
-                </button>
-                <button className={styles.button_primary} onClick={onSave} disabled={saving}>
-                    <FiSave className={styles.button_icon} />
-                    {saving ? 'Salvando…' : 'Salvar'}
-                </button>
+                <Button icon={FiLayout} onClick={onAutoLayout}>Organizar</Button>
+                <Button icon={FiUpload} onClick={onImport}>Importar</Button>
+                <Button variant="primary" icon={FiSave} loading={saving} loadingLabel="Salvando…" onClick={onSave}>Salvar</Button>
             </div>
         </div>
     );

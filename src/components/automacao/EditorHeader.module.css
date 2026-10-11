@@ -135,3 +135,6 @@
     width: 15px;
     height: 15px;
 }
+/* Nome do fluxo editável: parece título até receber foco */
+.title_input { border: 1px solid transparent; background: transparent; min-width: 220px; }
+.status_clickable { cursor: pointer; }

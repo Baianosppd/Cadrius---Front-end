@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiCopy, FiWatch } from 'react-icons/fi';
 import ui from '../ui/ui.module.css';
-import { Banner } from '../ui';
+import { Banner, Button, Row, Stack, Tabs } from '../ui';
 import { errorMessage } from '../../utils/format';
 import { SHORTCUT_GUIDES, rulesApi } from '../../services/rules';
 
@@ -21,31 +21,28 @@ export default function ShortcutPanel({ rule, canManage }) {
     };
     const g = SHORTCUT_GUIDES[guide];
     return (
-        <div className={ui.card} style={{ marginTop: 12, background: 'var(--c-surface-2)' }}>
-            <div className={ui.section_title}><FiWatch aria-hidden="true" /> Atalho no relógio, celular ou voz</div>
-            <p className={ui.muted} style={{ marginTop: 0 }}>Chame este link (método POST) para rodar a regra na hora. Dá para enviar um texto ditado,
+        <Stack gap={3} className={`${ui.card} ${ui.bg_soft} ${ui.mt_3}`}>
+            <Row gap={2} className={`${ui.section_title} ${ui.mb_0}`}><FiWatch aria-hidden="true" /> Atalho no relógio, celular ou voz</Row>
+            <p className={`${ui.muted} ${ui.mt_0} ${ui.mb_0}`}>Chame este link (método POST) para rodar a regra na hora. Dá para enviar um texto ditado,
                 que vira a variável {'{{atalho.texto}}'}.</p>
             {url ? (
                 <>
                     <Banner tone="warn">Guarde este link agora: por segurança ele não aparece de novo. Quem tiver o link aciona a regra.</Banner>
-                    <div className={ui.btn_row} style={{ alignItems: 'center' }}>
-                        <code style={{ wordBreak: 'break-all', fontSize: '.8rem', flex: 1 }}>{url}</code>
-                        <button type="button" className={ui.btn} onClick={copy}><FiCopy aria-hidden="true" /> Copiar</button>
-                    </div>
+                    <Row wrap={false}>
+                        <code className={`${ui.mono} ${ui.break_all} ${ui.flex_1}`}>{url}</code>
+                        <Button icon={FiCopy} onClick={copy}>Copiar</Button>
+                    </Row>
                 </>
             ) : (
-                <p className={ui.muted}>{rule.atalho_configurado ? 'O link já foi gerado e está valendo.' : 'Ainda não há link para esta regra.'}</p>
+                <p className={`${ui.muted} ${ui.mt_0} ${ui.mb_0}`}>{rule.atalho_configurado ? 'O link já foi gerado e está valendo.' : 'Ainda não há link para esta regra.'}</p>
             )}
-            {canManage && <button type="button" className={ui.btn} disabled={busy} onClick={make}>{rule.atalho_configurado ? 'Gerar link novo' : 'Gerar link do atalho'}</button>}
-            <div className={ui.tabs} role="tablist" style={{ marginTop: 12 }}>
-                {Object.entries(SHORTCUT_GUIDES).map(([k, v]) => (
-                    <button key={k} type="button" role="tab" aria-selected={guide === k} className={`${ui.tab} ${guide === k ? ui.tab_active : ''}`}
-                        onClick={() => setGuide(k)}>{v.label}</button>
-                ))}
+            {canManage && <Button className={ui.w_fit} loading={busy} onClick={make}>{rule.atalho_configurado ? 'Gerar link novo' : 'Gerar link do atalho'}</Button>}
+            <div>
+                <Tabs tabs={Object.entries(SHORTCUT_GUIDES).map(([id, v]) => ({ id, label: v.label }))} value={guide} onChange={setGuide} />
+                <ol className={ui.ol_compact}>
+                    {g.steps.map((step) => <li key={step}>{step}</li>)}
+                </ol>
             </div>
-            <ol style={{ margin: '8px 0 0', paddingLeft: 20, display: 'grid', gap: 4, fontSize: '.88rem' }}>
-                {g.steps.map((s) => <li key={s}>{s}</li>)}
-            </ol>
-        </div>
+        </Stack>
     );
 }

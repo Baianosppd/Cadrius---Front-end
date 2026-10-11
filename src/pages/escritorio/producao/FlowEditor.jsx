@@ -134,7 +134,7 @@ function FlowEditor() {
                 onAutoLayout={() => canvasRef.current?.autoLayout()}
             />
 
-            <input ref={importInputRef} type="file" accept=".json" style={{ display: 'none' }} onChange={handleImportFile} />
+            <input ref={importInputRef} type="file" accept=".json" hidden onChange={handleImportFile} />
 
             <div className={styles.body}>
                 <NodeLibrary />

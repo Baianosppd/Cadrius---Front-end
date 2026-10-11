@@ -101,3 +101,4 @@
     font-size: 11px;
     color: var(--c-subtle);
 }
+.subtitle_pad { padding: 0 4px; }

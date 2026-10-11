@@ -74,7 +74,7 @@ const NodeLibrary = () => {
                         </div>
                     </div>
                 ))}
-                <p className={styles.header_subtitle} style={{ padding: '0 4px' }}>
+                <p className={`${styles.header_subtitle} ${styles.subtitle_pad}`}>
                     Condições, horários, prazos e outros apps (Slack, Teams, SMS): use Automações → Regras, ou o bloco
                     “Chamar webhook” para sistemas que recebem webhook.
                 </p>

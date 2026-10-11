@@ -302,5 +302,10 @@
 .ai_preview { white-space: pre-wrap; max-height: 55vh; overflow: auto; font-size: var(--fs-md); line-height: 1.55; }
 /* Prévia de e-mail num iframe isolado (fundo claro fixo: é como o cliente vê) */
 .email_frame { width: 100%; border: 1px solid var(--c-border); border-radius: 10px; background: #f3f4f6; }
+.mt_4 { margin-top: var(--sp-4); }
+/* Fundo suave para um bloco dentro de um cartão */
+.bg_soft { background: var(--c-surface-2); }
+/* Lista numerada compacta (passo a passo) */
+.ol_compact { margin: var(--sp-2) 0 0; padding-left: 20px; display: grid; gap: var(--sp-1); font-size: var(--fs-sm); }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }
