@@ -285,3 +285,6 @@
 .pre_wrap { white-space: pre-wrap; }
 .break_all { word-break: break-all; }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+/* Linha de tabela que abre algo ao clicar (também abre com Enter quando focada) */
+.clickable { cursor: pointer; }
+.clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }
