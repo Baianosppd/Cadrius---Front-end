@@ -314,5 +314,7 @@
 .text_right { text-align: right; }
 /* Rótulo pequeno em caixa alta (ex.: o dia acima de uma lista) */
 .eyebrow { font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; color: var(--c-muted); }
+/* Tabela dentro de um cartão: sem a borda e a sombra próprias */
+.table_flat { border: none; box-shadow: none; }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }
