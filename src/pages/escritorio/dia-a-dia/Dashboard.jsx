@@ -2,14 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../services/api.js';
 import styles from './Dashboard.module.css';
 
-import PageHeader from '../../../components/ui/PageHearder.jsx';
-import ActionButton from '../../../components/ui/ActionButton';
+import { Button, PageHeader } from '../../../components/ui';
 import SummaryGroup from '../../../components/painel/SummaryGroup.jsx';
 import TasksToday from '../../../components/painel/TasksToday';
 import SmartActivities from '../../../components/painel/SmartActivities';
 
 import { FiFileText, FiZap, FiMail, FiToggleRight } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FirstSteps from '../../../components/painel/FirstSteps';
 import useAuth from '../../../hooks/useAuth';
@@ -18,7 +17,6 @@ import { greeting, todayLabel } from '../../../services/onboarding';
 
 function Dashboard() {
     usePaymentReturn();
-    const navigate = useNavigate();
     const { user } = useAuth();
     const [dashStats, setDashStats] = useState(null);
     const [tasks, setTasks] = useState([]);
@@ -52,10 +50,11 @@ function Dashboard() {
 
     const num = (key) => (dashStats ? String(dashStats[key] ?? 0) : '—');
     const stats = [
-        { icon: FiFileText, iconColor: '#3b82f6', title: 'Documentos', value: num('total_documentos') },
+        // Cores do tema (mudam no modo escuro). O roxo ainda não tem token — pendente com o Allan (CAD-127).
+        { icon: FiFileText, iconColor: 'var(--c-info)', title: 'Documentos', value: num('total_documentos') },
         { icon: FiToggleRight, iconColor: '#8b5cf6', title: 'Automações ativas', value: num('automacoes_ativas') },
-        { icon: FiZap, iconColor: '#f59e0b', title: 'Automações rodadas', value: num('automacoes_rodadas') },
-        { icon: FiMail, iconColor: '#10b981', title: 'Mensagens enviadas', value: num('mensagens_enviadas') },
+        { icon: FiZap, iconColor: 'var(--c-warning)', title: 'Automações rodadas', value: num('automacoes_rodadas') },
+        { icon: FiMail, iconColor: 'var(--c-success)', title: 'Mensagens enviadas', value: num('mensagens_enviadas') },
     ];
 
     const handleToggle = async (id) => {
@@ -77,18 +76,14 @@ function Dashboard() {
             <FirstSteps totalDocs={dashStats ? Number(dashStats.total_documentos || 0) : undefined} />
 
             <div className={styles.actions_row}>
-                <ActionButton icon={FiFileText} label="Analisar documento" variant="primary" onClick={() => navigate('/documents')} />
-                <ActionButton icon={FiZap} label="Nova automação" variant="secondary" onClick={() => navigate('/automacao')} />
+                <Button as={Link} to="/documents" variant="primary" size="lg" icon={FiFileText}>Analisar documento</Button>
+                <Button as={Link} to="/automacao" size="lg" icon={FiZap}>Nova automação</Button>
             </div>
 
             <SummaryGroup stats={stats} />
 
             <div className={styles.bottom_row}>
-                <TasksToday
-                    tasks={tasks}
-                    onToggleTask={handleToggle}
-                    onAddTask={() => navigate('/newtask')}
-                />
+                <TasksToday tasks={tasks} onToggleTask={handleToggle} />
                 <SmartActivities activities={activities} />
             </div>
         </div>

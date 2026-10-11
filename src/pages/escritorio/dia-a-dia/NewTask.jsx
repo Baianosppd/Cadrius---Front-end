@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiArrowLeft, FiCalendar, FiMessageCircle } from 'react-icons/fi';
 import styles from '../../../components/ui/ui.module.css';
-import { PageHeader } from '../../../components/ui';
+import { Button, Checkbox, Field, FilterBar, Input, PageHeader, Row, Select, Stack, Textarea } from '../../../components/ui';
 import { errorMessage } from '../../../utils/format';
 import api from '../../../services/api.js';
 import { gcal } from '../../../services/gcal';
@@ -60,28 +60,31 @@ export default function NewTask() {
 
     return (
         <div className={styles.page}>
-            <Link to="/dashboard" className={styles.link_btn} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, width: 'fit-content' }}>
-                <FiArrowLeft aria-hidden="true" /> Painel</Link>
+            <Button as={Link} to="/dashboard" variant="ghost" size="sm" icon={FiArrowLeft} className={styles.w_fit}>Painel</Button>
             <PageHeader title="Nova tarefa" />
-            <div className={styles.two_col} style={{ alignItems: 'start' }}>
-                <form className={`${styles.card} ${styles.stack}`} onSubmit={submit}>
-                    <label className={styles.field}>Título
-                        <input className={styles.input} autoFocus required maxLength={200} value={form.titulo} onChange={(e) => set('titulo', e.target.value)}
-                            placeholder="Ex.: Revisar o contrato do cliente" /></label>
-                    <label className={styles.field}>Detalhes (opcional)
-                        <textarea className={styles.textarea} rows={3} maxLength={2000} value={form.descricao} onChange={(e) => set('descricao', e.target.value)} /></label>
-                    <div className={styles.filters}>
-                        <label className={styles.field}>Quando
-                            <input className={styles.input} type="datetime-local" required value={form.dataHorario} onChange={(e) => set('dataHorario', e.target.value)} /></label>
+            <div className={`${styles.two_col} ${styles.align_start}`}>
+                <Stack as="form" className={styles.card} onSubmit={submit}>
+                    <Field label="Título">
+                        <Input autoFocus required maxLength={200} value={form.titulo} onChange={(e) => set('titulo', e.target.value)}
+                            placeholder="Ex.: Revisar o contrato do cliente" />
+                    </Field>
+                    <Field label="Detalhes (opcional)">
+                        <Textarea rows={3} maxLength={2000} value={form.descricao} onChange={(e) => set('descricao', e.target.value)} />
+                    </Field>
+                    <FilterBar>
+                        <Field label="Quando">
+                            <Input type="datetime-local" required value={form.dataHorario} onChange={(e) => set('dataHorario', e.target.value)} />
+                        </Field>
                         {members.length > 1 && (
-                            <label className={styles.field}>Responsável
-                                <select className={styles.select} value={form.responsavel} onChange={(e) => set('responsavel', e.target.value)}>
+                            <Field label="Responsável">
+                                <Select value={form.responsavel} onChange={(e) => set('responsavel', e.target.value)}>
                                     {members.map((m) => <option key={m.id} value={m.id}>{`${m.first_name || ''} ${m.last_name || ''}`.trim() || m.email}</option>)}
-                                </select></label>
+                                </Select>
+                            </Field>
                         )}
-                    </div>
+                    </FilterBar>
                     <div className={styles.field}>Prioridade
-                        <div className={styles.segmented} role="group" aria-label="Prioridade" style={{ width: 'fit-content' }}>
+                        <div className={`${styles.segmented} ${styles.w_fit}`} role="group" aria-label="Prioridade">
                             {PRIORITIES.map(([k, l]) => (
                                 <button key={k} type="button" aria-pressed={form.prioridade === k} className={form.prioridade === k ? styles.seg_on : ''}
                                     onClick={() => set('prioridade', k)}>{l}</button>
@@ -89,27 +92,26 @@ export default function NewTask() {
                         </div>
                     </div>
                     {google ? (
-                        <label className={styles.check_row}>
-                            <input type="checkbox" checked={form.sincronizar && mine} disabled={!mine} onChange={(e) => set('sincronizar', e.target.checked)} />
+                        <Checkbox checked={form.sincronizar && mine} disabled={!mine} onChange={(e) => set('sincronizar', e.target.checked)}>
                             <FiCalendar aria-hidden="true" /> Colocar no meu Google Agenda {!mine && '(só para tarefas suas)'}
-                        </label>
+                        </Checkbox>
                     ) : google === false && (
-                        <span className={styles.muted} style={{ fontSize: '.85rem' }}>Quer a tarefa também no celular? <Link to="/integracoes">Conecte o Google</Link>.</span>
+                        <span className={styles.muted}>Quer a tarefa também no celular? <Link to="/integracoes">Conecte o Google</Link>.</span>
                     )}
-                    <div className={styles.btn_row}>
-                        <button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy}>{busy ? 'Criando…' : 'Criar tarefa'}</button>
-                        <button type="button" className={styles.btn} onClick={() => navigate(-1)}>Cancelar</button>
-                    </div>
-                </form>
-                <aside className={`${styles.card} ${styles.stack}`} aria-label="Criar pelo Assistente" style={{ gap: 10 }}>
-                    <div className={styles.section_title} style={{ margin: 0, display: 'flex', gap: 8, alignItems: 'center' }}>
-                        <FiMessageCircle aria-hidden="true" color="var(--c-primary)" /> Prefere pedir?</div>
-                    <span className={styles.muted} style={{ fontSize: '.88rem' }}>Escreva do seu jeito no Assistente: ele monta a tarefa e você confirma.</span>
+                    <Row>
+                        <Button type="submit" variant="primary" loading={busy} loadingLabel="Criando…">Criar tarefa</Button>
+                        <Button onClick={() => navigate(-1)}>Cancelar</Button>
+                    </Row>
+                </Stack>
+                <Stack as="aside" gap={3} className={styles.card} aria-label="Criar pelo Assistente">
+                    <Row gap={2} className={`${styles.section_title} ${styles.mb_0}`}>
+                        <FiMessageCircle aria-hidden="true" color="var(--c-primary)" /> Prefere pedir?
+                    </Row>
+                    <span className={styles.muted}>Escreva do seu jeito no Assistente: ele monta a tarefa e você confirma.</span>
                     {EXAMPLES.map((t) => (
-                        <Link key={t} to={`/assistente?texto=${encodeURIComponent(t)}`} className={styles.chip}
-                            style={{ justifyContent: 'flex-start', textAlign: 'left', whiteSpace: 'normal', padding: '8px 12px', textDecoration: 'none', minHeight: 36 }}>{t}</Link>
+                        <Link key={t} to={`/assistente?texto=${encodeURIComponent(t)}`} className={`${styles.chip} ${styles.chip_wide}`}>{t}</Link>
                     ))}
-                </aside>
+                </Stack>
             </div>
         </div>
     );

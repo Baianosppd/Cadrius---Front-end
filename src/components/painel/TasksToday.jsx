@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+import { Button } from '../ui';
 import styles from './TasksToday.module.css';
 
 const priorityLabels = {
@@ -33,7 +35,7 @@ const TaskItem = ({ description, time, date, overdue, priority, completed, onTog
     </div>
 );
 
-const TasksToday = ({ tasks = [], onToggleTask, onAddTask }) => {
+const TasksToday = ({ tasks = [], onToggleTask }) => {
     const completed = tasks.filter(t => t.completed).length;
     const late = tasks.filter(t => t.overdue).length;
 
@@ -44,9 +46,7 @@ const TasksToday = ({ tasks = [], onToggleTask, onAddTask }) => {
                     <h2 className={styles.title}>Tarefas de Hoje</h2>
                     <span className={styles.counter}>{completed} de {tasks.length} concluídas{late ? ` · ${late} atrasada${late > 1 ? 's' : ''}` : ''}</span>
                 </div>
-                <button type="button" className={styles.add_button} onClick={onAddTask}>
-                    Nova tarefa
-                </button>
+                <Button as={Link} to="/newtask" variant="primary" className={styles.add_button}>Nova tarefa</Button>
             </div>
 
             <div className={styles.task_list}>

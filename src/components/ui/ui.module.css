@@ -286,5 +286,8 @@
 .break_all { word-break: break-all; }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 /* Linha de tabela que abre algo ao clicar (também abre com Enter quando focada) */
+.w_fit { width: fit-content; }
+/* Chip de sugestão com texto longo (ex.: frases de exemplo que abrem o Assistente) */
+.chip_wide { justify-content: flex-start; text-align: left; white-space: normal; padding: var(--sp-2) var(--sp-3); text-decoration: none; min-height: 36px; }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }

@@ -19,7 +19,7 @@ import Perfil from "../pages/escritorio/conta/Perfil";
 import UnderConstruction from '../pages/escritorio/legado/UnderConstruction';
 import GestaoEquipe from "../pages/escritorio/configuracoes/GestaoEquipe";
 import Notificacoes from "../pages/escritorio/conta/Notificacoes";
-import NewTask from "../pages/escritorio/legado/NewTask";
+import NewTask from "../pages/escritorio/dia-a-dia/NewTask";
 
 import EditorLayout from '../layouts/EditorLayout';
 import AdminLayout from '../layouts/AdminLayout';

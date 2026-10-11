@@ -5,7 +5,7 @@
 .close { width: 32px; height: 32px; border-radius: var(--radius); border: none; background: transparent; color: var(--c-muted); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .close:hover { background: var(--c-surface-3); color: var(--c-ink); }
 .bar { height: 6px; border-radius: 999px; background: var(--c-surface-3); overflow: hidden; }
-.bar span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--c-primary), #22c55e); transition: width .4s; }
+.bar span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--c-primary), var(--c-success)); transition: width .4s; }
 .list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-2); }
 .item { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); min-height: 44px; border-radius: var(--radius); text-decoration: none; color: var(--c-text); font-size: var(--fs-base); background: var(--c-surface); border: 1px solid var(--c-border); transition: border-color .15s, transform .15s; }
 .item:hover { border-color: var(--c-primary); transform: translateX(2px); }

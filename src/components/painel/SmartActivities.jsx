@@ -1,9 +1,10 @@
 import styles from './SmartActivities.module.css';
 
+// Cores do tema (mudam no modo escuro)
 const dotColors = {
-    success: '#10b981',
-    warning: '#f59e0b',
-    error: '#ef4444',
+    success: 'var(--c-success)',
+    warning: 'var(--c-warning)',
+    error: 'var(--c-danger)',
 };
 
 const ActivityItem = ({ title, description, time, type }) => (
