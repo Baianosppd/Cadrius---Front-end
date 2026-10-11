@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import styles from '../ui/ui.module.css';
-import { Banner, Empty, Loading, Pill } from '../ui';
+import { Banner, Button, Empty, Loading, Pill, Row, Stack } from '../ui';
 import { errorMessage, fmtDateTime } from '../../utils/format';
 import useLoader from '../../hooks/useLoader';
 import { RUN_STATUS, STEP_STATUS, rulesApi } from '../../services/rules';
@@ -28,12 +28,12 @@ export default function ExecucoesTab({ pendentes, canApprove, onChange }) {
     if (!data) return <Loading />;
     if (data.length === 0) return <Empty>{pendentes ? 'Nada aguardando aprovação.' : 'Nenhuma execução ainda.'}</Empty>;
     return (
-        <div>
+        <Stack gap={2}>
             {pendentes && <Banner tone="info">Aprovações expiram em 7 dias.</Banner>}
             {data.map((run) => {
                 const [label, tone] = RUN_STATUS[run.status] || [run.status, 'gray'];
                 return (
-                    <div key={run.id} className={styles.card} style={{ margin: '8px 0' }}>
+                    <Stack key={run.id} gap={2} className={styles.card}>
                         <div className={styles.header_row}>
                             <div>
                                 <strong>{run.regra.nome}</strong> <Pill tone={tone}>{label}</Pill>
@@ -42,28 +42,28 @@ export default function ExecucoesTab({ pendentes, canApprove, onChange }) {
                                     {run.decidido_por && ` · decidido por ${run.decidido_por}`}{run.observacao && ` (${run.observacao})`}</div>
                             </div>
                             {pendentes && canApprove && (
-                                <div className={styles.btn_row}>
-                                    <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => decide(run, true)}>Aprovar e enviar</button>
-                                    <button type="button" className={styles.btn} onClick={() => decide(run, false)}>Recusar</button>
-                                </div>
+                                <Row>
+                                    <Button variant="primary" onClick={() => decide(run, true)}>Aprovar e enviar</Button>
+                                    <Button onClick={() => decide(run, false)}>Recusar</Button>
+                                </Row>
                             )}
                         </div>
                         {run.passos.map((p, i) => {
                             const [sl, st] = STEP_STATUS[p.status] || [p.status, 'gray'];
                             return (
-                                <div key={i} style={{ marginTop: 6 }}>
+                                <div key={i}>
                                     <Pill tone={st}>{sl}</Pill> <strong>{p.rotulo}</strong> <span className={styles.muted}>{p.detalhe}</span>
                                     {p.status === 'aguardando' && p.dados?.mensagem && (
-                                        <div className={styles.doc_text} style={{ whiteSpace: 'pre-wrap' }}>
+                                        <div className={`${styles.doc_text} ${styles.pre_wrap} ${styles.mt_2}`}>
                                             {p.dados.assunto && <div><strong>Assunto:</strong> {p.dados.assunto}</div>}{p.dados.mensagem}
                                         </div>
                                     )}
                                 </div>
                             );
                         })}
-                    </div>
+                    </Stack>
                 );
             })}
-        </div>
+        </Stack>
     );
 }
