@@ -7,7 +7,8 @@ const FOCAVEL = 'input:not([disabled]), select:not([disabled]), textarea:not([di
 
 // Janela modal base: fecha no Esc e no clique fora, foca o 1º campo e devolve o foco ao fechar.
 // "busy" impede fechar enquanto algo está sendo salvo; "as" troca a tag da caixa (FormModal usa "form").
-export default function Modal({ open = true, onClose, title, size = 'md', footer, busy = false, as = 'div', children, ...rest }) {
+// closeOnOverlay={false}: clique fora não fecha (formulários, para não perder o que foi digitado).
+export default function Modal({ open = true, onClose, title, size = 'md', footer, busy = false, closeOnOverlay = true, as = 'div', children, ...rest }) {
     const Tag = as;
     const titleId = useId();
     const boxRef = useRef(null);
@@ -33,7 +34,7 @@ export default function Modal({ open = true, onClose, title, size = 'md', footer
     if (!open) return null;
     // Clique fora só fecha se começou no fundo — selecionar texto e soltar fora não fecha
     return createPortal(
-        <div className={styles.overlay} onMouseDown={(e) => { if (e.target === e.currentTarget && !busy) onClose?.(); }}>
+        <div className={styles.overlay} onMouseDown={(e) => { if (closeOnOverlay && e.target === e.currentTarget && !busy) onClose?.(); }}>
             <Tag ref={boxRef} className={styles.modal} style={{ maxWidth: SIZES[size] ?? size }}
                 role="dialog" aria-modal="true" aria-labelledby={title ? titleId : undefined} {...rest}>
                 {title && <h2 id={titleId} className={styles.modal_title}>{title}</h2>}
