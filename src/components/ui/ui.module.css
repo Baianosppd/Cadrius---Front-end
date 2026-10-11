@@ -248,3 +248,40 @@
 .td_actions { width: 1%; white-space: nowrap; }
 .td_actions > div { flex-wrap: nowrap; }
 @media (max-width: 640px) { .td_actions { width: auto; white-space: normal; } .td_actions > div { flex-wrap: wrap; } }
+
+/* ---------- Layout: <Stack> (coluna) e <Row> (linha) ---------- */
+.l_stack { display: flex; flex-direction: column; min-width: 0; }
+.l_row { display: flex; flex-wrap: wrap; min-width: 0; }
+.nowrap { flex-wrap: nowrap; }
+.gap_0 { gap: 0; }
+.gap_1 { gap: var(--sp-1); }
+.gap_2 { gap: var(--sp-2); }
+.gap_3 { gap: var(--sp-3); }
+.gap_4 { gap: var(--sp-4); }
+.gap_5 { gap: var(--sp-5); }
+.gap_6 { gap: var(--sp-6); }
+.gap_8 { gap: var(--sp-8); }
+.align_start { align-items: flex-start; }
+.align_center { align-items: center; }
+.align_end { align-items: flex-end; }
+.align_stretch { align-items: stretch; }
+.align_baseline { align-items: baseline; }
+.justify_start { justify-content: flex-start; }
+.justify_center { justify-content: center; }
+.justify_end { justify-content: flex-end; }
+.justify_between { justify-content: space-between; }
+
+/* ---------- Utilitários (ajustes pontuais no lugar de style={{}}) ---------- */
+.text_xs { font-size: var(--fs-xs); }
+.text_sm { font-size: var(--fs-sm); }
+.text_muted { color: var(--c-muted); }
+.text_danger { color: var(--c-danger); }
+.mt_0 { margin-top: 0; }
+.mt_2 { margin-top: var(--sp-2); }
+.mt_3 { margin-top: var(--sp-3); }
+.mb_0 { margin-bottom: 0; }
+.flex_1 { flex: 1 1 0; min-width: 0; }
+.flex_2 { flex: 2 1 0; min-width: 0; }
+.pre_wrap { white-space: pre-wrap; }
+.break_all { word-break: break-all; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }

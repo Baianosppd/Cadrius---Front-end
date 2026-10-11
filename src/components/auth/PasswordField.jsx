@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import Input from '../legado/AuthInput';
+import { Input } from '../ui';
 import s from './AuthShell.module.css';
 
 // Campo de senha com "mostrar/ocultar" (CAD-226): menos erro de digitação, sobretudo no celular
-export default function PasswordField({ id, ...props }) {
+export default function PasswordField({ id, size = 'lg', ...props }) {
     const [show, setShow] = useState(false);
     return (
         <div className={s.pwd_wrap}>
-            <Input id={id} type={show ? 'text' : 'password'} {...props} className={s.pwd_input} />
+            <Input id={id} size={size} type={show ? 'text' : 'password'} {...props} className={s.pwd_input} />
             <button type="button" className={s.pwd_toggle} onClick={() => setShow((v) => !v)}
                 aria-label={show ? 'Ocultar senha' : 'Mostrar senha'} aria-controls={id} aria-pressed={show}>
                 {show ? <FiEyeOff aria-hidden="true" /> : <FiEye aria-hidden="true" />}

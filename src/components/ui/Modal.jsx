@@ -7,7 +7,8 @@ const FOCAVEL = 'input:not([disabled]), select:not([disabled]), textarea:not([di
 
 // Janela modal base: fecha no Esc e no clique fora, foca o 1º campo e devolve o foco ao fechar.
 // "busy" impede fechar enquanto algo está sendo salvo; "as" troca a tag da caixa (FormModal usa "form").
-export default function Modal({ open = true, onClose, title, size = 'md', footer, busy = false, as: Tag = 'div', children, ...rest }) {
+export default function Modal({ open = true, onClose, title, size = 'md', footer, busy = false, as = 'div', children, ...rest }) {
+    const Tag = as;
     const titleId = useId();
     const boxRef = useRef(null);
 

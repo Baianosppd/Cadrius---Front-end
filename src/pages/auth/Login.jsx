@@ -2,15 +2,11 @@ import React, { useState } from 'react';
 import { pendingMfa } from '../../services/mfa';
 import { homePath } from '../../services/home';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 
 import useAuth from '../../hooks/useAuth';
-import Input from '../../components/legado/AuthInput';
-import Label from '../../components/ui/Label';
-import Button from '../../components/ui/Button';
-import Checkbox from '../../components/legado/AuthCheckBox';
-import FormGroup from '../../components/ui/FormGroup';
+import { Button, Checkbox, Field, Input, Row, Stack } from '../../components/ui';
+import PasswordField from '../../components/auth/PasswordField';
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,7 +23,6 @@ function Login() {
     const [password, setPassword] = useState('');
     const [lembrar, setLembrar] = useState(true);
     const [error, setError] = useState(null);
-    const [showPassword, setShowPassword] = useState(false);
 
     // 2ª etapa: desafio vindo do login por senha ou do login social (CAD-169)
     const [mfaToken, setMfaToken] = useState(() => pendingMfa.take());
@@ -132,72 +127,37 @@ function Login() {
                     )}
 
                     {mfaToken && (
-                        <form onSubmit={handleMfa}>
+                        <Stack as="form" gap={5} onSubmit={handleMfa}>
                             <p className={styles.form_subtitle}>Verificação em duas etapas: digite o código de 6 dígitos do seu aplicativo autenticador
                                 (ou um código de recuperação).</p>
-                            <FormGroup>
-                                <Label>Código</Label>
-                                <Input type="text" inputMode="numeric" autoComplete="one-time-code" autoFocus placeholder="123456"
+                            <Field label="Código">
+                                <Input size="lg" type="text" inputMode="numeric" autoComplete="one-time-code" autoFocus placeholder="123456"
                                     value={mfaCode} onChange={(e) => { setMfaCode(e.target.value); setError(null); }} />
-                            </FormGroup>
+                            </Field>
                             <Button type="submit" variant="primary" size="lg" block>Verificar</Button>
-                            <button type="button" className={styles.forgot_link} style={{ background: 'none', border: 'none', marginTop: 12, cursor: 'pointer' }}
+                            <button type="button" className={`${styles.forgot_link} ${styles.text_btn}`}
                                 onClick={() => { setMfaToken(null); setMfaCode(''); setError(null); }}>Voltar</button>
                             {error && <div className={styles.credentials_invalid}>{error}</div>}
-                        </form>
+                        </Stack>
                     )}
 
                     {/* Formulário */}
-                    {!mfaToken && <form onSubmit={handleSubmit}>
-                        <FormGroup>
-                            <Label>E-mail</Label>
-                            <Input
-                                type="email"
-                                id="username"
-                                name="username"
-                                autoComplete="username"
-                                inputMode="email"
-                                placeholder="seu@email.com"
-                                value={username}
-                                onChange={(e) => { setUsername(e.target.value); setError(null); }}
-                            />
-                        </FormGroup>
+                    {!mfaToken && <Stack as="form" gap={5} onSubmit={handleSubmit}>
+                        <Field label="E-mail">
+                            <Input size="lg" type="email" id="username" name="username" autoComplete="username" inputMode="email"
+                                placeholder="seu@email.com" value={username}
+                                onChange={(e) => { setUsername(e.target.value); setError(null); }} />
+                        </Field>
 
-                        <FormGroup>
-                            <Label>Senha</Label>
-                            <div className={styles.password_wrapper}>
-                                <Input
-                                    type={showPassword ? 'text' : 'password'}
-                                    id="current-password"
-                                    name="password"
-                                    autoComplete="current-password"
-                                    placeholder="••••••••"
-                                    value={password}
-                                    onChange={(e) => { setPassword(e.target.value); setError(null); }}
-                                    className={styles.password_input}
-                                />
-                                <button
-                                    type="button"
-                                    className={styles.eye_button}
-                                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                                    onClick={() => setShowPassword(p => !p)}
-                                >
-                                    {showPassword ? <FiEyeOff /> : <FiEye />}
-                                </button>
-                            </div>
-                        </FormGroup>
+                        <Field label="Senha">
+                            <PasswordField id="current-password" name="password" autoComplete="current-password" placeholder="••••••••"
+                                value={password} onChange={(e) => { setPassword(e.target.value); setError(null); }} />
+                        </Field>
 
-                        <div className={styles.row_options}>
-                            <Checkbox
-                                label="Manter conectado"
-                                id="lembrar"
-                                checked={lembrar}
-                                onChange={(e) => setLembrar(e.target.checked)}
-                            />
-                            <Link to="/esqueceu-a-senha" className={styles.forgot_link}>
-                                Esqueceu a senha?
-                            </Link>
-                        </div>
+                        <Row justify="between" gap={3}>
+                            <Checkbox checked={lembrar} onChange={(e) => setLembrar(e.target.checked)}>Manter conectado</Checkbox>
+                            <Link to="/esqueceu-a-senha" className={styles.forgot_link}>Esqueceu a senha?</Link>
+                        </Row>
 
                         <Button type="submit" variant="primary" size="lg" block>Entrar</Button>
 
@@ -206,7 +166,7 @@ function Login() {
                                 {error}
                             </div>
                         )}
-                    </form>}
+                    </Stack>}
 
                     <p className={styles.register_link}>
                         Não tem uma conta? <Link to="/criar-conta">Criar conta</Link>
