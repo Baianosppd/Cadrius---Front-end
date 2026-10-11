@@ -1,5 +1,5 @@
 import styles from './IntegrationGrid.module.css';
-import IntegrationCard from '../integracoes/IntegrationCard';
+import IntegrationCard from './IntegrationCard';
 
 const IntegrationGrid = ({ integrations = [] }) => {
     return (

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import ui from '../ui/ui.module.css';
-import { Pill } from '../ui';
+import { Button, Checkbox, Field, FilterBar, Input, Pill, Row, Select, Stack, Table } from '../ui';
 import { errorMessage, fmtDateTime } from '../../utils/format';
 import { AGENDA_ALERTS, EVENT_KINDS, gcal } from '../../services/gcal';
 import { rulesApi } from '../../services/rules';
@@ -72,60 +72,62 @@ export default function AgendaGoogleEvents({ status, onSaved }) {
             navigate('/automacao?aba=regras');
         } catch (e) { toast.error(errorMessage(e)); }
     };
+    const setF = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
     return (
-        <div className={ui.stack}>
-            <div className={ui.header_row} style={{ alignItems: 'center' }}>
-                <div className={ui.section_title} style={{ margin: 0 }}>Seus compromissos do Google</div>
-                {!form && <button type="button" className={`${ui.btn} ${ui.btn_sm} ${ui.btn_primary}`} onClick={() => setForm(blank)}>Novo compromisso</button>}
-            </div>
+        <Stack>
+            <Row justify="between">
+                <div className={`${ui.section_title} ${ui.mb_0}`}>Seus compromissos do Google</div>
+                {!form && <Button size="sm" variant="primary" onClick={() => setForm(blank)}>Novo compromisso</Button>}
+            </Row>
             {form && (
-                <form className={`${ui.card} ${ui.stack}`} onSubmit={submitNew} aria-label="Novo compromisso no Google Agenda">
-                    <label className={ui.field}>Título
-                        <input className={ui.input} required maxLength={200} value={form.titulo} placeholder="Ex.: Reunião com a cliente Maria"
-                            onChange={(e) => setForm({ ...form, titulo: e.target.value })} /></label>
-                    <div className={ui.filters}>
-                        <label className={ui.field}>Data<input className={ui.input} type="date" required value={form.data} onChange={(e) => setForm({ ...form, data: e.target.value })} /></label>
-                        <label className={ui.field}>Hora<input className={ui.input} type="time" required value={form.hora} onChange={(e) => setForm({ ...form, hora: e.target.value })} /></label>
-                        <label className={ui.field}>Duração (min)<input className={ui.input} type="number" min="5" max="1440" value={form.duracao_min} onChange={(e) => setForm({ ...form, duracao_min: e.target.value })} /></label>
-                    </div>
-                    <label className={ui.field}>Local (opcional)<input className={ui.input} maxLength={300} value={form.local} onChange={(e) => setForm({ ...form, local: e.target.value })} /></label>
-                    <label className={ui.field}>Convidados (e-mails, opcional)<input className={ui.input} value={form.convidados} placeholder="maria@email.com, joao@email.com" onChange={(e) => setForm({ ...form, convidados: e.target.value })} /></label>
+                <Stack as="form" gap={3} className={ui.card} onSubmit={submitNew} aria-label="Novo compromisso no Google Agenda">
+                    <Field label="Título">
+                        <Input required maxLength={200} value={form.titulo} placeholder="Ex.: Reunião com a cliente Maria" onChange={setF('titulo')} />
+                    </Field>
+                    <FilterBar>
+                        <Field label="Data"><Input type="date" required value={form.data} onChange={setF('data')} /></Field>
+                        <Field label="Hora"><Input type="time" required value={form.hora} onChange={setF('hora')} /></Field>
+                        <Field label="Duração (min)"><Input type="number" min="5" max="1440" value={form.duracao_min} onChange={setF('duracao_min')} /></Field>
+                    </FilterBar>
+                    <Field label="Local (opcional)"><Input maxLength={300} value={form.local} onChange={setF('local')} /></Field>
+                    <Field label="Convidados (e-mails, opcional)"><Input value={form.convidados} placeholder="maria@email.com, joao@email.com" onChange={setF('convidados')} /></Field>
                     {form.convidados.trim() && (
-                        <label className={ui.check_row}><input type="checkbox" checked={form.avisar_convidados} onChange={(e) => setForm({ ...form, avisar_convidados: e.target.checked })} /> Mandar o convite por e-mail aos convidados (pelo Google)</label>
+                        <Checkbox checked={form.avisar_convidados} onChange={(e) => setForm({ ...form, avisar_convidados: e.target.checked })}>
+                            Mandar o convite por e-mail aos convidados (pelo Google)
+                        </Checkbox>
                     )}
-                    <div className={ui.btn_row}>
-                        <button type="submit" className={`${ui.btn} ${ui.btn_primary}`} disabled={busy}>{busy ? 'Criando…' : 'Criar no Google Agenda'}</button>
-                        <button type="button" className={ui.btn} onClick={() => setForm(null)}>Cancelar</button>
-                    </div>
-                </form>
+                    <Row>
+                        <Button type="submit" variant="primary" loading={busy} loadingLabel="Criando…">Criar no Google Agenda</Button>
+                        <Button onClick={() => setForm(null)}>Cancelar</Button>
+                    </Row>
+                </Stack>
             )}
-            <label className={ui.check_row}>
-                <input type="checkbox" checked={status.import_events} disabled={busy} onChange={(e) => save({ import_events: e.target.checked })} />
+            <Checkbox checked={status.import_events} disabled={busy} onChange={(e) => save({ import_events: e.target.checked })}>
                 Trazer prazos, audiências e reuniões que eu criar direto no Google Agenda
-            </label>
+            </Checkbox>
             {status.import_events && (
                 <>
-                    <div className={ui.filters}>
-                        <label className={ui.field}>Até quantos dias à frente
-                            <select className={ui.select} value={status.lookahead_days} disabled={busy} onChange={(e) => save({ lookahead_days: Number(e.target.value) })}>
+                    <FilterBar>
+                        <Field label="Até quantos dias à frente">
+                            <Select value={status.lookahead_days} disabled={busy} onChange={(e) => save({ lookahead_days: Number(e.target.value) })}>
                                 {[30, 60, 90, 180].map((d) => <option key={d} value={d}>{d} dias</option>)}
-                            </select>
-                        </label>
-                    </div>
+                            </Select>
+                        </Field>
+                    </FilterBar>
                     <div className={ui.field}>Viram tarefa no Cadrius (e entram nos avisos de "Prazo chegando")
-                        <div className={ui.btn_row}>
+                        <Row gap={4}>
                             {EVENT_KINDS.map(([k, label]) => (
-                                <label key={k} className={ui.check_row}><input type="checkbox" checked={status.task_kinds.includes(k)} disabled={busy} onChange={() => toggleKind(k)} /> {label}</label>
+                                <Checkbox key={k} checked={status.task_kinds.includes(k)} disabled={busy} onChange={() => toggleKind(k)}>{label}</Checkbox>
                             ))}
-                        </div>
+                        </Row>
                     </div>
                     <div className={ui.card}>
                         <div className={ui.card_title}>Alertas prontos</div>
                         {AGENDA_ALERTS.map((a) => (
                             <div key={a.modelo} className={ui.list_row}>
-                                <span style={{ flex: 1 }}><strong>{a.titulo}</strong><br /><span className={ui.muted}>{a.canal} · horário comercial · aprovação antes de enviar</span></span>
-                                {isOrgManager && <button type="button" className={`${ui.btn} ${ui.btn_sm}`} onClick={() => createAlert(a.modelo)}>Criar alerta</button>}
+                                <span className={ui.flex_1}><strong>{a.titulo}</strong><br /><span className={ui.muted}>{a.canal} · horário comercial · aprovação antes de enviar</span></span>
+                                {isOrgManager && <Button size="sm" onClick={() => createAlert(a.modelo)}>Criar alerta</Button>}
                             </div>
                         ))}
                         <span className={ui.muted}>Quer outro canal, antecedência ou texto? Em Automações → Nova regra → "Compromisso da Agenda Google chegando".</span>
@@ -133,40 +135,44 @@ export default function AgendaGoogleEvents({ status, onSaved }) {
                     <div className={ui.card_title}>Próximos compromissos trazidos {status.events_synced_at && <span className={ui.muted}>· atualizado {fmtDateTime(status.events_synced_at)}</span>}</div>
                     {events && events.length === 0 && <div className={ui.muted}>Nada nos próximos dias. Crie um compromisso aqui, pelo Assistente ("marque reunião amanhã às 10h") ou no próprio Google.</div>}
                     {events && events.length > 0 && (
-                        <div className={ui.table_wrap}><table className={ui.table}>
-                            <thead><tr><th>Quando</th><th>Compromisso</th><th>Tipo</th><th>Cliente / processo</th><th>Tarefa</th><th>Ações</th></tr></thead>
-                            <tbody>{events.slice(0, 20).map((ev) => (
-                                <tr key={ev.id}>
-                                    <td>{editing?.id === ev.id ? (
-                                        <span className={ui.btn_row} style={{ gap: 4 }}>
-                                            <input className={ui.input} type="date" aria-label="Nova data" value={editing.data} onChange={(e) => setEditing({ ...editing, data: e.target.value })} />
-                                            <input className={ui.input} type="time" aria-label="Nova hora" value={editing.hora} onChange={(e) => setEditing({ ...editing, hora: e.target.value })} />
-                                        </span>) : fmtDateTime(ev.inicio)}</td>
-                                    <td>{editing?.id === ev.id
-                                        ? <input className={ui.input} aria-label="Título" value={editing.titulo} onChange={(e) => setEditing({ ...editing, titulo: e.target.value })} />
-                                        : ev.titulo}</td>
-                                    <td>
-                                        <select className={ui.select} aria-label={`Tipo de ${ev.titulo}`} value={ev.tipo} onChange={(e) => setKind(ev, e.target.value)}>
-                                            {EVENT_KINDS.map(([k, label]) => <option key={k} value={k}>{label}</option>)}
-                                        </select>
-                                    </td>
-                                    <td>{ev.cliente || '—'}{ev.processo && <div className={ui.muted}>{ev.processo}</div>}</td>
-                                    <td>{ev.tarefa_id ? <Pill tone="green">Criada</Pill> : <Pill tone="gray">—</Pill>}</td>
-                                    <td><span className={ui.btn_row} style={{ gap: 4, flexWrap: 'nowrap' }}>
-                                        {editing?.id === ev.id ? (<>
-                                            <button type="button" className={`${ui.btn} ${ui.btn_sm} ${ui.btn_primary}`} disabled={busy} onClick={() => reschedule(ev)}>Salvar</button>
-                                            <button type="button" className={`${ui.btn} ${ui.btn_sm}`} onClick={() => setEditing(null)}>Voltar</button>
-                                        </>) : (<>
-                                            <button type="button" className={`${ui.btn} ${ui.btn_sm}`} onClick={() => startEdit(ev)}>Alterar</button>
-                                            <button type="button" className={`${ui.btn} ${ui.btn_sm} ${ui.btn_ghost}`} style={{ color: 'var(--c-danger)' }} onClick={() => cancel(ev)}>Cancelar</button>
-                                        </>)}
-                                    </span></td>
-                                </tr>
-                            ))}</tbody>
-                        </table></div>
+                        <Table columns={['Quando', 'Compromisso', 'Tipo', 'Cliente / processo', 'Tarefa', { label: 'Ações', className: ui.td_actions }]}>
+                            {events.slice(0, 20).map((ev) => {
+                                const ed = editing?.id === ev.id;
+                                return (
+                                    <tr key={ev.id}>
+                                        <td>{ed ? (
+                                            <Row gap={1} wrap={false}>
+                                                <Input type="date" aria-label="Nova data" value={editing.data} onChange={(e) => setEditing({ ...editing, data: e.target.value })} />
+                                                <Input type="time" aria-label="Nova hora" value={editing.hora} onChange={(e) => setEditing({ ...editing, hora: e.target.value })} />
+                                            </Row>) : fmtDateTime(ev.inicio)}</td>
+                                        <td data-label="Compromisso">{ed
+                                            ? <Input aria-label="Título" value={editing.titulo} onChange={(e) => setEditing({ ...editing, titulo: e.target.value })} />
+                                            : ev.titulo}</td>
+                                        <td data-label="Tipo">
+                                            <Select aria-label={`Tipo de ${ev.titulo}`} value={ev.tipo} onChange={(e) => setKind(ev, e.target.value)}>
+                                                {EVENT_KINDS.map(([k, label]) => <option key={k} value={k}>{label}</option>)}
+                                            </Select>
+                                        </td>
+                                        <td data-label="Cliente / processo">{ev.cliente || '—'}{ev.processo && <div className={ui.muted}>{ev.processo}</div>}</td>
+                                        <td data-label="Tarefa">{ev.tarefa_id ? <Pill tone="green">Criada</Pill> : <Pill tone="gray">—</Pill>}</td>
+                                        <td className={ui.td_actions}>
+                                            <Row gap={1} wrap={false}>
+                                                {ed ? (<>
+                                                    <Button size="sm" variant="primary" loading={busy} onClick={() => reschedule(ev)}>Salvar</Button>
+                                                    <Button size="sm" onClick={() => setEditing(null)}>Voltar</Button>
+                                                </>) : (<>
+                                                    <Button size="sm" onClick={() => startEdit(ev)}>Alterar</Button>
+                                                    <Button size="sm" variant="danger" onClick={() => cancel(ev)}>Cancelar</Button>
+                                                </>)}
+                                            </Row>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </Table>
                     )}
                 </>
             )}
-        </div>
+        </Stack>
     );
 }

@@ -1,0 +1,19 @@
+/* Integrações: peças que só os conectores usam */
+
+/* Quadrado branco com o logo do Google (o logo tem cores próprias, por isso o fundo fixo) */
+.logo_box { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: #fff; border: 1px solid var(--c-border); flex-shrink: 0; }
+
+/* Busca de apps ao lado dos filtros */
+.search { max-width: 300px; }
+
+/* Guia "onde pegar cada dado" e passo a passo do app próprio do Google */
+.guide { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: var(--sp-2); font-size: var(--fs-sm); color: var(--c-text-2); }
+
+/* Bloco "Avançado" separado por uma linha */
+.divider_top { border-top: 1px solid var(--c-border); padding-top: var(--sp-3); }
+.field_narrow { max-width: 160px; }
+.field_phone { max-width: 260px; }
+
+/* WhatsApp: código de pareamento grande e QR code (fundo branco para o celular ler) */
+.pair_code { font-family: var(--font-mono, monospace); font-size: 1.8rem; letter-spacing: .15em; font-weight: 700; }
+.qr { background: #fff; padding: var(--sp-2); border-radius: var(--radius); }
