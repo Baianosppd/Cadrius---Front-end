@@ -1,0 +1,18 @@
+/* Estúdio de marketing: classes que só o Marketing usa */
+
+/* Conteúdo da agenda em lista: o cartão inteiro é um botão */
+.post_btn { width: 100%; text-align: left; cursor: pointer; display: flex; gap: var(--sp-3); align-items: center; flex-wrap: wrap; font: inherit; color: inherit; }
+.post_title { flex: 1 1 220px; min-width: 0; }
+
+/* Texto do post no editor */
+.texto { min-height: 260px; }
+.summary { cursor: pointer; font-size: var(--fs-sm); }
+
+/* Indicadores (Gestão Cadrius): barra de cadastros por semana */
+.bar_row { display: flex; align-items: center; gap: var(--sp-3); margin: var(--sp-1) 0; font-size: var(--fs-sm); }
+.bar_label { width: 70px; }
+.bar_value { width: 90px; text-align: right; }
+.kv_col { flex-direction: column; gap: 2px; }
+
+/* Bloco de vídeo dentro do estúdio de mídia */
+.video_block { border-top: 1px solid var(--c-border); padding-top: var(--sp-3); }

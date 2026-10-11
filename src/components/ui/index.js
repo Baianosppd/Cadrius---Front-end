@@ -14,6 +14,7 @@ export { default as MoneyInput } from './MoneyInput';
 export { default as PageHeader } from './PageHeader';
 export { default as Row } from './Row';
 export { default as ScoreBar } from './ScoreBar';
+export { default as Segmented } from './Segmented';
 export { default as Select } from './Select';
 export { default as Stack } from './Stack';
 export { default as StatCard } from './StatCard';

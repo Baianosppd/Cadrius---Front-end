@@ -310,5 +310,9 @@
 /* Lista com marcador, sem margem extra; _scroll limita a altura e rola */
 .list_indent { margin: 0; padding-left: 18px; }
 .list_scroll { margin: 0; padding-left: 18px; max-height: 140px; overflow-y: auto; }
+.ml_auto { margin-left: auto; }
+.text_right { text-align: right; }
+/* Rótulo pequeno em caixa alta (ex.: o dia acima de uma lista) */
+.eyebrow { font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; color: var(--c-muted); }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }
