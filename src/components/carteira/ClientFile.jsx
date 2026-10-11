@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../ui/ui.module.css';
-import { Banner, Empty, Loading, Pill } from '../ui';
+import { Banner, Button, Checkbox, Empty, Field, FilterBar, Input, Loading, Modal, Pill, Row, Stack, StatCard, Table, Tabs } from '../ui';
 import { errorMessage, fmtDate, fmtDateTime } from '../../utils/format';
 import useAuth from '../../hooks/useAuth';
 import useLoader from '../../hooks/useLoader';
@@ -9,6 +9,7 @@ import { AgreementForm, OpportunityForm } from './Forms';
 import { AGREEMENT_STATUS, REC_STATUS, brl, carteiraApi, portalApi } from '../../services/carteira';
 
 const LINK_TONE = { ativo: 'green', expirado: 'gray', revogado: 'red' };
+const TABS = [{ id: 'resumo', label: 'Carteira' }, { id: 'portal', label: 'Portal do cliente' }];
 
 // Portal do cliente: link pessoal (só o hash fica no servidor), com validade e revogação
 export function PortalLinks({ contact, canWrite }) {
@@ -34,43 +35,38 @@ export function PortalLinks({ contact, canWrite }) {
         try { await portalApi.revoke(id); reload(); } catch (err) { toast.error(errorMessage(err)); }
     };
     return (
-        <div className={styles.stack}>
-            <p className={styles.muted}>O cliente acompanha os processos vinculados a ele (andamentos em linguagem simples) e, se você quiser, os honorários
+        <Stack>
+            <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>O cliente acompanha os processos vinculados a ele (andamentos em linguagem simples) e, se você quiser, os honorários
                 em aberto com o link de pagamento. Sem documentos nem anotações internas. O link é pessoal e pode ser revogado.</p>
             {error && <Banner tone="error">{error}</Banner>}
             {canWrite && (
-                <div className={styles.filters}>
-                    <label className={styles.field}>Validade (dias)<input className={styles.input} type="number" min={1} max={365} value={form.dias} onChange={(e) => setForm({ ...form, dias: e.target.value })} /></label>
-                    <label className={styles.check_row}><input type="checkbox" checked={form.mostrar_financeiro} onChange={(e) => setForm({ ...form, mostrar_financeiro: e.target.checked })} /> Mostrar honorários</label>
-                    <label className={styles.check_row}><input type="checkbox" checked={form.enviar_email} onChange={(e) => setForm({ ...form, enviar_email: e.target.checked })} /> Enviar por e-mail</label>
-                    <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={create} disabled={busy}>Gerar link do portal</button>
-                </div>
+                <FilterBar>
+                    <Field label="Validade (dias)"><Input type="number" min={1} max={365} value={form.dias} onChange={(e) => setForm({ ...form, dias: e.target.value })} /></Field>
+                    <Checkbox checked={form.mostrar_financeiro} onChange={(e) => setForm({ ...form, mostrar_financeiro: e.target.checked })}>Mostrar honorários</Checkbox>
+                    <Checkbox checked={form.enviar_email} onChange={(e) => setForm({ ...form, enviar_email: e.target.checked })}>Enviar por e-mail</Checkbox>
+                    <Button variant="primary" loading={busy} onClick={create}>Gerar link do portal</Button>
+                </FilterBar>
             )}
             {created && (
                 <Banner tone="ok">
                     <div>Link criado. Ele aparece só agora — copie e envie ao cliente:</div>
-                    <code style={{ wordBreak: 'break-all' }}>{created.url}</code>
-                    <div className={styles.btn_row} style={{ marginTop: 6 }}><button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => copy(created.url)}>Copiar link</button></div>
+                    <code className={styles.break_all}>{created.url}</code>
+                    <Row className={styles.mt_2}><Button size="sm" onClick={() => copy(created.url)}>Copiar link</Button></Row>
                 </Banner>
             )}
             {data?.length > 0 && (
-                <div className={styles.table_wrap}>
-                    <table className={styles.table}>
-                        <thead><tr><th>Link</th><th>Situação</th><th>Acessos</th><th></th></tr></thead>
-                        <tbody>
-                            {data.map((l) => (
-                                <tr key={l.id}>
-                                    <td>…{l.final}<div className={styles.muted}>até {fmtDate(l.expira_em)}{l.mostra_financeiro ? ' · com honorários' : ''}</div></td>
-                                    <td><Pill tone={LINK_TONE[l.situacao]}>{l.situacao}</Pill></td>
-                                    <td>{l.acessos}<div className={styles.muted}>{l.ultimo_acesso ? fmtDateTime(l.ultimo_acesso) : 'nunca'}</div></td>
-                                    <td>{canWrite && l.situacao === 'ativo' && <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_danger}`} onClick={() => revoke(l.id)}>Revogar</button>}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table columns={['Link', 'Situação', 'Acessos', { label: '', className: styles.td_actions }]}>
+                    {data.map((l) => (
+                        <tr key={l.id}>
+                            <td>…{l.final}<div className={styles.muted}>até {fmtDate(l.expira_em)}{l.mostra_financeiro ? ' · com honorários' : ''}</div></td>
+                            <td data-label="Situação"><Pill tone={LINK_TONE[l.situacao]}>{l.situacao}</Pill></td>
+                            <td data-label="Acessos">{l.acessos}<div className={styles.muted}>{l.ultimo_acesso ? fmtDateTime(l.ultimo_acesso) : 'nunca'}</div></td>
+                            <td className={styles.td_actions}>{canWrite && l.situacao === 'ativo' && <Button size="sm" variant="danger" onClick={() => revoke(l.id)}>Revogar</Button>}</td>
+                        </tr>
+                    ))}
+                </Table>
             )}
-        </div>
+        </Stack>
     );
 }
 
@@ -82,62 +78,55 @@ export default function ClientFile({ contact, onClose }) {
     const [tab, setTab] = useState('resumo');
     const [form, setForm] = useState(null);
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-label={`Ficha de ${contact.name}`} onClick={onClose}>
-            <div className={styles.modal} style={{ maxWidth: 860, maxHeight: '92vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
-                <div className={styles.modal_title}>{contact.name}</div>
-                <div className={styles.tabs} role="tablist">
-                    {[['resumo', 'Carteira'], ['portal', 'Portal do cliente']].map(([k, l]) => (
-                        <button key={k} type="button" role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tab_active : ''}`} onClick={() => setTab(k)}>{l}</button>
+        <Modal title={contact.name} size="xl" onClose={onClose}
+            footer={<Button onClick={onClose}>Fechar</Button>}>
+            <Tabs tabs={TABS} value={tab} onChange={setTab} />
+            {error && <Banner tone="error">{error}</Banner>}
+            {!data && !error && <Loading />}
+            {data && tab === 'resumo' && (
+                <Stack>
+                    {data.financeiro && (
+                        <div className={styles.card_grid}>
+                            <StatCard title="Em aberto" value={brl(data.financeiro.em_aberto_centavos)} />
+                            <StatCard title="Vencido" value={brl(data.financeiro.vencido_centavos)} tone={data.financeiro.vencido_centavos ? 'red' : undefined} />
+                            <StatCard title="Recebido" value={brl(data.financeiro.recebido_centavos)} />
+                        </div>
+                    )}
+                    {canWrite && (
+                        <Row>
+                            <Button onClick={() => setForm('opp')}>Nova oportunidade</Button>
+                            <Button onClick={() => setForm('contrato')}>Novo contrato</Button>
+                        </Row>
+                    )}
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>Oportunidades</div>
+                    {data.oportunidades.length === 0 ? <Empty>Nenhuma.</Empty> : data.oportunidades.map((o) => (
+                        <div key={o.id}><strong>{o.titulo}</strong> <Pill tone={o.etapa === 'ganho' ? 'green' : o.etapa === 'perdido' ? 'gray' : 'blue'}>{o.etapa_label}</Pill></div>
                     ))}
-                </div>
-                {error && <Banner tone="error">{error}</Banner>}
-                {!data && !error && <Loading />}
-                {data && tab === 'resumo' && (
-                    <div className={styles.stack}>
-                        {data.financeiro && (
-                            <div className={styles.card_grid}>
-                                <div className={styles.card}><div className={styles.card_title}>Em aberto</div><div className={styles.card_value}>{brl(data.financeiro.em_aberto_centavos)}</div></div>
-                                <div className={styles.card}><div className={styles.card_title}>Vencido</div><div className={styles.card_value} style={data.financeiro.vencido_centavos ? { color: 'var(--c-danger)' } : undefined}>{brl(data.financeiro.vencido_centavos)}</div></div>
-                                <div className={styles.card}><div className={styles.card_title}>Recebido</div><div className={styles.card_value}>{brl(data.financeiro.recebido_centavos)}</div></div>
-                            </div>
-                        )}
-                        {canWrite && (
-                            <div className={styles.btn_row}>
-                                <button type="button" className={styles.btn} onClick={() => setForm('opp')}>Nova oportunidade</button>
-                                <button type="button" className={styles.btn} onClick={() => setForm('contrato')}>Novo contrato</button>
-                            </div>
-                        )}
-                        <div className={styles.section_title}>Oportunidades</div>
-                        {data.oportunidades.length === 0 ? <Empty>Nenhuma.</Empty> : data.oportunidades.map((o) => (
-                            <div key={o.id}><strong>{o.titulo}</strong> <Pill tone={o.etapa === 'ganho' ? 'green' : o.etapa === 'perdido' ? 'gray' : 'blue'}>{o.etapa_label}</Pill></div>
-                        ))}
-                        <div className={styles.section_title}>Contratos</div>
-                        {data.contratos.length === 0 ? <Empty>Nenhum.</Empty> : data.contratos.map((a) => (
-                            <div key={a.id}><strong>{a.titulo}</strong> · {a.tipo_label} · recebido {brl(a.recebido_centavos)} · em aberto {brl(a.em_aberto_centavos)}{' '}
-                                <Pill tone={AGREEMENT_STATUS[a.status]?.[1]}>{AGREEMENT_STATUS[a.status]?.[0]}</Pill></div>
-                        ))}
-                        {data.financeiro && (
-                            <>
-                                <div className={styles.section_title}>Lançamentos</div>
-                                {data.financeiro.lancamentos.length === 0 ? <Empty>Nenhum.</Empty> : (
-                                    <ul style={{ margin: 0, paddingLeft: 18 }}>
-                                        {data.financeiro.lancamentos.map((r) => (
-                                            <li key={r.id}>{r.descricao}: {brl(r.valor_centavos)} — {fmtDate(r.vencimento)} <Pill tone={r.vencido ? 'red' : REC_STATUS[r.status]?.[1]}>{r.vencido ? 'vencido' : REC_STATUS[r.status]?.[0]}</Pill></li>
-                                        ))}
-                                    </ul>
-                                )}
-                            </>
-                        )}
-                        <div className={styles.section_title}>Processos</div>
-                        {data.processos.length === 0 ? <Empty>Nenhum processo vinculado (vincule em Processos acompanhados).</Empty>
-                            : data.processos.map((p) => <div key={p.id}>{p.cnj}{p.apelido ? ` — ${p.apelido}` : ''}</div>)}
-                    </div>
-                )}
-                {data && tab === 'portal' && <PortalLinks contact={contact} canWrite={canWrite} />}
-                <div className={styles.btn_row} style={{ marginTop: 12 }}><button type="button" className={styles.btn} onClick={onClose}>Fechar</button></div>
-                {form === 'opp' && <OpportunityForm initial={{ contato: { id: contact.id, nome: contact.name } }} onClose={() => setForm(null)} onDone={() => { setForm(null); reload(); }} />}
-                {form === 'contrato' && <AgreementForm contact={contact} onClose={() => setForm(null)} onDone={() => { setForm(null); reload(); }} />}
-            </div>
-        </div>
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>Contratos</div>
+                    {data.contratos.length === 0 ? <Empty>Nenhum.</Empty> : data.contratos.map((a) => (
+                        <div key={a.id}><strong>{a.titulo}</strong> · {a.tipo_label} · recebido {brl(a.recebido_centavos)} · em aberto {brl(a.em_aberto_centavos)}{' '}
+                            <Pill tone={AGREEMENT_STATUS[a.status]?.[1]}>{AGREEMENT_STATUS[a.status]?.[0]}</Pill></div>
+                    ))}
+                    {data.financeiro && (
+                        <>
+                            <div className={`${styles.section_title} ${styles.mb_0}`}>Lançamentos</div>
+                            {data.financeiro.lancamentos.length === 0 ? <Empty>Nenhum.</Empty> : (
+                                <ul className={styles.list_indent}>
+                                    {data.financeiro.lancamentos.map((r) => (
+                                        <li key={r.id}>{r.descricao}: {brl(r.valor_centavos)} — {fmtDate(r.vencimento)} <Pill tone={r.vencido ? 'red' : REC_STATUS[r.status]?.[1]}>{r.vencido ? 'vencido' : REC_STATUS[r.status]?.[0]}</Pill></li>
+                                    ))}
+                                </ul>
+                            )}
+                        </>
+                    )}
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>Processos</div>
+                    {data.processos.length === 0 ? <Empty>Nenhum processo vinculado (vincule em Processos acompanhados).</Empty>
+                        : data.processos.map((p) => <div key={p.id}>{p.cnj}{p.apelido ? ` — ${p.apelido}` : ''}</div>)}
+                </Stack>
+            )}
+            {data && tab === 'portal' && <PortalLinks contact={contact} canWrite={canWrite} />}
+            {form === 'opp' && <OpportunityForm initial={{ contato: { id: contact.id, nome: contact.name } }} onClose={() => setForm(null)} onDone={() => { setForm(null); reload(); }} />}
+            {form === 'contrato' && <AgreementForm contact={contact} onClose={() => setForm(null)} onDone={() => { setForm(null); reload(); }} />}
+        </Modal>
     );
 }

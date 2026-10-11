@@ -307,5 +307,8 @@
 .bg_soft { background: var(--c-surface-2); }
 /* Lista numerada compacta (passo a passo) */
 .ol_compact { margin: var(--sp-2) 0 0; padding-left: 20px; display: grid; gap: var(--sp-1); font-size: var(--fs-sm); }
+/* Lista com marcador, sem margem extra; _scroll limita a altura e rola */
+.list_indent { margin: 0; padding-left: 18px; }
+.list_scroll { margin: 0; padding-left: 18px; max-height: 140px; overflow-y: auto; }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }
