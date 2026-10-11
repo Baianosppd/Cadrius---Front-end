@@ -1,7 +1,7 @@
 import styles from './ui.module.css';
 
 const VARIANT = { default: '', primary: styles.btn_primary, ghost: styles.btn_ghost, danger: styles.btn_danger };
-const SIZE = { sm: styles.btn_sm, md: '', lg: styles.btn_lg };
+const SIZE = { xs: styles.btn_xs, sm: styles.btn_sm, md: '', lg: styles.btn_lg };
 
 // Botão padrão. Sem "type", NÃO envia formulário (só type="submit" envia).
 // "as" vira link (as={Link} to="/x" ou as="a" href="…"); "loading" trava e mostra o spinner.

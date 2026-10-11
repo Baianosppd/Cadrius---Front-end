@@ -76,6 +76,8 @@
 .btn:hover:not(:disabled) { background: var(--c-surface-2); border-color: var(--c-subtle); color: var(--c-ink); }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
 .btn_sm { min-height: 30px; padding: 0 var(--sp-3); font-size: var(--fs-sm); }
+/* Botão mínimo (ex.: inserir {{variável}} num texto) */
+.btn_xs { min-height: 24px; padding: 0 var(--sp-2); font-size: var(--fs-xs); font-weight: 500; box-shadow: none; }
 .btn_primary { background: var(--c-primary-solid); border-color: var(--c-primary); color: #fff; }
 .btn_primary:hover:not(:disabled) { background: var(--c-primary-solid-hover); border-color: var(--c-primary-600); color: #fff; }
 .btn_ghost { border-color: transparent; background: transparent; color: var(--c-primary); box-shadow: none; }
@@ -219,6 +221,7 @@
 @media (max-width: 640px) {
     .chip { min-height: 40px; }
     .btn_sm { min-height: 40px; }
+    .btn_xs { min-height: 32px; }
 }
 .clamp3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
@@ -297,5 +300,7 @@
 .doc_editor { min-height: 420px; font-family: Georgia, serif; font-size: 15px; }
 /* Texto proposto pela IA (pré-visualização longa com rolagem) */
 .ai_preview { white-space: pre-wrap; max-height: 55vh; overflow: auto; font-size: var(--fs-md); line-height: 1.55; }
+/* Prévia de e-mail num iframe isolado (fundo claro fixo: é como o cliente vê) */
+.email_frame { width: 100%; border: 1px solid var(--c-border); border-radius: 10px; background: #f3f4f6; }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }
