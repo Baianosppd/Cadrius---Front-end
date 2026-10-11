@@ -2,7 +2,7 @@ import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './ui.module.css';
 
-const SIZES = { sm: 440, md: 560, lg: 760 };
+const SIZES = { sm: 440, md: 560, lg: 760, xl: 920 };
 const FOCAVEL = 'input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), a[href]';
 
 // Janela modal base: fecha no Esc e no clique fora, foca o 1º campo e devolve o foco ao fechar.

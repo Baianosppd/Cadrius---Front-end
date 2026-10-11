@@ -111,6 +111,8 @@
 /* ---------- Modais ---------- */
 .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, .5); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: var(--sp-4); backdrop-filter: blur(2px); }
 .modal { background: var(--c-surface); border-radius: var(--radius-lg); max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto; padding: var(--sp-6); display: flex; flex-direction: column; gap: var(--sp-4); box-shadow: var(--shadow-lg); }
+/* Filhos não encolhem quando o conteúdo passa da tela: quem rola é o modal (senão caixas com rolagem própria ficam esmagadas) */
+.modal > * { flex-shrink: 0; }
 .modal_title { font-size: var(--fs-lg); font-weight: 650; color: var(--c-ink); }
 
 /* ---------- Abas e filtros rápidos ---------- */

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../../components/ui/ui.module.css';
-import { Banner, Empty, Loading, PageHeader, Pill } from '../../../components/ui';
+import { Banner, Button, Checkbox, Empty, Field, FilterBar, Input, Modal, PageHeader, Pill, Row, Table, Tabs } from '../../../components/ui';
 import { errorMessage, fmtDateTime } from '../../../utils/format';
 import useAuth from '../../../hooks/useAuth';
 import useLoader from '../../../hooks/useLoader';
@@ -40,28 +40,27 @@ function Oabs({ canManage, onChecked }) {
                         <div className={styles.muted}>{w.ultima_consulta ? `consultada ${fmtDateTime(w.ultima_consulta)}` : 'ainda não consultada'}
                             {w.responsavel && ` · prazos para ${w.responsavel.nome}`}{w.erro && ` · ${w.erro}`}</div>
                     </div>
-                    <div className={styles.btn_row}>
-                        <button type="button" className={`${styles.btn} ${styles.btn_sm}`} disabled={busy === w.id} onClick={() => check(w)}>{busy === w.id ? 'Consultando…' : 'Consultar agora'}</button>
-                        {canManage && <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => publicationsApi.updateOab(w.id, { ativa: !w.ativa }).then(reload)}>{w.ativa ? 'Pausar' : 'Retomar'}</button>}
-                        {canManage && <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_danger}`}
-                            onClick={() => window.confirm(`Parar de acompanhar a OAB ${w.numero}/${w.uf}? As publicações já capturadas ficam na caixa.`) && publicationsApi.removeOab(w.id).then(reload)}>Remover</button>}
-                    </div>
+                    <Row>
+                        <Button size="sm" loading={busy === w.id} loadingLabel="Consultando…" onClick={() => check(w)}>Consultar agora</Button>
+                        {canManage && <Button size="sm" onClick={() => publicationsApi.updateOab(w.id, { ativa: !w.ativa }).then(reload)}>{w.ativa ? 'Pausar' : 'Retomar'}</Button>}
+                        {canManage && <Button size="sm" variant="danger"
+                            onClick={() => window.confirm(`Parar de acompanhar a OAB ${w.numero}/${w.uf}? As publicações já capturadas ficam na caixa.`) && publicationsApi.removeOab(w.id).then(reload)}>Remover</Button>}
+                    </Row>
                 </div>
             ))}
             {canManage && (
-                <form className={`${styles.filters} ${styles.form_divider}`} onSubmit={add}>
-                    <label className={styles.field}>Nº da OAB<input className={styles.input} value={form.numero} onChange={(e) => setForm({ ...form, numero: e.target.value })} inputMode="numeric" required /></label>
-                    <label className={styles.field}>UF<input className={styles.input} value={form.uf} onChange={(e) => setForm({ ...form, uf: e.target.value.toUpperCase() })} maxLength={2} required /></label>
-                    <label className={styles.field} style={{ flex: 2 }}>Nome do advogado (opcional)<input className={styles.input} value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></label>
-                    <button type="submit" className={styles.btn}>Adicionar OAB</button>
-                </form>
+                <FilterBar as="form" className={styles.form_divider} onSubmit={add}>
+                    <Field label="Nº da OAB"><Input value={form.numero} onChange={(e) => setForm({ ...form, numero: e.target.value })} inputMode="numeric" required /></Field>
+                    <Field label="UF"><Input value={form.uf} onChange={(e) => setForm({ ...form, uf: e.target.value.toUpperCase() })} maxLength={2} required /></Field>
+                    <Field label="Nome do advogado (opcional)" className={styles.flex_2}><Input value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></Field>
+                    <Button type="submit">Adicionar OAB</Button>
+                </FilterBar>
             )}
         </div>
     );
 }
 
 function Revisao({ id, onClose, onDone, canWrite }) {
-    const navigate = useNavigate();
     const [pub, setPub] = useState(null);
     const [form, setForm] = useState({ prazo_dias: '', vencimento: '', acompanhar: false, observacao: '' });
     const [preview, setPreview] = useState(null);
@@ -86,48 +85,49 @@ function Revisao({ id, onClose, onDone, canWrite }) {
         try { await fn(); toast.success(msg); onDone(); } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
     const venc = form.vencimento || preview?.vencimento || pub.vencimento;
+    // Com campos para confirmar, clique fora não fecha (não perde o que foi ajustado)
+    const editavel = pub.status === 'nova' && canWrite;
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true">
-            <div className={styles.modal} style={{ maxWidth: 860, maxHeight: '92vh', overflowY: 'auto' }}>
-                <div className={styles.modal_title}>{t.ato || pub.tipo} · {pub.tribunal} · <span className={styles.mono}>{pub.cnj || 'sem nº'}</span></div>
-                <div className={styles.muted}>{pub.orgao} · {pub.classe} · disponibilizada {brDate(pub.disponibilizada_em)}, publicada {brDate(pub.publicada_em)}
-                    {pub.processo?.cliente && ` · cliente: ${pub.processo.cliente}`}</div>
-                <div className={styles.card} style={{ margin: '10px 0' }}>
-                    <div><strong>Triagem sugerida</strong> <Pill tone={tone}>confiança {conf}</Pill> <span className={styles.muted}>({t.origem === 'local' ? 'leitura local' : `IA ${t.origem}`})</span></div>
-                    <div>Providência: {t.providencia}</div>
-                    <div>Prazo: {t.prazo_dias ? `${t.prazo_dias} dias úteis` : 'sem prazo identificado'} {t.prazo_origem && <span className={styles.muted}>— {t.prazo_origem}</span>}
-                        {t.fatal && <> <Pill tone="red">possivelmente fatal</Pill></>}</div>
-                    {t.audiencia && <div>Audiência: <strong>{t.audiencia}</strong></div>}
-                </div>
-                <div className={styles.doc_text} style={{ whiteSpace: 'pre-wrap', maxHeight: 260, overflowY: 'auto' }}>{pub.texto}</div>
-                {pub.link && <a href={pub.link} target="_blank" rel="noreferrer noopener">Ver no DJEN</a>}
-                {pub.status === 'nova' && canWrite && (
-                    <>
-                        <div className={styles.section_title}>Confirmar</div>
-                        <div className={styles.filters}>
-                            <label className={styles.field}>Prazo (dias úteis)<input className={styles.input} type="number" min={1} max={365} value={form.prazo_dias} onChange={(e) => setForm({ ...form, prazo_dias: e.target.value, vencimento: '' })} /></label>
-                            <label className={styles.field}>Vencimento (ou ajuste manual)<input className={styles.input} type="date" value={form.vencimento || venc || ''} onChange={(e) => setForm({ ...form, vencimento: e.target.value })} /></label>
-                            <label className={styles.check_row}><input type="checkbox" checked={form.acompanhar} onChange={(e) => setForm({ ...form, acompanhar: e.target.checked })} disabled={!!pub.processo} /> {pub.processo ? 'Processo já acompanhado' : 'Acompanhar este processo'}</label>
-                        </div>
-                        <p className={styles.muted}>Vencimento calculado em dias úteis a partir da publicação (feriados, recesso e o calendário do escritório). Confira antes de confirmar.</p>
-                        <label className={styles.field}>Observação (opcional)<input className={styles.input} value={form.observacao} onChange={(e) => setForm({ ...form, observacao: e.target.value })} maxLength={255} /></label>
-                    </>
-                )}
-                {pub.status !== 'nova' && <Banner tone="info">{pub.status === 'confirmada' ? `Confirmada por ${pub.revisada_por}; prazo em ${brDate(pub.vencimento)}.` : `Descartada por ${pub.revisada_por}${pub.observacao ? ` (${pub.observacao})` : ''}.`}</Banner>}
-                <div className={styles.btn_row}>
-                    {pub.status === 'nova' && canWrite && <>
-                        <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy}
-                            onClick={() => act(() => publicationsApi.confirm(id, confirmBody(form, t)), venc ? `Confirmada: prazo em ${brDate(venc)} na agenda.` : 'Confirmada.')}>
-                            {venc ? `Confirmar e criar prazo (${brDate(venc)})` : 'Confirmar sem prazo'}</button>
-                        <button type="button" className={styles.btn} disabled={busy}
-                            onClick={() => { const m = window.prompt('Motivo do descarte (opcional):', ''); if (m !== null) act(() => publicationsApi.discard(id, m), 'Descartada.'); }}>Descartar</button>
-                    </>}
-                    {pub.status !== 'nova' && canWrite && <button type="button" className={styles.btn} onClick={() => act(() => publicationsApi.reopen(id), 'Reaberta.')}>Reabrir</button>}
-                    {canWrite && <button type="button" className={styles.btn} onClick={() => navigate(`/minutas?fonte=publicacao&id=${id}`)}>Gerar minuta</button>}
-                    <button type="button" className={styles.btn} onClick={onClose}>Fechar</button>
-                </div>
+        <Modal size="xl" onClose={onClose} busy={busy} closeOnOverlay={!editavel}
+            title={<>{t.ato || pub.tipo} · {pub.tribunal} · <span className={styles.mono}>{pub.cnj || 'sem nº'}</span></>}
+            footer={<>
+                {editavel && <>
+                    <Button variant="primary" loading={busy}
+                        onClick={() => act(() => publicationsApi.confirm(id, confirmBody(form, t)), venc ? `Confirmada: prazo em ${brDate(venc)} na agenda.` : 'Confirmada.')}>
+                        {venc ? `Confirmar e criar prazo (${brDate(venc)})` : 'Confirmar sem prazo'}</Button>
+                    <Button disabled={busy}
+                        onClick={() => { const m = window.prompt('Motivo do descarte (opcional):', ''); if (m !== null) act(() => publicationsApi.discard(id, m), 'Descartada.'); }}>Descartar</Button>
+                </>}
+                {pub.status !== 'nova' && canWrite && <Button disabled={busy} onClick={() => act(() => publicationsApi.reopen(id), 'Reaberta.')}>Reabrir</Button>}
+                {canWrite && <Button as={Link} to={`/minutas?fonte=publicacao&id=${id}`}>Gerar minuta</Button>}
+                <Button onClick={onClose} disabled={busy}>Fechar</Button>
+            </>}>
+            <div className={styles.muted}>{pub.orgao} · {pub.classe} · disponibilizada {brDate(pub.disponibilizada_em)}, publicada {brDate(pub.publicada_em)}
+                {pub.processo?.cliente && ` · cliente: ${pub.processo.cliente}`}</div>
+            <div className={styles.card}>
+                <div><strong>Triagem sugerida</strong> <Pill tone={tone}>confiança {conf}</Pill> <span className={styles.muted}>({t.origem === 'local' ? 'leitura local' : `IA ${t.origem}`})</span></div>
+                <div>Providência: {t.providencia}</div>
+                <div>Prazo: {t.prazo_dias ? `${t.prazo_dias} dias úteis` : 'sem prazo identificado'} {t.prazo_origem && <span className={styles.muted}>— {t.prazo_origem}</span>}
+                    {t.fatal && <> <Pill tone="red">possivelmente fatal</Pill></>}</div>
+                {t.audiencia && <div>Audiência: <strong>{t.audiencia}</strong></div>}
             </div>
-        </div>
+            <div className={`${styles.doc_text} ${styles.pre_wrap}`}>{pub.texto}</div>
+            {pub.link && <a href={pub.link} target="_blank" rel="noreferrer noopener">Ver no DJEN</a>}
+            {editavel && (
+                <>
+                    <div className={styles.section_title}>Confirmar</div>
+                    <FilterBar>
+                        <Field label="Prazo (dias úteis)"><Input type="number" min={1} max={365} value={form.prazo_dias} onChange={(e) => setForm({ ...form, prazo_dias: e.target.value, vencimento: '' })} /></Field>
+                        <Field label="Vencimento (ou ajuste manual)"><Input type="date" value={form.vencimento || venc || ''} onChange={(e) => setForm({ ...form, vencimento: e.target.value })} /></Field>
+                        <Checkbox checked={form.acompanhar} onChange={(e) => setForm({ ...form, acompanhar: e.target.checked })} disabled={!!pub.processo}>
+                            {pub.processo ? 'Processo já acompanhado' : 'Acompanhar este processo'}</Checkbox>
+                    </FilterBar>
+                    <p className={styles.muted}>Vencimento calculado em dias úteis a partir da publicação (feriados, recesso e o calendário do escritório). Confira antes de confirmar.</p>
+                    <Field label="Observação (opcional)"><Input value={form.observacao} onChange={(e) => setForm({ ...form, observacao: e.target.value })} maxLength={255} /></Field>
+                </>
+            )}
+            {pub.status !== 'nova' && <Banner tone="info">{pub.status === 'confirmada' ? `Confirmada por ${pub.revisada_por}; prazo em ${brDate(pub.vencimento)}.` : `Descartada por ${pub.revisada_por}${pub.observacao ? ` (${pub.observacao})` : ''}.`}</Banner>}
+        </Modal>
     );
 }
 
@@ -138,48 +138,38 @@ export default function Publicacoes() {
     const [page, setPage] = useState(1);
     const [open, setOpen] = useState(null);
     const { data, error, reload } = useLoader(() => publicationsApi.list({ status, pagina: page }), [status, page]);
+    const tabs = PUB_STATUS.map(([k, label]) => ({ id: k, label, count: data?.contagem?.[k] }));
     return (
         <div className={styles.page}>
             <PageHeader title="Publicações" subtitle="Intimações do DJEN pela OAB" />
             <Oabs canManage={isOrgManager} onChecked={reload} />
-            <div className={styles.tabs} role="tablist">
-                {PUB_STATUS.map(([k, label]) => (
-                    <button key={k} type="button" role="tab" aria-selected={status === k} className={`${styles.tab} ${status === k ? styles.tab_active : ''}`}
-                        onClick={() => { setStatus(k); setPage(1); }}>{label}{data?.contagem && <span className={styles.count}>{data.contagem[k]}</span>}</button>
-                ))}
-            </div>
+            <Tabs tabs={tabs} value={status} onChange={(k) => { setStatus(k); setPage(1); }} />
             {error && <Banner tone="error">{error}</Banner>}
-            {!data && !error && <Loading />}
-            {data && data.resultados.length === 0 && <Empty>{status === 'nova' ? 'Nenhuma publicação nova. As OABs são consultadas a cada 3 horas.' : 'Nada aqui.'}</Empty>}
-            {data && data.resultados.length > 0 && (
-                <div className={styles.table_wrap}>
-                    <table className={styles.table}>
-                        <thead><tr><th>Disponibilizada</th><th>Processo</th><th>Triagem</th><th>Vencimento sugerido</th></tr></thead>
-                        <tbody>
-                            {data.resultados.map((p) => {
-                                const t = p.triagem || {};
-                                const [tone, conf] = confidenceTone(t.confianca || 0);
-                                return (
-                                    <tr key={p.id} onClick={() => setOpen(p.id)} style={{ cursor: 'pointer' }}>
-                                        <td>{brDate(p.disponibilizada_em)}<div className={styles.muted}>{p.oab}</div></td>
-                                        <td><span className={styles.mono}>{p.cnj || '—'}</span> <Pill tone="blue">{p.tribunal}</Pill><div className={styles.muted}>{p.orgao}</div>
-                                            {p.processo?.cliente && <div className={styles.muted}>cliente: {p.processo.cliente}</div>}</td>
-                                        <td><strong>{t.ato || p.tipo}</strong> {t.fatal && <Pill tone="red">fatal?</Pill>}<div className={styles.muted}>{t.providencia}</div></td>
-                                        <td>{p.vencimento ? <strong>{brDate(p.vencimento)}</strong> : '—'}{t.prazo_dias && <div className={styles.muted}>{t.prazo_dias} dias úteis</div>}
-                                            <Pill tone={tone}>{conf}</Pill></td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
+            {!error && (
+                <Table columns={['Disponibilizada', 'Processo', 'Triagem', 'Vencimento sugerido']} loading={!data}
+                    empty={data?.resultados.length === 0 && <Empty>{status === 'nova' ? 'Nenhuma publicação nova. As OABs são consultadas a cada 3 horas.' : 'Nada aqui.'}</Empty>}>
+                    {data?.resultados.map((p) => {
+                        const t = p.triagem || {};
+                        const [tone, conf] = confidenceTone(t.confianca || 0);
+                        return (
+                            <tr key={p.id} className={styles.clickable} tabIndex={0} onClick={() => setOpen(p.id)} onKeyDown={(e) => e.key === 'Enter' && setOpen(p.id)}>
+                                <td>{brDate(p.disponibilizada_em)}<div className={styles.muted}>{p.oab}</div></td>
+                                <td data-label="Processo"><span className={styles.mono}>{p.cnj || '—'}</span> <Pill tone="blue">{p.tribunal}</Pill><div className={styles.muted}>{p.orgao}</div>
+                                    {p.processo?.cliente && <div className={styles.muted}>cliente: {p.processo.cliente}</div>}</td>
+                                <td data-label="Triagem"><strong>{t.ato || p.tipo}</strong> {t.fatal && <Pill tone="red">fatal?</Pill>}<div className={styles.muted}>{t.providencia}</div></td>
+                                <td data-label="Vencimento">{p.vencimento ? <strong>{brDate(p.vencimento)}</strong> : '—'}{t.prazo_dias && <div className={styles.muted}>{t.prazo_dias} dias úteis</div>}
+                                    <Pill tone={tone}>{conf}</Pill></td>
+                            </tr>
+                        );
+                    })}
+                </Table>
             )}
             {data && data.total > 50 && (
-                <div className={styles.btn_row}>
-                    <button type="button" className={styles.btn} disabled={page === 1} onClick={() => setPage(page - 1)}>Anterior</button>
+                <Row>
+                    <Button disabled={page === 1} onClick={() => setPage(page - 1)}>Anterior</Button>
                     <span className={styles.muted}>Página {page} de {Math.ceil(data.total / 50)}</span>
-                    <button type="button" className={styles.btn} disabled={page * 50 >= data.total} onClick={() => setPage(page + 1)}>Próxima</button>
-                </div>
+                    <Button disabled={page * 50 >= data.total} onClick={() => setPage(page + 1)}>Próxima</Button>
+                </Row>
             )}
             <p className={styles.muted}>A triagem é sugestão (leitura local ou IA, conforme a política do escritório). O prazo só entra na agenda depois que alguém confirma.</p>
             {open && <Revisao id={open} canWrite={canWrite} onClose={() => setOpen(null)} onDone={() => { setOpen(null); reload(); }} />}
