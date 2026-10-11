@@ -68,8 +68,18 @@
     height: 18px;
 }
 
+/* Escondido só visualmente: continua alcançável pelo Tab (o botão acima mostra o foco) */
 .hidden_input {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.button:focus-within {
+    outline: 2px solid var(--c-primary);
+    outline-offset: 2px;
 }
 
 .formats {

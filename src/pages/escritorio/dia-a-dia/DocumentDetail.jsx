@@ -1,44 +1,40 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import AssinaturaModal from '../../../components/integracoes/AssinaturaModal';
 import { toast } from 'react-toastify';
-import { FiDownload, FiRefreshCw } from 'react-icons/fi';
+import { FiDownload, FiPlus, FiRefreshCw, FiX } from 'react-icons/fi';
 import styles from './DocumentDetail.module.css';
+import ui from '../../../components/ui/ui.module.css';
+import { Banner, Button, Checkbox, Field, Input, Row, Select, Stack, Textarea } from '../../../components/ui';
 import BackButton from '../../../components/layout/BackButton';
 import useAuth from '../../../hooks/useAuth';
-import { errorMessage } from '../../../utils/format';
+import { errorMessage, fmtDate } from '../../../utils/format';
 import {
     DOC_TYPES, EXTRACTION_STATUS, documentsApi, fieldsForConfirm, isBusy, normalizeFields,
 } from '../../../services/documents';
 
-const TONES = {
-    info: { background: 'var(--c-primary-50)', color: 'var(--c-primary-700)', border: '#bfdbfe' },
-    warn: { background: 'var(--c-warning-bg)', color: 'var(--c-warning)', border: 'var(--c-warning-bd)' },
-    success: { background: 'var(--c-success-bg)', color: 'var(--c-success)', border: '#bbf7d0' },
-    danger: { background: 'var(--c-danger-bg)', color: 'var(--c-danger)', border: '#fecaca' },
-};
-const box = { background: 'var(--c-surface)', border: '1px solid var(--c-border)', borderRadius: 12, padding: 18, marginBottom: 16 };
-const input = { width: '100%', padding: 7, border: '1px solid var(--c-border-2)', borderRadius: 6 };
+// Tom do status da leitura → tom do Banner
+const BANNER_TONE = { info: 'info', warn: 'warn', success: 'ok', danger: 'error' };
 
+// Lista editável (partes, prazos, próximos passos): uma linha por item, com remover e adicionar
 function ListEditor({ title, items, onChange, render, blank, addLabel, readOnly }) {
     return (
-        <section style={box}>
-            <h3 style={{ marginTop: 0 }}>{title}</h3>
-            {items.length === 0 && <p style={{ color: 'var(--c-muted)' }}>Nada identificado.</p>}
+        <Stack as="section" gap={3} className={ui.card}>
+            <h3 className={`${ui.section_title} ${ui.mb_0}`}>{title}</h3>
+            {items.length === 0 && <p className={ui.muted}>Nada identificado.</p>}
             {items.map((item, i) => (
-                <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+                <Row key={i} wrap={false}>
                     {render(item, (patch) => onChange(items.map((x, j) => (j === i ? { ...x, ...patch } : x))), i)}
-                    {!readOnly && <button type="button" aria-label="Remover" onClick={() => onChange(items.filter((_, j) => j !== i))}>✕</button>}
-                </div>
+                    {!readOnly && <Button size="sm" variant="ghost" icon={FiX} aria-label="Remover" onClick={() => onChange(items.filter((_, j) => j !== i))} />}
+                </Row>
             ))}
-            {!readOnly && <button type="button" onClick={() => onChange([...items, blank])}>{addLabel}</button>}
-        </section>
+            {!readOnly && <Button size="sm" icon={FiPlus} className={ui.w_fit} onClick={() => onChange([...items, blank])}>{addLabel}</Button>}
+        </Stack>
     );
 }
 
 export default function DocumentDetail() {
     const { id } = useParams();
-    const navigate = useNavigate();
     const [signing, setSigning] = useState(false);
     const { isOrgManager, role } = useAuth();
     const canReview = role !== 'VIEWER';
@@ -100,87 +96,86 @@ export default function DocumentDetail() {
     };
 
     const status = ex ? EXTRACTION_STATUS[ex.status] : null;
-    const tone = status ? TONES[status.tone] : TONES.info;
     const editable = canReview && ex?.status === 'review';
     const set = (patch) => setForm((f) => ({ ...f, ...patch }));
 
     return (
-        <div className={styles.DocumentDetail_container}>
+        <div className={ui.page}>
             <BackButton label="Voltar para Documentos" to="/documents" />
             <div className={styles.header}>
                 <div className={styles.header_left}>
                     <h1 className={styles.title}>{doc?.nome || 'Documento'}</h1>
                     <div className={styles.meta}>
-                        <span>{doc?.data ? new Date(doc.data).toLocaleDateString('pt-BR') : '—'}</span>
+                        <span>{fmtDate(doc?.data)}</span>
                         <span className={styles.dot}>•</span><span>{doc?.tipo || '—'}</span>
                         {doc?.cliente && <><span className={styles.dot}>•</span><span>{doc.cliente}</span></>}
                     </div>
                 </div>
-                <div className={styles.header_actions}>
+                <Row>
                     {canReview && ex && ex.status !== 'confirmed' && !isBusy(ex.status) && (
-                        <button className={styles.secondary_button} onClick={reprocess} disabled={busy}><FiRefreshCw className={styles.button_icon} /> Ler novamente</button>
+                        <Button icon={FiRefreshCw} disabled={busy} onClick={reprocess}>Ler novamente</Button>
                     )}
-                    <button className={styles.secondary_button} onClick={download}><FiDownload className={styles.button_icon} /> Baixar</button>
-                    <button className={styles.secondary_button} onClick={() => navigate(`/assistente?documento=${id}&nome=${encodeURIComponent(doc?.nome || '')}`)}>Usar no Assistente</button>
-                    <button className={styles.secondary_button} onClick={() => navigate(`/minutas?fonte=documento&id=${id}`)}>Gerar minuta</button>
-                    {doc?.nome?.toLowerCase().endsWith('.pdf') && <button className={styles.secondary_button} onClick={() => setSigning(true)}>Enviar para assinatura</button>}
-                </div>
+                    <Button icon={FiDownload} onClick={download}>Baixar</Button>
+                    <Button as={Link} to={`/assistente?documento=${id}&nome=${encodeURIComponent(doc?.nome || '')}`}>Usar no Assistente</Button>
+                    <Button as={Link} to={`/minutas?fonte=documento&id=${id}`}>Gerar minuta</Button>
+                    {doc?.nome?.toLowerCase().endsWith('.pdf') && <Button onClick={() => setSigning(true)}>Enviar para assinatura</Button>}
+                </Row>
             </div>
 
             {status && (
-                <div role="status" style={{ ...box, background: tone.background, color: tone.color, borderColor: tone.border }}>
+                <Banner tone={BANNER_TONE[status.tone] || 'info'} role="status">
                     <strong>{status.label}</strong>{ex.message ? ` — ${ex.message}` : ''}
                     {ex.confidence != null && <> · confiança da IA {ex.confidence}%</>}
                     {ex.ocr_used && <> · lido por OCR (confira com atenção)</>}
-                    {ex.status === 'review' && <div style={{ marginTop: 6 }}>Confira e confirme para criar as tarefas e prazos.</div>}
+                    {ex.status === 'review' && <div className={ui.mt_2}>Confira e confirme para criar as tarefas e prazos.</div>}
                     {ex.status === 'confirmed' && ex.reviewed_by && <div>Revisado por {ex.reviewed_by}.</div>}
-                </div>
+                </Banner>
             )}
 
             {form && ex && ['review', 'confirmed'].includes(ex.status) && (
-                <div>
-                    <section style={box}>
-                        <h3 style={{ marginTop: 0 }}>Resumo e identificação</h3>
-                        <label>Tipo do documento
-                            <select style={input} disabled={!editable} value={form.tipo_documento} onChange={(e) => set({ tipo_documento: e.target.value })}>
+                <Stack>
+                    <Stack as="section" className={ui.card}>
+                        <h3 className={`${ui.section_title} ${ui.mb_0}`}>Resumo e identificação</h3>
+                        <Field label="Tipo do documento">
+                            <Select disabled={!editable} value={form.tipo_documento} onChange={(e) => set({ tipo_documento: e.target.value })}>
                                 {DOC_TYPES.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
-                            </select>
-                        </label>
-                        <label>Nº do processo<input style={input} disabled={!editable} value={form.numero_processo} onChange={(e) => set({ numero_processo: e.target.value })} /></label>
-                        <label>Valor<input style={input} disabled={!editable} value={form.valor} onChange={(e) => set({ valor: e.target.value })} /></label>
-                        <label>Resumo<textarea style={input} rows={4} disabled={!editable} value={form.resumo} onChange={(e) => set({ resumo: e.target.value })} /></label>
-                    </section>
+                            </Select>
+                        </Field>
+                        <Field label="Nº do processo"><Input disabled={!editable} value={form.numero_processo} onChange={(e) => set({ numero_processo: e.target.value })} /></Field>
+                        <Field label="Valor"><Input disabled={!editable} value={form.valor} onChange={(e) => set({ valor: e.target.value })} /></Field>
+                        <Field label="Resumo"><Textarea rows={4} disabled={!editable} value={form.resumo} onChange={(e) => set({ resumo: e.target.value })} /></Field>
+                    </Stack>
 
-                    <ListEditor title="Partes" items={form.partes} readOnly={!editable} blank={{ papel: '', nome: '' }} addLabel="+ Adicionar parte"
+                    <ListEditor title="Partes" items={form.partes} readOnly={!editable} blank={{ papel: '', nome: '' }} addLabel="Adicionar parte"
                         onChange={(partes) => set({ partes })}
                         render={(p, upd) => (<>
-                            <input style={{ ...input, maxWidth: 160 }} placeholder="Papel" disabled={!editable} value={p.papel} onChange={(e) => upd({ papel: e.target.value })} />
-                            <input style={input} placeholder="Nome" disabled={!editable} value={p.nome} onChange={(e) => upd({ nome: e.target.value })} />
+                            <Input className={ui.flex_1} placeholder="Papel" aria-label="Papel" disabled={!editable} value={p.papel} onChange={(e) => upd({ papel: e.target.value })} />
+                            <Input className={ui.flex_2} placeholder="Nome" aria-label="Nome" disabled={!editable} value={p.nome} onChange={(e) => upd({ nome: e.target.value })} />
                         </>)} />
 
                     <ListEditor title="Prazos (com data viram tarefas ao confirmar)" items={form.prazos} readOnly={!editable}
-                        blank={{ descricao: '', data: '', dias: null, fatal: false }} addLabel="+ Adicionar prazo" onChange={(prazos) => set({ prazos })}
+                        blank={{ descricao: '', data: '', dias: null, fatal: false }} addLabel="Adicionar prazo" onChange={(prazos) => set({ prazos })}
                         render={(p, upd) => (<>
-                            <input style={input} placeholder="O que fazer" disabled={!editable} value={p.descricao} onChange={(e) => upd({ descricao: e.target.value })} />
-                            <input style={{ ...input, maxWidth: 170 }} type="date" disabled={!editable} value={p.data || ''} onChange={(e) => upd({ data: e.target.value })} />
-                            <label style={{ whiteSpace: 'nowrap' }}><input type="checkbox" disabled={!editable} checked={p.fatal} onChange={(e) => upd({ fatal: e.target.checked })} /> Fatal</label>
+                            <Input className={ui.flex_2} placeholder="O que fazer" aria-label="O que fazer" disabled={!editable} value={p.descricao} onChange={(e) => upd({ descricao: e.target.value })} />
+                            <Input className={ui.flex_1} type="date" aria-label="Data" disabled={!editable} value={p.data || ''} onChange={(e) => upd({ data: e.target.value })} />
+                            <Checkbox disabled={!editable} checked={p.fatal} onChange={(e) => upd({ fatal: e.target.checked })}>Fatal</Checkbox>
                         </>)} />
 
-                    <ListEditor title="Próximos passos sugeridos" items={form.proximos_passos.map((t) => ({ t }))} readOnly={!editable} blank={{ t: '' }} addLabel="+ Adicionar"
+                    <ListEditor title="Próximos passos sugeridos" items={form.proximos_passos.map((t) => ({ t }))} readOnly={!editable} blank={{ t: '' }} addLabel="Adicionar"
                         onChange={(rows) => set({ proximos_passos: rows.map((r) => r.t) })}
-                        render={(r, upd) => <input style={input} disabled={!editable} value={r.t} onChange={(e) => upd({ t: e.target.value })} />} />
+                        render={(r, upd) => <Input className={ui.flex_1} aria-label="Próximo passo" disabled={!editable} value={r.t} onChange={(e) => upd({ t: e.target.value })} />} />
 
-                    {editable && <button type="button" onClick={confirm} disabled={busy} style={{ padding: '10px 18px' }}>{busy ? 'Salvando…' : 'Confirmar leitura e criar tarefas'}</button>}
+                    {editable && <Button variant="primary" className={ui.w_fit} loading={busy} loadingLabel="Salvando…" onClick={confirm}>Confirmar leitura e criar tarefas</Button>}
                     {tasks.length > 0 && (
-                        <section style={{ ...box, marginTop: 16 }}>
-                            <h3 style={{ marginTop: 0 }}>Tarefas criadas</h3>
-                            <ul>{tasks.map((t) => <li key={t.id}>{t.titulo} — {new Date(t.scheduled_at).toLocaleString('pt-BR')}</li>)}</ul>
-                            <button type="button" onClick={() => navigate('/dashboard')}>Ver no dashboard</button>
-                        </section>
+                        <Stack as="section" gap={3} className={ui.card}>
+                            <h3 className={`${ui.section_title} ${ui.mb_0}`}>Tarefas criadas</h3>
+                            <ul className={ui.mt_0}>{tasks.map((t) => <li key={t.id}>{t.titulo} — {new Date(t.scheduled_at).toLocaleString('pt-BR')}</li>)}</ul>
+                            <Button as={Link} to="/dashboard" className={ui.w_fit}>Ver no Painel</Button>
+                        </Stack>
                     )}
-                </div>
+                </Stack>
             )}
-            {!isOrgManager && ex?.status === 'review' && !canReview && <p style={{ color: 'var(--c-muted)' }}>Seu papel permite apenas visualizar.</p>}
+            {!isOrgManager && ex?.status === 'review' && !canReview && <p className={ui.muted}>Seu papel permite apenas visualizar.</p>}
             {signing && <AssinaturaModal documentId={id} documentName={doc?.nome} onClose={() => setSigning(false)} />}
         </div>
     );

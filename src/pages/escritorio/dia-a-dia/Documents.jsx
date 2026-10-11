@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../../../services/api.js';
-import styles from './Documents.module.css';
+import styles from '../../../components/ui/ui.module.css';
 
-import PageHeader from '../../../components/ui/PageHearder.jsx';
+import { Banner, PageHeader } from '../../../components/ui';
 import DropZone from '../../../components/documentos/DropZone.jsx';
 import DocumentList from '../../../components/documentos/DocumentList.jsx';
 import { errorMessage } from '../../../utils/format';
@@ -65,10 +65,10 @@ function Documents() {
     };
 
     return (
-        <div className={styles.documents_container}>
+        <div className={styles.page}>
             <PageHeader title="Documentos" subtitle="Envie e a IA lê para você" />
             <DropZone onFileSelect={handleFiles} />
-            {uploading && <p style={{ padding: '8px 0' }}>Enviando…</p>}
+            {uploading && <Banner tone="info" role="status">Enviando arquivos…</Banner>}
             <DocumentList
                 documents={documents}
                 search={search}
