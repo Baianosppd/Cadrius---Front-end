@@ -8,7 +8,8 @@ const FOCAVEL = 'input:not([disabled]), select:not([disabled]), textarea:not([di
 // Janela modal base: fecha no Esc e no clique fora, foca o 1º campo e devolve o foco ao fechar.
 // "busy" impede fechar enquanto algo está sendo salvo; "as" troca a tag da caixa (FormModal usa "form").
 // closeOnOverlay={false}: clique fora não fecha (formulários, para não perder o que foi digitado).
-export default function Modal({ open = true, onClose, title, size = 'md', footer, busy = false, closeOnOverlay = true, as = 'div', children, ...rest }) {
+// closeOnEsc={false}: Esc também não fecha (ex.: token mostrado uma única vez; só o botão do rodapé fecha).
+export default function Modal({ open = true, onClose, title, size = 'md', footer, busy = false, closeOnOverlay = true, closeOnEsc = true, as = 'div', children, ...rest }) {
     const Tag = as;
     const titleId = useId();
     const boxRef = useRef(null);
@@ -27,13 +28,13 @@ export default function Modal({ open = true, onClose, title, size = 'md', footer
     useEffect(() => {
         if (!open) return;
         const onKey = (e) => {
-            if (e.key !== 'Escape' || busy) return;
+            if (e.key !== 'Escape' || busy || !closeOnEsc) return;
             const abertos = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
             if (abertos[abertos.length - 1] === boxRef.current) onClose?.();
         };
         document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
-    }, [open, busy, onClose]);
+    }, [open, busy, closeOnEsc, onClose]);
 
     if (!open) return null;
     // Clique fora só fecha se começou no fundo — selecionar texto e soltar fora não fecha
