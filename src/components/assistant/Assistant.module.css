@@ -4,7 +4,8 @@
     color: var(--c-text); border: 1px solid transparent; background: none; text-align: left; font: inherit; width: 100%; }
 .conv:hover { background: var(--c-surface-3); }
 .conv_on { background: var(--c-primary-50); border-color: var(--c-primary-100); color: var(--c-ink); }
-.conv_title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-base); }
+.conv_title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-base);
+    background: none; border: 0; padding: 0; font-family: inherit; color: inherit; cursor: pointer; text-align: left; }
 .conv_del { opacity: .6; background: none; border: 0; color: var(--c-muted); cursor: pointer; padding: 4px; border-radius: 6px; }
 .conv_del:hover { opacity: 1; color: var(--c-danger); background: var(--c-danger-bg); }
 .chat { display: flex; flex-direction: column; border: 1px solid var(--c-border); border-radius: var(--radius-lg); background: var(--c-surface);
@@ -73,3 +74,4 @@
 .doc_ref { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; font-size: var(--fs-sm); opacity: .85; }
 .composer_wrap { border-top: 1px solid var(--c-border); }
 .composer_wrap .composer { border-top: none; }
+.writer_text { min-height: 240px; }

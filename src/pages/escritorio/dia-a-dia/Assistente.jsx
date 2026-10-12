@@ -4,7 +4,7 @@ import { FiBriefcase, FiCheck, FiCpu, FiFileText, FiLink, FiMessageCircle, FiPap
 import { Link, useSearchParams } from 'react-router-dom';
 import styles from '../../../components/ui/ui.module.css';
 import a from '../../../components/assistant/Assistant.module.css';
-import { Banner, PageHeader, Pill } from '../../../components/ui';
+import { Banner, Button, Checkbox, Field, FormModal, PageHeader, Pill, Row, Select, Tabs, Textarea } from '../../../components/ui';
 import { errorMessage } from '../../../utils/format';
 import RichText from '../../../components/assistant/RichText';
 import TextTools from '../../../components/assistant/TextTools';
@@ -16,6 +16,8 @@ import { casesApi } from '../../../services/rules';
 
 // Assistente de IA (CAD-221): pergunta, pesquisa nos dados do escritório, escreve e PROPÕE ações — que só rodam
 // quando a própria pessoa confirma.
+const TABS = [{ id: 'conversa', label: 'Conversa' }, { id: 'texto', label: 'Ferramentas de texto' }];
+
 export default function Assistente() {
     const [tab, setTab] = useState('conversa');
     const [status, setStatus] = useState(null);
@@ -26,13 +28,10 @@ export default function Assistente() {
         <div className={styles.page}>
             <PageHeader title="Assistente IA" subtitle="Pergunte, peça e delegue"
                 actions={status?.pode_configurar && (
-                    <button type="button" className={styles.btn} onClick={() => setConfig(true)}><FiSettings aria-hidden="true" /> Configurações</button>
+                    <Button icon={FiSettings} onClick={() => setConfig(true)}>Configurações</Button>
                 )} />
             {config && <Settings status={status} onClose={() => { setConfig(false); loadStatus(); }} />}
-            <div className={styles.tabs} role="tablist">
-                <button type="button" role="tab" aria-selected={tab === 'conversa'} className={`${styles.tab} ${tab === 'conversa' ? styles.tab_active : ''}`} onClick={() => setTab('conversa')}>Conversa</button>
-                <button type="button" role="tab" aria-selected={tab === 'texto'} className={`${styles.tab} ${tab === 'texto' ? styles.tab_active : ''}`} onClick={() => setTab('texto')}>Ferramentas de texto</button>
-            </div>
+            <Tabs tabs={TABS} value={tab} onChange={setTab} />
             {status && !status.disponivel && (
                 <Banner tone="warn">
                     {status.ia_ligada === false ? 'A IA está desligada para o escritório (Segurança → IA segura).'
@@ -60,15 +59,6 @@ function Chat({ status }) {
 
     const loadList = () => assistantApi.list().then(setList).catch(() => {});
     useEffect(() => { loadList(); }, []);
-    useEffect(() => {                                  // CAD-233: vindo de "Nova tarefa" → pedido já escrito
-        const t = params.get('texto');
-        if (!t) return;
-        setConv(null);
-        setText(t.slice(0, 2000));
-        const next = new URLSearchParams(params); next.delete('texto');
-        setParams(next, { replace: true });
-        setTimeout(() => input.current?.focus(), 0);
-    }, [params, setParams]);
     useEffect(() => {                                  // CAD-233: vindo de "Nova tarefa" → pedido já escrito
         const t = params.get('texto');
         if (!t) return;
@@ -134,18 +124,13 @@ function Chat({ status }) {
     return (
         <div className={a.layout}>
             <aside className={a.side} aria-label="Conversas">
-                <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => { setConv(null); input.current?.focus(); }}>
-                    <FiPlus aria-hidden="true" /> Nova conversa
-                </button>
-                {status?.estrategia_de_caso && (
-                    <button type="button" className={styles.btn} onClick={() => setCaseStart(true)}><FiBriefcase aria-hidden="true" /> Estratégia de caso</button>
-                )}
+                <Button variant="primary" icon={FiPlus} onClick={() => { setConv(null); input.current?.focus(); }}>Nova conversa</Button>
+                {status?.estrategia_de_caso && <Button icon={FiBriefcase} onClick={() => setCaseStart(true)}>Estratégia de caso</Button>}
                 {list.map((c) => (
                     <div key={c.id} className={`${a.conv} ${conv?.id === c.id ? a.conv_on : ''}`}>
                         {c.modo === 'caso' ? <FiBriefcase aria-label="Estratégia de caso" /> : c.modo === 'mcp' ? <FiLink aria-label="Pedidos pelo conector" />
                             : <FiMessageCircle aria-hidden="true" />}
-                        <button type="button" className={a.conv_title} onClick={() => open(c.id)}
-                            style={{ background: 'none', border: 0, padding: 0, font: 'inherit', color: 'inherit', cursor: 'pointer', textAlign: 'left' }}>{c.titulo}</button>
+                        <button type="button" className={a.conv_title} onClick={() => open(c.id)}>{c.titulo}</button>
                         <button type="button" className={a.conv_del} aria-label={`Apagar conversa ${c.titulo}`} onClick={() => remove(c.id)}><FiTrash2 /></button>
                     </div>
                 ))}
@@ -204,15 +189,13 @@ function Chat({ status }) {
                     </div>
                 )}
                 <form className={a.composer} onSubmit={(e) => { e.preventDefault(); send(); }}>
-                    <button type="button" className={styles.btn} onClick={() => setPicking(true)} aria-label="Usar um documento" title="Usar um documento"
-                        disabled={status?.disponivel === false}><FiPaperclip aria-hidden="true" /></button>
-                    <textarea ref={input} className={styles.textarea} rows={1} value={text} maxLength={8000} aria-label="Mensagem ao assistente"
+                    <Button icon={FiPaperclip} onClick={() => setPicking(true)} aria-label="Usar um documento" title="Usar um documento"
+                        disabled={status?.disponivel === false} />
+                    <Textarea ref={input} rows={1} value={text} maxLength={8000} aria-label="Mensagem ao assistente"
                         placeholder="Pergunte ou peça algo… (Enter envia, Shift+Enter quebra linha)" disabled={status?.disponivel === false}
                         onChange={(e) => setText(e.target.value)}
                         onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} />
-                    <button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy || !text.trim()} aria-label="Enviar">
-                        <FiSend aria-hidden="true" />
-                    </button>
+                    <Button type="submit" variant="primary" icon={FiSend} disabled={busy || !text.trim()} aria-label="Enviar" />
                 </form>
                 </div>
             </section>
@@ -253,15 +236,14 @@ function ActionCard({ action, onDecide }) {
             {action.status === 'failed' && action.resultado?.erro && <Banner tone="error">{action.resultado.erro}</Banner>}
             {action.status === 'done' && action.resultado?.link && <a href={action.resultado.link}>Abrir</a>}
             {action.status === 'pending' && (
-                <div className={styles.btn_row}>
-                    <button type="button" className={`${styles.btn} ${styles.btn_primary} ${styles.btn_sm}`} disabled={busy} onClick={() => go('confirmar')}><FiCheck aria-hidden="true" /> Confirmar</button>
-                    <button type="button" className={`${styles.btn} ${styles.btn_sm}`} disabled={busy} onClick={() => go('cancelar')}><FiX aria-hidden="true" /> Cancelar</button>
-                </div>
+                <Row gap={1}>
+                    <Button size="sm" variant="primary" icon={FiCheck} disabled={busy} onClick={() => go('confirmar')}>Confirmar</Button>
+                    <Button size="sm" icon={FiX} disabled={busy} onClick={() => go('cancelar')}>Cancelar</Button>
+                </Row>
             )}
         </div>
     );
 }
-
 
 function CaseStart({ onClose, onStarted }) {
     const [cases, setCases] = useState([]);
@@ -271,6 +253,7 @@ function CaseStart({ onClose, onStarted }) {
     useEffect(() => { casesApi.list().then((r) => setCases(Array.isArray(r) ? r : r?.resultados || [])).catch(() => setCases([])); }, []);
     const start = async (e) => {
         e.preventDefault();
+        if (!msg.trim()) return;
         setBusy(true);
         try { onStarted(await assistantApi.startCase(msg, pid)); } catch (err) {
             if (err.response?.data?.conversa) onStarted(err.response.data.conversa);
@@ -278,47 +261,36 @@ function CaseStart({ onClose, onStarted }) {
         } finally { setBusy(false); }
     };
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="case-title">
-            <form className={styles.modal} onSubmit={start}>
-                <div className={styles.modal_title} id="case-title">Estratégia de caso</div>
-                <p className={styles.muted}>O assistente conduz: fatos, questões jurídicas, teses, provas, riscos, cenários e plano de ação — e salva o plano em Minutas.</p>
-                <label className={styles.field}>Processo acompanhado (opcional)
-                    <select className={styles.select} value={pid} onChange={(e) => setPid(e.target.value)}>
-                        <option value="">Caso novo / sem processo ainda</option>
-                        {cases.map((c) => <option key={c.id} value={c.id}>{c.label || c.cnj}{c.cliente?.nome ? ` — ${c.cliente.nome}` : ''}</option>)}
-                    </select>
-                </label>
-                <label className={styles.field}>Primeira mensagem
-                    <textarea className={styles.textarea} value={msg} maxLength={8000} onChange={(e) => setMsg(e.target.value)} />
-                </label>
-                <div className={styles.btn_row}>
-                    <button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy || !msg.trim()}>{busy ? 'Analisando…' : 'Começar'}</button>
-                    <button type="button" className={styles.btn} onClick={onClose}>Cancelar</button>
-                </div>
-            </form>
-        </div>
+        <FormModal title="Estratégia de caso" onClose={onClose} onSubmit={start} busy={busy} submitLabel="Começar" busyLabel="Analisando…">
+            <p className={`${styles.muted} ${styles.mt_0}`}>O assistente conduz: fatos, questões jurídicas, teses, provas, riscos, cenários e plano de ação — e salva o plano em Minutas.</p>
+            <Field label="Processo acompanhado (opcional)">
+                <Select value={pid} onChange={(e) => setPid(e.target.value)}>
+                    <option value="">Caso novo / sem processo ainda</option>
+                    {cases.map((c) => <option key={c.id} value={c.id}>{c.label || c.cnj}{c.cliente?.nome ? ` — ${c.cliente.nome}` : ''}</option>)}
+                </Select>
+            </Field>
+            <Field label="Primeira mensagem">
+                <Textarea value={msg} maxLength={8000} required onChange={(e) => setMsg(e.target.value)} />
+            </Field>
+        </FormModal>
     );
 }
 
 function Settings({ status, onClose }) {
     const [form, setForm] = useState({ estrategia_de_caso: status.estrategia_de_caso, usa_memoria: status.usa_memoria });
-    const save = async () => {
-        try { await assistantApi.saveSettings(form); toast.success('Configurações salvas.'); onClose(); } catch (e) { toast.error(errorMessage(e)); }
+    const [busy, setBusy] = useState(false);
+    const save = async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        try { await assistantApi.saveSettings(form); toast.success('Configurações salvas.'); onClose(); } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="cfg-title">
-            <div className={styles.modal}>
-                <div className={styles.modal_title} id="cfg-title">Configurações do assistente</div>
-                <label className={styles.check_row}><input type="checkbox" checked={form.estrategia_de_caso} onChange={(e) => setForm({ ...form, estrategia_de_caso: e.target.checked })} />
-                    Liberar o modo "estratégia de caso" para a equipe</label>
-                <label className={styles.check_row}><input type="checkbox" checked={form.usa_memoria} onChange={(e) => setForm({ ...form, usa_memoria: e.target.checked })} />
-                    Consultar a memória do escritório (o que a equipe ensinou ao Cadrius) em cada pergunta</label>
-                <p className={styles.muted}>O conector para Claude/ChatGPT fica em Plugins.</p>
-                <div className={styles.btn_row}>
-                    <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={save}>Salvar</button>
-                    <button type="button" className={styles.btn} onClick={onClose}>Cancelar</button>
-                </div>
-            </div>
-        </div>
+        <FormModal title="Configurações do assistente" onClose={onClose} onSubmit={save} busy={busy}>
+            <Checkbox checked={form.estrategia_de_caso} onChange={(e) => setForm({ ...form, estrategia_de_caso: e.target.checked })}>
+                Liberar o modo "estratégia de caso" para a equipe</Checkbox>
+            <Checkbox checked={form.usa_memoria} onChange={(e) => setForm({ ...form, usa_memoria: e.target.checked })}>
+                Consultar a memória do escritório (o que a equipe ensinou ao Cadrius) em cada pergunta</Checkbox>
+            <p className={`${styles.muted} ${styles.mb_0}`}>O conector para Claude/ChatGPT fica em Plugins.</p>
+        </FormModal>
     );
 }

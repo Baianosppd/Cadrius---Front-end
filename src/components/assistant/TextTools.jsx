@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { FiCopy } from 'react-icons/fi';
 import styles from '../ui/ui.module.css';
 import a from './Assistant.module.css';
-import { Banner } from '../ui';
+import { Banner, Button, Chip, Field, Input, Row, Textarea } from '../ui';
 import { errorMessage } from '../../utils/format';
 import { PROVIDER_LABEL, WRITE_ACTIONS, assistantApi } from '../../services/assistant';
 
@@ -47,21 +47,18 @@ export default function TextTools() {
         <div className={a.writer}>
             <form className={styles.card} onSubmit={run}>
                 <div className={styles.card_title}>Seu texto</div>
-                <textarea className={styles.textarea} style={{ minHeight: 240 }} value={text} maxLength={20000} aria-label="Texto"
+                <Textarea className={a.writer_text} value={text} maxLength={20000} aria-label="Texto"
                     placeholder="Cole aqui uma publicação, um e-mail, um trecho de peça…" onChange={(e) => setText(e.target.value)} />
-                <div className={styles.segmented} role="radiogroup" aria-label="O que fazer" style={{ flexWrap: 'wrap' }}>
-                    {WRITE_ACTIONS.map((w) => (
-                        <button key={w.key} type="button" role="radio" aria-checked={action === w.key}
-                            className={`${styles.chip} ${action === w.key ? styles.chip_active : ''}`} onClick={() => setAction(w.key)}>{w.label}</button>
-                    ))}
-                </div>
-                <label className={styles.field}>Orientação extra (opcional)
-                    <input className={styles.input} value={extra} maxLength={500} onChange={(e) => setExtra(e.target.value)} placeholder="Ex.: tom mais cordial; cite o art. 1.694 do CC" />
-                </label>
+                <Row gap={1} role="group" aria-label="O que fazer">
+                    {WRITE_ACTIONS.map((w) => <Chip key={w.key} active={action === w.key} onClick={() => setAction(w.key)}>{w.label}</Chip>)}
+                </Row>
+                <Field label="Orientação extra (opcional)">
+                    <Input value={extra} maxLength={500} onChange={(e) => setExtra(e.target.value)} placeholder="Ex.: tom mais cordial; cite o art. 1.694 do CC" />
+                </Field>
                 {error && <Banner tone="error">{error}</Banner>}
-                <div className={styles.btn_row}>
-                    <button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy || !text.trim()}>{busy ? 'Processando…' : 'Aplicar'}</button>
-                </div>
+                <Row>
+                    <Button type="submit" variant="primary" loading={busy} loadingLabel="Processando…" disabled={!text.trim()}>Aplicar</Button>
+                </Row>
             </form>
             <div className={styles.card}>
                 <div className={styles.card_title}>Resultado {out?.provedor && <span className={styles.muted}>· via {PROVIDER_LABEL[out.provedor] || out.provedor}</span>}</div>
@@ -69,15 +66,15 @@ export default function TextTools() {
                 {out && out.dados && typeof out.dados === 'object' ? (
                     <div>
                         {Object.entries(out.dados).map(([k, v]) => (
-                            <div key={k} className={styles.kv}><span className={styles.muted}>{FIELD_LABEL[k] || k}</span><span style={{ textAlign: 'right' }}>{show(v)}</span></div>
+                            <div key={k} className={styles.kv}><span className={styles.muted}>{FIELD_LABEL[k] || k}</span><span className={styles.text_right}>{show(v)}</span></div>
                         ))}
                     </div>
                 ) : out && <div className={a.result}>{out.texto}</div>}
                 {out && !out.dados && (
-                    <div className={styles.btn_row}>
-                        <button type="button" className={styles.btn} onClick={copy}><FiCopy aria-hidden="true" /> Copiar</button>
-                        <button type="button" className={styles.btn} onClick={() => { setText(out.texto); setOut(null); }}>Usar como novo texto</button>
-                    </div>
+                    <Row>
+                        <Button icon={FiCopy} onClick={copy}>Copiar</Button>
+                        <Button onClick={() => { setText(out.texto); setOut(null); }}>Usar como novo texto</Button>
+                    </Row>
                 )}
             </div>
         </div>
