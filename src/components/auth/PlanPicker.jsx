@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { FiDollarSign, FiCheck } from 'react-icons/fi';
 import api, { API_ORIGIN } from '../../services/api';
 import styles from '../../pages/auth/steps/individual/Step.module.css';
+import ui from '../ui/ui.module.css';
+import { Field, Input } from '../ui';
 
 // Planos reais vindos do back (GET /api/billing/plans/) — id numérico é o que o cadastro e o checkout exigem.
 export default function PlanPicker({ formData, onChange, subtitle }) {
@@ -50,20 +52,11 @@ export default function PlanPicker({ formData, onChange, subtitle }) {
                     </div>
                 ))}
             </div>
-            <label className={styles.label} style={{ display: "block", marginTop: 16 }}>
-                Cupom (opcional)
-                <input
-                    className={styles.input}
-                    value={formData.cupom || ''}
-                    maxLength={40}
-                    placeholder="Ex.: BEMVINDO"
-                    aria-describedby="cupom-help"
-                    onChange={(e) => onChange({ cupom: e.target.value.toUpperCase().replace(/\s/g, '') })}
-                />
-            </label>
-            <p id="cupom-help" className={styles.subtitle}>
-                Recebeu um cupom do Cadrius? Ele é conferido ao criar a conta: dias extras de teste entram na hora e desconto vale no primeiro pagamento.
-            </p>
+            <Field label="Cupom (opcional)" className={ui.mt_4}
+                hint="Recebeu um cupom do Cadrius? Ele é conferido ao criar a conta: dias extras de teste entram na hora e desconto vale no primeiro pagamento.">
+                <Input size="lg" value={formData.cupom || ''} maxLength={40} placeholder="Ex.: BEMVINDO"
+                    onChange={(e) => onChange({ cupom: e.target.value.toUpperCase().replace(/\s/g, '') })} />
+            </Field>
         </div>
     );
 }

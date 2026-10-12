@@ -319,5 +319,7 @@
 .li_plain { list-style: none; }
 /* Bloco estreito (formulários curtos numa página larga) */
 .narrow { max-width: 640px; }
+/* Tela só com um aviso centralizado (ex.: retorno do login social) */
+.page_center { padding: var(--sp-8) var(--sp-4); max-width: 520px; margin: 0 auto; text-align: center; }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }

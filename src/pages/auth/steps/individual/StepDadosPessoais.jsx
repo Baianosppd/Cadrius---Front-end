@@ -1,6 +1,9 @@
 import styles from './Step.module.css';
 import { FiUser } from 'react-icons/fi';
+import { Field, Input } from '../../../../components/ui';
 import LegalAcceptance from '../../../../components/auth/LegalAcceptance';
+
+const Obrigatorio = () => <span className={styles.required}>Obrigatório</span>;
 
 const StepDadosPessoais = ({ formData, onChange }) => {
     return (
@@ -16,22 +19,18 @@ const StepDadosPessoais = ({ formData, onChange }) => {
             </div>
 
             <div className={styles.fields_grid}>
-                <div className={styles.field}>
-                    <label className={styles.label}>Nome Completo <span className={styles.required}>Obrigatório</span></label>
-                    <input className={styles.input} placeholder="Maria Silva Santos" value={formData.nome || ''} onChange={e => onChange({ nome: e.target.value })} />
-                </div>
-                <div className={styles.field}>
-                    <label className={styles.label}>CPF <span className={styles.required}>Obrigatório</span></label>
-                    <input className={styles.input} placeholder="000.000.000-00" value={formData.cpf || ''} onChange={e => onChange({ cpf: e.target.value })} />
-                </div>
-                <div className={styles.field}>
-                    <label className={styles.label}>E-mail <span className={styles.required}>Obrigatório</span></label>
-                    <input className={styles.input} type="email" autoComplete="email" placeholder="maria@email.com" value={formData.email || ''} onChange={e => onChange({ email: e.target.value })} />
-                </div>
-                <div className={styles.field}>
-                    <label className={styles.label}>Criar Senha <span className={styles.required}>Obrigatório</span></label>
-                    <input className={styles.input} type="password" autoComplete="new-password" placeholder="Mínimo 8 caracteres" value={formData.senha || ''} onChange={e => onChange({ senha: e.target.value })} />
-                </div>
+                <Field label={<>Nome Completo <Obrigatorio /></>}>
+                    <Input size="lg" autoComplete="name" placeholder="Maria Silva Santos" value={formData.nome || ''} onChange={(e) => onChange({ nome: e.target.value })} />
+                </Field>
+                <Field label={<>CPF <Obrigatorio /></>}>
+                    <Input size="lg" inputMode="numeric" placeholder="000.000.000-00" value={formData.cpf || ''} onChange={(e) => onChange({ cpf: e.target.value })} />
+                </Field>
+                <Field label={<>E-mail <Obrigatorio /></>}>
+                    <Input size="lg" type="email" autoComplete="email" placeholder="maria@email.com" value={formData.email || ''} onChange={(e) => onChange({ email: e.target.value })} />
+                </Field>
+                <Field label={<>Criar Senha <Obrigatorio /></>}>
+                    <Input size="lg" type="password" autoComplete="new-password" placeholder="Mínimo 8 caracteres" value={formData.senha || ''} onChange={(e) => onChange({ senha: e.target.value })} />
+                </Field>
             </div>
 
             <LegalAcceptance formData={formData} onChange={onChange} />

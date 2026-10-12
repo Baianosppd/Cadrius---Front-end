@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
+import ui from '../ui/ui.module.css';
+import s from './LegalAcceptance.module.css';
+import { Checkbox, Row } from '../ui';
 import Markdown from '../seguranca/Markdown';
 
 const KINDS = ['terms', 'privacy', 'ciencia'];
@@ -31,22 +34,21 @@ export default function LegalAcceptance({ formData, onChange }) {
     };
 
     return (
-        <fieldset style={{ border: '1px solid var(--c-border)', borderRadius: 10, padding: 14, marginTop: 18 }}>
-            <legend style={{ padding: '0 6px', fontWeight: 600 }}>Termos e privacidade</legend>
+        <fieldset className={s.box}>
+            <legend className={s.legend}>Termos e privacidade</legend>
             {docs.map((d) => (
-                <div key={d.id} style={{ marginBottom: 8 }}>
-                    <label style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 14 }}>
-                        <input type="checkbox" checked={legal[d.kind] === d.version} onChange={(e) => toggle(d, e.target.checked)} />
-                        <span>
-                            Li e aceito {LABEL[d.kind]} (v{d.version}){' '}
-                            <button type="button" onClick={() => setOpen(open === d.id ? null : d.id)}
-                                style={{ background: 'none', border: 'none', color: 'var(--c-primary)', cursor: 'pointer', padding: 0 }}>
-                                {open === d.id ? 'ocultar' : 'ler'}
-                            </button>
-                        </span>
-                    </label>
+                <div key={d.id} className={s.item}>
+                    {/* O botão "ler" fica fora do <label> para não marcar a caixa ao abrir o texto */}
+                    <Row gap={2} align="start">
+                        <Checkbox className={s.check} checked={legal[d.kind] === d.version} onChange={(e) => toggle(d, e.target.checked)}>
+                            Li e aceito {LABEL[d.kind]} (v{d.version})
+                        </Checkbox>
+                        <button type="button" className={ui.link_btn} aria-expanded={open === d.id} onClick={() => setOpen(open === d.id ? null : d.id)}>
+                            {open === d.id ? 'ocultar' : 'ler'}
+                        </button>
+                    </Row>
                     {open === d.id && (
-                        <div tabIndex={0} style={{ fontSize: 13, maxHeight: 200, overflowY: 'auto', background: 'var(--c-surface-2)', border: '1px solid var(--c-border)', borderRadius: 8, padding: 10, marginTop: 6 }}>
+                        <div tabIndex={0} className={s.doc}>
                             <Markdown text={d.content_md} />
                         </div>
                     )}

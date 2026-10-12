@@ -413,3 +413,7 @@
     .field, .field_full { min-width: 0; }
     .title { font-size: 1.35rem; }
 }
+
+/* Cabeçalho da confirmação: fundo verde no ícone e o emoji maior */
+.icon_success { background-color: var(--c-success-bg); }
+.emoji { font-size: 24px; }

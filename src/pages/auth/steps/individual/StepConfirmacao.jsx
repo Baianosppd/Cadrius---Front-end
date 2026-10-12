@@ -5,8 +5,8 @@ const StepConfirmacao = () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <div className={styles.icon_wrapper} style={{ backgroundColor: 'var(--c-success-bg)' }}>
-                    <span style={{ fontSize: 24 }}>🎉</span>
+                <div className={`${styles.icon_wrapper} ${styles.icon_success}`}>
+                    <span className={styles.emoji} aria-hidden="true">🎉</span>
                 </div>
                 <div>
                     <h2 className={styles.title}>Confirmação</h2>
