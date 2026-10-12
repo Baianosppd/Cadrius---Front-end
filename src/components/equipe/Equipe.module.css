@@ -1,0 +1,5 @@
+/* Equipe: barra de uso de créditos de IA no mês (a largura do preenchimento depende do dado) */
+.usage { display: grid; gap: var(--sp-1); min-width: 140px; }
+.usage_track { height: 6px; border-radius: 3px; background: var(--c-border); }
+.usage_fill { height: 100%; border-radius: 3px; background: var(--c-primary); }
+.usage_fill_high { background: var(--c-danger); }

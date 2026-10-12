@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../services/api.js';
-import { PageHeader } from '../../../components/ui';
-import styles from './GestaoEquipe.module.css';
+import { PageHeader, Tabs } from '../../../components/ui';
+import styles from '../../../components/ui/ui.module.css';
 
-import TabBar from '../../../components/ui/TabBar.jsx';
 import TeamMembers from '../../../components/equipe/TeamMembers.jsx';
 import { AccessGroups, AccessReference } from '../../../components/equipe/AccessGroups.jsx';
 import useAuth from '../../../hooks/useAuth';
@@ -62,7 +61,7 @@ function GestaoEquipe() {
     ];
 
     return (
-        <div className={styles.GestaoEquipe_container}>
+        <div className={styles.page}>
             <PageHeader title="Equipe" subtitle="Pessoas, acessos e créditos de IA" />
             {showInviteModal && (
                 <InviteMemberModal
@@ -71,11 +70,7 @@ function GestaoEquipe() {
                 />
             )}
 
-            <TabBar
-                tabs={tabs}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-            />
+            <Tabs tabs={tabs} value={activeTab} onChange={setActiveTab} />
 
             {activeTab === 'funcionarios' && (
                 <TeamMembers

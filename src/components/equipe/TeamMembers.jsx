@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiUserPlus } from 'react-icons/fi';
 import ui from '../ui/ui.module.css';
-import { Banner, Pill, StatCard } from '../ui';
+import s from './Equipe.module.css';
+import { Banner, Button, Field, FormModal, Input, Pill, Row, Stack, StatCard, Table } from '../ui';
 import { errorMessage } from '../../utils/format';
 import api from '../../services/api';
 
@@ -13,11 +14,10 @@ function UsageBar({ used, limit }) {
     if (limit == null) return <span>{used} usado(s) <span className={ui.muted}>· sem cota</span></span>;
     const pct = limit ? Math.min(Math.round((used / limit) * 100), 100) : 100;
     return (
-        <div style={{ display: 'grid', gap: 4, minWidth: 140 }}>
+        <div className={s.usage}>
             <span>{used} / {limit} <span className={ui.muted}>({pct}%)</span></span>
-            <div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label="Uso da cota"
-                style={{ height: 6, borderRadius: 3, background: 'var(--c-border)' }}>
-                <div style={{ width: `${pct}%`, height: '100%', borderRadius: 3, background: pct >= 90 ? 'var(--c-danger)' : 'var(--c-primary)' }} />
+            <div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label="Uso da cota" className={s.usage_track}>
+                <div className={`${s.usage_fill} ${pct >= 90 ? s.usage_fill_high : ''}`} style={{ width: `${pct}%` }} />
             </div>
         </div>
     );
@@ -36,18 +36,11 @@ function QuotaEditor({ member, onClose, onSaved }) {
         } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
     return (
-        <div className={ui.overlay} role="dialog" aria-modal="true" aria-labelledby="quota-title">
-            <form className={ui.modal} onSubmit={save} style={{ maxWidth: 440 }}>
-                <div id="quota-title" className={ui.modal_title}>Cota mensal de {member.nome}</div>
-                <label className={ui.field}>Créditos por mês (vazio = sem cota; usa os do escritório)
-                    <input id="quota-value" className={ui.input} type="number" min={0} value={value} onChange={(e) => setValue(e.target.value)} />
-                </label>
-                <div className={ui.btn_row} style={{ justifyContent: 'flex-end' }}>
-                    <button type="button" className={ui.btn} onClick={onClose}>Cancelar</button>
-                    <button type="submit" className={`${ui.btn} ${ui.btn_primary}`} disabled={busy}>Salvar cota</button>
-                </div>
-            </form>
-        </div>
+        <FormModal title={`Cota mensal de ${member.nome}`} size="sm" onClose={onClose} onSubmit={save} busy={busy} submitLabel="Salvar cota">
+            <Field label="Créditos por mês" hint="Vazio = sem cota; a pessoa usa os créditos do escritório.">
+                <Input type="number" min={0} value={value} onChange={(e) => setValue(e.target.value)} />
+            </Field>
+        </FormModal>
     );
 }
 
@@ -56,7 +49,7 @@ export default function TeamMembers({ members = [], summary, canManage, onInvite
     const [editing, setEditing] = useState(null);
     const usage = summary?.uso_por_atividade || [];
     return (
-        <div className={ui.stack}>
+        <Stack>
             {summary && (
                 <div className={ui.grid}>
                     <StatCard title="Créditos usados no mês" value={`${summary.creditos_usados} / ${summary.creditos_total}`}
@@ -71,36 +64,27 @@ export default function TeamMembers({ members = [], summary, canManage, onInvite
             {summary && summary.creditos_disponiveis <= 0 && !summary.creditos_avulsos && (
                 <Banner tone="warn">Os créditos do mês acabaram. Compre um pacote em Perfil → Assinatura e créditos ou aguarde o próximo mês.</Banner>
             )}
-            <section className={ui.card}>
-                <div className={ui.btn_row} style={{ justifyContent: 'space-between' }}>
+            <Stack as="section" gap={3} className={ui.card}>
+                <Row justify="between">
                     <div>
-                        <div className={ui.section_title}>Pessoas do escritório</div>
-                        <p className={ui.muted}>O uso de cada pessoa é atualizado a cada pedido à IA.</p>
+                        <div className={`${ui.section_title} ${ui.mb_0}`}>Pessoas do escritório</div>
+                        <p className={`${ui.muted} ${ui.mt_0} ${ui.mb_0}`}>O uso de cada pessoa é atualizado a cada pedido à IA.</p>
                     </div>
-                    {canManage && (
-                        <button type="button" className={`${ui.btn} ${ui.btn_primary}`} onClick={onInvite}>
-                            <FiUserPlus aria-hidden="true" /> Convidar pessoa
-                        </button>
-                    )}
-                </div>
-                <div className={ui.table_wrap} style={{ marginTop: 12 }}>
-                    <table className={`${ui.table} ${ui.table_stack}`}>
-                        <thead><tr><th>Pessoa</th><th>Cargo</th><th>Grupo de acesso</th><th>Créditos no mês</th><th><span className="sr-only">Ações</span></th></tr></thead>
-                        <tbody>
-                            {members.map((m) => (
-                                <tr key={m.id}>
-                                    <td><strong>{m.nome}</strong><div className={ui.muted}>{m.email}</div></td>
-                                    <td data-label="Cargo"><Pill tone={['owner', 'administrador'].includes(m.role) ? 'blue' : 'gray'}>{ROLE_LABEL[m.role] || m.role}</Pill></td>
-                                    <td data-label="Grupo">{m.grupo?.nome || <span className={ui.muted}>pelo cargo</span>}</td>
-                                    <td data-label="Créditos no mês"><UsageBar used={m.creditos_usados || 0} limit={m.creditos_limite} /></td>
-                                    <td>{canManage && <button type="button" className={`${ui.btn} ${ui.btn_sm}`} onClick={() => setEditing(m)}>Definir cota</button>}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+                    {canManage && <Button variant="primary" icon={FiUserPlus} onClick={onInvite}>Convidar pessoa</Button>}
+                </Row>
+                <Table flat columns={['Pessoa', 'Cargo', 'Grupo de acesso', 'Créditos no mês', { label: <span className={ui.sr_only}>Ações</span>, className: ui.td_actions }]}>
+                    {members.map((m) => (
+                        <tr key={m.id}>
+                            <td><strong>{m.nome}</strong><div className={ui.muted}>{m.email}</div></td>
+                            <td data-label="Cargo"><Pill tone={['owner', 'administrador'].includes(m.role) ? 'blue' : 'gray'}>{ROLE_LABEL[m.role] || m.role}</Pill></td>
+                            <td data-label="Grupo">{m.grupo?.nome || <span className={ui.muted}>pelo cargo</span>}</td>
+                            <td data-label="Créditos no mês"><UsageBar used={m.creditos_usados || 0} limit={m.creditos_limite} /></td>
+                            <td className={ui.td_actions}>{canManage && <Button size="sm" onClick={() => setEditing(m)}>Definir cota</Button>}</td>
+                        </tr>
+                    ))}
+                </Table>
+            </Stack>
             {editing && <QuotaEditor member={editing} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); onChanged?.(); }} />}
-        </div>
+        </Stack>
     );
 }
