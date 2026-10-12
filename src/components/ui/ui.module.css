@@ -317,5 +317,7 @@
 /* Tabela dentro de um cartão: sem a borda e a sombra próprias */
 .table_flat { border: none; box-shadow: none; }
 .li_plain { list-style: none; }
+/* Bloco estreito (formulários curtos numa página larga) */
+.narrow { max-width: 640px; }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }

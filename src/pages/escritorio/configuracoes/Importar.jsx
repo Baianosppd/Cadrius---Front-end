@@ -2,24 +2,26 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../../components/ui/ui.module.css';
-import { Banner, Empty, PageHeader, Pill, StatCard } from '../../../components/ui';
+import { Banner, Button, Empty, Field, Input, PageHeader, Pill, Row, Select, Stack, StatCard, Table } from '../../../components/ui';
 import { errorMessage, fmtDateTime } from '../../../utils/format';
 import useLoader from '../../../hooks/useLoader';
 import { ACTION_TONE, MAX_MB, TARGETS, importsApi, missingRequired, setColumnField } from '../../../services/imports';
 
+// Importações anteriores (só aparece quando há alguma)
 function Historico({ tick }) {
     const { data } = useLoader(importsApi.list, [tick]);
     if (!data?.length) return null;
     return (
-        <div className={styles.table_wrap}>
-            <table className={styles.table}>
-                <thead><tr><th>Quando</th><th>Arquivo</th><th>Destino</th><th>Situação</th><th>Resultado</th></tr></thead>
-                <tbody>{data.map((j) => (
-                    <tr key={j.id}><td>{fmtDateTime(j.created_at)}</td><td>{j.filename}</td><td>{j.target_label}</td><td>{j.status_label}</td>
-                        <td>{j.status === 'done' ? `${j.summary.created} criados · ${j.summary.updated} atualizados · ${j.summary.errors} com erro` : '—'}</td></tr>
-                ))}</tbody>
-            </table>
-        </div>
+        <Stack gap={3}>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Importações anteriores</div>
+            <Table columns={['Quando', 'Arquivo', 'Destino', 'Situação', 'Resultado']}>
+                {data.map((j) => (
+                    <tr key={j.id}><td>{fmtDateTime(j.created_at)}</td><td data-label="Arquivo">{j.filename}</td><td data-label="Destino">{j.target_label}</td>
+                        <td data-label="Situação">{j.status_label}</td>
+                        <td data-label="Resultado">{j.status === 'done' ? `${j.summary.created} criados · ${j.summary.updated} atualizados · ${j.summary.errors} com erro` : '—'}</td></tr>
+                ))}
+            </Table>
+        </Stack>
     );
 }
 
@@ -54,6 +56,7 @@ export default function Importar() {
         setTick((t) => t + 1);
     });
     const missing = job ? missingRequired(job.fields, mapping) : [];
+    const valid = preview ? preview.counts.create + preview.counts.update : 0;
 
     return (
         <div className={styles.page}>
@@ -61,77 +64,73 @@ export default function Importar() {
             {error && <Banner tone="error">{error}</Banner>}
 
             {!job && (
-                <div className={styles.card} style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 640 }}>
-                    <div className={styles.section_title}>1. Escolha o arquivo</div>
-                    <label className={styles.field}>O que você vai importar
-                        <select className={styles.select} value={target} onChange={(e) => setTarget(e.target.value)}>{TARGETS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>
-                    </label>
-                    <label className={styles.field}>Planilha (.csv ou .xlsx, até {MAX_MB} MB e 5.000 linhas; 1ª linha com os nomes das colunas)
-                        <input className={styles.input} type="file" accept=".csv,.xlsx,.txt" onChange={(e) => setFile(e.target.files?.[0] || null)} />
-                    </label>
-                    <div><button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={upload} disabled={busy || !file}>{busy ? 'Lendo…' : 'Ler planilha'}</button></div>
-                </div>
+                <Stack gap={3} className={`${styles.card} ${styles.narrow}`}>
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>1. Escolha o arquivo</div>
+                    <Field label="O que você vai importar">
+                        <Select value={target} onChange={(e) => setTarget(e.target.value)}>{TARGETS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</Select>
+                    </Field>
+                    <Field label="Planilha" hint={`.csv ou .xlsx, até ${MAX_MB} MB e 5.000 linhas; a 1ª linha com os nomes das colunas.`}>
+                        <Input type="file" accept=".csv,.xlsx,.txt" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+                    </Field>
+                    <Button variant="primary" className={styles.w_fit} disabled={!file} loading={busy} loadingLabel="Lendo…" onClick={upload}>Ler planilha</Button>
+                </Stack>
             )}
 
             {job && !result && (
-                <div className={styles.card} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    <div className={styles.section_title}>2. Confira as colunas — {job.filename} ({job.rows_total} linhas)</div>
-                    <p className={styles.muted}>Sugerimos o campo de cada coluna pelo nome dela. Ajuste o que precisar; colunas sem campo são ignoradas.</p>
-                    <div className={styles.table_wrap}>
-                        <table className={styles.table}>
-                            <thead><tr><th>Coluna da planilha</th><th>Exemplo</th><th>Vai para</th></tr></thead>
-                            <tbody>{job.columns.map((col, i) => (
-                                <tr key={i}><td><strong>{col}</strong></td><td className={styles.muted}>{job.sample?.[0]?.[i] || '—'}</td>
-                                    <td><select className={styles.select} value={mapping[String(i)] || ''} onChange={(e) => { setMapping((m) => setColumnField(m, i, e.target.value)); setPreview(null); }}>
+                <Stack gap={3} className={styles.card}>
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>2. Confira as colunas — {job.filename} ({job.rows_total} linhas)</div>
+                    <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>Sugerimos o campo de cada coluna pelo nome dela. Ajuste o que precisar; colunas sem campo são ignoradas.</p>
+                    <Table columns={['Coluna da planilha', 'Exemplo', 'Vai para']}>
+                        {job.columns.map((col, i) => (
+                            <tr key={i}><td><strong>{col}</strong></td><td data-label="Exemplo" className={styles.muted}>{job.sample?.[0]?.[i] || '—'}</td>
+                                <td data-label="Vai para">
+                                    <Select aria-label={`Campo da coluna ${col}`} value={mapping[String(i)] || ''}
+                                        onChange={(e) => { setMapping((m) => setColumnField(m, i, e.target.value)); setPreview(null); }}>
                                         <option value="">— ignorar —</option>
                                         {job.fields.map((f) => <option key={f.key} value={f.key}>{f.label}{f.required ? ' *' : ''}</option>)}
-                                    </select></td></tr>
-                            ))}</tbody>
-                        </table>
-                    </div>
+                                    </Select>
+                                </td></tr>
+                        ))}
+                    </Table>
                     {missing.length > 0 && <Banner tone="warn">Falta escolher a coluna de: {missing.join(', ')}.</Banner>}
-                    <div className={styles.btn_row}>
-                        <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={simulate} disabled={busy || missing.length > 0}>3. Simular</button>
-                        <button type="button" className={styles.btn} onClick={() => run(async () => { await importsApi.cancel(job.id); reset(); })} disabled={busy}>Cancelar</button>
-                    </div>
-                </div>
+                    <Row>
+                        <Button variant="primary" disabled={missing.length > 0 || busy} loading={busy && !preview} loadingLabel="Simulando…" onClick={simulate}>3. Simular</Button>
+                        <Button disabled={busy} onClick={() => run(async () => { await importsApi.cancel(job.id); reset(); })}>Cancelar</Button>
+                    </Row>
+                </Stack>
             )}
 
             {preview && !result && (
-                <div className={styles.card} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    <div className={styles.section_title}>Simulação (nada foi gravado)</div>
+                <Stack gap={3} className={styles.card}>
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>Simulação (nada foi gravado)</div>
                     <div className={styles.grid}>
                         <StatCard title="Serão criados" value={preview.counts.create} tone="green" />
                         <StatCard title="Serão atualizados" value={preview.counts.update} />
                         <StatCard title="Com erro (ficam de fora)" value={preview.counts.errors} tone={preview.counts.errors ? 'red' : undefined} />
                     </div>
-                    <div className={styles.table_wrap}>
-                        <table className={styles.table}>
-                            <thead><tr><th>Linha</th><th>O que acontece</th><th>Detalhe</th></tr></thead>
-                            <tbody>{preview.preview.map((r) => (
-                                <tr key={r.row}><td>{r.row}</td><td><Pill tone={ACTION_TONE[r.action]}>{r.action}</Pill></td>
-                                    <td>{r.errors.length ? r.errors.join(' ') : (r.values.name || r.values.cnj || '')}</td></tr>
-                            ))}</tbody>
-                        </table>
-                    </div>
-                    {preview.counts.create + preview.counts.update > 0
-                        ? <div><button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={commit} disabled={busy}>4. Importar {preview.counts.create + preview.counts.update} linhas</button></div>
+                    <Table columns={['Linha', 'O que acontece', 'Detalhe']}>
+                        {preview.preview.map((r) => (
+                            <tr key={r.row}><td>{r.row}</td><td data-label="O que acontece"><Pill tone={ACTION_TONE[r.action]}>{r.action}</Pill></td>
+                                <td data-label="Detalhe">{r.errors.length ? r.errors.join(' ') : (r.values.name || r.values.cnj || '')}</td></tr>
+                        ))}
+                    </Table>
+                    {valid > 0
+                        ? <Button variant="primary" className={styles.w_fit} loading={busy} loadingLabel="Importando…" onClick={commit}>4. Importar {valid} linhas</Button>
                         : <Banner tone="warn">Nenhuma linha válida para importar. Corrija a planilha e envie de novo.</Banner>}
-                </div>
+                </Stack>
             )}
 
             {result && (
-                <div className={styles.card} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    <div className={styles.section_title}>Importação concluída</div>
-                    <p>{result.summary.created} criados · {result.summary.updated} atualizados · {result.summary.skipped} sem mudança · {result.summary.errors} com erro.</p>
+                <Stack gap={3} className={styles.card}>
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>Importação concluída</div>
+                    <p className={`${styles.mt_0} ${styles.mb_0}`}>{result.summary.created} criados · {result.summary.updated} atualizados · {result.summary.skipped} sem mudança · {result.summary.errors} com erro.</p>
                     {result.errors.length > 0 && <Banner tone="warn">Linhas com erro: {result.errors.map((e) => `${e.row} (${e.errors.join(' ')})`).join('; ')}</Banner>}
-                    <div className={styles.btn_row}>
-                        <Link className={`${styles.btn} ${styles.btn_primary}`} to={result.target === 'contacts' ? '/contatos' : '/acompanhamento'}>Ver {result.target === 'contacts' ? 'contatos' : 'processos'}</Link>
-                        <button type="button" className={styles.btn} onClick={reset}>Importar outra planilha</button>
-                    </div>
-                </div>
+                    <Row>
+                        <Button as={Link} variant="primary" to={result.target === 'contacts' ? '/contatos' : '/acompanhamento'}>Ver {result.target === 'contacts' ? 'contatos' : 'processos'}</Button>
+                        <Button onClick={reset}>Importar outra planilha</Button>
+                    </Row>
+                </Stack>
             )}
-            <div className={styles.section_title}>Importações anteriores</div>
             <Historico tick={tick} />
             {!job && <Empty>Dica: exporte a planilha do seu sistema antigo ou do Excel como CSV (UTF-8) ou .xlsx.</Empty>}
         </div>
