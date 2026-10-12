@@ -1,7 +1,7 @@
 // Menu do escritório agrupado por seção (CAD-174). Ordem = frequência de uso no dia a dia.
 import {
     FiActivity, FiBriefcase, FiCalendar, FiCheckCircle, FiCpu, FiMessageCircle, FiPackage, FiEdit3, FiHelpCircle, FiHome, FiInbox, FiLayers, FiLock,
-    FiDollarSign, FiMail, FiSettings, FiShield, FiTarget, FiTrendingUp, FiUpload, FiUsers, FiWatch, FiZap,
+    FiDollarSign, FiFilter, FiGrid, FiMail, FiPenTool, FiSettings, FiShield, FiTarget, FiTrendingUp, FiUpload, FiUserPlus, FiUsers, FiWatch, FiZap,
 } from 'react-icons/fi';
 
 // CAD-225: menu mais curto — "Dia a dia" sempre aberto; os demais grupos abrem com um clique (e sozinhos na tela ativa)
@@ -19,21 +19,21 @@ export const APP_MENU = [
     },
     {
         section: 'Produção', collapsible: true, icon: FiEdit3, items: [
-            { to: '/minutas', label: 'Minutas', icon: FiEdit3, module: 'minutas' },
+            { to: '/minutas', label: 'Minutas', icon: FiPenTool, module: 'minutas' },
             { to: '/automacao', label: 'Automações', icon: FiZap, module: 'automacoes' },
             { to: '/contatos', label: 'Contatos', icon: FiUsers, module: 'contatos' },
         ],
     },
     {
         section: 'Clientes e finanças', collapsible: true, icon: FiTarget, items: [
-            { to: '/carteira', label: 'Carteira de clientes', icon: FiTarget, module: 'funil' },
+            { to: '/carteira', label: 'Carteira de clientes', icon: FiFilter, module: 'funil' },
             { to: '/financas', label: 'Finanças', icon: FiDollarSign, module: 'financeiro' },
             { to: '/marketing', label: 'Marketing', icon: FiTrendingUp, module: 'marketing' },
         ],
     },
     {
         section: 'Configurações', collapsible: true, icon: FiSettings, items: [
-            { to: '/equipe', label: 'Equipe', soloLabel: 'Convidar alguém', icon: FiSettings, hideSoloWhenSingleSeat: true },
+            { to: '/equipe', label: 'Equipe', soloLabel: 'Convidar alguém', icon: FiUserPlus, hideSoloWhenSingleSeat: true },
             { to: '/integracoes', label: 'Integrações', icon: FiLayers, module: 'integracoes' },
             { to: '/aprovacoes', label: 'IA do escritório', icon: FiCheckCircle, module: 'automacoes' },
             { to: '/plugins', label: 'Plugins de IA', icon: FiPackage, module: 'ia' },
@@ -50,7 +50,7 @@ export const APP_MENU = [
 ];
 
 export const HELP_ITEM = { to: '/suporte', label: 'Ajuda e suporte', icon: FiHelpCircle };
-export const STAFF_ITEM = { to: '/gestao', label: 'Gestão Cadrius', icon: FiShield };
+export const STAFF_ITEM = { to: '/gestao', label: 'Gestão Cadrius', icon: FiGrid };
 
 // Filtra pelo perfil (itens só de dono/admin)
 // solo = advogado autônomo (CAD-222): sem textos de equipe; "Equipe" some se o plano só tem 1 usuário
