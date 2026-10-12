@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../../components/ui/ui.module.css';
-import { Banner, Empty, Pill, PageHeader } from '../../../components/ui';
+import s from '../../../components/forense/Forense.module.css';
+import { Banner, Button, Checkbox, Empty, Field, FilterBar, Input, Pill, PageHeader, Stack, Table } from '../../../components/ui';
 import { errorMessage } from '../../../utils/format';
 import useAuth from '../../../hooks/useAuth';
 import useLoader from '../../../hooks/useLoader';
@@ -26,45 +27,47 @@ function Calculadora() {
         }
     };
     return (
-        <div className={styles.card}>
-            <div className={styles.card_title}>Calcular prazo</div>
-            <form className={styles.filters} onSubmit={calc}>
-                <label className={styles.field}>{form.disponibilizacao ? 'Disponibilizado no Diário em' : 'Intimação / publicação em'}
-                    <input className={styles.input} type="date" value={form.inicio} onChange={set('inicio')} required />
-                </label>
-                <label className={styles.field}>Prazo (dias úteis)<input className={styles.input} type="number" min={1} max={365} value={form.dias} onChange={set('dias')} /></label>
-                <label className={styles.field}>Tribunal (opcional, ex.: tjsp, trf3)<input className={styles.input} value={form.tribunal} onChange={set('tribunal')} maxLength={12} /></label>
-                <label className={styles.check_row}><input type="checkbox" checked={form.disponibilizacao} onChange={set('disponibilizacao')} /> Data de disponibilização no DJe</label>
-                <button type="submit" className={`${styles.btn} ${styles.btn_primary}`}>Calcular</button>
-            </form>
+        <Stack gap={3} className={styles.card}>
+            <div className={`${styles.card_title} ${styles.mb_0}`}>Calcular prazo</div>
+            <FilterBar as="form" onSubmit={calc}>
+                <Field label={form.disponibilizacao ? 'Disponibilizado no Diário em' : 'Intimação / publicação em'}>
+                    <Input type="date" value={form.inicio} onChange={set('inicio')} required />
+                </Field>
+                <Field label="Prazo (dias úteis)"><Input type="number" min={1} max={365} value={form.dias} onChange={set('dias')} /></Field>
+                <Field label="Tribunal (opcional)" hint="Ex.: tjsp, trf3"><Input value={form.tribunal} onChange={set('tribunal')} maxLength={12} /></Field>
+                <Checkbox checked={form.disponibilizacao} onChange={set('disponibilizacao')}>Data de disponibilização no DJe</Checkbox>
+                <Button type="submit" variant="primary">Calcular</Button>
+            </FilterBar>
             {error && <Banner tone="error">{error}</Banner>}
             {result && (
-                <div style={{ marginTop: 12 }}>
+                <Stack gap={2} role="status">
                     {result.publicacao && <div>Publicação considerada em <strong>{brDate(result.publicacao)}</strong> (1º dia útil após a disponibilização).</div>}
-                    <div style={{ fontSize: 20, margin: '6px 0' }}>Vencimento: <strong>{brDate(result.vencimento)}</strong></div>
+                    <div className={s.vencimento}>Vencimento: <strong>{brDate(result.vencimento)}</strong></div>
                     {result.pulados.length > 0 && (
                         <details>
-                            <summary>{result.pulados.length} dia(s) não contado(s)</summary>
-                            <ul>{result.pulados.map((p) => <li key={p.data}>{brDate(p.data)} — {p.motivo}</li>)}</ul>
+                            <summary className={styles.clickable}>{result.pulados.length} dia(s) não contado(s)</summary>
+                            <ul className={styles.list_indent}>{result.pulados.map((p) => <li key={p.data}>{brDate(p.data)} — {p.motivo}</li>)}</ul>
                         </details>
                     )}
                     <Banner tone="warn">{result.aviso}</Banner>
-                </div>
+                </Stack>
             )}
-        </div>
+        </Stack>
     );
 }
 
+const EMPTY = { data: '', nome: '', tribunal: '', anual: false };
+
 function Feriados({ canManage }) {
     const { data, error, reload } = useLoader(() => forenseApi.feriados(), []);
-    const [form, setForm] = useState({ data: '', nome: '', tribunal: '', anual: false });
+    const [form, setForm] = useState(EMPTY);
     const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }));
     const add = async (e) => {
         e.preventDefault();
         try {
             await forenseApi.addFeriado(form);
             toast.success('Feriado cadastrado.');
-            setForm({ data: '', nome: '', tribunal: '', anual: false });
+            setForm(EMPTY);
             reload();
         } catch (err) { toast.error(errorMessage(err)); }
     };
@@ -73,39 +76,36 @@ function Feriados({ canManage }) {
         try { await forenseApi.removeFeriado(h.id); reload(); } catch (err) { toast.error(errorMessage(err)); }
     };
     return (
-        <div className={styles.card}>
-            <div className={styles.card_title}>Feriados e suspensões do escritório</div>
-            <p className={styles.muted}>
+        <Stack gap={3} className={styles.card}>
+            <div className={`${styles.card_title} ${styles.mb_0}`}>Feriados e suspensões do escritório</div>
+            <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>
                 Já considerados automaticamente: fins de semana, feriados nacionais, Carnaval, Sexta-feira Santa, Corpus Christi e o recesso de
                 20/12 a 20/01 (CPC art. 220); na Justiça Federal (trf), também os dias da Lei 5.010/66. Cadastre aqui os municipais, estaduais e do tribunal.
             </p>
             {canManage && (
-                <form className={styles.filters} onSubmit={add}>
-                    <label className={styles.field}>Data<input className={styles.input} type="date" value={form.data} onChange={set('data')} required /></label>
-                    <label className={styles.field} style={{ flex: 2 }}>Nome<input className={styles.input} value={form.nome} onChange={set('nome')} maxLength={120} required /></label>
-                    <label className={styles.field}>Só no tribunal (opcional)<input className={styles.input} value={form.tribunal} onChange={set('tribunal')} maxLength={12} placeholder="tjsp" /></label>
-                    <label className={styles.check_row}><input type="checkbox" checked={form.anual} onChange={set('anual')} /> Repete todo ano</label>
-                    <button type="submit" className={styles.btn}>Adicionar</button>
-                </form>
+                <FilterBar as="form" onSubmit={add}>
+                    <Field label="Data"><Input type="date" value={form.data} onChange={set('data')} required /></Field>
+                    <Field label="Nome" className={styles.flex_2}><Input value={form.nome} onChange={set('nome')} maxLength={120} required /></Field>
+                    <Field label="Só no tribunal (opcional)"><Input value={form.tribunal} onChange={set('tribunal')} maxLength={12} placeholder="tjsp" /></Field>
+                    <Checkbox checked={form.anual} onChange={set('anual')}>Repete todo ano</Checkbox>
+                    <Button type="submit">Adicionar</Button>
+                </FilterBar>
             )}
             {error && <Banner tone="error">{error}</Banner>}
             {data && data.length === 0 && <Empty>Nenhum feriado local cadastrado.</Empty>}
             {data && data.length > 0 && (
-                <table className={styles.table}>
-                    <thead><tr><th>Data</th><th>Nome</th><th>Vale para</th><th></th></tr></thead>
-                    <tbody>
-                        {data.map((h) => (
-                            <tr key={h.id}>
-                                <td>{h.anual ? brDate(h.data).slice(0, 5) : brDate(h.data)} {h.anual && <Pill tone="blue">todo ano</Pill>}</td>
-                                <td>{h.nome}</td>
-                                <td>{h.tribunal || 'todos os tribunais'}</td>
-                                <td>{canManage && <button type="button" className={styles.btn} onClick={() => remove(h)}>Remover</button>}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <Table flat columns={['Data', 'Nome', 'Vale para', { label: '', className: styles.td_actions }]}>
+                    {data.map((h) => (
+                        <tr key={h.id}>
+                            <td>{h.anual ? brDate(h.data).slice(0, 5) : brDate(h.data)} {h.anual && <Pill tone="blue">todo ano</Pill>}</td>
+                            <td data-label="Nome">{h.nome}</td>
+                            <td data-label="Vale para">{h.tribunal || 'todos os tribunais'}</td>
+                            <td className={styles.td_actions}>{canManage && <Button size="sm" variant="danger" onClick={() => remove(h)}>Remover</Button>}</td>
+                        </tr>
+                    ))}
+                </Table>
             )}
-        </div>
+        </Stack>
     );
 }
 
