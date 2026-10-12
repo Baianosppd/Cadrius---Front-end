@@ -1,0 +1,9 @@
+/* Conversa do chamado: balões alinhados por quem escreveu, com as cores do tema (claro e escuro) */
+.conversa { display: flex; flex-direction: column; gap: var(--sp-3); }
+.msg { padding: var(--sp-3); max-width: 80%; align-self: flex-start; }
+.msg_mine { align-self: flex-end; }
+.msg_staff { background: var(--c-primary-50); }
+.msg_internal { background: var(--c-warning-bg); }
+
+/* Formulários de chamado e parametrização com largura confortável */
+.form { max-width: 760px; }
