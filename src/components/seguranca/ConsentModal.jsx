@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import api, { CONSENT_REQUIRED_EVENT } from '../../services/api';
 import styles from '../ui/ui.module.css';
-import { Banner } from '../ui';
+import { Banner, Button, Checkbox, Modal, Stack } from '../ui';
 import { errorMessage } from '../../utils/format';
 import Markdown from './Markdown';
 
@@ -9,6 +9,7 @@ const KIND_LABEL = { terms: 'Termos de Uso', privacy: 'Política de Privacidade'
 
 // Modal de reaceite (LGPD): abre quando há documentos novos pendentes (ao entrar) ou quando o back responde 428.
 // O texto exibido é o da versão vigente; o aceite grava versão + hash no servidor (prova).
+// Obrigatório: não fecha por Esc nem clique fora — só segue depois de aceitar.
 export default function ConsentModal() {
     const [pending, setPending] = useState([]);
     const [accepted, setAccepted] = useState({});
@@ -52,33 +53,22 @@ export default function ConsentModal() {
     };
 
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="consent-title">
-            <div className={styles.modal}>
-                <h2 id="consent-title" className={styles.modal_title}>Atualizamos nossos termos</h2>
-                <p className={styles.muted}>
-                    Para continuar usando o Cadrius, leia e aceite as versões vigentes dos documentos abaixo.
-                </p>
-                {pending.map((doc) => (
-                    <div key={doc.id} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        <strong>{doc.title || KIND_LABEL[doc.kind] || doc.kind} <span className={styles.muted}>(v{doc.version})</span></strong>
-                        {doc.content_md && <div className={styles.doc_text} tabIndex={0}><Markdown text={doc.content_md} /></div>}
-                        <label className={styles.check_row}>
-                            <input
-                                type="checkbox"
-                                checked={!!accepted[doc.id]}
-                                onChange={(e) => setAccepted((a) => ({ ...a, [doc.id]: e.target.checked }))}
-                            />
-                            Li e aceito {KIND_LABEL[doc.kind] || 'este documento'} (versão {doc.version}).
-                        </label>
-                    </div>
-                ))}
-                {error && <Banner tone="error">{error}</Banner>}
-                <div className={styles.btn_row} style={{ justifyContent: 'flex-end' }}>
-                    <button className={`${styles.btn} ${styles.btn_primary}`} disabled={!allChecked || saving} onClick={submit}>
-                        {saving ? 'Registrando…' : 'Aceitar e continuar'}
-                    </button>
-                </div>
-            </div>
-        </div>
+        <Modal title="Atualizamos nossos termos" size="lg" closeOnOverlay={false} closeOnEsc={false} busy={saving}
+            footer={<Button variant="primary" className={styles.ml_auto} disabled={!allChecked} loading={saving} loadingLabel="Registrando…" onClick={submit}>
+                Aceitar e continuar</Button>}>
+            <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>
+                Para continuar usando o Cadrius, leia e aceite as versões vigentes dos documentos abaixo.
+            </p>
+            {pending.map((doc) => (
+                <Stack key={doc.id} gap={2}>
+                    <strong>{doc.title || KIND_LABEL[doc.kind] || doc.kind} <span className={styles.muted}>(v{doc.version})</span></strong>
+                    {doc.content_md && <div className={styles.doc_text} tabIndex={0}><Markdown text={doc.content_md} /></div>}
+                    <Checkbox checked={!!accepted[doc.id]} onChange={(e) => setAccepted((a) => ({ ...a, [doc.id]: e.target.checked }))}>
+                        Li e aceito {KIND_LABEL[doc.kind] || 'este documento'} (versão {doc.version}).
+                    </Checkbox>
+                </Stack>
+            ))}
+            {error && <Banner tone="error">{error}</Banner>}
+        </Modal>
     );
 }

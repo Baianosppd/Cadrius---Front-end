@@ -1,0 +1,11 @@
+/* Renderizador de Markdown dos documentos legais (Termos, Privacidade…) */
+.h1, .h2, .h3, .h4 { font-weight: 700; margin: 10px 0 4px; }
+.h1 { font-size: 1.15rem; }
+.h2 { font-size: 1rem; }
+.h3 { font-size: .95rem; }
+.h4 { font-size: .9rem; }
+.p { margin: 4px 0; }
+.ul { margin: 4px 0 4px 20px; }
+.table { border-collapse: collapse; margin: 6px 0; width: 100%; font-size: var(--fs-sm); }
+.table th { text-align: left; border-bottom: 1px solid var(--c-border-2); padding: 4px 6px; }
+.table td { border-bottom: 1px solid var(--c-surface-3); padding: 4px 6px; vertical-align: top; }

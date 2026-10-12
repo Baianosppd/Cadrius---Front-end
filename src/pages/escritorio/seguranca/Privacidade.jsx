@@ -2,10 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../../../services/api';
 import useAuth from '../../../hooks/useAuth';
-import TabBar from '../../../components/ui/TabBar';
 import styles from '../../../components/ui/ui.module.css';
 import Markdown from '../../../components/seguranca/Markdown';
-import { Banner, Empty, Loading, PageHeader, Pill } from '../../../components/ui';
+import { Banner, Button, Empty, Field, Input, Loading, PageHeader, Pill, Select, Stack, Table, Tabs, Textarea } from '../../../components/ui';
 import { errorMessage, fmtDate, fmtDateTime } from '../../../utils/format';
 
 const KIND = { terms: 'Termos de Uso', privacy: 'Política de Privacidade', ciencia: 'Termo de Ciência', cookies: 'Cookies' };
@@ -32,42 +31,34 @@ function Aceites() {
 
     if (!data) return <Loading />;
     return (
-        <div className={styles.page}>
+        <Stack>
             {data.pending.length > 0 && <Banner tone="warn">Há {data.pending.length} documento(s) novo(s) aguardando seu aceite.</Banner>}
-            <div className={styles.section_title}>Documentos vigentes</div>
-            <div className={styles.table_wrap}>
-                <table className={styles.table}>
-                    <thead><tr><th>Documento</th><th>Versão</th><th>Publicado em</th><th /></tr></thead>
-                    <tbody>
-                        {docs.map((d) => (
-                            <tr key={d.id}>
-                                <td>{d.title || KIND[d.kind]}</td><td>{d.version}</td><td>{fmtDate(d.published_at)}</td>
-                                <td><button className={styles.btn} onClick={() => setOpen(open === d.id ? null : d.id)}>{open === d.id ? 'Fechar' : 'Ler'}</button></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Documentos vigentes</div>
+            <Table columns={['Documento', 'Versão', 'Publicado em', { label: '', className: styles.td_actions }]}>
+                {docs.map((d) => (
+                    <tr key={d.id}>
+                        <td>{d.title || KIND[d.kind]}</td><td data-label="Versão">{d.version}</td><td data-label="Publicado em">{fmtDate(d.published_at)}</td>
+                        <td className={styles.td_actions}>
+                            <Button size="sm" aria-expanded={open === d.id} onClick={() => setOpen(open === d.id ? null : d.id)}>{open === d.id ? 'Fechar' : 'Ler'}</Button>
+                        </td>
+                    </tr>
+                ))}
+            </Table>
             {open && <div className={styles.doc_text} tabIndex={0}><Markdown text={docs.find((d) => d.id === open)?.content_md} /></div>}
 
-            <div className={styles.section_title}>Meu histórico de aceites</div>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Meu histórico de aceites</div>
             {data.consents.length === 0 ? <Empty>Nenhum aceite registrado.</Empty> : (
-                <div className={styles.table_wrap}>
-                    <table className={styles.table}>
-                        <thead><tr><th>Documento</th><th>Versão</th><th>Quando</th><th>Situação</th><th>Prova (SHA-256)</th></tr></thead>
-                        <tbody>
-                            {data.consents.map((c) => (
-                                <tr key={c.id}>
-                                    <td>{KIND[c.kind] || c.kind}</td><td>{c.version}</td><td>{fmtDateTime(c.occurred_at)}</td>
-                                    <td><Pill tone={c.granted ? 'green' : 'gray'}>{c.granted ? 'Aceito' : 'Revogado'}</Pill></td>
-                                    <td className={styles.mono} title={c.evidence_sha256}>{(c.evidence_sha256 || '').slice(0, 12)}…</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table columns={['Documento', 'Versão', 'Quando', 'Situação', 'Prova (SHA-256)']}>
+                    {data.consents.map((c) => (
+                        <tr key={c.id}>
+                            <td>{KIND[c.kind] || c.kind}</td><td data-label="Versão">{c.version}</td><td data-label="Quando">{fmtDateTime(c.occurred_at)}</td>
+                            <td data-label="Situação"><Pill tone={c.granted ? 'green' : 'gray'}>{c.granted ? 'Aceito' : 'Revogado'}</Pill></td>
+                            <td data-label="Prova" className={styles.mono} title={c.evidence_sha256}>{(c.evidence_sha256 || '').slice(0, 12)}…</td>
+                        </tr>
+                    ))}
+                </Table>
             )}
-        </div>
+        </Stack>
     );
 }
 
@@ -103,49 +94,43 @@ function MeusDados() {
     };
 
     return (
-        <div className={styles.page}>
-            <div className={styles.two_col}>
-                <div className={styles.card}>
-                    <div className={styles.section_title}>Baixar meus dados</div>
-                    <p className={styles.muted} style={{ marginBottom: 12 }}>Cópia em formato estruturado (JSON) dos dados que mantemos sobre você (LGPD art. 18, II e V).</p>
-                    <button className={`${styles.btn} ${styles.btn_primary}`} onClick={exportData}>Baixar arquivo</button>
-                </div>
-                <form className={styles.card} onSubmit={submit}>
-                    <div className={styles.section_title}>Fazer um pedido (direitos do titular)</div>
-                    <div className={styles.field}>
-                        Tipo de pedido
-                        <select className={styles.select} value={type} onChange={(e) => setType(e.target.value)}>
+        <Stack>
+            <div className={`${styles.two_col} ${styles.align_start}`}>
+                <Stack gap={3} className={styles.card}>
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>Baixar meus dados</div>
+                    <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>Cópia em formato estruturado (JSON) dos dados que mantemos sobre você (LGPD art. 18, II e V).</p>
+                    <Button variant="primary" className={styles.w_fit} onClick={exportData}>Baixar arquivo</Button>
+                </Stack>
+                <Stack as="form" gap={3} className={styles.card} onSubmit={submit}>
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>Fazer um pedido (direitos do titular)</div>
+                    <Field label="Tipo de pedido">
+                        <Select value={type} onChange={(e) => setType(e.target.value)}>
                             {REQUEST_TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                        </select>
-                    </div>
-                    <div className={styles.field} style={{ marginTop: 10 }}>
-                        Detalhes (opcional)
-                        <textarea className={styles.textarea} maxLength={2000} value={notes} onChange={(e) => setNotes(e.target.value)} />
-                    </div>
-                    <div style={{ marginTop: 12 }}><button className={`${styles.btn} ${styles.btn_primary}`} disabled={busy}>Enviar pedido</button></div>
-                </form>
+                        </Select>
+                    </Field>
+                    <Field label="Detalhes (opcional)">
+                        <Textarea maxLength={2000} value={notes} onChange={(e) => setNotes(e.target.value)} />
+                    </Field>
+                    <Button type="submit" variant="primary" className={styles.w_fit} loading={busy} loadingLabel="Enviando…">Enviar pedido</Button>
+                </Stack>
             </div>
-            <div className={styles.section_title}>Meus pedidos</div>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Meus pedidos</div>
             {requests.length === 0 ? <Empty>Você ainda não fez pedidos.</Empty> : (
-                <div className={styles.table_wrap}>
-                    <table className={styles.table}>
-                        <thead><tr><th>Tipo</th><th>Situação</th><th>Aberto em</th><th>Prazo</th><th>Resposta</th></tr></thead>
-                        <tbody>
-                            {requests.map((r) => {
-                                const [label, tone] = DSR_STATUS[r.status] || [r.status, 'gray'];
-                                return (
-                                    <tr key={r.id}>
-                                        <td>{REQUEST_TYPES.find(([v]) => v === r.type)?.[1] || r.type}</td>
-                                        <td><Pill tone={r.overdue ? 'red' : tone}>{r.overdue ? 'Atrasado' : label}</Pill></td>
-                                        <td>{fmtDate(r.opened_at)}</td><td>{fmtDate(r.due_at)}</td><td>{r.resolution || '—'}</td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
+                <Table columns={['Tipo', 'Situação', 'Aberto em', 'Prazo', 'Resposta']}>
+                    {requests.map((r) => {
+                        const [label, tone] = DSR_STATUS[r.status] || [r.status, 'gray'];
+                        return (
+                            <tr key={r.id}>
+                                <td>{REQUEST_TYPES.find(([v]) => v === r.type)?.[1] || r.type}</td>
+                                <td data-label="Situação"><Pill tone={r.overdue ? 'red' : tone}>{r.overdue ? 'Atrasado' : label}</Pill></td>
+                                <td data-label="Aberto em">{fmtDate(r.opened_at)}</td><td data-label="Prazo">{fmtDate(r.due_at)}</td>
+                                <td data-label="Resposta">{r.resolution || '—'}</td>
+                            </tr>
+                        );
+                    })}
+                </Table>
             )}
-        </div>
+        </Stack>
     );
 }
 
@@ -154,23 +139,18 @@ function Suboperadores() {
     useEffect(() => { api.get('legal/subprocessors/').then((r) => setList(r.data)).catch(() => setList([])); }, []);
     if (!list) return <Loading />;
     return (
-        <div className={styles.page}>
-            <p className={styles.muted}>Empresas que tratam dados em nosso nome (LGPD art. 9º — transparência).</p>
-            <div className={styles.table_wrap}>
-                <table className={styles.table}>
-                    <thead><tr><th>Empresa</th><th>País</th><th>Finalidade</th><th>Dados</th><th>Transferência internacional</th></tr></thead>
-                    <tbody>
-                        {list.map((s) => (
-                            <tr key={s.name}>
-                                <td>{s.name}</td><td>{s.country}</td><td>{s.purpose}</td>
-                                <td>{(s.data_categories || []).join(', ')}</td>
-                                <td>{s.international_transfer ? <Pill tone="yellow">Sim</Pill> : <Pill tone="green">Não</Pill>}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <Stack>
+            <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>Empresas que tratam dados em nosso nome (LGPD art. 9º — transparência).</p>
+            <Table columns={['Empresa', 'País', 'Finalidade', 'Dados', 'Transferência internacional']}>
+                {list.map((s) => (
+                    <tr key={s.name}>
+                        <td><strong>{s.name}</strong></td><td data-label="País">{s.country}</td><td data-label="Finalidade">{s.purpose}</td>
+                        <td data-label="Dados">{(s.data_categories || []).join(', ')}</td>
+                        <td data-label="Internacional">{s.international_transfer ? <Pill tone="yellow">Sim</Pill> : <Pill tone="green">Não</Pill>}</td>
+                    </tr>
+                ))}
+            </Table>
+        </Stack>
     );
 }
 
@@ -189,23 +169,20 @@ function Encerramento({ organization }) {
     };
 
     return (
-        <div className={styles.page}>
+        <Stack>
             <Banner tone="warn">
                 Encerrar o escritório agenda a eliminação dos dados em 30 dias. Durante esse prazo os dados ficam bloqueados e podem ser exportados.
                 Registros de auditoria são mantidos pelo prazo legal.
             </Banner>
             {result ? <Banner tone="ok">Encerramento agendado. Eliminação prevista para {fmtDate(result.purge_after)}.</Banner> : (
-                <div className={styles.card} style={{ maxWidth: 520 }}>
-                    <div className={styles.field}>
-                        Digite o nome exato do escritório (<strong>{organization?.name}</strong>) para confirmar
-                        <input className={styles.input} value={confirm} onChange={(e) => setConfirm(e.target.value)} />
-                    </div>
-                    <div style={{ marginTop: 12 }}>
-                        <button className={`${styles.btn} ${styles.btn_danger}`} disabled={busy || confirm !== organization?.name} onClick={close}>Encerrar escritório</button>
-                    </div>
-                </div>
+                <Stack gap={3} className={`${styles.card} ${styles.narrow}`}>
+                    <Field label={<>Digite o nome exato do escritório (<strong>{organization?.name}</strong>) para confirmar</>}>
+                        <Input value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+                    </Field>
+                    <Button variant="danger" className={styles.w_fit} disabled={confirm !== organization?.name} loading={busy} onClick={close}>Encerrar escritório</Button>
+                </Stack>
             )}
-        </div>
+        </Stack>
     );
 }
 
@@ -220,7 +197,7 @@ export default function Privacidade() {
     return (
         <div className={styles.page}>
             <PageHeader title="Privacidade e dados" subtitle="Seus direitos e seus dados (LGPD)" />
-            <TabBar tabs={tabs} activeTab={tab} onTabChange={setTab} />
+            <Tabs tabs={tabs} value={tab} onChange={setTab} />
             {tab === 'aceites' && <Aceites />}
             {tab === 'dados' && <MeusDados />}
             {tab === 'sub' && <Suboperadores />}

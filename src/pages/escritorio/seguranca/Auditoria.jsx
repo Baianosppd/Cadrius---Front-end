@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../../../services/api';
-import TabBar from '../../../components/ui/TabBar';
 import styles from '../../../components/ui/ui.module.css';
 import { auditLabel } from '../../../services/auditLabels';
-import { ALERT_STATUS, Banner, Empty, Loading, OUTCOME, PageHeader, SEVERITY, StatCard, StatusPill } from '../../../components/ui';
+import { ALERT_STATUS, Banner, Button, Empty, Field, FilterBar, Input, Loading, OUTCOME, PageHeader, Row, SEVERITY, Select, Stack, StatCard, StatusPill, Table, Tabs } from '../../../components/ui';
 import { fmtDateTime, errorMessage } from '../../../utils/format';
 
 const PREFIXES = [
@@ -12,6 +11,7 @@ const PREFIXES = [
     ['data.', 'Dados e exportações'], ['consent.', 'Consentimento'], ['org.', 'Escritório'], ['permission.', 'Permissões negadas'],
 ];
 const PAGE_SIZE = 10; // igual ao PAGE_SIZE do back (DRF)
+const TABS = [{ id: 'resumo', label: 'Resumo' }, { id: 'eventos', label: 'Eventos' }, { id: 'alertas', label: 'Alertas' }];
 
 function Resumo() {
     const [s, setS] = useState(null);
@@ -20,7 +20,7 @@ function Resumo() {
     if (error) return <Banner tone="error">{error}</Banner>;
     if (!s) return <Loading />;
     return (
-        <div className={styles.page}>
+        <Stack>
             <div className={styles.grid}>
                 <StatCard title={`Eventos (${s.window_days} dias)`} value={s.total_events} />
                 <StatCard title="Logins com falha" value={s.failed_logins} tone={s.failed_logins > 10 ? 'red' : undefined} />
@@ -28,13 +28,13 @@ function Resumo() {
                 <StatCard title="Exportações" value={s.exports} />
                 <StatCard title="Alertas abertos" value={s.open_alerts} tone={s.open_alerts > 0 ? 'red' : 'green'} />
             </div>
-            <div className={styles.section_title}>Ações mais frequentes</div>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Ações mais frequentes</div>
             <div className={styles.card}>
                 {Object.keys(s.by_action).length === 0 ? <Empty /> : Object.entries(s.by_action).map(([action, n]) => (
                     <div key={action} className={styles.kv}><span title={action}>{auditLabel(action)}</span><strong>{n}</strong></div>
                 ))}
             </div>
-        </div>
+        </Stack>
     );
 }
 
@@ -75,44 +75,39 @@ function Eventos() {
 
     const pages = Math.max(1, Math.ceil(count / PAGE_SIZE));
     return (
-        <div className={styles.page}>
-            <div className={styles.filters}>
-                <label className={styles.field}>Tipo de ação
-                    <select className={styles.select} value={filters.prefix} onChange={set('prefix')}>{PREFIXES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
-                </label>
-                <label className={styles.field}>Resultado
-                    <select className={styles.select} value={filters.outcome} onChange={set('outcome')}>
+        <Stack>
+            <FilterBar>
+                <Field label="Tipo de ação">
+                    <Select value={filters.prefix} onChange={set('prefix')}>{PREFIXES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</Select>
+                </Field>
+                <Field label="Resultado">
+                    <Select value={filters.outcome} onChange={set('outcome')}>
                         <option value="">Todos</option><option value="success">Sucesso</option><option value="denied">Negado</option><option value="error">Erro</option>
-                    </select>
-                </label>
-                <label className={styles.field}>De<input type="date" className={styles.input} value={filters.from} onChange={set('from')} /></label>
-                <label className={styles.field}>Até<input type="date" className={styles.input} value={filters.to} onChange={set('to')} /></label>
-                <button className={styles.btn} onClick={exportCsv}>Exportar CSV</button>
-            </div>
+                    </Select>
+                </Field>
+                <Field label="De"><Input type="date" value={filters.from} onChange={set('from')} /></Field>
+                <Field label="Até"><Input type="date" value={filters.to} onChange={set('to')} /></Field>
+                <Button onClick={exportCsv}>Exportar CSV</Button>
+            </FilterBar>
             {error && <Banner tone="error">{error}</Banner>}
-            <div className={styles.table_wrap}>
-                <table className={styles.table}>
-                    <thead><tr><th>#</th><th>Quando</th><th>Quem</th><th>Ação</th><th>Alvo</th><th>Resultado</th><th>IP</th><th>Motivo</th></tr></thead>
-                    <tbody>
-                        {rows.map((e) => (
-                            <tr key={e.seq}>
-                                <td className={styles.mono}>{e.seq}</td><td>{fmtDateTime(e.occurred_at)}</td>
-                                <td>{e.actor_label || e.actor_type}</td><td title={e.action}>{auditLabel(e.action)}</td>
-                                <td className={styles.muted}>{e.target_type ? `${e.target_type} ${e.target_id}` : '—'}</td>
-                                <td><StatusPill map={OUTCOME} value={e.outcome} /></td>
-                                <td className={styles.mono}>{e.ip || '—'}</td><td className={styles.muted}>{e.reason || '—'}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {!loading && rows.length === 0 && <Empty>Nenhum evento para esses filtros.</Empty>}
-            </div>
-            <div className={styles.pager}>
-                <button className={styles.btn} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Anterior</button>
-                <span>Página {page} de {pages} ({count} eventos)</span>
-                <button className={styles.btn} disabled={page >= pages} onClick={() => setPage((p) => p + 1)}>Próxima</button>
-            </div>
-        </div>
+            <Table columns={['#', 'Quando', 'Quem', 'Ação', 'Alvo', 'Resultado', 'IP', 'Motivo']}
+                empty={!loading && rows.length === 0 && <Empty>Nenhum evento para esses filtros.</Empty>}>
+                {rows.map((e) => (
+                    <tr key={e.seq}>
+                        <td className={styles.mono}>{e.seq}</td><td data-label="Quando">{fmtDateTime(e.occurred_at)}</td>
+                        <td data-label="Quem">{e.actor_label || e.actor_type}</td><td data-label="Ação" title={e.action}>{auditLabel(e.action)}</td>
+                        <td data-label="Alvo" className={styles.muted}>{e.target_type ? `${e.target_type} ${e.target_id}` : '—'}</td>
+                        <td data-label="Resultado"><StatusPill map={OUTCOME} value={e.outcome} /></td>
+                        <td data-label="IP" className={styles.mono}>{e.ip || '—'}</td><td data-label="Motivo" className={styles.muted}>{e.reason || '—'}</td>
+                    </tr>
+                ))}
+            </Table>
+            <Row justify="center">
+                <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Anterior</Button>
+                <span className={styles.muted}>Página {page} de {pages} ({count} eventos)</span>
+                <Button disabled={page >= pages} onClick={() => setPage((p) => p + 1)}>Próxima</Button>
+            </Row>
+        </Stack>
     );
 }
 
@@ -134,40 +129,35 @@ function Alertas() {
     };
 
     return (
-        <div className={styles.page}>
-            <div className={styles.filters}>
-                <label className={styles.field}>Situação
-                    <select className={styles.select} value={status} onChange={(e) => setStatus(e.target.value)}>
+        <Stack>
+            <FilterBar>
+                <Field label="Situação">
+                    <Select value={status} onChange={(e) => setStatus(e.target.value)}>
                         <option value="open">Abertos</option><option value="ack">Em análise</option>
                         <option value="resolved">Resolvidos</option><option value="false_positive">Falsos positivos</option><option value="">Todos</option>
-                    </select>
-                </label>
-            </div>
+                    </Select>
+                </Field>
+            </FilterBar>
             {error && <Banner tone="error">{error}</Banner>}
             {alerts.length === 0 ? <Empty>Nenhum alerta {status === 'open' ? 'aberto — tudo tranquilo' : 'encontrado'}.</Empty> : (
-                <div className={styles.table_wrap}>
-                    <table className={styles.table}>
-                        <thead><tr><th>Quando</th><th>Severidade</th><th>Regra</th><th>Resumo</th><th>Usuário</th><th>Situação</th><th>Triagem</th></tr></thead>
-                        <tbody>
-                            {alerts.map((a) => (
-                                <tr key={a.id}>
-                                    <td>{fmtDateTime(a.created_at)}</td><td><StatusPill map={SEVERITY} value={a.severity} /></td>
-                                    <td className={styles.mono}>{a.rule}</td><td>{a.summary}</td><td>{a.actor_label || '—'}</td>
-                                    <td><StatusPill map={ALERT_STATUS} value={a.status} /></td>
-                                    <td>
-                                        <div className={styles.btn_row}>
-                                            {a.status === 'open' && <button className={styles.btn} onClick={() => triage(a.id, 'ack')}>Analisar</button>}
-                                            {a.status !== 'resolved' && <button className={styles.btn} onClick={() => triage(a.id, 'resolved')}>Resolver</button>}
-                                            {a.status !== 'false_positive' && <button className={styles.btn} onClick={() => triage(a.id, 'false_positive')}>Falso positivo</button>}
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table columns={['Quando', 'Severidade', 'Regra', 'Resumo', 'Usuário', 'Situação', 'Triagem']}>
+                    {alerts.map((a) => (
+                        <tr key={a.id}>
+                            <td>{fmtDateTime(a.created_at)}</td><td data-label="Severidade"><StatusPill map={SEVERITY} value={a.severity} /></td>
+                            <td data-label="Regra" className={styles.mono}>{a.rule}</td><td data-label="Resumo">{a.summary}</td><td data-label="Usuário">{a.actor_label || '—'}</td>
+                            <td data-label="Situação"><StatusPill map={ALERT_STATUS} value={a.status} /></td>
+                            <td data-label="Triagem">
+                                <Row gap={1}>
+                                    {a.status === 'open' && <Button size="sm" onClick={() => triage(a.id, 'ack')}>Analisar</Button>}
+                                    {a.status !== 'resolved' && <Button size="sm" variant="primary" onClick={() => triage(a.id, 'resolved')}>Resolver</Button>}
+                                    {a.status !== 'false_positive' && <Button size="sm" variant="ghost" onClick={() => triage(a.id, 'false_positive')}>Falso positivo</Button>}
+                                </Row>
+                            </td>
+                        </tr>
+                    ))}
+                </Table>
             )}
-        </div>
+        </Stack>
     );
 }
 
@@ -176,7 +166,7 @@ export default function Auditoria() {
     return (
         <div className={styles.page}>
             <PageHeader title="Auditoria" subtitle="Quem fez o quê, quando e de onde" />
-            <TabBar tabs={[{ id: 'resumo', label: 'Resumo' }, { id: 'eventos', label: 'Eventos' }, { id: 'alertas', label: 'Alertas' }]} activeTab={tab} onTabChange={setTab} />
+            <Tabs tabs={TABS} value={tab} onChange={setTab} />
             {tab === 'resumo' && <Resumo />}
             {tab === 'eventos' && <Eventos />}
             {tab === 'alertas' && <Alertas />}
