@@ -1,0 +1,6 @@
+/* Aceite dos documentos legais no cadastro */
+.box { border: 1px solid var(--c-border); border-radius: 10px; padding: 14px; margin: 18px 0 0; }
+.legend { padding: 0 6px; font-weight: 600; }
+.item { margin-bottom: var(--sp-2); }
+.check { align-items: flex-start; font-size: 14px; }
+.doc { font-size: 13px; max-height: 200px; overflow-y: auto; background: var(--c-surface-2); border: 1px solid var(--c-border); border-radius: 8px; padding: 10px; margin-top: 6px; }

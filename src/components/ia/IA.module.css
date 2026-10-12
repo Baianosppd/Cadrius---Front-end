@@ -1,0 +1,8 @@
+/* IA do escritório: classes que só os componentes de IA usam */
+
+/* Barra de porcentagem na tabela de acerto (Aprendizado) */
+.bar_cell { min-width: 120px; }
+.bar_pct { min-width: 34px; font-size: var(--fs-xs); }
+
+/* Cartão de Sugestões da IA em destaque quando há sugestões abertas */
+.card_highlight { border-color: var(--c-info-bd); background: var(--c-primary-50); }

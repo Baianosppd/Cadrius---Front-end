@@ -1,0 +1,93 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { FiBell, FiChevronDown, FiMenu, FiSearch } from 'react-icons/fi';
+import { openPalette } from '../../services/search';
+import { useNavigate } from 'react-router-dom';
+import styles from './BarraSup.module.css';
+import api from '../../services/api';
+import useAuth from '../../hooks/useAuth';
+import ThemeToggle from './ThemeToggle';
+import BrandLogo from '../brand/BrandLogo';
+
+// Disparado quando o usuário lê notificações (atualiza o número do sino sem esperar o polling)
+export const NOTIFICATIONS_CHANGED = 'cadrius:notifications-changed';
+
+function BarraSup({ nome, onMenu, menuOpen }) {
+    const navigate = useNavigate();
+    const { user } = useAuth();
+    const [unread, setUnread] = useState(0);
+
+    const loadUnread = useCallback(() => {
+        api.get('notifications/unread-count/').then((r) => setUnread(r.data.unread ?? r.data.count ?? 0)).catch(() => {});
+    }, []);
+
+    // Contador do sino: a cada 42 s com a aba visível, ao voltar para a aba e quando alguém lê notificações
+    useEffect(() => {
+        loadUnread();
+        const timer = setInterval(() => { if (document.visibilityState === 'visible') loadUnread(); }, 42000);
+        const onVisible = () => { if (document.visibilityState === 'visible') loadUnread(); };
+        document.addEventListener('visibilitychange', onVisible);
+        window.addEventListener(NOTIFICATIONS_CHANGED, loadUnread);
+        return () => {
+            clearInterval(timer);
+            document.removeEventListener('visibilitychange', onVisible);
+            window.removeEventListener(NOTIFICATIONS_CHANGED, loadUnread);
+        };
+    }, [loadUnread]);
+
+    return (
+        <header className={styles.barra_superior}>
+            <div className={styles.left}>
+                {onMenu && (
+                    <button type="button" className={styles.menu_button} onClick={onMenu} aria-label="Abrir menu"
+                        aria-expanded={!!menuOpen} aria-controls="menu-principal">
+                        <FiMenu size={22} />
+                    </button>
+                )}
+                <span className={styles.brand_mobile}><BrandLogo size={26} /></span>
+            </div>
+
+            <button type="button" className={styles.search_trigger} onClick={openPalette} aria-label="Buscar (Ctrl+K)" aria-keyshortcuts="Control+K Meta+K">
+                <FiSearch aria-hidden="true" /><span className={styles.search_text}>Buscar telas, clientes, processos…</span><kbd className={styles.search_kbd}>Ctrl K</kbd>
+            </button>
+
+            <div className={styles.actions_container}>
+                <ThemeToggle />
+                <button
+                    className={styles.icon_button_notification}
+                    aria-label="Notificações"
+                    onClick={() => navigate('/notificacoes')}
+                >
+                    <FiBell size={20} />
+                    {unread > 0 && <span className={styles.badge}>{unread > 99 ? '99+' : unread}</span>}
+                </button>
+
+                {/* Abre o Perfil com clique, Enter ou Espaço */}
+                <div
+                    className={`${styles.user_profile} ${styles.clickable}`}
+                    role="link"
+                    tabIndex={0}
+                    aria-label="Meu perfil"
+                    onClick={() => navigate('/perfil')}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate('/perfil'); } }}
+                >
+                    <div className={styles.avatar_wrapper}>
+                        {user?.profile_picture ? (
+                            <img src={user.profile_picture} alt="Perfil" className={styles.avatar_img} />
+                        ) : (
+                            <div className={`${styles.avatar_img} ${styles.avatar_initials}`} aria-hidden="true">
+                                {user?.initials || '?'}
+                            </div>
+                        )}
+                        <span className={styles.status_indicator}></span>
+                    </div>
+                    <div className={styles.user_info_trigger}>
+                        <span className={styles.user_name}>{nome}</span>
+                        <FiChevronDown className={styles.chevron} />
+                    </div>
+                </div>
+            </div>
+        </header>
+    );
+}
+
+export default BarraSup;

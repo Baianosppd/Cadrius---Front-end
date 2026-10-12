@@ -1,0 +1,140 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background-color: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    height: 64px;
+    flex-shrink: 0;
+    gap: 16px;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 200px;
+}
+
+.title_wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--c-ink);
+    margin: 0;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.status_active {
+    background-color: var(--c-success-bg);
+    color: var(--c-success);
+}
+
+.status_inactive {
+    background-color: var(--c-surface-3);
+    color: var(--c-muted);
+}
+
+.status_dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.last_execution {
+    font-size: 12px;
+    color: var(--c-subtle);
+    margin: 0;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--c-surface-2);
+    border: 1px solid var(--c-border);
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+.counter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--c-text-2);
+    font-weight: 500;
+}
+
+.counter_dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.button_secondary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-text-2);
+    cursor: pointer;
+}
+
+.button_secondary:hover {
+    background-color: var(--c-surface-2);
+}
+
+.button_primary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--c-primary-solid);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.button_primary:hover {
+    opacity: 0.85;
+}
+
+.button_icon {
+    width: 15px;
+    height: 15px;
+}
+/* Nome do fluxo editável: parece título até receber foco */
+.title_input { border: 1px solid transparent; background: transparent; min-width: 220px; }
+.status_clickable { cursor: pointer; }

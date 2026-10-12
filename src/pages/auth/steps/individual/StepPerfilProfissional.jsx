@@ -1,5 +1,6 @@
 import styles from './Step.module.css';
 import { FiBriefcase } from 'react-icons/fi';
+import { Field, Input, Select } from '../../../../components/ui';
 
 const estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
 
@@ -17,20 +18,17 @@ const StepPerfilProfissional = ({ formData, onChange }) => {
             </div>
 
             <div className={styles.fields_grid}>
-                <div className={styles.field}>
-                    <label className={styles.label}>Número da OAB <span className={styles.optional}>Opcional</span></label>
-                    <input className={styles.input} placeholder="Ex: 123456" value={formData.oab || ''} onChange={e => onChange({ oab: e.target.value })} />
-                </div>
-                <div className={styles.field}>
-                    <label className={styles.label}>Estado (UF)</label>
-                    <select className={styles.select} value={formData.uf || ''} onChange={e => onChange({ uf: e.target.value })}>
+                <Field label={<>Número da OAB <span className={styles.optional}>Opcional</span></>}>
+                    <Input size="lg" inputMode="numeric" placeholder="Ex: 123456" value={formData.oab || ''} onChange={(e) => onChange({ oab: e.target.value })} />
+                </Field>
+                <Field label="Estado (UF)">
+                    <Select size="lg" value={formData.uf || ''} onChange={(e) => onChange({ uf: e.target.value })}>
                         <option value="">UF</option>
-                        {estados.map(e => <option key={e} value={e}>{e}</option>)}
-                    </select>
-                </div>
-                <div className={`${styles.field} ${styles.field_full}`}>
-                    <label className={styles.label}>Área de Atuação Principal</label>
-                    <select className={styles.select} value={formData.area || ''} onChange={e => onChange({ area: e.target.value })}>
+                        {estados.map((e) => <option key={e} value={e}>{e}</option>)}
+                    </Select>
+                </Field>
+                <Field label="Área de Atuação Principal" className={styles.field_full}>
+                    <Select size="lg" value={formData.area || ''} onChange={(e) => onChange({ area: e.target.value })}>
                         <option value="">Selecione a área...</option>
                         <option>Direito Civil</option>
                         <option>Direito Penal</option>
@@ -40,8 +38,8 @@ const StepPerfilProfissional = ({ formData, onChange }) => {
                         <option>Direito de Família</option>
                         <option>Direito Previdenciário</option>
                         <option>Outra</option>
-                    </select>
-                </div>
+                    </Select>
+                </Field>
             </div>
 
             <div className={styles.info_box}>

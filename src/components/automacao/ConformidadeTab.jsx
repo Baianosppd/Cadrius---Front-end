@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, Loading, Pill, ScoreBar, StatCard } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Button, Empty, Loading, Pill, Row, ScoreBar, Stack, StatCard } from '../ui';
+import useLoader from '../../hooks/useLoader';
 import { complianceApi } from '../../services/cad223';
 
 const TONE = { alto: 'red', medio: 'yellow', baixo: 'gray' };
@@ -12,7 +12,7 @@ export default function ConformidadeTab() {
     if (error) return <Banner tone="error">{error}</Banner>;
     if (!data) return <Loading />;
     return (
-        <div className={styles.stack}>
+        <Stack>
             <div className={styles.grid}>
                 <div className={styles.card}>
                     <div className={styles.card_title}>Nota de conformidade</div>
@@ -26,13 +26,13 @@ export default function ConformidadeTab() {
             {data.dica_bloqueios && <Banner tone="warn">{data.dica_bloqueios}</Banner>}
             {data.regras.length === 0 ? <Empty title="Nenhum achado">As regras do escritório seguem as boas práticas abaixo.</Empty> : data.regras.map((r) => (
                 <div key={r.id} className={styles.card}>
-                    <div className={styles.btn_row} style={{ justifyContent: 'space-between' }}>
+                    <Row justify="between">
                         <strong>{r.nome}</strong><Pill tone={r.ligada ? 'green' : 'gray'}>{r.ligada ? 'Ligada' : 'Desligada'}</Pill>
-                    </div>
+                    </Row>
                     {r.achados.map((a, i) => (
-                        <div key={i} className={styles.list_row} style={{ alignItems: 'flex-start' }}>
+                        <div key={i} className={`${styles.list_row} ${styles.align_start}`}>
                             <Pill tone={TONE[a.nivel]}>{a.nivel}</Pill>
-                            <div style={{ flex: 1 }}><strong>{a.regra}</strong><div className={styles.muted}>{a.o_que_fazer}</div></div>
+                            <div className={styles.flex_1}><strong>{a.regra}</strong><div className={styles.muted}>{a.o_que_fazer}</div></div>
                         </div>
                     ))}
                 </div>
@@ -42,13 +42,13 @@ export default function ConformidadeTab() {
                     <div className={styles.card_title}>Acessos</div>
                     <p className={styles.muted}>Grupos com financeiro: {data.acessos.grupos_com_financeiro.join(', ') || 'nenhum'}.</p>
                     <p className={styles.muted}>Permissões extras: {data.acessos.permissoes_extras.join('; ') || 'nenhuma'}.</p>
-                    <Link to="/equipe" className={`${styles.btn} ${styles.btn_sm}`}>Revisar grupos de acesso</Link>
+                    <Button as={Link} to="/equipe" size="sm">Revisar grupos de acesso</Button>
                 </div>
                 <div className={styles.card}>
                     <div className={styles.card_title}>Boas práticas</div>
                     <ul>{data.boas_praticas.map((b) => <li key={b} className={styles.muted}>{b}</li>)}</ul>
                 </div>
             </div>
-        </div>
+        </Stack>
     );
 }

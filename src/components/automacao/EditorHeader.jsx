@@ -1,0 +1,76 @@
+import styles from './EditorHeader.module.css';
+import { FiSave, FiUpload, FiLayout } from 'react-icons/fi';
+import { Button } from '../ui';
+
+const EditorHeader = ({
+    title,
+    active,
+    lastExecution,
+    nodeCount,
+    onSave,
+    onImport,
+    onAutoLayout,
+    onTitleChange,
+    onToggleActive,
+    saving,
+}) => {
+    return (
+        <div className={styles.header}>
+            <div className={styles.left}>
+                <div className={styles.title_wrapper}>
+                    {onTitleChange ? (
+                        <input
+                            className={`${styles.title} ${styles.title_input}`}
+                            value={title}
+                            maxLength={255}
+                            aria-label="Nome do fluxo"
+                            onChange={(e) => onTitleChange(e.target.value)}
+                        />
+                    ) : (
+                        <h1 className={styles.title}>{title || 'Novo Fluxo'}</h1>
+                    )}
+                    <span
+                        className={`${styles.status} ${active ? styles.status_active : styles.status_inactive} ${onToggleActive ? styles.status_clickable : ''}`}
+                        role={onToggleActive ? 'button' : undefined}
+                        tabIndex={onToggleActive ? 0 : undefined}
+                        onClick={onToggleActive}
+                        onKeyDown={(e) => onToggleActive && (e.key === 'Enter' || e.key === ' ') && onToggleActive()}
+                    >
+                        <span className={styles.status_dot} />
+                        {active ? 'Ativa' : 'Inativa'}
+                    </span>
+                </div>
+                {lastExecution && (
+                    <p className={styles.last_execution}>Última execução: {lastExecution}</p>
+                )}
+            </div>
+
+            <div className={styles.center}>
+                <div className={styles.counter}>
+                    <span className={styles.counter_dot} style={{ backgroundColor: 'var(--c-success)' }} />
+                    <span>Gatilhos: {nodeCount.triggers}</span>
+                </div>
+                <div className={styles.counter}>
+                    <span className={styles.counter_dot} style={{ backgroundColor: 'var(--c-info)' }} />
+                    <span>Ações: {nodeCount.actions}</span>
+                </div>
+                <div className={styles.counter}>
+                    <span className={styles.counter_dot} style={{ backgroundColor: 'var(--c-warning)' }} />
+                    <span>Condições: {nodeCount.conditions}</span>
+                </div>
+                <div className={styles.counter}>
+                    <span className={styles.counter_dot} style={{ backgroundColor: '#8b5cf6' }} />
+                    <span>Conexões: {nodeCount.connections}</span>
+                </div>
+            </div>
+
+            <div className={styles.right}>
+                <Button icon={FiLayout} onClick={onAutoLayout}>Organizar</Button>
+                <Button icon={FiUpload} onClick={onImport}>Importar</Button>
+                <Button variant="primary" icon={FiSave} loading={saving} loadingLabel="Salvando…" onClick={onSave}>Salvar</Button>
+            </div>
+        </div>
+    );
+};
+
+export default EditorHeader;

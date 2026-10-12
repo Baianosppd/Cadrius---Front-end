@@ -1,17 +1,7 @@
-import React from 'react';
-import styles from './Input.module.css';
+import styles from './ui.module.css';
 
-const Input = ({ children, className, ...props }) => {
-    return (
-        <input
-
-            className={`${styles.input_default} ${className || ''}`}
-            {...props}
-        >
-            {children}
-        </input>
-    );
-};
-
-export default Input;
-//Componente novo
+// <input> com o visual do kit. size="lg" nas telas de login; invalid = borda vermelha.
+export default function Input({ size = 'md', invalid = false, className = '', ...rest }) {
+    const cls = [styles.input, size === 'lg' && styles.input_lg, className].filter(Boolean).join(' ');
+    return <input {...rest} className={cls} aria-invalid={invalid || undefined} />;
+}

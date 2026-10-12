@@ -1,5 +1,5 @@
 // Cabeçalho de página antigo: agora usa o cabeçalho padrão (CAD-219), para todas as telas ficarem iguais
-import { PageHeader as SharedPageHeader } from '../seguranca/ui';
+import SharedPageHeader from './PageHeader';
 
 const PageHeader = ({ title, subtitle, actions }) => <SharedPageHeader title={title} subtitle={subtitle} actions={actions} />;
 

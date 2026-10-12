@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDateTime, Loading, Pill } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Button, Empty, Loading, Modal, Pill, Row, Stack, Table } from '../ui';
+import { errorMessage, fmtDateTime } from '../../utils/format';
+import useLoader from '../../hooks/useLoader';
 import { STEP_STATUS, describeRule, hasExternal, rulesApi } from '../../services/rules';
 import RuleEditor from './RuleEditor';
 import RuleFlowView from './RuleFlowView';
@@ -13,41 +14,40 @@ import FaleSobreProcessoCta from '../ia/FaleSobreProcessoCta';
 
 function Simulacao({ result, onClose, onEnable }) {
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true">
-            <div className={styles.modal} style={{ maxWidth: 720, maxHeight: '90vh', overflowY: 'auto' }}>
-                <div className={styles.modal_title}>Simulação: {result.regra.nome}</div>
-                <Banner tone="info">
-                    {result.origem === 'real'
-                        ? <>Usando o evento real mais recente: <strong>{result.evento}</strong>. Nada foi enviado nem criado.</>
-                        : <>O escritório ainda não tem um evento deste tipo: usamos um <strong>exemplo fictício</strong>. Nada foi enviado nem criado.</>}
-                </Banner>
-                {result.condicoes.length > 0 && (
-                    <>
-                        <div className={styles.section_title}>Condições</div>
-                        {result.condicoes.map((c, i) => (
-                            <div key={i}><Pill tone={c.atendida ? 'green' : 'gray'}>{c.atendida ? 'atende' : 'não atende'}</Pill> {c.field} {c.op} {Array.isArray(c.value) ? c.value.join(', ') : c.value}</div>
-                        ))}
-                    </>
-                )}
-                <div className={styles.section_title}>O que faria</div>
-                {!result.condicoes_atendidas && <Empty>Com este evento as condições não são atendidas: nada seria feito.</Empty>}
+        <Modal title={`Simulação: ${result.regra.nome}`} size="lg" onClose={onClose}
+            footer={<>
+                {!result.regra.ativa && <Button variant="primary" onClick={onEnable}>Ligar a regra</Button>}
+                <Button onClick={onClose}>Fechar</Button>
+            </>}>
+            <Banner tone="info">
+                {result.origem === 'real'
+                    ? <>Usando o evento real mais recente: <strong>{result.evento}</strong>. Nada foi enviado nem criado.</>
+                    : <>O escritório ainda não tem um evento deste tipo: usamos um <strong>exemplo fictício</strong>. Nada foi enviado nem criado.</>}
+            </Banner>
+            {result.condicoes.length > 0 && (
+                <Stack gap={2}>
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>Condições</div>
+                    {result.condicoes.map((c, i) => (
+                        <div key={i}><Pill tone={c.atendida ? 'green' : 'gray'}>{c.atendida ? 'atende' : 'não atende'}</Pill> {c.field} {c.op} {Array.isArray(c.value) ? c.value.join(', ') : c.value}</div>
+                    ))}
+                </Stack>
+            )}
+            <div className={`${styles.section_title} ${styles.mb_0}`}>O que faria</div>
+            {!result.condicoes_atendidas && <Empty>Com este evento as condições não são atendidas: nada seria feito.</Empty>}
+            <Stack gap={2}>
                 {result.passos.map((p, i) => {
                     const [label, tone] = STEP_STATUS[p.status] || [p.status, 'gray'];
                     return (
-                        <div key={i} className={styles.card} style={{ marginBottom: 8 }}>
+                        <div key={i} className={styles.card}>
                             <div><strong>{i + 1}. {p.rotulo}</strong> <Pill tone={tone}>{label}</Pill></div>
                             <div className={styles.muted}>{p.detalhe}</div>
                             {p.dados?.assunto && <div><strong>Assunto:</strong> {p.dados.assunto}</div>}
-                            {p.dados?.mensagem && <div className={styles.doc_text} style={{ whiteSpace: 'pre-wrap' }}>{p.dados.mensagem}</div>}
+                            {p.dados?.mensagem && <div className={`${styles.doc_text} ${styles.pre_wrap}`}>{p.dados.mensagem}</div>}
                         </div>
                     );
                 })}
-                <div className={styles.btn_row}>
-                    {!result.regra.ativa && <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={onEnable}>Ligar a regra</button>}
-                    <button type="button" className={styles.btn} onClick={onClose}>Fechar</button>
-                </div>
-            </div>
-        </div>
+            </Stack>
+        </Modal>
     );
 }
 
@@ -94,71 +94,65 @@ export default function RegrasTab({ canManage }) {
     };
 
     return (
-        <div className={styles.stack}>
+        <Stack>
             {openId && <RuleFlowView key={openId} ruleId={openId} catalog={catalog} canManage={canManage}
                 onClose={() => { openRule(null); reload(); }} onEdit={(r) => setEditing(r)} />}
             {canManage && <FaleSobreProcessoCta onOpen={() => setFale(true)} />}
             {fale && <FaleSobreProcesso onClose={() => { setFale(false); reload(); }} />}
             <SugestoesIA canManage={canManage} onAccepted={(id) => { reload(); if (id) openRule(id); }} />
             {canManage && (
-                <div className={styles.btn_row} style={{ margin: '12px 0' }}>
-                    <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setShowTemplates((v) => !v)}>Usar um modelo pronto</button>
-                    <button type="button" className={styles.btn} onClick={() => setEditing({})}>Criar do zero</button>
-                </div>
+                <Row>
+                    <Button variant="primary" aria-expanded={showTemplates} onClick={() => setShowTemplates((v) => !v)}>Usar um modelo pronto</Button>
+                    <Button onClick={() => setEditing({})}>Criar do zero</Button>
+                </Row>
             )}
             {showTemplates && (
-                <div className={styles.grid} style={{ marginBottom: 12 }}>
+                <div className={styles.grid}>
                     {templates.map((t) => (
                         <div key={t.key} className={styles.card}>
                             <div className={styles.card_title}>{t.name}</div>
                             <p className={styles.muted}>{t.description}</p>
-                            <button type="button" className={styles.btn} onClick={() => fromTemplate(t.key)}>Usar este modelo</button>
+                            <Button onClick={() => fromTemplate(t.key)}>Usar este modelo</Button>
                         </div>
                     ))}
                 </div>
             )}
             {rules.length === 0 && <Empty title="Nenhuma regra ainda">Comece por um modelo pronto: toda regra nasce desligada e só liga depois de simulada.</Empty>}
             {rules.length > 0 && (
-                <div className={styles.table_wrap}>
-                    <table className={`${styles.table} ${styles.table_stack}`}>
-                        <thead><tr><th>Regra</th><th>Situação</th><th>Execuções</th><th></th></tr></thead>
-                        <tbody>
-                            {rules.map((r) => (
-                                <tr key={r.id}>
-                                    <td>
-                                        <strong>{r.nome}</strong>
-                                        <div className={styles.muted}>{describeRule(r, catalog)}</div>
-                                        {hasExternal(r) && <Pill tone={r.exige_aprovacao ? 'blue' : 'orange'}>{r.exige_aprovacao ? 'envio com aprovação' : 'envio automático'}</Pill>}
-                                    </td>
-                                    <td data-label="Situação">
-                                        <Pill tone={r.ativa ? 'green' : 'gray'}>{r.ativa ? 'Ligada' : 'Desligada'}</Pill>
-                                        {!r.simulada && <div className={styles.muted}>precisa simular</div>}
-                                        {r.pendentes > 0 && <div><Pill tone="yellow">{r.pendentes} aguardando aprovação</Pill></div>}
-                                    </td>
-                                    <td data-label="Execuções">{r.execucoes}<div className={styles.muted}>{r.ultima_execucao ? fmtDateTime(r.ultima_execucao) : 'nunca'}</div></td>
-                                    <td className={styles.td_actions}>
-                                        <div className={styles.btn_row} style={{ gap: 4 }}>
-                                            <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_primary}`} onClick={() => openRule(r.id)}
-                                                aria-label={`Abrir o fluxo da regra ${r.nome}`}>Abrir</button>
-                                            {canManage && (<>
-                                                <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => toggle(r)}>{r.ativa ? 'Desligar' : 'Ligar'}</button>
-                                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} onClick={() => simulate(r)}>Simular</button>
-                                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} onClick={() => setEditing(r)}>Editar</button>
-                                                <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_ghost}`} style={{ color: 'var(--c-danger)' }}
-                                                    onClick={() => window.confirm(`Excluir a regra "${r.nome}"?`) && act(() => rulesApi.remove(r.id), 'Regra excluída.')}>Excluir</button>
-                                            </>)}
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table columns={['Regra', 'Situação', 'Execuções', { label: '', className: styles.td_actions }]}>
+                    {rules.map((r) => (
+                        <tr key={r.id}>
+                            <td>
+                                <strong>{r.nome}</strong>
+                                <div className={styles.muted}>{describeRule(r, catalog)}</div>
+                                {hasExternal(r) && <Pill tone={r.exige_aprovacao ? 'blue' : 'orange'}>{r.exige_aprovacao ? 'envio com aprovação' : 'envio automático'}</Pill>}
+                            </td>
+                            <td data-label="Situação">
+                                <Pill tone={r.ativa ? 'green' : 'gray'}>{r.ativa ? 'Ligada' : 'Desligada'}</Pill>
+                                {!r.simulada && <div className={styles.muted}>precisa simular</div>}
+                                {r.pendentes > 0 && <div><Pill tone="yellow">{r.pendentes} aguardando aprovação</Pill></div>}
+                            </td>
+                            <td data-label="Execuções">{r.execucoes}<div className={styles.muted}>{r.ultima_execucao ? fmtDateTime(r.ultima_execucao) : 'nunca'}</div></td>
+                            <td className={styles.td_actions}>
+                                <Row gap={1}>
+                                    <Button size="sm" variant="primary" onClick={() => openRule(r.id)} aria-label={`Abrir o fluxo da regra ${r.nome}`}>Abrir</Button>
+                                    {canManage && (<>
+                                        <Button size="sm" onClick={() => toggle(r)}>{r.ativa ? 'Desligar' : 'Ligar'}</Button>
+                                        <Button size="sm" variant="ghost" onClick={() => simulate(r)}>Simular</Button>
+                                        <Button size="sm" variant="ghost" onClick={() => setEditing(r)}>Editar</Button>
+                                        <Button size="sm" variant="danger"
+                                            onClick={() => window.confirm(`Excluir a regra "${r.nome}"?`) && act(() => rulesApi.remove(r.id), 'Regra excluída.')}>Excluir</Button>
+                                    </>)}
+                                </Row>
+                            </td>
+                        </tr>
+                    ))}
+                </Table>
             )}
             {editing && <RuleEditor catalog={catalog} rule={editing.id ? editing : null} onCancel={() => setEditing(null)}
                 onDone={() => { setEditing(null); reload(); }} />}
             {sim && <Simulacao result={sim} onClose={() => setSim(null)}
                 onEnable={async () => { await act(() => rulesApi.enable(sim.regra.id, true), 'Regra ligada.'); setSim(null); }} />}
-        </div>
+        </Stack>
     );
 }

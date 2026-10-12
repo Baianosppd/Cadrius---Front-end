@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import BarraSup from '../components/common/BarraSup';
-import NavBar from '../components/common/Navbar';
+import BarraSup from '../components/layout/BarraSup';
+import NavBar from '../components/layout/Navbar';
 import styles from './MainLayout.module.css';
 import useAuth from '../hooks/useAuth';
 import ConsentModal from '../components/seguranca/ConsentModal';
-import SubscriptionBanner from '../components/common/SubscriptionBanner';
-import CommandPalette from '../components/common/CommandPalette';
-import ModuleTour from '../components/common/ModuleTour';
+import SubscriptionBanner from '../components/layout/SubscriptionBanner';
+import CommandPalette from '../components/layout/CommandPalette';
+import ModuleTour from '../components/layout/ModuleTour';
 
 // Layout do escritório (CAD-174): menu fixo no computador; no celular/tablet vira gaveta aberta pelo botão ☰
 export default function MainLayout() {

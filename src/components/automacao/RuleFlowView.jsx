@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiPlay, FiPower, FiX } from 'react-icons/fi';
-import ui from '../seguranca/seguranca.module.css';
-import { Banner, Pill, errorMessage } from '../seguranca/ui';
+import ui from '../ui/ui.module.css';
+import { Banner, Button, Pill, Row } from '../ui';
+import { errorMessage } from '../../utils/format';
 import { rulesApi } from '../../services/rules';
 import s from './RuleFlowView.module.css';
 import ShortcutPanel from './ShortcutPanel';
@@ -73,21 +74,21 @@ export default function RuleFlowView({ ruleId, catalog, canManage, onClose, onEd
     const live = rule.ativa;
     return (
         <section className={ui.card} aria-labelledby="flow-title">
-            <div className={ui.btn_row} style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ minWidth: 0 }}>
+            <Row justify="between" align="start">
+                <div className={ui.flex_1}>
                     <div id="flow-title" className={ui.section_title}>{rule.nome}</div>
                     {rule.descricao && <p className={ui.muted}>{rule.descricao}</p>}
                     <span className={s.live}><span className={`${s.dot} ${live ? '' : s.dot_off}`} aria-hidden="true" />
                         {live ? 'Ligada: rodando a cada evento (atualiza sozinho)' : 'Desligada: simule e ligue para começar a rodar'}</span>
                 </div>
-                <div className={ui.btn_row}>
-                    {canManage && <button type="button" className={ui.btn} onClick={simulate}><FiPlay aria-hidden="true" /> Simular</button>}
-                    {canManage && <button type="button" className={`${ui.btn} ${live ? '' : ui.btn_primary}`} onClick={toggle} disabled={!live && !rule.simulada && !sim}>
-                        <FiPower aria-hidden="true" /> {live ? 'Desligar' : 'Ligar'}</button>}
-                    {canManage && <button type="button" className={ui.btn} onClick={() => onEdit(rule)}>Editar</button>}
-                    <button type="button" className={ui.btn} onClick={onClose} aria-label="Fechar o fluxo"><FiX aria-hidden="true" /></button>
-                </div>
-            </div>
+                <Row>
+                    {canManage && <Button icon={FiPlay} onClick={simulate}>Simular</Button>}
+                    {canManage && <Button variant={live ? 'default' : 'primary'} icon={FiPower} onClick={toggle} disabled={!live && !rule.simulada && !sim}>
+                        {live ? 'Desligar' : 'Ligar'}</Button>}
+                    {canManage && <Button onClick={() => onEdit(rule)}>Editar</Button>}
+                    <Button icon={FiX} onClick={onClose} aria-label="Fechar o fluxo" />
+                </Row>
+            </Row>
 
             <RuleCanvas live={live} steps={steps} />
 
@@ -98,14 +99,14 @@ export default function RuleFlowView({ ruleId, catalog, canManage, onClose, onEd
                     {' '}As cores mostram o que aconteceria. Nada foi enviado. <button type="button" className={ui.link_btn} onClick={() => setSim(null)}>Ver execuções reais</button></Banner>
             )}
 
-            <div className={ui.section_title} style={{ marginTop: 16 }}>Execuções ({runs.length})</div>
+            <div className={`${ui.section_title} ${ui.mt_4}`}>Execuções ({runs.length})</div>
             {runs.length === 0 ? (
                 <p className={ui.muted}>{live ? 'Ainda não rodou: assim que o evento acontecer, a execução aparece aqui.' : 'Nenhuma execução ainda.'}</p>
             ) : (
                 <div className={s.runs}>
                     {runs.slice(0, 15).map((r) => (
                         <button type="button" key={r.id} className={`${s.run} ${run?.id === r.id && !sim ? s.run_selected : ''}`} onClick={() => { setSim(null); setSelected(r.id); }}>
-                            <span style={{ minWidth: 0 }}><strong>{r.titulo || 'Evento'}</strong><br /><small>{fmt(r.criada_em)}{r.decidido_por ? ` · decidido por ${r.decidido_por}` : ''}</small></span>
+                            <span className={ui.flex_1}><strong>{r.titulo || 'Evento'}</strong><br /><small>{fmt(r.criada_em)}{r.decidido_por ? ` · decidido por ${r.decidido_por}` : ''}</small></span>
                             <Pill tone={RUN_TONE[r.status] || 'gray'}>{r.status_label}</Pill>
                         </button>
                     ))}

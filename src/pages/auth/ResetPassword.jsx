@@ -3,11 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiAlertTriangle } from 'react-icons/fi';
 
-import Button from '../../components/ui/Button';
+import { Button, Field, Stack } from '../../components/ui';
 import PasswordField from '../../components/auth/PasswordField';
 import PasswordStrength from '../../components/auth/PasswordStrength';
-import Label from '../../components/ui/Label';
-import FormGroup from '../../components/ui/FormGroup';
 import AuthShell, { authStyles as s } from '../../components/auth/AuthShell';
 import { confirmPasswordReset, parseResetFragment, passwordResetError } from '../../services/passwordReset';
 import { passwordChecks } from '../../services/passwordPolicy';
@@ -53,30 +51,28 @@ function ResetPassword() {
                     <FiAlertTriangle aria-hidden="true" />
                     <span>Este link de redefinição não vale mais. Os links duram 1 hora e só podem ser usados uma vez. Peça um novo.</span>
                 </div>
-                <Button type="button" onClick={() => navigate('/esqueceu-a-senha')}>Pedir novo link</Button>
+                <Button variant="primary" size="lg" block onClick={() => navigate('/esqueceu-a-senha')}>Pedir novo link</Button>
             </AuthShell>
         );
     }
 
     return (
         <AuthShell eyebrow="Acesso" title="Criar nova senha" subtitle="Escolha uma senha que você não usa em outros sites." footer={footer}>
-            <form className={s.form} onSubmit={handleSubmit} noValidate>
-                <FormGroup>
-                    <Label htmlFor="new-password">Nova senha</Label>
+            <Stack as="form" gap={5} onSubmit={handleSubmit} noValidate>
+                <Field label="Nova senha">
                     <PasswordField id="new-password" autoComplete="new-password" value={password} autoFocus aria-describedby="pwd-rules"
                         onChange={(e) => { setPassword(e.target.value); setError(null); }} />
-                </FormGroup>
+                </Field>
                 <PasswordStrength checks={checks} />
-                <FormGroup>
-                    <Label htmlFor="confirm-password">Confirmar nova senha</Label>
+                <Field label="Confirmar nova senha">
                     <PasswordField id="confirm-password" autoComplete="new-password" value={confirm}
                         onChange={(e) => { setConfirm(e.target.value); setError(null); }} />
-                </FormGroup>
+                </Field>
                 {confirm && <p className={`${s.match} ${confirm === password ? s.check_ok : s.error}`} aria-live="polite">
                     {confirm === password ? '✓ As senhas conferem' : 'As senhas ainda não conferem'}</p>}
                 {error && <p role="alert" className={s.error}>{error}</p>}
-                <Button type="submit" disabled={loading}>{loading ? 'Salvando…' : 'Salvar nova senha'}</Button>
-            </form>
+                <Button type="submit" variant="primary" size="lg" block loading={loading} loadingLabel="Salvando…">Salvar nova senha</Button>
+            </Stack>
         </AuthShell>
     );
 }

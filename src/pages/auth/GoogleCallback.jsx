@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { pendingMfa } from "../../services/mfa";
 import { homePath } from "../../services/home";
+import ui from "../../components/ui/ui.module.css";
+import { Banner, Button, Loading, Stack } from "../../components/ui";
 
 // Retorno do login social (Google/Microsoft). O back redireciona para /google/callback#access=...&refresh=...
 // (fragmento: não vai para logs de servidor nem para o cabeçalho Referer). Também aceita ?access=&refresh=.
@@ -59,13 +61,13 @@ function GoogleCallback() {
 
     if (error) {
         return (
-            <div style={{ padding: 32, textAlign: "center" }}>
-                <p>{error}</p>
-                <button onClick={() => navigate("/", { replace: true })}>Voltar ao login</button>
-            </div>
+            <Stack align="center" className={ui.page_center}>
+                <Banner tone="error">{error}</Banner>
+                <Button variant="primary" onClick={() => navigate("/", { replace: true })}>Voltar ao login</Button>
+            </Stack>
         );
     }
-    return <div style={{ padding: 32, textAlign: "center" }}>Fazendo login...</div>;
+    return <Stack align="center" className={ui.page_center} role="status"><Loading lines={2} /><span className={ui.muted}>Fazendo login…</span></Stack>;
 }
 
 export default GoogleCallback;

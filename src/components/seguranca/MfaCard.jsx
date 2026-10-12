@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from './seguranca.module.css';
-import { Banner, Pill, errorMessage } from './ui';
+import styles from '../ui/ui.module.css';
+import s from './Mfa.module.css';
+import { Banner, Button, Field, Input, Pill, Row, Stack } from '../ui';
+import { errorMessage } from '../../utils/format';
 import MfaSetup, { RecoveryCodes } from './MfaSetup';
 import useAuth from '../../hooks/useAuth';
 import { mfaApi } from '../../services/mfa';
@@ -40,36 +42,38 @@ export default function MfaCard() {
     if (!status) return null;
     if (mode === 'setup') return <MfaSetup onDone={finish} />;
     return (
-        <section className={styles.card} style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 24 }}>
-            <div className={styles.section_title}>Verificação em duas etapas {status.enabled ? <Pill tone="green">Ativa</Pill> : <Pill tone="gray">Desativada</Pill>}</div>
+        <Stack as="section" gap={3} className={styles.card}>
+            <Row gap={2} className={`${styles.section_title} ${styles.mb_0}`}>
+                Verificação em duas etapas {status.enabled ? <Pill tone="green">Ativa</Pill> : <Pill tone="gray">Desativada</Pill>}
+            </Row>
             {!status.enabled && status.required && <Banner tone="warn">Obrigatória para a sua conta{user?.is_staff ? ' (equipe Cadrius)' : ''}.</Banner>}
-            {status.enabled && <p className={styles.muted}>Códigos de recuperação restantes: <strong>{status.recovery_codes_left}</strong></p>}
+            {status.enabled && <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>Códigos de recuperação restantes: <strong>{status.recovery_codes_left}</strong></p>}
             {mode === '' && (
-                <div className={styles.btn_row}>
-                    {!status.enabled && <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={() => setMode('setup')}>Ativar</button>}
-                    {status.enabled && <button type="button" className={styles.btn} onClick={() => setMode('codes')}>Gerar novos códigos de recuperação</button>}
-                    {status.enabled && <button type="button" className={`${styles.btn} ${styles.btn_danger}`} onClick={() => setMode('disable')}>Desativar</button>}
-                </div>
+                <Row>
+                    {!status.enabled && <Button variant="primary" onClick={() => setMode('setup')}>Ativar</Button>}
+                    {status.enabled && <Button onClick={() => setMode('codes')}>Gerar novos códigos de recuperação</Button>}
+                    {status.enabled && <Button variant="danger" onClick={() => setMode('disable')}>Desativar</Button>}
+                </Row>
             )}
             {(mode === 'disable' || mode === 'codes') && !newCodes && (
-                <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 360 }}>
+                <Stack as="form" gap={3} onSubmit={submit} className={s.narrow}>
                     {mode === 'disable' && (
-                        <label className={styles.field}>Senha atual
-                            <input className={styles.input} type="password" value={form.password} autoComplete="current-password"
+                        <Field label="Senha atual">
+                            <Input type="password" value={form.password} autoComplete="current-password"
                                 onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))} />
-                        </label>
+                        </Field>
                     )}
-                    <label className={styles.field}>{mode === 'disable' ? 'Código do aplicativo ou de recuperação' : 'Código do aplicativo'}
-                        <input className={styles.input} value={form.code} inputMode={mode === 'codes' ? 'numeric' : 'text'} autoComplete="one-time-code"
+                    <Field label={mode === 'disable' ? 'Código do aplicativo ou de recuperação' : 'Código do aplicativo'}>
+                        <Input value={form.code} inputMode={mode === 'codes' ? 'numeric' : 'text'} autoComplete="one-time-code"
                             onChange={(e) => setForm((f) => ({ ...f, code: e.target.value }))} />
-                    </label>
-                    <div className={styles.btn_row}>
-                        <button type="submit" className={`${styles.btn} ${mode === 'disable' ? styles.btn_danger : styles.btn_primary}`} disabled={busy}>Confirmar</button>
-                        <button type="button" className={styles.btn} onClick={finish} disabled={busy}>Cancelar</button>
-                    </div>
-                </form>
+                    </Field>
+                    <Row>
+                        <Button type="submit" variant={mode === 'disable' ? 'danger' : 'primary'} loading={busy}>Confirmar</Button>
+                        <Button onClick={finish} disabled={busy}>Cancelar</Button>
+                    </Row>
+                </Stack>
             )}
             {newCodes && <RecoveryCodes codes={newCodes} email={user?.email} onDone={finish} doneLabel="Concluir" />}
-        </section>
+        </Stack>
     );
 }

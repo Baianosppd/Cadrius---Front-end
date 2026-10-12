@@ -2,12 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import Button from '../../components/ui/Button';
+import { Button, Field, Stack } from '../../components/ui';
 import PasswordField from '../../components/auth/PasswordField';
 import PasswordStrength from '../../components/auth/PasswordStrength';
 import { FiUser } from 'react-icons/fi';
-import Label from '../../components/ui/Label';
-import FormGroup from '../../components/ui/FormGroup';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
 import { passwordChecks } from '../../services/passwordPolicy';
@@ -60,32 +58,29 @@ export default function ForcePasswordChange() {
                 <li className={stepClass(3)}><span className={s.step_num}>3</span> Pronto</li>
             </ol>
             {user?.email && <span className={s.account}><FiUser aria-hidden="true" /> {user.email}</span>}
-            <form onSubmit={handleSubmit} noValidate className={s.form}>
+            <Stack as="form" gap={5} onSubmit={handleSubmit} noValidate>
                 <input type="text" name="username" autoComplete="username" value={user?.email || ''} readOnly hidden />
-                <FormGroup>
-                    <Label htmlFor="pwd-current">Senha temporária (a que a TI passou)</Label>
+                <Field label="Senha temporária (a que a TI passou)">
                     <PasswordField id="pwd-current" autoComplete="current-password" value={current} autoFocus
                         onChange={(e) => { setCurrent(e.target.value); setError(null); }} />
-                </FormGroup>
-                <FormGroup>
-                    <Label htmlFor="pwd-new">Nova senha</Label>
+                </Field>
+                <Field label="Nova senha">
                     <PasswordField id="pwd-new" autoComplete="new-password" value={password}
                         onChange={(e) => { setPassword(e.target.value); setError(null); }} aria-describedby="pwd-rules" />
-                </FormGroup>
+                </Field>
                 <PasswordStrength checks={checks} />
-                <FormGroup>
-                    <Label htmlFor="pwd-confirm">Confirmar nova senha</Label>
+                <Field label="Confirmar nova senha">
                     <PasswordField id="pwd-confirm" autoComplete="new-password" value={confirm} aria-describedby="pwd-match"
                         onChange={(e) => { setConfirm(e.target.value); setError(null); }} />
-                </FormGroup>
+                </Field>
                 {confirm && (
                     <p id="pwd-match" className={`${s.match} ${matches ? s.check_ok : s.error}`} aria-live="polite">
                         {matches ? '✓ As senhas conferem' : 'As senhas ainda não conferem'}</p>
                 )}
                 {error && <p role="alert" className={s.error}>{error}</p>}
-                <Button type="submit" disabled={loading || !current || !allOk || !matches}>{loading ? 'Salvando…' : 'Salvar nova senha e entrar'}</Button>
+                <Button type="submit" variant="primary" size="lg" block disabled={!current || !allOk || !matches} loading={loading} loadingLabel="Salvando…">Salvar nova senha e entrar</Button>
                 <p className={s.tip}>Dica: um gerenciador de senhas (do navegador ou do celular) cria e guarda uma senha forte para você.</p>
-            </form>
+            </Stack>
         </AuthShell>
     );
 }

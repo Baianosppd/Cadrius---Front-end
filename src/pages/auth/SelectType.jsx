@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { FiArrowRight, FiCalendar, FiLock, FiShield } from 'react-icons/fi';
 import styles from './SelectType.module.css';
-import RegisterHeader from '../../components/common/RegisterHeader';
-import BackButton from '../../components/common/BackButton';
+import RegisterHeader from '../../components/auth/RegisterHeader';
+import BackButton from '../../components/layout/BackButton';
 import { CourthouseScene, LawFirmTeam, LawyerDesk } from '../../components/illustrations/LegalArt';
 
 // Escolha do tipo de conta (CAD-219): cenas do dia a dia jurídico para o advogado se reconhecer logo na entrada

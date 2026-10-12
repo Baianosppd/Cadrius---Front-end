@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiPlus, FiX, FiZap } from 'react-icons/fi';
-import styles from '../seguranca/seguranca.module.css';
+import styles from '../ui/ui.module.css';
 import s from './MediaStudio.module.css';
-import { Pill, errorMessage } from '../seguranca/ui';
+import m from './Marketing.module.css';
+import { Button, Field, Pill, Row, Segmented, Select, Stack, Textarea } from '../ui';
+import { errorMessage } from '../../utils/format';
 import { ART_STYLES, IMAGE_SOURCE, MAX_REFS } from '../../services/marketing';
 import { mediaAddon } from '../../services/billing';
 
-const MODES = [['arte', 'Arte pronta'], ['foto', 'Fotos'], ['ia', 'Com IA']];
+const MODES = [{ id: 'arte', label: 'Arte pronta' }, { id: 'foto', label: 'Fotos' }, { id: 'ia', label: 'Com IA', icon: FiZap }];
 const brl = (v) => Number(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 function StylePicker({ value, onChange, brand }) {
@@ -15,6 +17,7 @@ function StylePicker({ value, onChange, brand }) {
         <div className={s.styles} role="group" aria-label="Modelo da arte">
             {ART_STYLES.map(([k, label, desc]) => (
                 <button key={k} type="button" className={s.style} aria-pressed={value === k} onClick={() => onChange(k)} title={desc}>
+                    {/* A cor da marca vem do escritório: variável inline */}
                     <span className={`${s.mini} ${s[`m_${k}`]}`} style={{ '--brand': brand }} aria-hidden="true">
                         {k === 'citacao' && <b>“</b>}{k === 'dica' && <span />}<i /><i />
                     </span>
@@ -75,14 +78,14 @@ function Upsell({ addon }) {
         <div className={s.upsell}>
             <strong><FiZap aria-hidden="true" /> Estúdio de mídia com IA</strong>
             <ul>{(addon?.recursos || ['Imagens com IA', 'Vídeos curtos com IA', 'Suas fotos como referência']).map((r) => <li key={r}>{r}</li>)}</ul>
-            <span className={styles.muted} style={{ fontSize: '.8rem' }}>Incluído no plano Enterprise. Nos outros planos, é um adicional mensal.
+            <span className={`${styles.muted} ${styles.text_xs}`}>Incluído no plano Enterprise. Nos outros planos, é um adicional mensal.
                 As imagens e vídeos usam créditos de IA.</span>
             {addon?.pode_gerenciar && addon?.pode_contratar ? (
-                <div className={styles.btn_row} style={{ alignItems: 'center' }}>
+                <Row>
                     <span className={s.price}>{brl(addon.preco)}<small className={styles.muted}>/mês</small></span>
-                    <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy} onClick={buy}>{busy ? 'Abrindo pagamento…' : 'Contratar adicional'}</button>
-                </div>
-            ) : <span className={styles.muted} style={{ fontSize: '.82rem' }}>Peça ao dono ou administrador do escritório para contratar.</span>}
+                    <Button variant="primary" loading={busy} loadingLabel="Abrindo pagamento…" onClick={buy}>Contratar adicional</Button>
+                </Row>
+            ) : <span className={`${styles.muted} ${styles.text_xs}`}>Peça ao dono ou administrador do escritório para contratar.</span>}
         </div>
     );
 }
@@ -104,34 +107,34 @@ function VideoBlock({ api, p, onPiece, photos, disabled }) {
         catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
     return (
-        <div className={styles.stack} style={{ gap: 8, borderTop: '1px solid var(--c-border)', paddingTop: 12 }}>
-            <strong style={{ fontSize: '.9rem' }}>Vídeo curto (Reels/Shorts)</strong>
+        <Stack gap={2} className={m.video_block}>
+            <strong>Vídeo curto (Reels/Shorts)</strong>
             {p.video_status === 'pronto' && p.video_url && (
                 <>
                     <video className={s.video} src={p.video_url} controls playsInline preload="metadata"><track kind="captions" /></video>
-                    <div className={styles.btn_row}><a className={`${styles.btn} ${styles.btn_sm}`} href={p.video_url} download target="_blank" rel="noopener noreferrer">Baixar vídeo</a></div>
+                    <Button as="a" size="sm" className={styles.w_fit} href={p.video_url} download target="_blank" rel="noopener noreferrer">Baixar vídeo</Button>
                 </>
             )}
             {p.video_status === 'gerando' ? (
                 <div className={s.spinner_row} role="status"><span className={s.dot} /> Gerando o vídeo no Gemini… a tela atualiza sozinha.</div>
             ) : (
                 <>
-                    {p.video_status === 'falhou' && <span style={{ color: 'var(--c-danger)', fontSize: '.84rem' }}>{p.video_erro}</span>}
-                    <textarea className={styles.textarea} rows={2} maxLength={500} value={hint} onChange={(e) => setHint(e.target.value)}
+                    {p.video_status === 'falhou' && <span className={`${styles.text_danger} ${styles.text_sm}`}>{p.video_erro}</span>}
+                    <Textarea rows={2} maxLength={500} value={hint} onChange={(e) => setHint(e.target.value)}
                         aria-label="Cena do vídeo" placeholder="Cena do vídeo. Ex.: advogada explicando em escritório claro, câmera lenta" />
                     {photos.length > 0 && (
-                        <label className={styles.field}>Começar a partir de uma foto (opcional)
-                            <select className={styles.select} value={photo || ''} onChange={(e) => setPhoto(e.target.value ? Number(e.target.value) : null)}>
+                        <Field label="Começar a partir de uma foto (opcional)">
+                            <Select value={photo || ''} onChange={(e) => setPhoto(e.target.value ? Number(e.target.value) : null)}>
                                 <option value="">— sem foto —</option>
                                 {photos.map((ph) => <option key={ph.id} value={ph.id}>{ph.nome || `Foto ${ph.id}`}</option>)}
-                            </select>
-                        </label>
+                            </Select>
+                        </Field>
                     )}
-                    <div><button type="button" className={styles.btn} disabled={busy || disabled} onClick={start}>
-                        {busy ? 'Pedindo…' : p.video_status === 'pronto' ? 'Gerar outro vídeo' : 'Gerar vídeo com IA'}</button></div>
+                    <Button className={styles.w_fit} disabled={disabled} loading={busy} loadingLabel="Pedindo…" onClick={start}>
+                        {p.video_status === 'pronto' ? 'Gerar outro vídeo' : 'Gerar vídeo com IA'}</Button>
                 </>
             )}
-        </div>
+        </Stack>
     );
 }
 
@@ -156,61 +159,49 @@ export default function MediaStudio({ api, p, hint, setHint, brandColor, onPiece
     };
     const toggleRef = (id) => setRefs((r) => (r.includes(id) ? r.filter((x) => x !== id) : r.length >= MAX_REFS ? r : [...r, id]));
     const needPhoto = mode === 'foto' || (mode === 'arte' && style === 'foto');
+    const pickOne = (id) => setChosen(id === chosen ? null : id);
 
     return (
-        <div className={styles.card} style={{ background: 'var(--c-surface-2)' }}>
-            <div className={styles.section_title} style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+        <Stack gap={3} className={`${styles.card} ${styles.bg_soft}`}>
+            <Row gap={2} className={`${styles.section_title} ${styles.mb_0}`}>
                 Imagem do post {p.imagem_origem && <Pill tone={p.imagem_origem === 'marca' || p.imagem_origem === 'foto' ? 'gray' : 'blue'}>{IMAGE_SOURCE[p.imagem_origem] || p.imagem_origem}</Pill>}
-            </div>
-            <div className={styles.segmented} role="group" aria-label="Como criar a imagem" style={{ marginBottom: 12 }}>
-                {MODES.map(([k, l]) => (
-                    <button key={k} type="button" aria-pressed={mode === k} className={mode === k ? styles.seg_on : ''} onClick={() => setMode(k)}>
-                        {k === 'ia' && <FiZap aria-hidden="true" />} {l}
-                    </button>
-                ))}
-            </div>
+            </Row>
+            <Segmented options={MODES} value={mode} onChange={setMode} aria-label="Como criar a imagem" />
 
             {mode === 'arte' && (
-                <div className={styles.stack} style={{ gap: 10 }}>
+                <Stack gap={3}>
                     <StylePicker value={style} onChange={setStyle} brand={brandColor} />
-                    {style === 'foto' && <Gallery api={api} photos={photos} setPhotos={setPhotos} selected={chosen ? [chosen] : []} onToggle={(id) => setChosen(id === chosen ? null : id)} disabled={disabled} />}
-                    <div className={styles.btn_row}>
-                        <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={!!busy || disabled || (needPhoto && !chosen)}
-                            onClick={() => run('arte', { modo: 'marca', estilo: style, foto_id: style === 'foto' ? chosen : null })}>
-                            {busy === 'arte' ? 'Montando…' : 'Usar esta arte'}</button>
-                    </div>
-                    <span className={styles.muted} style={{ fontSize: '.78rem' }}>Com a cor e a logo do escritório. Sem custo.</span>
-                </div>
+                    {style === 'foto' && <Gallery api={api} photos={photos} setPhotos={setPhotos} selected={chosen ? [chosen] : []} onToggle={pickOne} disabled={disabled} />}
+                    <Button variant="primary" className={styles.w_fit} disabled={!!busy || disabled || (needPhoto && !chosen)} loading={busy === 'arte'} loadingLabel="Montando…"
+                        onClick={() => run('arte', { modo: 'marca', estilo: style, foto_id: style === 'foto' ? chosen : null })}>Usar esta arte</Button>
+                    <span className={`${styles.muted} ${styles.text_xs}`}>Com a cor e a logo do escritório. Sem custo.</span>
+                </Stack>
             )}
 
             {mode === 'foto' && (
-                <div className={styles.stack} style={{ gap: 10 }}>
-                    <Gallery api={api} photos={photos} setPhotos={setPhotos} selected={chosen ? [chosen] : []} onToggle={(id) => setChosen(id === chosen ? null : id)} disabled={disabled} />
-                    <div className={styles.btn_row}>
-                        <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={!!busy || disabled || !chosen}
-                            onClick={() => run('foto', { modo: 'foto', foto_id: chosen })}>{busy === 'foto' ? 'Preparando…' : 'Usar a foto no post'}</button>
-                    </div>
-                    <span className={styles.muted} style={{ fontSize: '.78rem' }}>JPEG, PNG ou WebP até 8 MB.</span>
-                </div>
+                <Stack gap={3}>
+                    <Gallery api={api} photos={photos} setPhotos={setPhotos} selected={chosen ? [chosen] : []} onToggle={pickOne} disabled={disabled} />
+                    <Button variant="primary" className={styles.w_fit} disabled={!!busy || disabled || !chosen} loading={busy === 'foto'} loadingLabel="Preparando…"
+                        onClick={() => run('foto', { modo: 'foto', foto_id: chosen })}>Usar a foto no post</Button>
+                    <span className={`${styles.muted} ${styles.text_xs}`}>JPEG, PNG ou WebP até 8 MB.</span>
+                </Stack>
             )}
 
             {mode === 'ia' && !iaOn && <Upsell addon={addon} />}
             {mode === 'ia' && iaOn && (
-                <div className={styles.stack} style={{ gap: 10 }}>
-                    <label className={styles.field}>O que a imagem deve mostrar
-                        <textarea className={styles.textarea} rows={2} maxLength={500} value={hint} onChange={(e) => setHint(e.target.value)}
+                <Stack gap={3}>
+                    <Field label="O que a imagem deve mostrar">
+                        <Textarea rows={2} maxLength={500} value={hint} onChange={(e) => setHint(e.target.value)}
                             placeholder="Ex.: balança da justiça sobre mesa de madeira, luz natural" />
-                    </label>
+                    </Field>
                     <div className={styles.field}>Fotos de referência (até {MAX_REFS}, opcional)</div>
                     <Gallery api={api} photos={photos} setPhotos={setPhotos} selected={refs} onToggle={toggleRef} multi disabled={disabled} />
-                    <div className={styles.btn_row}>
-                        <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={!!busy || disabled}
-                            onClick={() => run('ia', { modo: 'ia', sugestao_imagem: hint, referencias: refs })}>
-                            {busy === 'ia' ? 'Gerando a imagem…' : p.imagem_url ? 'Gerar outra com IA' : 'Gerar imagem com IA'}</button>
-                    </div>
+                    <Button variant="primary" className={styles.w_fit} disabled={!!busy || disabled} loading={busy === 'ia'} loadingLabel="Gerando a imagem…"
+                        onClick={() => run('ia', { modo: 'ia', sugestao_imagem: hint, referencias: refs })}>
+                        {p.imagem_url ? 'Gerar outra com IA' : 'Gerar imagem com IA'}</Button>
                     <VideoBlock api={api} p={p} onPiece={onPiece} photos={photos} disabled={disabled} />
-                </div>
+                </Stack>
             )}
-        </div>
+        </Stack>
     );
 }

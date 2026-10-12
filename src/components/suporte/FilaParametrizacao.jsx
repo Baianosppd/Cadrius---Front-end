@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, fmtDate, fmtDateTime, Loading, StatusPill } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Empty, Loading, StatusPill } from '../ui';
+import { errorMessage, fmtDate, fmtDateTime } from '../../utils/format';
+import useLoader from '../../hooks/useLoader';
 import { STAFF_STAGE_NEXT, STAGES, brl, customizationApi } from '../../services/cad223';
 
 // Gestão Cadrius → Suporte: fila de pedidos de parametrização (CAD-223)

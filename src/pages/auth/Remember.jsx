@@ -2,10 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiCheckCircle } from 'react-icons/fi';
 
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
-import Label from '../../components/ui/Label';
-import FormGroup from '../../components/ui/FormGroup';
+import { Button, Field, Input, Stack } from '../../components/ui';
 import AuthShell, { authStyles as s } from '../../components/auth/AuthShell';
 import { requestPasswordReset, passwordResetError } from '../../services/passwordReset';
 
@@ -47,15 +44,14 @@ function Remember() {
                     <button type="button" className={s.link} onClick={() => setSent(false)}>Usar outro e-mail</button>
                 </>
             ) : (
-                <form className={s.form} onSubmit={handleSubmit} noValidate>
-                    <FormGroup>
-                        <Label htmlFor="reset-email">E-mail</Label>
-                        <Input id="reset-email" type="email" autoComplete="email" placeholder="seu@email.com" value={email} autoFocus
+                <Stack as="form" gap={5} onSubmit={handleSubmit} noValidate>
+                    <Field label="E-mail">
+                        <Input size="lg" id="reset-email" type="email" autoComplete="email" placeholder="seu@email.com" value={email} autoFocus
                             onChange={(e) => { setEmail(e.target.value); setError(null); }} />
-                    </FormGroup>
+                    </Field>
                     {error && <p role="alert" className={s.error}>{error}</p>}
-                    <Button type="submit" disabled={loading}>{loading ? 'Enviando…' : 'Enviar link'}</Button>
-                </form>
+                    <Button type="submit" variant="primary" size="lg" block loading={loading} loadingLabel="Enviando…">Enviar link</Button>
+                </Stack>
             )}
         </AuthShell>
     );

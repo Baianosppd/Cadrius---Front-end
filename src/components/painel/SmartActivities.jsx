@@ -1,0 +1,35 @@
+import styles from './SmartActivities.module.css';
+
+// Cores do tema (mudam no modo escuro)
+const dotColors = {
+    success: 'var(--c-success)',
+    warning: 'var(--c-warning)',
+    error: 'var(--c-danger)',
+};
+
+const ActivityItem = ({ title, description, time, type }) => (
+    <div className={styles.activity_item}>
+        <span className={styles.dot} style={{ backgroundColor: dotColors[type] }}></span>
+        <div className={styles.activity_content}>
+            <p className={styles.activity_title}>{title}</p>
+            <p className={styles.activity_description}>{description}</p>
+            <span className={styles.activity_time}>{time}</span>
+        </div>
+    </div>
+);
+
+const SmartActivities = ({ activities = [] }) => {
+    return (
+        <div className={styles.container}>
+            <h2 className={styles.title}>Atividades Inteligentes</h2>
+            <div className={styles.activity_list}>
+                {activities.length === 0 && <p className={styles.empty}>Sem atividades recentes. Elas aparecem aqui quando a IA lê documentos, publicações ou roda automações.</p>}
+                {activities.map((activity, index) => (
+                    <ActivityItem key={index} {...activity} />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default SmartActivities;

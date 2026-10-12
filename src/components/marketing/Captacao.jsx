@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiCopy, FiTrash2 } from 'react-icons/fi';
-import styles from '../seguranca/seguranca.module.css';
-import { Banner, Empty, errorMessage, Loading, Pill, StatCard } from '../seguranca/ui';
-import useLoader from '../../pages/gestao/useLoader';
+import styles from '../ui/ui.module.css';
+import { Banner, Button, Checkbox, Chip, Empty, Field, Input, Loading, Pill, Row, Stack, StatCard, Table, Textarea } from '../ui';
+import { errorMessage } from '../../utils/format';
+import useLoader from '../../hooks/useLoader';
 import { brl, leadsApi } from '../../services/cad223';
 
 const publicUrl = (path) => `${window.location.origin}${path}`;
@@ -30,73 +31,63 @@ export function Captacao({ canWrite }) {
         try { await leadsApi.removeForm(form.id); reload(); } catch (err) { toast.error(errorMessage(err)); }
     };
     return (
-        <div className={styles.stack}>
-            <p className={styles.muted} style={{ margin: 0 }}>Cada envio vira contato e oportunidade no funil, com o consentimento do visitante.</p>
+        <Stack>
+            <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>Cada envio vira contato e oportunidade no funil, com o consentimento do visitante.</p>
             {canWrite && (
-                <form className={styles.card} onSubmit={create}>
-                    <div className={styles.section_title}>Novo formulário</div>
+                <Stack as="form" className={styles.card} onSubmit={create}>
+                    <div className={`${styles.section_title} ${styles.mb_0}`}>Novo formulário</div>
                     <div className={styles.grid}>
-                        <label className={styles.field}>Título<input className={styles.input} required value={f.titulo} onChange={(e) => setF({ ...f, titulo: e.target.value })} /></label>
-                        <label className={styles.field}>Assuntos (separados por vírgula)<input className={styles.input} value={f.assuntos} onChange={(e) => setF({ ...f, assuntos: e.target.value })} placeholder="Previdenciário, Família, Trabalhista" /></label>
+                        <Field label="Título"><Input required value={f.titulo} onChange={(e) => setF({ ...f, titulo: e.target.value })} /></Field>
+                        <Field label="Assuntos (separados por vírgula)"><Input value={f.assuntos} onChange={(e) => setF({ ...f, assuntos: e.target.value })} placeholder="Previdenciário, Família, Trabalhista" /></Field>
                     </div>
-                    <label className={styles.field}>Apresentação (opcional)<textarea className={styles.textarea} value={f.apresentacao} maxLength={500} onChange={(e) => setF({ ...f, apresentacao: e.target.value })} /></label>
+                    <Field label="Apresentação (opcional)"><Textarea value={f.apresentacao} maxLength={500} onChange={(e) => setF({ ...f, apresentacao: e.target.value })} /></Field>
                     {alerts && <Banner tone="warn">{alerts}</Banner>}
                     {alerts.includes('OAB') && (
-                        <label className={styles.check_row}><input type="checkbox" checked={f.revisado} onChange={(e) => setF({ ...f, revisado: e.target.checked })} /> Revisei o texto e assumo a responsabilidade</label>
+                        <Checkbox checked={f.revisado} onChange={(e) => setF({ ...f, revisado: e.target.checked })}>Revisei o texto e assumo a responsabilidade</Checkbox>
                     )}
-                    <div className={styles.btn_row}><button type="submit" className={`${styles.btn} ${styles.btn_primary}`}>Criar formulário</button></div>
-                </form>
+                    <Button type="submit" variant="primary" className={styles.w_fit}>Criar formulário</Button>
+                </Stack>
             )}
             {error && <Banner tone="error">{error}</Banner>}
             {!data && !error && <Loading />}
             {data && data.length === 0 && <Empty title="Nenhum formulário ainda">Crie um e coloque o link no site, no Google ou na bio do Instagram.</Empty>}
             {data && data.length > 0 && (
-                <div className={styles.table_wrap}>
-                    <table className={styles.table}>
-                        <thead><tr><th>Formulário</th><th>Envios</th><th>Situação</th><th>Link público</th><th></th></tr></thead>
-                        <tbody>
-                            {data.map((form) => (
-                                <tr key={form.id}>
-                                    <td><strong>{form.titulo}</strong>{form.alertas?.length > 0 && <div className={styles.muted}>{form.alertas.length} alerta(s) da checagem OAB</div>}</td>
-                                    <td>{form.envios}</td>
-                                    <td><Pill tone={form.ativo ? 'green' : 'gray'}>{form.ativo ? 'Ativo' : 'Pausado'}</Pill></td>
-                                    <td>
-                                        <div className={styles.btn_row}>
-                                            <a className={`${styles.btn} ${styles.btn_sm}`} href={form.link} target="_blank" rel="noreferrer noopener">Abrir</a>
-                                            <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => navigator.clipboard.writeText(publicUrl(form.link)).then(() => toast.success('Link copiado.'))}>
-                                                <FiCopy aria-hidden="true" /> Copiar</button>
-                                        </div>
-                                    </td>
-                                    <td>{canWrite && (
-                                        <div className={styles.btn_row}>
-                                            <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => toggle(form)}>{form.ativo ? 'Pausar' : 'Ativar'}</button>
-                                            <button type="button" className={`${styles.btn} ${styles.btn_sm} ${styles.btn_danger}`} aria-label={`Apagar ${form.titulo}`} onClick={() => remove(form)}><FiTrash2 aria-hidden="true" /></button>
-                                        </div>
-                                    )}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table columns={['Formulário', 'Envios', 'Situação', 'Link público', { label: '', className: styles.td_actions }]}>
+                    {data.map((form) => (
+                        <tr key={form.id}>
+                            <td><strong>{form.titulo}</strong>{form.alertas?.length > 0 && <div className={styles.muted}>{form.alertas.length} alerta(s) da checagem OAB</div>}</td>
+                            <td data-label="Envios">{form.envios}</td>
+                            <td data-label="Situação"><Pill tone={form.ativo ? 'green' : 'gray'}>{form.ativo ? 'Ativo' : 'Pausado'}</Pill></td>
+                            <td data-label="Link público">
+                                <Row gap={1}>
+                                    <Button as="a" size="sm" href={form.link} target="_blank" rel="noreferrer noopener">Abrir</Button>
+                                    <Button size="sm" icon={FiCopy} onClick={() => navigator.clipboard.writeText(publicUrl(form.link)).then(() => toast.success('Link copiado.'))}>Copiar</Button>
+                                </Row>
+                            </td>
+                            <td className={styles.td_actions}>{canWrite && (
+                                <Row gap={1} wrap={false}>
+                                    <Button size="sm" onClick={() => toggle(form)}>{form.ativo ? 'Pausar' : 'Ativar'}</Button>
+                                    <Button size="sm" variant="danger" icon={FiTrash2} aria-label={`Apagar ${form.titulo}`} onClick={() => remove(form)} />
+                                </Row>
+                            )}</td>
+                        </tr>
+                    ))}
+                </Table>
             )}
-        </div>
+        </Stack>
     );
 }
 
 function ResultTable({ rows, title }) {
     return (
-        <div className={styles.table_wrap}>
-            <table className={styles.table}>
-                <thead><tr><th>{title}</th><th>Oportunidades</th><th>Fechadas</th><th>Não fecharam</th><th>Conversão</th><th>Honorários fechados</th></tr></thead>
-                <tbody>
-                    {rows.length === 0 && <tr><td colSpan={6}><Empty>Sem oportunidades no período.</Empty></td></tr>}
-                    {rows.map((r) => (
-                        <tr key={r.chave}><td><strong>{r.rotulo}</strong></td><td>{r.oportunidades}</td><td>{r.ganhas}</td><td>{r.perdidas}</td>
-                            <td>{r.conversao_pct == null ? '—' : `${r.conversao_pct}%`}</td><td>{brl(r.valor_ganho_centavos)}</td></tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <Table columns={[title, 'Oportunidades', 'Fechadas', 'Não fecharam', 'Conversão', 'Honorários fechados']}
+            empty={rows.length === 0 && <Empty>Sem oportunidades no período.</Empty>}>
+            {rows.map((r) => (
+                <tr key={r.chave}><td><strong>{r.rotulo}</strong></td><td data-label="Oportunidades">{r.oportunidades}</td><td data-label="Fechadas">{r.ganhas}</td>
+                    <td data-label="Não fecharam">{r.perdidas}</td><td data-label="Conversão">{r.conversao_pct == null ? '—' : `${r.conversao_pct}%`}</td>
+                    <td data-label="Honorários">{brl(r.valor_ganho_centavos)}</td></tr>
+            ))}
+        </Table>
     );
 }
 
@@ -108,10 +99,10 @@ export function Resultados() {
     if (!data) return <Loading />;
     const sat = data.satisfacao;
     return (
-        <div className={styles.stack}>
-            <div className={styles.btn_row}>
-                {[90, 180, 365].map((n) => <button key={n} type="button" className={`${styles.chip} ${dias === n ? styles.chip_active : ''}`} onClick={() => setDias(n)}>Últimos {n} dias</button>)}
-            </div>
+        <Stack>
+            <Row role="group" aria-label="Período">
+                {[90, 180, 365].map((n) => <Chip key={n} active={dias === n} onClick={() => setDias(n)}>Últimos {n} dias</Chip>)}
+            </Row>
             <div className={styles.grid}>
                 <StatCard title="NPS (satisfação)" value={sat.nps == null ? '—' : sat.nps} tone={sat.nps == null ? undefined : sat.nps >= 50 ? 'green' : sat.nps < 0 ? 'red' : undefined}
                     note={`${sat.respostas} resposta(s) de ${sat.enviadas} pesquisa(s)`} />
@@ -122,6 +113,6 @@ export function Resultados() {
             <ResultTable rows={data.por_origem} title="Origem" />
             <ResultTable rows={data.por_campanha} title="Campanha" />
             <p className={styles.muted}>Pesquisas de satisfação são enviadas pela automação "Pedir avaliação ao cliente" (veja os modelos em <Link to="/automacao">Automações</Link>). Vincule campanhas às oportunidades na Carteira para medir cada uma.</p>
-        </div>
+        </Stack>
     );
 }

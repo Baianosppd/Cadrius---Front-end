@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './RegisterIndividual.module.css'; // reutiliza o mesmo CSS
-import RegisterHeader from '../../components/common/RegisterHeader';
-import RegisterSidebar from '../../components/common/RegisterSidebar';
-import RegisterFooter from '../../components/common/RegisterFooter';
+import RegisterHeader from '../../components/auth/RegisterHeader';
+import RegisterSidebar from '../../components/auth/RegisterSidebar';
+import RegisterFooter from '../../components/auth/RegisterFooter';
 import { FiGrid } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import api from '../../services/api.js';

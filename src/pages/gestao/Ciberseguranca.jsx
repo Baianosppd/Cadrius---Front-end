@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiRefreshCw, FiShieldOff } from 'react-icons/fi';
-import styles from '../../components/seguranca/seguranca.module.css';
-import { Banner, Empty, PageHeader, Pill, StatCard, errorMessage, fmtDateTime } from '../../components/seguranca/ui';
+import styles from '../../components/ui/ui.module.css';
+import { Banner, Empty, PageHeader, Pill, StatCard } from '../../components/ui';
+import { errorMessage, fmtDateTime } from '../../utils/format';
 import { HourlyBars, Meter, ScoreRing } from '../../components/cyber/charts';
 import { backofficeApi } from '../../services/backoffice';
-import useLoader from './useLoader';
+import useLoader from '../../hooks/useLoader';
 
 const TABS = [['geral', 'Visão geral'], ['servidor', 'Servidor'], ['ameacas', 'Ameaças'], ['alertas', 'Alertas'], ['acessos', 'Acessos'],
     ['configuracao', 'Configuração'], ['ia', 'IA'], ['ips', 'IPs bloqueados']];

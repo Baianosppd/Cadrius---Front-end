@@ -1,0 +1,2 @@
+/* Painel lateral de propriedades do nó selecionado no editor de fluxo */
+.panel { width: 300px; border-left: 1px solid var(--c-border); background: var(--c-surface); padding: var(--sp-4); overflow-y: auto; }

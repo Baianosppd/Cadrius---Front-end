@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import styles from './seguranca.module.css';
-import { Banner, errorMessage } from './ui';
+import styles from '../ui/ui.module.css';
+import s from './Mfa.module.css';
+import { Banner, Button, Field, Input, Row, Stack } from '../ui';
+import { errorMessage } from '../../utils/format';
 import useAuth from '../../hooks/useAuth';
 import { mfaApi, recoveryCodesText, svgDataUri } from '../../services/mfa';
 
@@ -13,17 +15,17 @@ export function RecoveryCodes({ codes, email, onDone, doneLabel = 'Já guardei o
         URL.revokeObjectURL(url);
     };
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <Stack gap={3}>
             <Banner tone="warn">Guarde estes códigos agora — eles <strong>não serão mostrados de novo</strong>. Cada um vale uma vez, se você perder o celular.</Banner>
-            <div className={styles.mono} style={{ display: 'grid', gridTemplateColumns: 'repeat(2, max-content)', gap: '6px 28px', fontSize: '1rem' }}>
+            <div className={`${styles.mono} ${s.codes}`}>
                 {codes.map((c) => <span key={c}>{c}</span>)}
             </div>
-            <div className={styles.btn_row}>
-                <button type="button" className={styles.btn} onClick={() => navigator.clipboard?.writeText(text)}>Copiar</button>
-                <button type="button" className={styles.btn} onClick={download}>Baixar .txt</button>
-                {onDone && <button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={onDone}>{doneLabel}</button>}
-            </div>
-        </div>
+            <Row>
+                <Button onClick={() => navigator.clipboard?.writeText(text)}>Copiar</Button>
+                <Button onClick={download}>Baixar .txt</Button>
+                {onDone && <Button variant="primary" onClick={onDone}>{doneLabel}</Button>}
+            </Row>
+        </Stack>
     );
 }
 
@@ -54,29 +56,28 @@ export default function MfaSetup({ onDone, onStart, intro }) {
     };
 
     return (
-        <div className={styles.card} style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 620 }}>
-            <div className={styles.section_title}>Verificação em duas etapas</div>
+        <Stack gap={4} className={`${styles.card} ${s.wide}`}>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Verificação em duas etapas</div>
             {step === 'start' && (
                 <>
-                    <p className={styles.muted}>{intro || 'Além da senha, o login vai pedir um código de 6 dígitos do aplicativo autenticador do seu celular (Google Authenticator, Microsoft Authenticator, 1Password…).'}</p>
-                    <div><button type="button" className={`${styles.btn} ${styles.btn_primary}`} onClick={begin} disabled={busy}>Ativar agora</button></div>
+                    <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>{intro || 'Além da senha, o login vai pedir um código de 6 dígitos do aplicativo autenticador do seu celular (Google Authenticator, Microsoft Authenticator, 1Password…).'}</p>
+                    <Button variant="primary" className={styles.w_fit} loading={busy} onClick={begin}>Ativar agora</Button>
                 </>
             )}
             {step === 'scan' && setup && (
-                <form onSubmit={confirm} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    <p>1. No aplicativo autenticador, toque em <strong>adicionar conta</strong> e leia o QR code:</p>
-                    <img src={svgDataUri(setup.qr_svg)} alt="QR code para o aplicativo autenticador" width={200} height={200}
-                        style={{ border: '1px solid var(--c-border)', borderRadius: 8, background: 'var(--c-surface)' }} />
-                    <p className={styles.muted}>Sem câmera? Digite a chave: <span className={styles.mono}>{setup.secret.match(/.{1,4}/g).join(' ')}</span></p>
-                    <label className={styles.field}>2. Digite o código de 6 dígitos que aparece no aplicativo
-                        <input className={styles.input} value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric"
-                            autoComplete="one-time-code" maxLength={7} style={{ maxWidth: 160, letterSpacing: '.2em' }} autoFocus />
-                    </label>
-                    <div><button type="submit" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy || code.replace(/\s/g, '').length < 6}>Confirmar</button></div>
-                </form>
+                <Stack as="form" gap={3} onSubmit={confirm}>
+                    <p className={`${styles.mt_0} ${styles.mb_0}`}>1. No aplicativo autenticador, toque em <strong>adicionar conta</strong> e leia o QR code:</p>
+                    <img src={svgDataUri(setup.qr_svg)} alt="QR code para o aplicativo autenticador" width={200} height={200} className={s.qr} />
+                    <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>Sem câmera? Digite a chave: <span className={styles.mono}>{setup.secret.match(/.{1,4}/g).join(' ')}</span></p>
+                    <Field label="2. Digite o código de 6 dígitos que aparece no aplicativo">
+                        <Input className={s.code_input} value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric"
+                            autoComplete="one-time-code" maxLength={7} autoFocus />
+                    </Field>
+                    <Button type="submit" variant="primary" className={styles.w_fit} disabled={code.replace(/\s/g, '').length < 6} loading={busy}>Confirmar</Button>
+                </Stack>
             )}
             {step === 'codes' && <RecoveryCodes codes={codes} email={user?.email} onDone={onDone} />}
             {error && <Banner tone="error">{error}</Banner>}
-        </div>
+        </Stack>
     );
 }

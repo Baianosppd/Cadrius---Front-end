@@ -1,5 +1,5 @@
-import styles from '../../components/seguranca/seguranca.module.css';
-import { PageHeader } from '../../components/seguranca/ui';
+import styles from '../../components/ui/ui.module.css';
+import { PageHeader } from '../../components/ui';
 import MarketingStudio from '../../components/marketing/MarketingStudio';
 import { cadriusMarketingApi } from '../../services/marketing';
 
