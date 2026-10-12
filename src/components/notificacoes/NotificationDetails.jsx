@@ -1,13 +1,9 @@
+import { Link } from 'react-router-dom';
+import { FiArrowLeft } from 'react-icons/fi';
 import styles from './NotificationDetail.module.css';
-import { FiFileText, FiCalendar, FiZap, FiMail, FiArrowLeft } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
-
-const iconMap = {
-    documento: { icon: FiFileText, color: '#3b82f6', bg: 'var(--c-primary-50)' },
-    prazo: { icon: FiCalendar, color: '#f59e0b', bg: 'var(--c-warning-bg)' },
-    automacao: { icon: FiZap, color: '#8b5cf6', bg: 'rgba(139, 92, 246, .14)' },
-    erro: { icon: FiMail, color: '#ef4444', bg: 'var(--c-danger-bg)' },
-};
+import ui from '../ui/ui.module.css';
+import { Button, Row } from '../ui';
+import { tipo } from './tipos';
 
 const DetailField = ({ label, value }) => (
     <div className={styles.field}>
@@ -17,19 +13,15 @@ const DetailField = ({ label, value }) => (
 );
 
 const NotificationDetail = ({ notification, onBack }) => {
-    const navigate = useNavigate();
-    const { icon: Icon, color, bg } = iconMap[notification.type] || iconMap.documento;
-
+    const { icon: Icon, color, bg } = tipo(notification.type);
     return (
         <div className={styles.container}>
-            <button className={styles.back_button} onClick={onBack}>
-                <FiArrowLeft className={styles.back_icon} />
-                Voltar para Notificações
-            </button>
+            <Button variant="ghost" size="sm" icon={FiArrowLeft} className={ui.w_fit} onClick={onBack}>Voltar para Notificações</Button>
 
             <div className={styles.header}>
+                {/* A cor do ícone vem do tipo da notificação */}
                 <div className={styles.icon_wrapper} style={{ backgroundColor: bg }}>
-                    <Icon className={styles.icon} style={{ color }} />
+                    <Icon className={styles.icon} style={{ color }} aria-hidden="true" />
                 </div>
                 <div>
                     <h2 className={styles.title}>{notification.title}</h2>
@@ -46,14 +38,10 @@ const NotificationDetail = ({ notification, onBack }) => {
             <DetailField label="Ação" value={notification.acao || '—'} />
             <DetailField label="Detalhes" value={notification.detalhes || '—'} />
 
-            <div className={styles.footer}>
-                <button className={styles.primary_button} onClick={() => navigate(notification.link || '/dashboard')}>
-                    {notification.actionLabel || 'Ir para o módulo'}
-                </button>
-                <button className={styles.secondary_button} onClick={onBack}>
-                    Fechar
-                </button>
-            </div>
+            <Row>
+                <Button as={Link} variant="primary" to={notification.link || '/dashboard'}>{notification.actionLabel || 'Ir para o módulo'}</Button>
+                <Button onClick={onBack}>Fechar</Button>
+            </Row>
         </div>
     );
 };

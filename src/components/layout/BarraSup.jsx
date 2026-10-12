@@ -21,11 +21,18 @@ function BarraSup({ nome, onMenu, menuOpen }) {
         api.get('notifications/unread-count/').then((r) => setUnread(r.data.unread ?? r.data.count ?? 0)).catch(() => {});
     }, []);
 
+    // Contador do sino: a cada 42 s com a aba visível, ao voltar para a aba e quando alguém lê notificações
     useEffect(() => {
         loadUnread();
-        const timer = setInterval(loadUnread, 60000);
+        const timer = setInterval(() => { if (document.visibilityState === 'visible') loadUnread(); }, 42000);
+        const onVisible = () => { if (document.visibilityState === 'visible') loadUnread(); };
+        document.addEventListener('visibilitychange', onVisible);
         window.addEventListener(NOTIFICATIONS_CHANGED, loadUnread);
-        return () => { clearInterval(timer); window.removeEventListener(NOTIFICATIONS_CHANGED, loadUnread); };
+        return () => {
+            clearInterval(timer);
+            document.removeEventListener('visibilitychange', onVisible);
+            window.removeEventListener(NOTIFICATIONS_CHANGED, loadUnread);
+        };
     }, [loadUnread]);
 
     return (

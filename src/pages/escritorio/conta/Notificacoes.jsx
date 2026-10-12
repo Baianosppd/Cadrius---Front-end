@@ -2,11 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import api from '../../../services/api.js';
 import ui from '../../../components/ui/ui.module.css';
-import styles from './Notificacoes.module.css';
 import { NOTIFICATIONS_CHANGED } from '../../../components/layout/BarraSup.jsx';
-import { Empty, Loading } from '../../../components/ui';
+import { Button, Empty, Loading, PageHeader } from '../../../components/ui';
 
-import PageHeader from '../../../components/ui/PageHearder.jsx';
 import NotificationList from '../../../components/notificacoes/NotificationList.jsx';
 import NotificationDetail from '../../../components/notificacoes/NotificationDetails.jsx';
 
@@ -43,11 +41,11 @@ function Notificacoes() {
     };
 
     return (
-        <div className={styles.Notificacoes_container}>
+        <div className={ui.page}>
             {!selectedNotification ? (
                 <>
                     <PageHeader title="Notificações"
-                        actions={notifications.some((n) => !n.read) && <button type="button" className={ui.btn} onClick={markAll}>Marcar todas como lidas</button>} />
+                        actions={notifications.some((n) => !n.read) && <Button onClick={markAll}>Marcar todas como lidas</Button>} />
                     {loading ? <Loading /> : notifications.length === 0 ? <Empty title="Tudo em dia">Avisos de prazos, publicações e automações aparecem aqui.</Empty> : (
                         <NotificationList notifications={notifications} onSelect={open} />
                     )}
