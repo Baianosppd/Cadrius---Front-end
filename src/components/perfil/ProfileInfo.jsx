@@ -1,40 +1,31 @@
 import { useState } from 'react';
-import styles from './ProfileInfo.module.css';
+import ui from '../ui/ui.module.css';
+import { Button, Field, Input, Stack } from '../ui';
 
-// CAD-230: a foto foi para a capa do perfil (ProfileCover)
+// Dados pessoais (CAD-230: a foto foi para a capa do perfil — ProfileCover). onSave pode ser assíncrono.
 const ProfileInfo = ({ user = {}, onSave }) => {
     const [nome, setNome] = useState(user.nome || '');
-    const [email, setEmail] = useState(user.email || '');
     const [telefone, setTelefone] = useState(user.telefone || '');
     const [oab, setOab] = useState(user.oab || '');
+    const [busy, setBusy] = useState(false);
+
+    const save = async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        try { await onSave({ nome, telefone, oab }); } finally { setBusy(false); }
+    };
 
     return (
-        <div className={styles.container}>
-            <h2 className={styles.title}>Informações Pessoais</h2>
-
-            <div className={styles.fields_grid}>
-                <div className={styles.field}>
-                    <label className={styles.label}>Nome Completo</label>
-                    <input className={styles.input} value={nome} onChange={(e) => setNome(e.target.value)} />
-                </div>
-                <div className={styles.field}>
-                    <label className={styles.label}>E-mail</label>
-                    <input className={styles.input} value={email} disabled style={{ opacity: 0.6, cursor: 'not-allowed' }} />
-                </div>
-                <div className={styles.field}>
-                    <label className={styles.label}>Telefone</label>
-                    <input className={styles.input} value={telefone} onChange={(e) => setTelefone(e.target.value)} />
-                </div>
-                <div className={styles.field}>
-                    <label className={styles.label}>OAB (Opcional)</label>
-                    <input className={styles.input} value={oab} onChange={(e) => setOab(e.target.value)} />
-                </div>
+        <Stack as="form" className={ui.card} onSubmit={save}>
+            <h2 className={`${ui.section_title} ${ui.mb_0}`}>Informações pessoais</h2>
+            <div className={ui.grid}>
+                <Field label="Nome completo"><Input autoComplete="name" value={nome} onChange={(e) => setNome(e.target.value)} /></Field>
+                <Field label="E-mail" hint="O e-mail de acesso não pode ser alterado aqui."><Input value={user.email || ''} disabled /></Field>
+                <Field label="Telefone"><Input type="tel" autoComplete="tel" value={telefone} onChange={(e) => setTelefone(e.target.value)} /></Field>
+                <Field label="OAB (opcional)"><Input value={oab} onChange={(e) => setOab(e.target.value)} /></Field>
             </div>
-
-            <button className={styles.save_button} onClick={() => onSave({ nome, email, telefone, oab })}>
-                Salvar Alterações
-            </button>
-        </div>
+            <Button type="submit" variant="primary" className={ui.w_fit} loading={busy} loadingLabel="Salvando…">Salvar alterações</Button>
+        </Stack>
     );
 };
 

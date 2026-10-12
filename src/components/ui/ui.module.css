@@ -281,6 +281,7 @@
 .text_sm { font-size: var(--fs-sm); }
 .text_muted { color: var(--c-muted); }
 .text_danger { color: var(--c-danger); }
+.text_success { color: var(--c-success); }
 .mt_0 { margin-top: 0; }
 .mt_2 { margin-top: var(--sp-2); }
 .mt_3 { margin-top: var(--sp-3); }

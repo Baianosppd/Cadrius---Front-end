@@ -1,0 +1,8 @@
+/* Verificação em duas etapas (MFA) */
+/* QR sempre em fundo branco: no tema escuro o celular não lê um QR escuro */
+.qr { border: 1px solid var(--c-border); border-radius: 8px; background: #fff; padding: 6px; }
+.code_input { max-width: 160px; letter-spacing: .2em; }
+/* Códigos de recuperação em duas colunas */
+.codes { display: grid; grid-template-columns: repeat(2, max-content); gap: 6px 28px; font-size: 1rem; }
+.narrow { max-width: 360px; }
+.wide { max-width: 620px; }
