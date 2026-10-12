@@ -2,6 +2,7 @@ import styles from './Step.module.css';
 import { FiUser } from 'react-icons/fi';
 import { Field, Input } from '../../../../components/ui';
 import LegalAcceptance from '../../../../components/auth/LegalAcceptance';
+import { maskCpf } from '../../../../utils/format';
 
 const Obrigatorio = () => <span className={styles.required}>Obrigatório</span>;
 
@@ -23,7 +24,7 @@ const StepDadosPessoais = ({ formData, onChange }) => {
                     <Input size="lg" autoComplete="name" placeholder="Maria Silva Santos" value={formData.nome || ''} onChange={(e) => onChange({ nome: e.target.value })} />
                 </Field>
                 <Field label={<>CPF <Obrigatorio /></>}>
-                    <Input size="lg" inputMode="numeric" placeholder="000.000.000-00" value={formData.cpf || ''} onChange={(e) => onChange({ cpf: e.target.value })} />
+                    <Input size="lg" inputMode="numeric" placeholder="000.000.000-00" value={formData.cpf || ''} maxLength={14} onChange={(e) => onChange({ cpf: maskCpf(e.target.value) })} />
                 </Field>
                 <Field label={<>E-mail <Obrigatorio /></>}>
                     <Input size="lg" type="email" autoComplete="email" placeholder="maria@email.com" value={formData.email || ''} onChange={(e) => onChange({ email: e.target.value })} />

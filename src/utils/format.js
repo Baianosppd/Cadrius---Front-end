@@ -31,3 +31,24 @@ export function maskMoney(value) {
     const digits = String(value ?? '').replace(/\D/g, '').replace(/^0+/, '').slice(0, 13);
     return digits ? money.format(Number(digits) / 100) : '';
 }
+
+// Máscara por molde: '#' = dígito; o resto entra conforme a pessoa digita. Letras são ignoradas.
+function maskPattern(value, pattern) {
+    const digits = String(value ?? '').replace(/\D/g, '');
+    let out = '';
+    let i = 0;
+    for (const ch of pattern) {
+        if (i >= digits.length) break;
+        out += ch === '#' ? digits[i++] : ch;
+    }
+    return out;
+}
+
+export const maskCpf = (v) => maskPattern(v, '###.###.###-##');
+export const maskCnpj = (v) => maskPattern(v, '##.###.###/####-##');
+export const maskCep = (v) => maskPattern(v, '#####-###');
+// Fixo (10 dígitos) → (11) 3456-7890; celular (11 dígitos) → (11) 98765-4321
+export const maskPhone = (v) => {
+    const n = String(v ?? '').replace(/\D/g, '').length;
+    return maskPattern(v, n > 10 ? '(##) #####-####' : '(##) ####-####');
+};

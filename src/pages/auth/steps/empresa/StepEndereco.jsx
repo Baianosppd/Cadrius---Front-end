@@ -1,12 +1,13 @@
 import styles from '../individual/Step.module.css';
 import { FiMapPin } from 'react-icons/fi';
 import { Field, Input, Select } from '../../../../components/ui';
+import { maskCep, maskPhone } from '../../../../utils/format';
 
 const estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
 
-// Campos de texto do endereço: [chave, rótulo, placeholder, props extras]
+// Campos de texto do endereço: [chave, rótulo, placeholder, props extras, máscara?]
 const CAMPOS = [
-    ['cep', 'CEP', '00000-000', { inputMode: 'numeric', autoComplete: 'postal-code' }],
+    ['cep', 'CEP', '00000-000', { inputMode: 'numeric', autoComplete: 'postal-code', maxLength: 9 }, maskCep],
     ['logradouro', 'Logradouro', 'Rua, Avenida, etc.', { autoComplete: 'address-line1' }],
     ['numero', 'Número', '123', {}],
     ['bairro', 'Bairro', 'Centro', {}],
@@ -27,9 +28,9 @@ const StepEndereco = ({ formData, onChange }) => {
             </div>
 
             <div className={styles.fields_grid}>
-                {CAMPOS.map(([k, label, ph, extra]) => (
+                {CAMPOS.map(([k, label, ph, extra, mask]) => (
                     <Field key={k} label={label}>
-                        <Input size="lg" {...extra} placeholder={ph} value={formData[k] || ''} onChange={(e) => onChange({ [k]: e.target.value })} />
+                        <Input size="lg" {...extra} placeholder={ph} value={formData[k] || ''} onChange={(e) => onChange({ [k]: mask ? mask(e.target.value) : e.target.value })} />
                     </Field>
                 ))}
                 <Field label="UF">
@@ -39,7 +40,7 @@ const StepEndereco = ({ formData, onChange }) => {
                     </Select>
                 </Field>
                 <Field label="Telefone Principal">
-                    <Input size="lg" type="tel" autoComplete="tel" placeholder="(11) 98765-4321" value={formData.telefone || ''} onChange={(e) => onChange({ telefone: e.target.value })} />
+                    <Input size="lg" type="tel" autoComplete="tel" placeholder="(11) 98765-4321" value={formData.telefone || ''} maxLength={15} onChange={(e) => onChange({ telefone: maskPhone(e.target.value) })} />
                 </Field>
                 <Field label="E-mail Corporativo">
                     <Input size="lg" type="email" placeholder="contato@empresa.com" value={formData.emailCorporativo || ''} onChange={(e) => onChange({ emailCorporativo: e.target.value })} />

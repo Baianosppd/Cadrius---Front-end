@@ -2,6 +2,7 @@ import LegalAcceptance from '../../../../components/auth/LegalAcceptance';
 import styles from '../individual/Step.module.css';
 import { FiUser } from 'react-icons/fi';
 import { Field, Input } from '../../../../components/ui';
+import { maskCpf } from '../../../../utils/format';
 
 const Obrigatorio = () => <span className={styles.required}>Obrigatório</span>;
 
@@ -23,7 +24,7 @@ const StepGerenteResponsavel = ({ formData, onChange }) => {
                     <Input size="lg" autoComplete="name" placeholder="João Silva Santos" value={formData.gerenteNome || ''} onChange={(e) => onChange({ gerenteNome: e.target.value })} />
                 </Field>
                 <Field label={<>CPF <Obrigatorio /></>}>
-                    <Input size="lg" inputMode="numeric" placeholder="000.000.000-00" value={formData.gerenteCpf || ''} onChange={(e) => onChange({ gerenteCpf: e.target.value })} />
+                    <Input size="lg" inputMode="numeric" placeholder="000.000.000-00" value={formData.gerenteCpf || ''} maxLength={14} onChange={(e) => onChange({ gerenteCpf: maskCpf(e.target.value) })} />
                 </Field>
                 <Field label={<>E-mail de Acesso <Obrigatorio /></>} hint="Este e-mail será usado para login no sistema.">
                     <Input size="lg" type="email" autoComplete="email" placeholder="joao@empresa.com" value={formData.gerenteEmail || ''} onChange={(e) => onChange({ gerenteEmail: e.target.value })} />

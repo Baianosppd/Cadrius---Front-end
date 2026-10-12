@@ -1,6 +1,7 @@
 import styles from '../individual/Step.module.css';
 import { FiGrid } from 'react-icons/fi';
 import { Field, Input, Select } from '../../../../components/ui';
+import { maskCnpj } from '../../../../utils/format';
 
 const tipos = ['Selecione o tipo...', 'Sociedade Limitada (LTDA)', 'Sociedade Anônima (S.A.)', 'EIRELI', 'MEI'];
 const Obrigatorio = () => <span className={styles.required}>Obrigatório</span>;
@@ -26,7 +27,7 @@ const StepDadosBasicos = ({ formData, onChange }) => {
                     <Input size="lg" placeholder="Ex: Silva Advocacia" value={formData.nomeFantasia || ''} onChange={(e) => onChange({ nomeFantasia: e.target.value })} />
                 </Field>
                 <Field label={<>CNPJ <Obrigatorio /></>}>
-                    <Input size="lg" inputMode="numeric" placeholder="00.000.000/0001-00" value={formData.cnpj || ''} onChange={(e) => onChange({ cnpj: e.target.value })} />
+                    <Input size="lg" inputMode="numeric" placeholder="00.000.000/0001-00" value={formData.cnpj || ''} maxLength={18} onChange={(e) => onChange({ cnpj: maskCnpj(e.target.value) })} />
                 </Field>
                 <Field label="Tipo de Sociedade">
                     <Select size="lg" value={formData.tipoSociedade || ''} onChange={(e) => onChange({ tipoSociedade: e.target.value })}>
