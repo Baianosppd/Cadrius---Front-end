@@ -33,7 +33,7 @@ export default function PortalCliente() {
                         {data.honorarios.map((h, i) => (
                             <div key={i} className={s.fee}>
                                 <div><strong>{h.descricao}</strong><div className={h.vencido ? s.late : s.muted}>{h.vencido ? 'Vencido em ' : 'Vence em '}{day(h.vencimento)}</div></div>
-                                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                                <div className={s.fee_pay}>
                                     <strong>{brl(h.valor_centavos)}</strong>
                                     {h.link_pagamento && <a className={s.pay} href={h.link_pagamento} target="_blank" rel="noreferrer noopener">Pagar</a>}
                                 </div>

@@ -32,9 +32,9 @@ export default function WhatsAppPair() {
                         <p role="status"><strong>Pronto! O WhatsApp do escritório está conectado.</strong> Pode fechar esta página.</p>
                     ) : (
                         <>
-                            <ol style={{ paddingLeft: 18, display: 'grid', gap: 8 }}>{PAIRING_STEPS.map((step) => <li key={step}>{step}</li>)}</ol>
+                            <ol className={s.steps}>{PAIRING_STEPS.map((step) => <li key={step}>{step}</li>)}</ol>
                             <p className={s.muted}>Número com final {data.numero_final}</p>
-                            <div aria-label="Código de pareamento" style={{ fontSize: '2.2rem', fontWeight: 700, letterSpacing: '.15em', textAlign: 'center', padding: '16px 0' }}>
+                            <div aria-label="Código de pareamento" className={s.pair_code}>
                                 {formatPairingCode(data.codigo_pareamento) || '…'}
                             </div>
                             <p className={s.muted}>Esta página confirma sozinha quando conectar. O código muda a cada poucos minutos; se expirar, a página mostra um novo.</p>

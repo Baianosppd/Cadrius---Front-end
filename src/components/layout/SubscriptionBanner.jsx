@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCurrentPlan, getNotices, subscriptionNotice } from '../../services/billing';
-
-const COLORS = {
-    info: { background: 'var(--c-primary-50)', color: 'var(--c-primary-700)', border: 'var(--c-info-bd)' },
-    warn: { background: 'var(--c-warning-bg)', color: 'var(--c-warning)', border: 'var(--c-warning-bd)' },
-    danger: { background: 'var(--c-danger-bg)', color: 'var(--c-danger)', border: 'var(--c-danger-bd)' },
-};
+import s from './SubscriptionBanner.module.css';
 
 // Faixa no topo do app com o estado da assinatura (trial, cobrança pendente, IA pausada).
 export default function SubscriptionBanner() {
@@ -40,11 +35,11 @@ export default function SubscriptionBanner() {
     return (
         <>
             {visible.map((item) => {
-                const c = COLORS[item.tone] || COLORS.info;
+                const tone = s[item.tone] || s.info;
                 return (
-                    <div key={item.id} role="status" style={{ background: c.background, color: c.color, borderBottom: `1px solid ${c.border}`, padding: '10px 24px', fontSize: '0.875rem', display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                        <span>{item.text} {item.link && <Link to="/perfil?aba=plano" style={{ color: 'inherit', fontWeight: 600 }}>Ver plano</Link>}</span>
-                        {item.dismissible && <button type="button" aria-label="Dispensar aviso" onClick={() => dismiss(item.id)} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>✕</button>}
+                    <div key={item.id} role="status" className={`${s.bar} ${tone}`}>
+                        <span>{item.text} {item.link && <Link to="/perfil?aba=plano" className={s.link}>Ver plano</Link>}</span>
+                        {item.dismissible && <button type="button" aria-label="Dispensar aviso" onClick={() => dismiss(item.id)} className={s.dismiss}>✕</button>}
                     </div>
                 );
             })}

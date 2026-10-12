@@ -9,7 +9,6 @@ import ThemeToggle from './ThemeToggle';
 import BrandLogo from '../brand/BrandLogo';
 
 // Disparado quando o usuário lê notificações (atualiza o número do sino sem esperar o polling)
-// eslint-disable-next-line react-refresh/only-export-components
 export const NOTIFICATIONS_CHANGED = 'cadrius:notifications-changed';
 
 function BarraSup({ nome, onMenu, menuOpen }) {
@@ -62,16 +61,20 @@ function BarraSup({ nome, onMenu, menuOpen }) {
                     {unread > 0 && <span className={styles.badge}>{unread > 99 ? '99+' : unread}</span>}
                 </button>
 
+                {/* Abre o Perfil com clique, Enter ou Espaço */}
                 <div
-                    className={styles.user_profile}
+                    className={`${styles.user_profile} ${styles.clickable}`}
+                    role="link"
+                    tabIndex={0}
+                    aria-label="Meu perfil"
                     onClick={() => navigate('/perfil')}
-                    style={{ cursor: 'pointer' }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate('/perfil'); } }}
                 >
                     <div className={styles.avatar_wrapper}>
                         {user?.profile_picture ? (
                             <img src={user.profile_picture} alt="Perfil" className={styles.avatar_img} />
                         ) : (
-                            <div className={styles.avatar_img} aria-label="Perfil" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--c-primary-100)', color: 'var(--c-primary-700)', fontWeight: 700 }}>
+                            <div className={`${styles.avatar_img} ${styles.avatar_initials}`} aria-hidden="true">
                                 {user?.initials || '?'}
                             </div>
                         )}

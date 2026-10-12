@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiArrowLeft, FiCalendar, FiMessageCircle } from 'react-icons/fi';
 import styles from '../../../components/ui/ui.module.css';
-import { Button, Checkbox, Field, FilterBar, Input, PageHeader, Row, Select, Stack, Textarea } from '../../../components/ui';
+import { Button, Checkbox, Field, FilterBar, Input, PageHeader, Row, Segmented, Select, Stack, Textarea } from '../../../components/ui';
 import { errorMessage } from '../../../utils/format';
 import api from '../../../services/api.js';
 import { gcal } from '../../../services/gcal';
@@ -84,12 +84,8 @@ export default function NewTask() {
                         )}
                     </FilterBar>
                     <div className={styles.field}>Prioridade
-                        <div className={`${styles.segmented} ${styles.w_fit}`} role="group" aria-label="Prioridade">
-                            {PRIORITIES.map(([k, l]) => (
-                                <button key={k} type="button" aria-pressed={form.prioridade === k} className={form.prioridade === k ? styles.seg_on : ''}
-                                    onClick={() => set('prioridade', k)}>{l}</button>
-                            ))}
-                        </div>
+                        <Segmented aria-label="Prioridade" value={form.prioridade} onChange={(k) => set('prioridade', k)}
+                            options={PRIORITIES.map(([id, label]) => ({ id, label }))} />
                     </div>
                     {google ? (
                         <Checkbox checked={form.sincronizar && mine} disabled={!mine} onChange={(e) => set('sincronizar', e.target.checked)}>

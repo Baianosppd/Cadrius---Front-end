@@ -1,0 +1,10 @@
+/* Faixa de aviso da assinatura/informes no topo do app */
+.bar { padding: 10px 24px; font-size: .875rem; display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid; }
+.info { background: var(--c-primary-50); color: var(--c-primary-700); border-color: var(--c-info-bd); }
+.warn { background: var(--c-warning-bg); color: var(--c-warning); border-color: var(--c-warning-bd); }
+.danger { background: var(--c-danger-bg); color: var(--c-danger); border-color: var(--c-danger-bd); }
+.link { color: inherit; font-weight: 600; }
+.dismiss { background: none; border: none; color: inherit; cursor: pointer; }
+
+/* Selo TESTE/LOCAL fora da produção */
+.env_badge { background: var(--c-warning-bg); color: var(--c-warning); border: 1px solid var(--c-warning-bd); border-radius: 999px; font-size: .65rem; font-weight: 800; padding: 2px 8px; letter-spacing: .06em; }
