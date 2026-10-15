@@ -32,3 +32,34 @@ export function setColumnField(mapping, colIndex, field) {
 }
 
 export const ACTION_TONE = { criar: 'green', atualizar: 'blue', erro: 'red' };
+
+// CAD-234: carteira de clientes por pastas (pasta = cliente, arquivos = documentos), do Google Drive ou de um .zip.
+// Contrato: imports/folders_api.py (/api/v1/imports/pastas/)
+export const foldersApi = {
+    state: () => api.get('imports/pastas/').then((r) => r.data),
+    fromDrive: (link) => api.post('imports/pastas/', { link }).then((r) => r.data),
+    fromZip: (file) => {
+        const form = new FormData();
+        form.append('arquivo', file);
+        return api.post('imports/pastas/zip/', form).then((r) => r.data);
+    },
+    get: (id) => api.get(`imports/pastas/${id}/`).then((r) => r.data),
+    run: (id, selecionadas, lerComIa) => api.post(`imports/pastas/${id}/importar/`, { selecionadas, ler_com_ia: !!lerComIa }).then((r) => r.data),
+    cancel: (id) => api.delete(`imports/pastas/${id}/`),
+    // pede ao Google a leitura do Drive (só nessa hora) e volta para esta tela
+    authorizeDrive: () => api.post('integrations/google-calendar/connect/', { acesso: 'drive_leitura', volta: 'importar' }).then((r) => r.data),
+};
+
+// "12,3 MB"
+export function fmtBytes(n) {
+    const v = Number(n) || 0;
+    if (v < 1024 * 1024) return `${Math.max(1, Math.round(v / 1024))} KB`;
+    if (v < 1024 ** 3) return `${(v / 1024 / 1024).toFixed(1).replace('.', ',')} MB`;
+    return `${(v / 1024 ** 3).toFixed(1).replace('.', ',')} GB`;
+}
+
+// Progresso (0–100) de uma importação de pastas em andamento
+export function folderProgress(p) {
+    if (!p?.total) return 0;
+    return Math.min(100, Math.round((100 * (p.feitas || 0)) / p.total));
+}

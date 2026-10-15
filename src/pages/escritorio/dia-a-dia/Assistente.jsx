@@ -215,7 +215,7 @@ function UserText({ text }) {
 }
 
 const TOOL_LABELS = {
-    buscar_contatos: 'Contatos', buscar_processos: 'Processos', publicacoes: 'Publicações', ler_publicacao: 'Publicação', agenda: 'Agenda',
+    buscar_contatos: 'Contatos', consultar_cnpj: 'CNPJ (Receita)', consultar_cep: 'CEP', buscar_processos: 'Processos', publicacoes: 'Publicações', ler_publicacao: 'Publicação', agenda: 'Agenda',
     buscar_documentos: 'Documentos', ler_documento: 'Leitura do documento', calcular_prazo: 'Cálculo de prazo', resumo_financeiro: 'Financeiro', memoria_do_escritorio: 'Memória do escritório',
     criar_tarefa: 'Tarefa', criar_contato: 'Contato', gerar_minuta: 'Minuta', lancar_despesa: 'Despesa', marcar_publicacao_revisada: 'Revisão',
     catalogo_de_automacao: 'Catálogo de automações', listar_regras: 'Regras', sugestoes_de_automacao: 'Sugestões', criar_regra: 'Nova automação',

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styles from '../../../components/ui/ui.module.css';
-import { Banner, Button, Empty, Field, Input, PageHeader, Pill, Row, Select, Stack, StatCard, Table } from '../../../components/ui';
+import { Banner, Button, Empty, Field, Input, PageHeader, Pill, Row, Segmented, Select, Stack, StatCard, Table } from '../../../components/ui';
+import PastasClientes from '../../../components/importar/PastasClientes';
 import { errorMessage, fmtDateTime } from '../../../utils/format';
 import useLoader from '../../../hooks/useLoader';
 import { ACTION_TONE, MAX_MB, TARGETS, importsApi, missingRequired, setColumnField } from '../../../services/imports';
@@ -25,7 +26,11 @@ function Historico({ tick }) {
     );
 }
 
+const MODES = [{ id: 'planilha', label: 'Planilha' }, { id: 'pastas', label: 'Pastas de clientes (Drive)' }];
+
 export default function Importar() {
+    const [params] = useSearchParams();
+    const [mode, setMode] = useState(params.get('gcal') || params.get('tipo') === 'pastas' ? 'pastas' : 'planilha');
     const [target, setTarget] = useState('contacts');
     const [file, setFile] = useState(null);
     const [job, setJob] = useState(null);
@@ -60,7 +65,9 @@ export default function Importar() {
 
     return (
         <div className={styles.page}>
-            <PageHeader title="Importar dados" subtitle="Contatos e processos de planilhas" />
+            <PageHeader title="Importar dados" subtitle="Planilhas ou pastas de clientes do Google Drive" />
+            <Segmented options={MODES} value={mode} onChange={setMode} aria-label="O que importar" />
+            {mode === 'pastas' ? <PastasClientes /> : (<>
             {error && <Banner tone="error">{error}</Banner>}
 
             {!job && (
@@ -133,6 +140,7 @@ export default function Importar() {
             )}
             <Historico tick={tick} />
             {!job && <Empty>Dica: exporte a planilha do seu sistema antigo ou do Excel como CSV (UTF-8) ou .xlsx.</Empty>}
+            </>)}
         </div>
     );
 }
