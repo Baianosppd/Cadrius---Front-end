@@ -11,6 +11,23 @@ import CobrancaModal from '../../../components/integracoes/CobrancaModal';
 import ClientFile from '../../../components/carteira/ClientFile';
 import { EMPTY_CONTACT, KINDS, birthdayToInput, channelStatus, contactBody, contactsApi, formatPhone } from '../../../services/contacts';
 import { cnpjApi } from '../../../services/cad223';
+import { documentsApi } from '../../../services/documents';
+
+// CAD-234: documentos do contato (ex.: os que vieram da pasta dele no Drive)
+function ContactDocuments({ contactId }) {
+    const [docs, setDocs] = useState(null);
+    useEffect(() => { documentsApi.byContact(contactId).then((r) => setDocs(r.results || [])).catch(() => setDocs([])); }, [contactId]);
+    if (!docs?.length) return null;
+    return (
+        <div>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Documentos ({docs.length})</div>
+            <Row>
+                {docs.slice(0, 12).map((d) => <Link key={d.id} className={styles.chip} to={`/documents/${d.id}`}>{d.nome}</Link>)}
+                {docs.length > 12 && <Link to="/documents">ver todos</Link>}
+            </Row>
+        </div>
+    );
+}
 
 function ContatoForm({ initial, onDone, onCancel, canDelete, onCharge, onFile }) {
     const [form, setForm] = useState({ ...EMPTY_CONTACT, ...initial, tags: (initial?.tags || []).join(', '), birthday: birthdayToInput(initial?.birthday) });
@@ -58,6 +75,7 @@ function ContatoForm({ initial, onDone, onCancel, canDelete, onCharge, onFile })
                 <Field label="Aniversário (dia/mês)"><Input value={form.birthday} onChange={set('birthday')} placeholder="06/03" maxLength={10} /></Field>
             </FilterBar>
             <Field label="Observações"><Textarea value={form.notes} onChange={set('notes')} /></Field>
+            {initial?.id && <ContactDocuments contactId={initial.id} />}
             <div className={`${styles.section_title} ${styles.mb_0}`}>Consentimento para mensagens (LGPD)</div>
             <Row gap={4}>
                 <Checkbox checked={form.whatsapp_consent} onChange={set('whatsapp_consent')}>Aceita WhatsApp</Checkbox>

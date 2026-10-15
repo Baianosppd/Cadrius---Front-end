@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import EmailVisualField from '../email/EmailVisualField';
 import { toast } from 'react-toastify';
 import styles from '../ui/ui.module.css';
 import { Button, Checkbox, Field, FilterBar, FormModal, Input, Row, Select, Stack, Textarea } from '../ui';
 import { errorMessage } from '../../utils/format';
+import { contactsApi } from '../../services/contacts';
 import { DAILY_CONFIG, actionsFor, emptyAction, insertVariable, producedVars, ruleBody, ruleToForm, rulesApi, triggerHasDeadline } from '../../services/rules';
 
 // Texto com botões de variáveis: clicar insere {{variavel}} onde está o cursor
@@ -29,6 +30,51 @@ function TemplateText({ label, value, onChange, vars, multiline, max }) {
 }
 
 // Campo "dias úteis" que muda conforme a data é contada do evento ou do prazo (tarefa e compromisso do Google)
+// CAD-234: "Para" = cliente/contato do evento ou um contato fixo (contato:<id>), achado pelo nome
+export function RecipientField({ value, onChange, trigger, labels }) {
+    const fixedId = typeof value === 'string' && value.startsWith('contato:') ? value.slice(8) : '';
+    const [picking, setPicking] = useState(!!fixedId || !trigger.destinatarios.length);
+    const [chosen, setChosen] = useState(null);
+    const [q, setQ] = useState('');
+    const [found, setFound] = useState([]);
+    useEffect(() => {
+        if (fixedId && chosen?.id !== Number(fixedId)) contactsApi.get(fixedId).then((c) => setChosen({ id: c.id, name: c.name })).catch(() => setChosen(null));
+    }, [fixedId, chosen?.id]);
+    useEffect(() => {
+        if (!picking || q.trim().length < 2) return undefined;
+        const t = setTimeout(() => contactsApi.list({ q }).then((r) => setFound((r.resultados || []).slice(0, 6))).catch(() => setFound([])), 250);
+        return () => clearTimeout(t);
+    }, [q, picking]);
+    const pick = (mode) => {
+        if (mode === 'fixo') { setPicking(true); return; }
+        setPicking(false);
+        onChange(mode);
+    };
+    return (
+        <Stack gap={2}>
+            <Field label="Para">
+                <Select value={picking ? 'fixo' : value} onChange={(e) => pick(e.target.value)}>
+                    {trigger.destinatarios.map((d) => <option key={d} value={d}>{labels[d] || d}</option>)}
+                    <option value="fixo">Um contato específico…</option>
+                </Select>
+            </Field>
+            {picking && (chosen && fixedId ? (
+                <Row><span>Para <strong>{chosen.name}</strong></span>
+                    <Button size="sm" onClick={() => { setChosen(null); onChange(''); }}>Trocar</Button></Row>
+            ) : (
+                <Stack gap={1}>
+                    <Input aria-label="Buscar contato" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Digite o nome do contato" />
+                    {(q.trim().length >= 2 ? found : []).map((c) => (
+                        <Button key={c.id} size="sm" className={styles.w_fit} onClick={() => { setChosen({ id: c.id, name: c.name }); onChange(`contato:${c.id}`); }}>
+                            {c.name}{c.email ? ` · ${c.email}` : ''}</Button>
+                    ))}
+                    <span className={styles.muted}>Não está nos contatos? Peça ao Assistente: ele cadastra o contato junto com a automação.</span>
+                </Stack>
+            ))}
+        </Stack>
+    );
+}
+
 function DiasField({ p, set, antesLabel }) {
     return p.quando === 'prazo'
         ? <Field label={antesLabel}><Input type="number" min={0} max={30} value={p.antecedencia ?? 0} onChange={(e) => set('antecedencia', e.target.value)} /></Field>
@@ -64,12 +110,9 @@ function ActionFields({ action, onChange, trigger, vars, catalog }) {
             return (<>{text('titulo', 'Título do aviso', { max: 120 })}{text('mensagem', 'Mensagem', { multiline: true, max: 500 })}</>);
         case 'send_message':
             return (<>
+                <RecipientField value={p.destinatario} onChange={(v) => set('destinatario', v)} trigger={trigger}
+                    labels={{ cliente: 'Cliente', contato: 'O contato do evento' }} />
                 <FilterBar>
-                    <Field label="Para">
-                        <Select value={p.destinatario} onChange={(e) => set('destinatario', e.target.value)}>
-                            {trigger.destinatarios.map((d) => <option key={d} value={d}>{d === 'cliente' ? 'Cliente' : 'O contato do evento'}</option>)}
-                        </Select>
-                    </Field>
                     <Field label="Canal">
                         <Select value={p.canal} onChange={(e) => set('canal', e.target.value)}>
                             <option value="melhor">Melhor canal autorizado (WhatsApp, senão e-mail)</option>
@@ -99,11 +142,8 @@ function ActionFields({ action, onChange, trigger, vars, catalog }) {
         case 'send_whatsapp':
         case 'send_email':
             return (<>
-                <Field label="Para">
-                    <Select value={p.destinatario} onChange={(e) => set('destinatario', e.target.value)}>
-                        {trigger.destinatarios.map((d) => <option key={d} value={d}>{d === 'cliente' ? 'Cliente do processo' : 'O contato cadastrado'}</option>)}
-                    </Select>
-                </Field>
+                <RecipientField value={p.destinatario} onChange={(v) => set('destinatario', v)} trigger={trigger}
+                    labels={{ cliente: 'Cliente do processo', contato: 'O contato cadastrado' }} />
                 {action.type === 'send_email' && text('assunto', 'Assunto', { max: 150 })}
                 {text('mensagem', 'Mensagem', { multiline: true, max: 1000 })}
                 {action.type === 'send_email' && <EmailVisualField value={p.visual} onChange={(v) => set('visual', v)} assunto={p.assunto} mensagem={p.mensagem} />}

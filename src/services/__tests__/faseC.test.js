@@ -23,9 +23,9 @@ describe('regras de automação (CAD-172)', () => {
         expect(insertVariable('ab', 'x', 99)).toBe('ab{{x}}');
     });
 
-    it('só oferece envio a contato quando o gatilho traz um contato', () => {
+    it('envio a contato em qualquer gatilho (CAD-234: sem contato no evento, usa um contato fixo)', () => {
         expect(actionsFor(catalog, 'case_movement').map((a) => a.id)).toContain('send_whatsapp');
-        expect(actionsFor(catalog, 'deadline_soon').map((a) => a.id)).not.toContain('send_email');
+        expect(actionsFor(catalog, 'deadline_soon').map((a) => a.id)).toContain('send_email');
         expect(triggerHasDeadline('deadline_soon')).toBe(true);
         expect(triggerHasDeadline('case_movement')).toBe(false);
     });

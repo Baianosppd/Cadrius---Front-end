@@ -66,12 +66,15 @@ export function emptyAction(type, destinatarios = []) {
     }
 }
 
-// Ações válidas para o gatilho: envio a contato só quando o evento traz um contato; tarefa "na data do prazo" só se há prazo
+// Ações válidas para o gatilho. Envio a contato vale em qualquer gatilho (CAD-234: sem contato no evento, escolhe-se um contato
+// fixo); pesquisa de satisfação só quando o evento traz o cliente
 export function actionsFor(catalog, triggerId) {
     const trigger = catalog?.gatilhos?.find((g) => g.id === triggerId);
-    return (catalog?.acoes || []).filter((a) => (!['send_whatsapp', 'send_email', 'send_message'].includes(a.id) || trigger?.destinatarios?.length)
-        && (a.id !== 'send_survey' || trigger?.destinatarios?.includes('cliente')));
+    return (catalog?.acoes || []).filter((a) => a.id !== 'send_survey' || trigger?.destinatarios?.includes('cliente'));
 }
+
+// "contato:12" = contato fixo escolhido na regra
+export const isFixedContact = (dest) => /^contato:\d+$/.test(String(dest || ''));
 
 // CAD-230: variáveis que os passos ANTERIORES (calcular, tabela) oferecem ao passo i
 export function producedVars(acoes, upTo) {

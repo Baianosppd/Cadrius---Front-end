@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { SiGoogle, SiGooglecalendar, SiGooglesheets, SiGoogledocs } from 'react-icons/si';
 import { gcal, gcalResult, GCAL_STATUS_LABEL } from '../../services/gcal';
@@ -79,6 +80,10 @@ export default function GoogleCalendarCard({ embedded = false }) {
             {st.app_configured && !st.connected && (
                 <p className={`${ui.muted} ${ui.mt_0} ${ui.mb_0}`}>Clique em conectar, escolha sua conta e autorize. O Cadrius passa a criar e ler seus compromissos,
                     exportar listas para Planilhas e salvar minutas no Docs. No Drive, ele só enxerga os arquivos que ele mesmo criar.</p>
+            )}
+            {active && (
+                <p className={`${ui.muted} ${ui.mt_0} ${ui.mb_0}`}>Carteira de clientes organizada em pastas no Drive? <Link to="/importar?tipo=pastas">Importe as
+                    pastas</Link>: cada pasta vira um cliente com os documentos dele.</p>
             )}
             {active && !docsOk && (
                 <p className={`${ui.muted} ${ui.mt_0} ${ui.mb_0}`}>Sua conexão é de antes de Planilhas e Documentos. Clique em <strong>Reconectar</strong> e aceite o novo acesso.</p>

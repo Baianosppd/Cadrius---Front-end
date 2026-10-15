@@ -3,6 +3,8 @@ import api from './api';
 
 export const documentsApi = {
     get: (id) => api.get(`documentos/${id}/`).then((r) => r.data),
+    // CAD-234: documentos ligados a um contato (ex.: importados da pasta do cliente no Drive)
+    byContact: (contactId) => api.get('documentos/', { params: { contato: contactId, page_size: 50 } }).then((r) => r.data),
     extraction: (id) => api.get(`documentos/${id}/extraction/`).then((r) => r.data),
     reprocess: (id) => api.post(`documentos/${id}/extraction/reprocess/`).then((r) => r.data),
     confirm: (id, fields) => api.post(`documentos/${id}/extraction/confirm/`, { fields }).then((r) => r.data),
