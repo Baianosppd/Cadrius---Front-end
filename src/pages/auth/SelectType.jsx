@@ -1,15 +1,16 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FiArrowRight, FiCalendar, FiLock, FiShield } from 'react-icons/fi';
 import styles from './SelectType.module.css';
 import RegisterHeader from '../../components/auth/RegisterHeader';
 import BackButton from '../../components/layout/BackButton';
 import { CourthouseScene, LawFirmTeam, LawyerDesk } from '../../components/illustrations/LegalArt';
 
-// Escolha do tipo de conta (CAD-219): cenas do dia a dia jurídico para o advogado se reconhecer logo na entrada
-const TypeCard = ({ art, title, description, features, cta, onClick }) => {
+// Escolha do tipo de conta (CAD-219): cenas do dia a dia jurídico para o advogado se reconhecer logo na entrada.
+// Link de verdade (<a href>) para o Google seguir até as páginas de cadastro.
+const TypeCard = ({ art, title, description, features, cta, to }) => {
     const Art = art;
     return (
-    <button type="button" className={styles.card} onClick={onClick}>
+    <Link className={styles.card} to={to}>
         <Art className={styles.card_art} />
         <span className={styles.card_title}>{title}</span>
         <span className={styles.card_description}>{description}</span>
@@ -19,7 +20,7 @@ const TypeCard = ({ art, title, description, features, cta, onClick }) => {
             ))}
         </ul>
         <span className={styles.card_cta}>{cta} <FiArrowRight aria-hidden="true" /></span>
-    </button>
+    </Link>
     );
 };
 
@@ -30,7 +31,6 @@ const TRUST = [
 ];
 
 function SelectType() {
-    const navigate = useNavigate();
     return (
         <div className={styles.container}>
             <RegisterHeader />
@@ -53,11 +53,11 @@ function SelectType() {
                     <TypeCard art={LawyerDesk} title="Advogado autônomo" cta="Criar minha conta"
                         description="Para quem advoga por conta própria e quer menos tempo com rotina e mais tempo com o cliente."
                         features={['Conta individual', 'Publicações e prazos da sua OAB', 'Leitura de documentos com IA']}
-                        onClick={() => navigate('/cadastro/individual')} />
+                        to="/cadastro/individual" />
                     <TypeCard art={LawFirmTeam} title="Escritório / sociedade" cta="Cadastrar o escritório"
                         description="Para escritórios com equipe: carteira de clientes, financeiro e permissões por pessoa."
                         features={['Vários advogados e colaboradores', 'Perfis de acesso e auditoria', 'Funil, honorários e portal do cliente']}
-                        onClick={() => navigate('/cadastro/empresa')} />
+                        to="/cadastro/empresa" />
                 </div>
 
                 <ul className={styles.trust}>

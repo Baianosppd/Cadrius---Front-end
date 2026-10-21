@@ -3,33 +3,34 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import useAuth from "../hooks/useAuth";
 
 import AuthLayout from "../layouts/authLayout";
-import MainLayout from "../layouts/mainLayout";
 
 import Login from "../pages/auth/Login";
 import Remember from "../pages/auth/Remember"
-import ResetPassword from "../pages/auth/ResetPassword";
-import GoogleCallback from "../pages/auth/GoogleCallback";
-import ForcePasswordChange from "../pages/auth/ForcePasswordChange";
-
-import Dashboard from "../pages/escritorio/dia-a-dia/Dashboard";
-import Automacao from "../pages/escritorio/producao/Automacao";
-import Processos from "../pages/escritorio/legado/Processos";
-import Integracoes from "../pages/escritorio/configuracoes/Integracoes";
-import Perfil from "../pages/escritorio/conta/Perfil";
-import UnderConstruction from '../pages/escritorio/legado/UnderConstruction';
-import GestaoEquipe from "../pages/escritorio/configuracoes/GestaoEquipe";
-import Notificacoes from "../pages/escritorio/conta/Notificacoes";
-import NewTask from "../pages/escritorio/dia-a-dia/NewTask";
-
-import EditorLayout from '../layouts/EditorLayout';
-import AdminLayout from '../layouts/AdminLayout';
 
 import RegisterLayout from '../layouts/RegisterLayout';
 import SelectType from '../pages/auth/SelectType';
-import RegisterIndividual from '../pages/auth/RegisterIndividual';
 
-import RegisterEmpresa from '../pages/auth/RegisterEmpresa';
 import { BrandMark } from '../components/brand/BrandLogo';
+import RouteSeo from '../seo/RouteSeo';
+
+// Telas públicas de entrada ficam no pacote inicial; o resto carrega sob demanda (Core Web Vitals do login/cadastro)
+const MainLayout = lazy(() => import("../layouts/mainLayout"));
+const EditorLayout = lazy(() => import('../layouts/EditorLayout'));
+const AdminLayout = lazy(() => import('../layouts/AdminLayout'));
+const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
+const GoogleCallback = lazy(() => import("../pages/auth/GoogleCallback"));
+const ForcePasswordChange = lazy(() => import("../pages/auth/ForcePasswordChange"));
+const RegisterIndividual = lazy(() => import('../pages/auth/RegisterIndividual'));
+const RegisterEmpresa = lazy(() => import('../pages/auth/RegisterEmpresa'));
+const Dashboard = lazy(() => import("../pages/escritorio/dia-a-dia/Dashboard"));
+const Automacao = lazy(() => import("../pages/escritorio/producao/Automacao"));
+const Processos = lazy(() => import("../pages/escritorio/legado/Processos"));
+const Integracoes = lazy(() => import("../pages/escritorio/configuracoes/Integracoes"));
+const Perfil = lazy(() => import("../pages/escritorio/conta/Perfil"));
+const UnderConstruction = lazy(() => import('../pages/escritorio/legado/UnderConstruction'));
+const GestaoEquipe = lazy(() => import("../pages/escritorio/configuracoes/GestaoEquipe"));
+const Notificacoes = lazy(() => import("../pages/escritorio/conta/Notificacoes"));
+const NewTask = lazy(() => import("../pages/escritorio/dia-a-dia/NewTask"));
 
 
 // Carregamento sob demanda: o editor de fluxos (React Flow) e o visualizador de PDF são pesados
@@ -100,6 +101,7 @@ export default function AppRoutes() {
 
   return (
     <BrowserRouter>
+      <RouteSeo />
       <Suspense fallback={<div className="app-loading" role="status" aria-label="Carregando"><BrandMark size={44} /></div>}>
       <Routes>
         {/* Portal do cliente: público, só com o link pessoal (CAD-175) */}
