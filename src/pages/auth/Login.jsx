@@ -87,7 +87,7 @@ function Login() {
         <div className={styles.main_wrapper}>
             {/* Lado esquerdo escuro */}
             <div className={styles.side_dark}>
-                <h1 className={styles.dark_title}><BrandLogo size={48} tone="light" /></h1>
+                <p className={styles.dark_title}><BrandLogo size={48} tone="light" /></p>
                 <p className={styles.dark_subtitle}>Automação inteligente para escritórios jurídicos modernos</p>
                 <ul className={styles.dark_points}>
                     <li>Publicações do DJEN e prazos em dias úteis</li>
@@ -102,7 +102,8 @@ function Login() {
                 <div className={styles.form_tools}><ThemeToggle /></div>
                 <div className={styles.form_container}>
                     <div className={styles.mobile_brand} aria-hidden="true"><BrandLogo size={34} /></div>
-                    <h2 className={styles.form_title}>Entrar</h2>
+                    {/* Único H1 da página (o painel escuro some no celular) */}
+                    <h1 className={styles.form_title}>Entrar no Cadrius</h1>
                     <p className={styles.form_subtitle}>Acesse sua conta para continuar</p>
 
                     {ssoEnabled && !mfaToken && (
@@ -113,7 +114,7 @@ function Login() {
                         Continuar com Google
                     </button>
                     <button className={styles.social_button} onClick={handleMicrosoft}>
-                        <img src="/microsoft-icon.png" alt="Microsoft" className={styles.social_icon} />
+                        <img src="/microsoft-icon.svg" alt="" width="20" height="20" className={styles.social_icon} />
                         Continuar com Microsoft
                     </button>
 

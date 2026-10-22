@@ -1,3 +1,7 @@
-# https://www.robotstxt.org/robotstxt.html
+# Cadrius — produção (app.cadrius.ia.br). O ambiente de teste recebe "Disallow: /" pelo nginx.
+# Telas logadas e links com token não são bloqueados aqui de propósito: elas respondem com
+# "X-Robots-Tag: noindex" e o Google precisa conseguir ler esse aviso.
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://app.cadrius.ia.br/sitemap.xml

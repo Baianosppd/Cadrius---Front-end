@@ -2,16 +2,76 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadrius — Gestão jurídica com IA para advogados e escritórios</title>
+    <!-- Descrição, robots, canonical e og:* por rota: src/seo/RouteSeo.jsx -->
+    <meta name="description" content="Cadrius é a plataforma de gestão jurídica com IA para advogados e escritórios: publicações do DJEN, prazos em dias úteis, leitura de documentos com IA e dados protegidos pela LGPD." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#0a2463" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cadrius</title>
+
+    <!-- Compartilhamento em redes sociais (WhatsApp, LinkedIn, Facebook, X) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cadrius" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Cadrius — Gestão jurídica com IA para advogados e escritórios" />
+    <meta property="og:description" content="Publicações do DJEN, prazos em dias úteis, documentos lidos pela IA com revisão do advogado e dados protegidos pela LGPD." />
+    <meta property="og:url" content="https://app.cadrius.ia.br/" />
+    <meta property="og:image" content="https://app.cadrius.ia.br/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Cadrius — Gestão jurídica com IA para advogados e escritórios de advocacia" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cadrius — Gestão jurídica com IA para advogados e escritórios" />
+    <meta name="twitter:description" content="Publicações do DJEN, prazos em dias úteis, documentos lidos pela IA e dados protegidos pela LGPD." />
+    <meta name="twitter:image" content="https://app.cadrius.ia.br/og-image.png" />
+
+    <!-- Dados estruturados (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://cadrius.ia.br/#organization",
+          "name": "Cadrius",
+          "url": "https://app.cadrius.ia.br/",
+          "logo": "https://app.cadrius.ia.br/logo512.png"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://app.cadrius.ia.br/#website",
+          "name": "Cadrius",
+          "url": "https://app.cadrius.ia.br/",
+          "inLanguage": "pt-BR",
+          "publisher": { "@id": "https://cadrius.ia.br/#organization" }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Cadrius",
+          "applicationCategory": "BusinessApplication",
+          "applicationSubCategory": "Software de gestão jurídica",
+          "operatingSystem": "Web, Android, iOS",
+          "url": "https://app.cadrius.ia.br/",
+          "image": "https://app.cadrius.ia.br/og-image.png",
+          "inLanguage": "pt-BR",
+          "description": "Gestão jurídica com IA para advogados e escritórios: publicações do DJEN, prazos em dias úteis, leitura de documentos com IA, carteira de clientes e dados protegidos pela LGPD.",
+          "audience": { "@type": "Audience", "audienceType": "Advogados e escritórios de advocacia" },
+          "publisher": { "@id": "https://cadrius.ia.br/#organization" }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>Cadrius — Gestão jurídica com IA</h1>
+      <p>Publicações do DJEN, prazos em dias úteis, documentos lidos pela IA e dados protegidos pela LGPD. Ative o JavaScript para usar o Cadrius.</p>
+      <p><a href="/criar-conta">Criar conta</a> · <a href="/">Entrar</a></p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

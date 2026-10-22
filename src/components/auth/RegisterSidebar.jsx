@@ -15,7 +15,7 @@ const RegisterSidebar = ({ title, subtitle, icon: Icon, steps, currentStep, tip 
                         </div>
                     )}
                     <div>
-                        <p className={styles.title}>{title}</p>
+                        <h1 className={styles.title}>{title}</h1>
                         <p className={styles.subtitle}>{subtitle}</p>
                     </div>
                 </div>
