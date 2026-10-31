@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styles from '../ui/ui.module.css';
-import { Banner } from '../ui';
+import { Banner, Field, FormModal, Input, Textarea } from '../ui';
 import { errorMessage } from '../../utils/format';
 import { MIN_REASON, buildActionBody } from '../../services/backoffice';
 
@@ -27,29 +27,19 @@ export default function ActionModal({ title, subject, actionKey, spec, onRun, on
     };
 
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true">
-            <form className={styles.modal} onSubmit={submit}>
-                <div className={styles.modal_title}>{title}</div>
-                <div className={styles.muted}>{subject}</div>
-                {spec.danger && <Banner tone="warn">Ação sensível: afeta o acesso do cliente imediatamente.</Banner>}
-                {(spec.fields || []).map((f) => (
-                    <label key={f.name} className={styles.field}>{f.label}
-                        <input className={styles.input} type="number" min={f.min} max={f.max} value={values[f.name]}
-                            onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))} />
-                    </label>
-                ))}
-                <label className={styles.field}>Motivo (mínimo {MIN_REASON} caracteres — fica registrado na auditoria)
-                    <textarea className={styles.textarea} value={values.reason || ''} maxLength={255}
-                        onChange={(e) => setValues((v) => ({ ...v, reason: e.target.value }))} />
-                </label>
-                {error && <Banner tone="error">{error}</Banner>}
-                <div className={styles.btn_row}>
-                    <button type="submit" className={`${styles.btn} ${spec.danger ? styles.btn_danger : styles.btn_primary}`} disabled={busy}>
-                        {busy ? 'Executando…' : 'Confirmar'}
-                    </button>
-                    <button type="button" className={styles.btn} onClick={onClose} disabled={busy}>Cancelar</button>
-                </div>
-            </form>
-        </div>
+        <FormModal title={title} onClose={onClose} onSubmit={submit} busy={busy} error={error}
+            submitLabel="Confirmar" busyLabel="Executando…" submitVariant={spec.danger ? 'danger' : 'primary'}>
+            <div className={`${styles.muted} ${styles.mt_0}`}>{subject}</div>
+            {spec.danger && <Banner tone="warn">Ação sensível: afeta o acesso do cliente imediatamente.</Banner>}
+            {(spec.fields || []).map((f) => (
+                <Field key={f.name} label={f.label}>
+                    <Input type="number" min={f.min} max={f.max} value={values[f.name]}
+                        onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))} />
+                </Field>
+            ))}
+            <Field label="Motivo" hint={`Mínimo de ${MIN_REASON} caracteres. Fica registrado na auditoria.`}>
+                <Textarea value={values.reason || ''} maxLength={255} onChange={(e) => setValues((v) => ({ ...v, reason: e.target.value }))} />
+            </Field>
+        </FormModal>
     );
 }
