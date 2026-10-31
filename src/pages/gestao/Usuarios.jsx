@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../../components/ui/ui.module.css';
-import { Banner, Empty, Loading, PageHeader, Pill } from '../../components/ui';
+import { Banner, Button, Checkbox, Empty, Field, FilterBar, Input, Loading, PageHeader, Pill, Row, Select, Table } from '../../components/ui';
 import { fmtDateTime } from '../../utils/format';
 import ActionModal from '../../components/gestao/ActionModal';
 import TempPasswordModal from '../../components/gestao/TempPasswordModal';
@@ -23,50 +23,46 @@ export default function Usuarios() {
     return (
         <div className={styles.page}>
             <PageHeader title="Usuários" subtitle="Acesso, bloqueios e sessões" />
-            <form className={styles.filters} onSubmit={(e) => { e.preventDefault(); setQuery((q) => ({ ...q, q: term.trim() })); }}>
-                <label className={styles.field}>E-mail ou nome
-                    <input className={styles.input} value={term} onChange={(e) => setTerm(e.target.value)} placeholder="ana@ ou Ana Souza" />
-                </label>
-                <label className={styles.check_row} style={{ alignSelf: 'center' }}>
-                    <input type="checkbox" checked={query.equipe === '1'} onChange={(e) => setQuery((q) => ({ ...q, equipe: e.target.checked ? '1' : '' }))} />
+            <FilterBar as="form" onSubmit={(e) => { e.preventDefault(); setQuery((q) => ({ ...q, q: term.trim() })); }}>
+                <Field label="E-mail ou nome">
+                    <Input value={term} onChange={(e) => setTerm(e.target.value)} placeholder="ana@ ou Ana Souza" />
+                </Field>
+                <Checkbox checked={query.equipe === '1'} onChange={(e) => setQuery((q) => ({ ...q, equipe: e.target.checked ? '1' : '' }))}>
                     Só equipe Cadrius
-                </label>
-                <button type="submit" className={styles.btn}>Buscar</button>
-            </form>
+                </Checkbox>
+                <Button type="submit">Buscar</Button>
+            </FilterBar>
             {error && <Banner tone="error">{error}</Banner>}
             {!data && !error && <Loading />}
             {data && (
-                <div className={styles.table_wrap}>
-                    <table className={styles.table}>
-                        <thead><tr><th>Conta</th><th>Escritórios</th><th>Situação</th><th>Último acesso</th><th>Ações</th></tr></thead>
-                        <tbody>
-                            {data.resultados.length === 0 && <tr><td colSpan={5}><Empty>Nenhum usuário encontrado.</Empty></td></tr>}
-                            {data.resultados.map((u) => (
-                                <tr key={u.id}>
-                                    <td><strong>{u.email}</strong><div className={styles.muted}>{u.nome || '—'}</div>
-                                        {u.equipe_cadrius && <Pill tone="blue">{u.superusuario ? 'Superusuário' : 'Equipe Cadrius'}</Pill>}</td>
-                                    <td>{u.escritorios.map((o) => `${o.nome} (${o.papel})`).join(', ') || '—'}</td>
-                                    <td><span className={styles.btn_row}>
-                                        {u.ativo ? <Pill tone="green">Ativo</Pill> : <Pill tone="gray">Desativado</Pill>}
-                                        {u.bloqueado && <Pill tone="red">Login bloqueado</Pill>}
-                                        {u.mfa ? <Pill tone="blue">MFA</Pill> : (u.equipe_cadrius && <Pill tone="yellow">Sem MFA</Pill>)}
-                                        {u.troca_de_senha_pendente && <Pill tone="yellow">Troca de senha pendente</Pill>}
-                                    </span></td>
-                                    <td>{fmtDateTime(u.ultimo_acesso)}</td>
-                                    <td>
-                                        <select className={styles.select} value="" onChange={(e) => {
-                                            const action = userActionsFor(u).find((a) => a.key === e.target.value);
-                                            if (action) setPending({ user: u, action });
-                                        }}>
-                                            <option value="">Escolher…</option>
-                                            {userActionsFor(u).map((a) => <option key={a.key} value={a.key}>{a.label}</option>)}
-                                        </select>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table columns={['Conta', 'Escritórios', 'Situação', 'Último acesso', 'Ações']}
+                    empty={data.resultados.length === 0 && <Empty>Nenhum usuário encontrado.</Empty>}>
+                    {data.resultados.map((u) => (
+                        <tr key={u.id}>
+                            <td><strong>{u.email}</strong><div className={styles.muted}>{u.nome || '—'}</div>
+                                {u.equipe_cadrius && <Pill tone="blue">{u.superusuario ? 'Superusuário' : 'Equipe Cadrius'}</Pill>}</td>
+                            <td data-label="Escritórios">{u.escritorios.map((o) => `${o.nome} (${o.papel})`).join(', ') || '—'}</td>
+                            <td data-label="Situação">
+                                <Row gap={1}>
+                                    {u.ativo ? <Pill tone="green">Ativo</Pill> : <Pill tone="gray">Desativado</Pill>}
+                                    {u.bloqueado && <Pill tone="red">Login bloqueado</Pill>}
+                                    {u.mfa ? <Pill tone="blue">MFA</Pill> : (u.equipe_cadrius && <Pill tone="yellow">Sem MFA</Pill>)}
+                                    {u.troca_de_senha_pendente && <Pill tone="yellow">Troca de senha pendente</Pill>}
+                                </Row>
+                            </td>
+                            <td data-label="Último acesso">{fmtDateTime(u.ultimo_acesso)}</td>
+                            <td data-label="Ações">
+                                <Select value="" aria-label={`Ações para ${u.email}`} onChange={(e) => {
+                                    const action = userActionsFor(u).find((a) => a.key === e.target.value);
+                                    if (action) setPending({ user: u, action });
+                                }}>
+                                    <option value="">Escolher…</option>
+                                    {userActionsFor(u).map((a) => <option key={a.key} value={a.key}>{a.label}</option>)}
+                                </Select>
+                            </td>
+                        </tr>
+                    ))}
+                </Table>
             )}
             {data && data.total > data.resultados.length && <div className={styles.muted}>Mostrando {data.resultados.length} de {data.total}. Refine a busca.</div>}
             {pending && <ActionModal title={pending.action.label} subject={pending.user.email} actionKey={pending.action.key}
