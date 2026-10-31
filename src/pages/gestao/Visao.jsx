@@ -1,6 +1,8 @@
 import { Link, useOutletContext } from 'react-router-dom';
+import { FiRefreshCw } from 'react-icons/fi';
 import styles from '../../components/ui/ui.module.css';
-import { Banner, Empty, Loading, PageHeader, StatCard, StatusPill } from '../../components/ui';
+import { Banner, Button, Loading, PageHeader, Row, StatCard, StatusPill, Table } from '../../components/ui';
+import g from '../../components/gestao/Gestao.module.css';
 import { SUB_STATE, backofficeApi, hasArea } from '../../services/backoffice';
 import { brl } from '../../services/financeiro';
 import useLoader from '../../hooks/useLoader';
@@ -14,7 +16,7 @@ export default function Visao() {
     return (
         <div className={styles.page}>
             <PageHeader title="Visão geral" subtitle="Situação da plataforma Cadrius agora"
-                actions={<button type="button" className={styles.btn} onClick={reload}>Atualizar</button>} />
+                actions={<Button icon={FiRefreshCw} onClick={reload}>Atualizar</Button>} />
             <div className={styles.grid}>
                 <StatCard title="Escritórios ativos" value={e.ativos} note={`${e.total} no total · ${e.novos_30d} novos em 30 dias`} />
                 <StatCard title="Usuários ativos" value={u.total} note={`${u.acessaram_24h} acessaram em 24 h · ${u.acessaram_30d} em 30 dias`} />
@@ -33,13 +35,13 @@ export default function Visao() {
             </div>
             <div className={styles.card}>
                 <div className={styles.section_title}>Assinaturas por estado</div>
-                <div className={styles.btn_row}>
+                <Row>
                     {Object.entries(e.por_estado).map(([st, n]) => (
-                        <Link key={st} to={`/gestao/escritorios?estado=${st}`} style={{ textDecoration: 'none' }}>
+                        <Link key={st} to={`/gestao/escritorios?estado=${st}`} className={g.state_link}>
                             <StatusPill map={SUB_STATE} value={st} /> <strong>{n}</strong>
                         </Link>
                     ))}
-                </div>
+                </Row>
             </div>
             {f && (
                 <div className={styles.card}>
@@ -52,15 +54,17 @@ export default function Visao() {
                 </div>
             )}
             {f?.tendencia_12m && (
-                <div className={styles.table_wrap}>
-                    <table className={styles.table}>
-                        <thead><tr><th>Mês</th><th>Receita recebida</th><th>Escritórios novos</th><th>Cancelamentos</th><th>Churn</th></tr></thead>
-                        <tbody>{[...f.tendencia_12m].reverse().map((m) => (
-                            <tr key={m.mes}><td>{m.mes.split('-').reverse().join('/')}</td><td>{brl(m.receita_brl)}</td><td>{m.novos_escritorios}</td>
-                                <td>{m.cancelamentos}</td><td>{m.churn_pct}%</td></tr>
-                        ))}</tbody>
-                    </table>
-                </div>
+                <Table columns={['Mês', 'Receita recebida', 'Escritórios novos', 'Cancelamentos', 'Churn']}>
+                    {[...f.tendencia_12m].reverse().map((m) => (
+                        <tr key={m.mes}>
+                            <td>{m.mes.split('-').reverse().join('/')}</td>
+                            <td data-label="Receita recebida">{brl(m.receita_brl)}</td>
+                            <td data-label="Escritórios novos">{m.novos_escritorios}</td>
+                            <td data-label="Cancelamentos">{m.cancelamentos}</td>
+                            <td data-label="Churn">{m.churn_pct}%</td>
+                        </tr>
+                    ))}
+                </Table>
             )}
             {!hasArea(areas, 'ti') && !hasArea(areas, 'financeiro') && <Banner tone="warn">Sem área atribuída.</Banner>}
         </div>

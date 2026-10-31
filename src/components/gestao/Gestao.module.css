@@ -3,3 +3,7 @@
 /* Segredo mostrado uma única vez (senha temporária): grande, fácil de selecionar inteiro */
 .secret { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--radius); background: var(--c-surface-3); color: var(--c-ink);
     font-family: var(--font-mono); font-size: 18px; letter-spacing: .06em; user-select: all; overflow-wrap: anywhere; }
+
+/* Contagem por estado na Visão geral: selo + número viram um link sem sublinhado */
+.state_link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: var(--c-ink); }
+.state_link:hover strong { text-decoration: underline; }
