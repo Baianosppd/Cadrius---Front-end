@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { FiActivity, FiArrowLeft, FiChevronDown, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import { AREA_LABEL, backofficeApi } from '../services/backoffice';
-import { Loading } from '../components/ui';
+import { Button, Loading } from '../components/ui';
 import { errorMessage } from '../utils/format';
 import ConsentModal from '../components/seguranca/ConsentModal';
 import MfaSetup from '../components/seguranca/MfaSetup';
@@ -113,8 +113,7 @@ export default function AdminLayout() {
                     {me.mfa && !enrolling && user?.mfa_enabled && (
                         <div className={styles.denied}><h2>Confirme a verificação em duas etapas</h2>
                             <p>Esta sessão começou antes do código. Saia e entre de novo com a senha e o código do aplicativo.</p>
-                            <button type="button" className={styles.footer_btn} style={{ margin: '0 auto', color: 'var(--c-primary)' }}
-                                onClick={async () => { await logout(); navigate('/', { replace: true }); }}>Sair e entrar de novo</button>
+                            <Button variant="primary" icon={FiLogOut} onClick={async () => { await logout(); navigate('/', { replace: true }); }}>Sair e entrar de novo</Button>
                         </div>
                     )}
                     {!me.error && !me.data && !me.mfa && <div className={styles.page_inner}><Loading lines={4} /></div>}
