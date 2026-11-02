@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import TabBar from '../../components/ui/TabBar';
+import { FiPlus, FiTrash2 } from 'react-icons/fi';
 import styles from '../../components/ui/ui.module.css';
-import { Banner, Empty, Loading, Pill, StatCard } from '../../components/ui';
-import { errorMessage } from '../../utils/format';
+import g from '../../components/gestao/Gestao.module.css';
+import { Banner, Button, Checkbox, Empty, Field, FormModal, Input, Loading, Modal, PageHeader, Pill, Row, Select, Stack, StatCard, Table, Tabs, Textarea } from '../../components/ui';
+import { errorMessage, fmtDateTime } from '../../utils/format';
+import useLoader from '../../hooks/useLoader';
 import {
     STATUSES, TIERS, adminApi, apiErrors, brl, formToBody, toLocalInput,
 } from '../../services/financeiro';
-
 const SEVERITIES = [['info', 'Informativo'], ['warn', 'Atenção'], ['danger', 'Urgente']];
 const KINDS = [['percent', 'Percentual (%)'], ['amount', 'Valor fixo (R$)'], ['trial', 'Dias extras de teste']];
 const DURATIONS = [['once', 'Só na 1ª cobrança'], ['repeating', 'Por N meses'], ['forever', 'Para sempre']];
@@ -92,31 +93,35 @@ const RESOURCES = {
     },
 };
 
-function MultiCheck({ options, value, onChange }) {
+function MultiCheck({ label, options, value, onChange }) {
     const set = new Set(value || []);
     return (
-        <span style={{ display: 'inline-flex', gap: 10, flexWrap: 'wrap' }}>
-            {options.map(([k, label]) => (
-                <label key={k}><input type="checkbox" checked={set.has(k)} onChange={() => { set.has(k) ? set.delete(k) : set.add(k); onChange([...set]); }} /> {label}</label>
-            ))}
-        </span>
+        <Stack gap={1} role="group" aria-label={label}>
+            <span className={styles.text_sm}>{label}</span>
+            <Row gap={3}>
+                {options.map(([k, l]) => (
+                    <Checkbox key={k} checked={set.has(k)} onChange={() => { set.has(k) ? set.delete(k) : set.add(k); onChange([...set]); }}>{l}</Checkbox>
+                ))}
+            </Row>
+        </Stack>
     );
 }
 
-function Field({ field, form, setForm }) {
+function CampoRecurso({ field, form, setForm }) {
     const v = form[field.name] ?? '';
     const set = (val) => setForm((f) => ({ ...f, [field.name]: val }));
-    const base = { style: { width: '100%', padding: 6, border: '1px solid var(--c-border-2)', borderRadius: 6 } };
-    if (field.type === 'checkbox') return <input type="checkbox" checked={!!form[field.name]} onChange={(e) => set(e.target.checked)} />;
-    if (field.type === 'select') return <select {...base} value={v} onChange={(e) => set(e.target.value)}>{field.options.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>;
-    if (field.type === 'textarea') return <textarea {...base} rows={3} value={v} onChange={(e) => set(e.target.value)} />;
-    if (field.type === 'tiers') return <MultiCheck options={TIERS} value={form[field.name]} onChange={set} />;
-    if (field.type === 'statuses') return <MultiCheck options={STATUSES} value={form[field.name]} onChange={set} />;
-    if (field.type === 'datetime') return <input {...base} type="datetime-local" value={v} onChange={(e) => set(e.target.value)} />;
-    return <input {...base} type={field.type === 'number' ? 'number' : 'text'} value={v} onChange={(e) => set(e.target.value)} />;
+    if (field.type === 'checkbox') return <Checkbox checked={!!form[field.name]} onChange={(e) => set(e.target.checked)}>{field.label}</Checkbox>;
+    if (field.type === 'tiers') return <MultiCheck label={field.label} options={TIERS} value={form[field.name]} onChange={set} />;
+    if (field.type === 'statuses') return <MultiCheck label={field.label} options={STATUSES} value={form[field.name]} onChange={set} />;
+    let control;
+    if (field.type === 'select') control = <Select value={v} onChange={(e) => set(e.target.value)}>{field.options.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</Select>;
+    else if (field.type === 'textarea') control = <Textarea rows={3} value={v} onChange={(e) => set(e.target.value)} />;
+    else if (field.type === 'datetime') control = <Input type="datetime-local" value={v} onChange={(e) => set(e.target.value)} />;
+    else control = <Input type={field.type === 'number' ? 'number' : 'text'} value={v} onChange={(e) => set(e.target.value)} />;
+    return <Field label={field.label}>{control}</Field>;
 }
 
-function EditForm({ spec, initial, onSave, onCancel }) {
+function EditForm({ spec, title, initial, onSave, onCancel }) {
     const [form, setForm] = useState(initial);
     const [errors, setErrors] = useState([]);
     const [busy, setBusy] = useState(false);
@@ -127,16 +132,29 @@ function EditForm({ spec, initial, onSave, onCancel }) {
         try { await onSave(formToBody(spec.fields, form)); } catch (err) { setErrors(apiErrors(err)); } finally { setBusy(false); }
     };
     return (
-        <form onSubmit={submit} style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)', borderRadius: 8, padding: 14, margin: '8px 0', display: 'grid', gap: 10, gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-            {spec.fields.map((f) => (
-                <label key={f.name} style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: '0.85rem', color: 'var(--c-text-2)' }}>{f.label}<Field field={f} form={form} setForm={setForm} /></label>
-            ))}
-            {errors.length > 0 && <div style={{ gridColumn: '1 / -1' }}><Banner tone="error">{errors.map((e) => <div key={e}>{e}</div>)}</Banner></div>}
-            <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 8 }}>
-                <button type="submit" disabled={busy}>{busy ? 'Salvando…' : 'Salvar'}</button>
-                <button type="button" onClick={onCancel}>Cancelar</button>
+        <FormModal title={title} size="lg" onClose={onCancel} onSubmit={submit} busy={busy}
+            error={errors.length > 0 && errors.map((e) => <div key={e}>{e}</div>)}>
+            <div className={g.form_grid}>
+                {spec.fields.map((fd) => <CampoRecurso key={fd.name} field={fd} form={form} setForm={setForm} />)}
             </div>
-        </form>
+        </FormModal>
+    );
+}
+
+function ConfirmarApagar({ row, onDone, onCancel }) {
+    const [busy, setBusy] = useState(false);
+    const confirm = async () => {
+        setBusy(true);
+        try { await onDone(row); } catch (e) { toast.error(errorMessage(e)); setBusy(false); }
+    };
+    return (
+        <Modal title="Apagar este item?" size="sm" onClose={onCancel} busy={busy}
+            footer={<>
+                <Button onClick={onCancel} disabled={busy}>Voltar</Button>
+                <Button variant="danger" icon={FiTrash2} loading={busy} onClick={confirm}>Apagar</Button>
+            </>}>
+            <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>{row.title || row.name || row.code} será apagado e não pode ser recuperado.</p>
+        </Modal>
     );
 }
 
@@ -147,67 +165,64 @@ function toForm(spec, row) {
 }
 
 function Crud({ spec }) {
-    const [rows, setRows] = useState(null);
-    const [error, setError] = useState(null);
-    const [editing, setEditing] = useState(null);   // id | 'new'
-    const load = useCallback(() => adminApi.list(spec.resource).then(setRows).catch((e) => setError(errorMessage(e))), [spec.resource]);
-    useEffect(() => { load(); }, [load]);
+    const { data: rows, error, reload } = useLoader(() => adminApi.list(spec.resource), [spec.resource]);
+    const [editing, setEditing] = useState(null);
+    const [removing, setRemoving] = useState(null);
 
     const save = async (body) => {
         if (editing === 'new') await adminApi.create(spec.resource, body); else await adminApi.update(spec.resource, editing, body);
         toast.success('Salvo.');
         setEditing(null);
-        load();
+        reload();
     };
     const remove = async (row) => {
-        if (!window.confirm('Apagar este item?')) return;
-        try { await adminApi.remove(spec.resource, row.id); load(); } catch (e) { toast.error(errorMessage(e)); }
+        await adminApi.remove(spec.resource, row.id);
+        toast.success('Apagado.');
+        setRemoving(null);
+        reload();
     };
 
     if (error) return <Banner tone="error">{error}</Banner>;
     if (!rows) return <Loading />;
+    const current = editing && editing !== 'new' ? rows.find((r) => r.id === editing) : null;
     return (
-        <div className={styles.page}>
+        <Stack gap={3}>
             <Banner tone="info">{spec.note}</Banner>
-            {spec.canCreate && editing !== 'new' && <div><button onClick={() => setEditing('new')}>+ Novo</button></div>}
-            {editing === 'new' && <EditForm spec={spec} initial={spec.empty} onSave={save} onCancel={() => setEditing(null)} />}
-            <div className={styles.table_wrap}>
-                <table className={styles.table}>
-                    <thead><tr>{spec.columns.map(([, label]) => <th key={label}>{label}</th>)}<th /></tr></thead>
-                    <tbody>
-                        {rows.length === 0 && <tr><td colSpan={spec.columns.length + 1}><Empty>Nada cadastrado.</Empty></td></tr>}
-                        {rows.map((row) => (
-                            <tr key={row.id}>
-                                {spec.columns.map(([key, label, render]) => <td key={label}>{render ? render(row[key], row) : String(row[key] ?? '—')}</td>)}
-                                <td style={{ whiteSpace: 'nowrap' }}>
-                                    <button onClick={() => setEditing(editing === row.id ? null : row.id)}>Editar</button>
-                                    {spec.canDelete && <button onClick={() => remove(row)} style={{ color: 'var(--c-danger)', marginLeft: 6 }}>Apagar</button>}
-                                </td>
-                            </tr>
+            {spec.canCreate && <Button variant="primary" icon={FiPlus} className={styles.w_fit} onClick={() => setEditing('new')}>Novo</Button>}
+            <Table columns={[...spec.columns.map(([, label]) => label), { label: '', className: styles.td_actions }]}
+                empty={rows.length === 0 && <Empty>Nada cadastrado.</Empty>}>
+                {rows.map((row) => (
+                    <tr key={row.id}>
+                        {spec.columns.map(([key, label, render], i) => (
+                            <td key={label} data-label={i ? label : undefined}>{render ? render(row[key], row) : String(row[key] ?? '—')}</td>
                         ))}
-                    </tbody>
-                </table>
-            </div>
-            {editing && editing !== 'new' && (
-                <EditForm spec={spec} initial={toForm(spec, rows.find((r) => r.id === editing) || {})} onSave={save} onCancel={() => setEditing(null)} />
+                        <td className={styles.td_actions}>
+                            <Row gap={1} wrap={false}>
+                                <Button size="sm" onClick={() => setEditing(row.id)}>Editar</Button>
+                                {spec.canDelete && <Button size="sm" variant="danger" icon={FiTrash2} onClick={() => setRemoving(row)}>Apagar</Button>}
+                            </Row>
+                        </td>
+                    </tr>
+                ))}
+            </Table>
+            {editing === 'new' && <EditForm spec={spec} title="Novo" initial={spec.empty} onSave={save} onCancel={() => setEditing(null)} />}
+            {current && (
+                <EditForm spec={spec} title={`Editar: ${current.name || current.title || current.label || current.code || ''}`}
+                    initial={toForm(spec, current)} onSave={save} onCancel={() => setEditing(null)} />
             )}
-        </div>
+            {removing && <ConfirmarApagar row={removing} onDone={remove} onCancel={() => setRemoving(null)} />}
+        </Stack>
     );
 }
 
 function Resumo() {
-    const [data, setData] = useState(null);
-    const [history, setHistory] = useState([]);
-    const [error, setError] = useState(null);
-    useEffect(() => {
-        adminApi.summary().then(setData).catch((e) => setError(errorMessage(e)));
-        adminApi.priceHistory().then(setHistory).catch(() => setHistory([]));
-    }, []);
+    const { data, error } = useLoader(adminApi.summary);
+    const { data: history } = useLoader(() => adminApi.priceHistory().catch(() => []));
     if (error) return <Banner tone="error">{error}</Banner>;
     if (!data) return <Loading />;
     const st = data.organizacoes_por_estado;
     return (
-        <div className={styles.page}>
+        <Stack gap={3}>
             <div className={styles.grid}>
                 <StatCard title="MRR (preço de tabela)" value={brl(data.mrr_tabela_brl)} note="Assinaturas ativas com Stripe; não desconta cupons" />
                 <StatCard title="Assinantes pagantes" value={data.assinantes_pagantes} note={`Ticket médio ${brl(data.ticket_medio_brl)}`} />
@@ -216,20 +231,15 @@ function Resumo() {
                 <StatCard title="Créditos avulsos (30 dias)" value={brl(data.pacotes_30d.receita_brl)} note={`${data.pacotes_30d.creditos_vendidos} créditos vendidos${data.creditos_cortesia_30d ? ` · ${data.creditos_cortesia_30d} de cortesia` : ''}`} />
                 <StatCard title="Promoções" value={data.promocoes_ativas} note={`${data.usos_de_promocao} usos no total`} />
             </div>
-            <h3>Histórico de preços</h3>
-            <div className={styles.table_wrap}>
-                <table className={styles.table}>
-                    <thead><tr><th>Quando</th><th>Plano</th><th>Preço</th><th>Créditos</th></tr></thead>
-                    <tbody>
-                        {history.length === 0 && <tr><td colSpan={4}><Empty>Nenhuma alteração registrada.</Empty></td></tr>}
-                        {history.map((h, i) => (
-                            <tr key={i}><td>{new Date(h.changed_at).toLocaleString('pt-BR')}</td><td>{h.plan}</td>
-                                <td>{brl(h.old_price)} → {brl(h.new_price)}</td><td>{h.old_credits} → {h.new_credits}</td></tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            <div className={`${styles.section_title} ${styles.mb_0}`}>Histórico de preços</div>
+            <Table columns={['Quando', 'Plano', 'Preço', 'Créditos']}
+                empty={(history || []).length === 0 && <Empty>Nenhuma alteração registrada.</Empty>}>
+                {(history || []).map((h, i) => (
+                    <tr key={i}><td>{fmtDateTime(h.changed_at)}</td><td data-label="Plano">{h.plan}</td>
+                        <td data-label="Preço">{brl(h.old_price)} → {brl(h.new_price)}</td><td data-label="Créditos">{h.old_credits} → {h.new_credits}</td></tr>
+                ))}
+            </Table>
+        </Stack>
     );
 }
 
@@ -240,11 +250,8 @@ export default function Financeiro() {
     const [tab, setTab] = useState('resumo');
     return (
         <div className={styles.page}>
-            <div>
-                <div className={styles.page_title}>Financeiro</div>
-                <div className={styles.page_subtitle}>Preços, pacotes e promoções</div>
-            </div>
-            <TabBar tabs={TABS} activeTab={tab} onTabChange={setTab} />
+            <PageHeader title="Financeiro" subtitle="Preços, pacotes e promoções" />
+            <Tabs tabs={TABS} value={tab} onChange={setTab} />
             {tab === 'resumo' ? <Resumo /> : <Crud key={tab} spec={RESOURCES[tab]} />}
         </div>
     );
