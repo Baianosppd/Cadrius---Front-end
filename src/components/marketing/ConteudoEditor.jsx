@@ -9,7 +9,6 @@ import PostPreview from './PostPreview';
 import MediaStudio from './MediaStudio';
 import AIWriteMenu from '../assistant/AIWriteMenu';
 
-// Alertas do verificador OAB (Provimento 205/2021)
 function Alertas({ alertas }) {
     if (!alertas?.length) return <Banner tone="ok">Nenhum alerta encontrado pelo verificador.</Banner>;
     return (
@@ -77,7 +76,6 @@ export default function ConteudoEditor({ api, id, canApprove, onClose, onChanged
     const auto = AUTO_CHANNELS.includes(p.canal);
     const travado = busy || (blocking && !revisei);
     return (
-        // Editor com texto: clique fora não fecha (Esc e "Fechar" fecham)
         <Modal size="xl" onClose={onClose} busy={busy} closeOnOverlay={false}
             title={<>{CHANNEL_LABEL[p.canal]} <Pill tone={tone}>{label}</Pill> {p.ia && <Pill tone="blue">IA</Pill>}</>}
             footer={<>

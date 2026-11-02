@@ -5,7 +5,6 @@ import { Button, Checkbox, Chip, Field, Input, Row, Select, Stack, Textarea } fr
 import { errorMessage } from '../../utils/format';
 import { CHANNELS } from '../../services/marketing';
 
-// Novo conteúdo (com ou sem IA) + ideias de pauta que preenchem o tema
 export default function CriarConteudo({ api, scope, ideas, campaigns, onCreated }) {
     const [form, setForm] = useState({ canal: 'instagram', tema: '', orientacoes: '', usar_ia: true, campanha_id: '' });
     const [busy, setBusy] = useState(false);

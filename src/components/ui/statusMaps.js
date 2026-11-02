@@ -1,4 +1,4 @@
-// Mapas de estado → rótulo/cor, compartilhados entre as telas (usados com <StatusPill>)
+// Mapas de estado → rótulo/cor, compartilhados entre as telas
 export const SEVERITY = {
     critical: { label: 'Crítica', tone: 'red' }, high: { label: 'Alta', tone: 'orange' },
     medium: { label: 'Média', tone: 'yellow' }, low: { label: 'Baixa', tone: 'blue' },

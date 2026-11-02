@@ -4,7 +4,6 @@ import ui from '../ui/ui.module.css';
 import { Button, Empty, Field, FilterBar, Input, Pill, Row, Stack, Table } from '../ui';
 import { fmtDate } from '../../utils/format';
 
-// Status do documento → rótulo e cor da Pill
 const STATUS = {
     pronto: { label: 'Pronto', tone: 'green' },
     processando: { label: 'Processando', tone: 'blue' },

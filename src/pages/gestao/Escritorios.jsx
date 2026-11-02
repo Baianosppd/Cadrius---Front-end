@@ -8,7 +8,6 @@ import ActionModal from '../../components/gestao/ActionModal';
 import { SUB_STATE, backofficeApi, orgActionsFor } from '../../services/backoffice';
 import useLoader from '../../hooks/useLoader';
 
-// Detalhe do escritório num modal grande; as ações (motivo obrigatório) abrem outro modal por cima — o Esc fecha só o de cima
 function Detalhe({ id, areas, onClose, onChanged }) {
     const { data, error, reload } = useLoader(() => backofficeApi.organization(id), [id]);
     const [action, setAction] = useState(null);

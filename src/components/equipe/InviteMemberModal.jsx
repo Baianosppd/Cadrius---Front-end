@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Field, FormModal, Input, Select } from '../ui';
 
-// Convite de funcionário. O back recebe só e-mail e cargo; o nome a pessoa preenche ao aceitar o convite.
 const InviteMemberModal = ({ onClose, onSave }) => {
     const [formData, setFormData] = useState({ email: '', role: 'MEMBER' });
     const [loading, setLoading] = useState(false);

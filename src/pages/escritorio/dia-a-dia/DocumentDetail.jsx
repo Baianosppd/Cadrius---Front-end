@@ -13,10 +13,8 @@ import {
     DOC_TYPES, EXTRACTION_STATUS, documentsApi, fieldsForConfirm, isBusy, normalizeFields,
 } from '../../../services/documents';
 
-// Tom do status da leitura → tom do Banner
 const BANNER_TONE = { info: 'info', warn: 'warn', success: 'ok', danger: 'error' };
 
-// Lista editável (partes, prazos, próximos passos): uma linha por item, com remover e adicionar
 function ListEditor({ title, items, onChange, render, blank, addLabel, readOnly }) {
     return (
         <Stack as="section" gap={3} className={ui.card}>

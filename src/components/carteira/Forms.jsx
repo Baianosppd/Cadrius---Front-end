@@ -9,7 +9,6 @@ import {
 } from '../../services/carteira';
 
 const today = () => new Date().toISOString().slice(0, 10);
-// Centavos da API → texto do MoneyInput ("1.500,00")
 const centsToText = (c) => (c ? (c / 100).toFixed(2).replace('.', ',') : '');
 
 // Busca de cliente no quadro de contatos (nome, CPF/CNPJ, e-mail) — evita listas enormes num <select>

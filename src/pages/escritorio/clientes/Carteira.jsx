@@ -80,7 +80,6 @@ function AgreementDetail({ id, canManage, onClose, onChanged }) {
         try { await carteiraApi.agreementAction(id, action, body); toast.success(ok); reload(); onChanged(); } catch (err) { toast.error(errorMessage(err)); }
     };
     return (
-        // Com o êxito sendo preenchido, clique fora não fecha
         <Modal title={data?.titulo || 'Contrato'} size="lg" onClose={onClose} closeOnOverlay={!success.proveito}
             footer={<>
                 {canManage && data?.status === 'ativo' && <Button variant="danger"

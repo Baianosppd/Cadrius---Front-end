@@ -16,7 +16,6 @@ const AutomationRow = ({ workflow, canManage, onToggle, onApprove, onReject, onD
                 <div className={ui.muted}>Gatilho: {workflow.trigger?.event_type || '—'}</div>
             </td>
             <td data-label="Status">
-                {/* Interruptor liga/desliga (rascunho da IA só liga depois de aprovado) */}
                 <button
                     type="button"
                     className={`${styles.toggle} ${active ? styles.toggle_active : styles.toggle_inactive}`}

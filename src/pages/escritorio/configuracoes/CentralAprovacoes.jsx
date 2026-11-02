@@ -10,7 +10,6 @@ import PerfilEscritorio from '../../../components/ia/PerfilEscritorio';
 import Aprendizado from '../../../components/ia/Aprendizado';
 import { MEMORY_KIND, MODE_LABEL, RISK_LABEL, RULE_KIND, brainApi, pct, promotionProgress, ruleEvidence } from '../../../services/brain';
 
-// Item de lista em cartão: texto à esquerda, ações à direita (quebra no celular)
 function ItemCard({ children, actions }) {
     return (
         <Row justify="between" gap={3} className={styles.card}>

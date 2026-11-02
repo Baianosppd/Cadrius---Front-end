@@ -5,7 +5,6 @@
     overflow: hidden;
 }
 
-/* O item é um <button> (abre pelo teclado): zera o visual padrão do botão */
 .item {
     width: 100%;
     border: none;

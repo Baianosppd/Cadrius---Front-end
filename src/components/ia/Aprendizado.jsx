@@ -50,7 +50,6 @@ export default function Aprendizado() {
     );
 }
 
-// Barra de porcentagem; a largura depende do dado, por isso fica inline
 function Bar({ value }) {
     if (value === null || value === undefined) return '—';
     const tone = value >= 85 ? styles.bar_fill_green : value >= 60 ? '' : styles.bar_fill_yellow;

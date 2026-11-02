@@ -49,7 +49,6 @@ export default function GoogleCalendarCard({ embedded = false }) {
 
     return (
         <Stack as="section" aria-label="Google" className={embedded ? '' : ui.card}>
-            {/* Dentro da janela de Integrações o título já aparece no topo; fora dela, o cartão mostra o próprio cabeçalho */}
             {!embedded && (
                 <Row gap={3} wrap={false}>
                     <span aria-hidden="true" className={s.logo_box}><SiGoogle size={22} color="#4285F4" /></span>

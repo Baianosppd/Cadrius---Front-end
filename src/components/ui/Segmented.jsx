@@ -1,6 +1,5 @@
 import styles from './ui.module.css';
 
-// Escolha entre poucas opções lado a lado (ex.: Lista | Calendário). options = [{ id, label, icon? }]
 export default function Segmented({ options, value, onChange, className = '', ...rest }) {
     return (
         <div role="group" {...rest} className={[styles.segmented, styles.w_fit, className].filter(Boolean).join(' ')}>

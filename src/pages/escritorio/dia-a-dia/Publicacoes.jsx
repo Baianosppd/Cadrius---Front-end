@@ -85,7 +85,6 @@ function Revisao({ id, onClose, onDone, canWrite }) {
         try { await fn(); toast.success(msg); onDone(); } catch (err) { toast.error(errorMessage(err)); } finally { setBusy(false); }
     };
     const venc = form.vencimento || preview?.vencimento || pub.vencimento;
-    // Com campos para confirmar, clique fora não fecha (não perde o que foi ajustado)
     const editavel = pub.status === 'nova' && canWrite;
     return (
         <Modal size="xl" onClose={onClose} busy={busy} closeOnOverlay={!editavel}

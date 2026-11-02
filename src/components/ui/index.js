@@ -1,4 +1,3 @@
-// Kit de componentes do Cadrius: import { Banner, Modal, … } from '…/components/ui'
 export { default as Banner } from './Banner';
 export { default as Button } from './Button';
 export { default as Checkbox } from './Checkbox';

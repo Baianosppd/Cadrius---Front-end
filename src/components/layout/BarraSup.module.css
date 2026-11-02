@@ -114,8 +114,6 @@
   .search_text, .search_kbd { display: none; }
 }
 
-/* Bloco foto + nome abre o Perfil (também pelo teclado) */
 .clickable { cursor: pointer; border-radius: var(--radius); }
 .clickable:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; }
-/* Avatar sem foto: iniciais */
 .avatar_initials { display: flex; align-items: center; justify-content: center; background: var(--c-primary-100); color: var(--c-primary-700); font-weight: 700; }

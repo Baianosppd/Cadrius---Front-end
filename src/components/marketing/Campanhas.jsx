@@ -7,7 +7,6 @@ import { CHANNELS, CHANNEL_LABEL } from '../../services/marketing';
 
 const EMPTY = { nome: '', objetivo: '', publico: '', inicio: '', fim: '', canais: [] };
 
-// Campanhas: agrupam conteúdos de um mesmo objetivo
 export default function Campanhas({ api, campaigns, reload }) {
     const [form, setForm] = useState(EMPTY);
     const add = async (e) => {

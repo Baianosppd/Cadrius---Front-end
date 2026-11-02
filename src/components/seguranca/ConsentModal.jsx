@@ -9,7 +9,6 @@ const KIND_LABEL = { terms: 'Termos de Uso', privacy: 'Política de Privacidade'
 
 // Modal de reaceite (LGPD): abre quando há documentos novos pendentes (ao entrar) ou quando o back responde 428.
 // O texto exibido é o da versão vigente; o aceite grava versão + hash no servidor (prova).
-// Obrigatório: não fecha por Esc nem clique fora — só segue depois de aceitar.
 export default function ConsentModal() {
     const [pending, setPending] = useState([]);
     const [accepted, setAccepted] = useState({});

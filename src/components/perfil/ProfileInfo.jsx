@@ -2,7 +2,6 @@ import { useState } from 'react';
 import ui from '../ui/ui.module.css';
 import { Button, Field, Input, Stack } from '../ui';
 
-// Dados pessoais (CAD-230: a foto foi para a capa do perfil — ProfileCover). onSave pode ser assíncrono.
 const ProfileInfo = ({ user = {}, onSave }) => {
     const [nome, setNome] = useState(user.nome || '');
     const [telefone, setTelefone] = useState(user.telefone || '');

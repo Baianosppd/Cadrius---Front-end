@@ -25,7 +25,6 @@ export default function AssinaturaModal({ documentId, documentName, onClose }) {
         catch (err) { setError({ msg: errorMessage(err), notConnected: err?.response?.data?.code === 'not_connected' }); } finally { setBusy(false); }
     };
     return (
-        // Com signatários escolhidos, clique fora não fecha (não perde a seleção)
         <Modal title="Enviar para assinatura" onClose={onClose} busy={busy} closeOnOverlay={!chosen.length || !!result}
             footer={result ? <Button onClick={onClose}>Fechar</Button> : <>
                 <Button variant="primary" disabled={!chosen.length} loading={busy} loadingLabel="Enviando…" onClick={send}>Enviar</Button>

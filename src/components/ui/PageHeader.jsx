@@ -1,6 +1,5 @@
 import styles from './ui.module.css';
 
-// Cabeçalho padrão das telas (CAD-219): título, subtítulo curto e ações à direita
 export default function PageHeader({ title, subtitle, actions }) {
     return (
         <div className={styles.header_row}>

@@ -1,7 +1,6 @@
 import styles from './NotificationList.module.css';
 import { tipo } from './tipos';
 
-// Cada notificação é um botão: abre com clique, Enter ou Espaço. A cor do ícone vem do tipo (inline).
 const NotificationItem = ({ title, description, time, read, type, onClick }) => {
     const { icon: Icon, color, bg } = tipo(type);
     return (

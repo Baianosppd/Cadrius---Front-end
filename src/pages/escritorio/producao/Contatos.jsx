@@ -87,7 +87,6 @@ export default function Contatos() {
     const [charging, setCharging] = useState(null);
     const [file, setFile] = useState(null);
     const { data, error, reload } = useLoader(() => contactsApi.list(query), [query.q, query.kind, query.tag]);
-    // Linha da tabela abre o contato no clique ou com Enter (quem só lê não abre)
     const open = (c) => canWrite && setEditing(c);
     return (
         <div className={styles.page}>

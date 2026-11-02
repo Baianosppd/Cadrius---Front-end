@@ -20,7 +20,6 @@ function BarraSup({ nome, onMenu, menuOpen }) {
         api.get('notifications/unread-count/').then((r) => setUnread(r.data.unread ?? r.data.count ?? 0)).catch(() => {});
     }, []);
 
-    // Contador do sino: a cada 42 s com a aba visível, ao voltar para a aba e quando alguém lê notificações
     useEffect(() => {
         loadUnread();
         const timer = setInterval(() => { if (document.visibilityState === 'visible') loadUnread(); }, 42000);
@@ -61,7 +60,6 @@ function BarraSup({ nome, onMenu, menuOpen }) {
                     {unread > 0 && <span className={styles.badge}>{unread > 99 ? '99+' : unread}</span>}
                 </button>
 
-                {/* Abre o Perfil com clique, Enter ou Espaço */}
                 <div
                     className={`${styles.user_profile} ${styles.clickable}`}
                     role="link"

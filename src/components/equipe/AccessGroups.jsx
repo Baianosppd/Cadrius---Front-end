@@ -119,7 +119,6 @@ function GroupEditor({ cat, group, onClose, onSaved }) {
         } catch (e) { toast.error(errorMessage(e)); } finally { setBusy(false); }
     };
     return (
-        // Muitas escolhas: clique fora não fecha
         <Modal title={group.id ? `Editar "${group.nome}"` : 'Novo grupo de acesso'} size="xl" onClose={onClose} busy={busy} closeOnOverlay={false}
             footer={<>
                 <Button variant="primary" disabled={nome.trim().length < 2} loading={busy} loadingLabel="Salvando…" onClick={save}>Salvar grupo</Button>

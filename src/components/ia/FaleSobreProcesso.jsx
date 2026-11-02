@@ -63,7 +63,6 @@ export default function FaleSobreProcesso({ onClose }) {
     };
     const title = <><FiMessageCircle aria-hidden="true" /> Fale sobre seu processo</>;
 
-    // 1ª etapa: o formulário (o rodapé fica dentro do <form>, então o Enter e o botão enviam)
     if (!result) return (
         <Modal as="form" title={title} size="lg" onClose={onClose} busy={busy} closeOnOverlay={false} onSubmit={submit}
             footer={<>
@@ -93,7 +92,6 @@ export default function FaleSobreProcesso({ onClose }) {
         </Modal>
     );
 
-    // 2ª etapa: as automações sugeridas
     return (
         <Modal title={title} size="lg" onClose={onClose}
             footer={<>

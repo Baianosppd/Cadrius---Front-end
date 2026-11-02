@@ -2,7 +2,6 @@ import styles from '../ui/ui.module.css';
 import s from './Suporte.module.css';
 import { fmtDateTime } from '../../utils/format';
 
-// Mensagens de um chamado. staffView: na Gestão Cadrius, as mensagens da equipe ficam à direita.
 export default function Conversa({ messages, staffView = false }) {
     return (
         <div className={s.conversa}>

@@ -1,6 +1,5 @@
 import styles from './SmartActivities.module.css';
 
-// Cores do tema (mudam no modo escuro)
 const dotColors = {
     success: 'var(--c-success)',
     warning: 'var(--c-warning)',

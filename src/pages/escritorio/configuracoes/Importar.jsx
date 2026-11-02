@@ -7,7 +7,6 @@ import { errorMessage, fmtDateTime } from '../../../utils/format';
 import useLoader from '../../../hooks/useLoader';
 import { ACTION_TONE, MAX_MB, TARGETS, importsApi, missingRequired, setColumnField } from '../../../services/imports';
 
-// Importações anteriores (só aparece quando há alguma)
 function Historico({ tick }) {
     const { data } = useLoader(importsApi.list, [tick]);
     if (!data?.length) return null;

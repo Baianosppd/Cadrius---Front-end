@@ -28,7 +28,6 @@ function TemplateText({ label, value, onChange, vars, multiline, max }) {
     );
 }
 
-// Campo "dias úteis" que muda conforme a data é contada do evento ou do prazo (tarefa e compromisso do Google)
 function DiasField({ p, set, antesLabel }) {
     return p.quando === 'prazo'
         ? <Field label={antesLabel}><Input type="number" min={0} max={30} value={p.antecedencia ?? 0} onChange={(e) => set('antecedencia', e.target.value)} /></Field>
@@ -226,7 +225,6 @@ function StepCondition({ action, onChange, vars, operadores }) {
     );
 }
 
-// Campo numérico da configuração do gatilho (dias antes, dias de atraso…)
 function CfgNumber({ label, value, min, max, onChange }) {
     return <Field label={label}><Input type="number" min={min} max={max} value={value} onChange={(e) => onChange(Number(e.target.value))} /></Field>;
 }

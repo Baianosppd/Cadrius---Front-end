@@ -7,7 +7,6 @@ import { integrationsApi } from '../../services/integrations';
 
 // Cobrança de honorários pelo Asaas (CAD-174): boleto/Pix para um contato com CPF/CNPJ
 export default function CobrancaModal({ contact, onClose }) {
-    // Vencimento padrão: daqui a 7 dias (calculado só ao abrir)
     const [form, setForm] = useState(() => ({
         valor: '', vencimento: new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10),
         descricao: 'Honorários advocatícios', forma: 'UNDEFINED',
@@ -15,14 +14,12 @@ export default function CobrancaModal({ contact, onClose }) {
     const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
     const [result, setResult] = useState(null);
     const { busy, error, falha, submit } = useSubmit(
-        // O back espera "1500,00" (sem o ponto de milhar)
         () => integrationsApi.charge({ contato_id: contact.id, ...form, valor: form.valor.replace(/\./g, '') }),
         { onDone: setResult },
     );
     const naoConectado = falha?.response?.data?.code === 'not_connected';
     const title = `Cobrar ${contact.name}`;
 
-    // Depois de gerar: mesma janela, agora só com o resultado
     if (result) return (
         <Modal title={title} onClose={onClose}
             footer={<Button onClick={onClose}>Fechar</Button>}>

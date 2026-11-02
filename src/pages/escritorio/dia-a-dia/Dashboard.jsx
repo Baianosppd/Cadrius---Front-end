@@ -50,7 +50,6 @@ function Dashboard() {
 
     const num = (key) => (dashStats ? String(dashStats[key] ?? 0) : '—');
     const stats = [
-        // Cores do tema (mudam no modo escuro). O roxo ainda não tem token — pendente com o Allan (CAD-127).
         { icon: FiFileText, iconColor: 'var(--c-info)', title: 'Documentos', value: num('total_documentos') },
         { icon: FiToggleRight, iconColor: '#8b5cf6', title: 'Automações ativas', value: num('automacoes_ativas') },
         { icon: FiZap, iconColor: 'var(--c-warning)', title: 'Automações rodadas', value: num('automacoes_rodadas') },

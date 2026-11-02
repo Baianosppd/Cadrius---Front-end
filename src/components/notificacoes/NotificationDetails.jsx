@@ -19,7 +19,6 @@ const NotificationDetail = ({ notification, onBack }) => {
             <Button variant="ghost" size="sm" icon={FiArrowLeft} className={ui.w_fit} onClick={onBack}>Voltar para Notificações</Button>
 
             <div className={styles.header}>
-                {/* A cor do ícone vem do tipo da notificação */}
                 <div className={styles.icon_wrapper} style={{ backgroundColor: bg }}>
                     <Icon className={styles.icon} style={{ color }} aria-hidden="true" />
                 </div>

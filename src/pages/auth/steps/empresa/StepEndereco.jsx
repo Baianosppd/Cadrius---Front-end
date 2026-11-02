@@ -5,7 +5,6 @@ import { maskCep, maskPhone } from '../../../../utils/format';
 
 const estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
 
-// Campos de texto do endereço: [chave, rótulo, placeholder, props extras, máscara?]
 const CAMPOS = [
     ['cep', 'CEP', '00000-000', { inputMode: 'numeric', autoComplete: 'postal-code', maxLength: 9 }, maskCep],
     ['logradouro', 'Logradouro', 'Rua, Avenida, etc.', { autoComplete: 'address-line1' }],

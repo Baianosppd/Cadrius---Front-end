@@ -17,7 +17,6 @@ function StylePicker({ value, onChange, brand }) {
         <div className={s.styles} role="group" aria-label="Modelo da arte">
             {ART_STYLES.map(([k, label, desc]) => (
                 <button key={k} type="button" className={s.style} aria-pressed={value === k} onClick={() => onChange(k)} title={desc}>
-                    {/* A cor da marca vem do escritório: variável inline */}
                     <span className={`${s.mini} ${s[`m_${k}`]}`} style={{ '--brand': brand }} aria-hidden="true">
                         {k === 'citacao' && <b>“</b>}{k === 'dica' && <span />}<i /><i />
                     </span>

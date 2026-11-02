@@ -29,7 +29,6 @@ export default function Plugins() {
     );
 }
 
-// Botão "Copiar" que vira "Copiado" por 1,5 s
 function Copy({ value, label = 'Copiar' }) {
     const [ok, setOk] = useState(false);
     const copy = async () => {
@@ -38,7 +37,6 @@ function Copy({ value, label = 'Copiar' }) {
     return <Button size="sm" icon={ok ? FiCheck : FiCopy} onClick={copy}>{ok ? 'Copiado' : label}</Button>;
 }
 
-// Token recém-criado: aparece uma única vez, por isso só o "Pronto" fecha (nem Esc nem clique fora)
 function TokenCriado({ created, onClose }) {
     const [app, setApp] = useState('claude');
     return (

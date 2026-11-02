@@ -3,7 +3,6 @@ import m from './Marketing.module.css';
 import { Banner, Empty, Loading, Pill, Stack, StatCard } from '../ui';
 import useLoader from '../../hooks/useLoader';
 
-// Indicadores de aquisição (só na Gestão Cadrius): cadastros, conversão e playbook
 export default function Indicadores({ api }) {
     const { data, error } = useLoader(() => api.growth(), []);
     if (error) return <Banner tone="error">{error}</Banner>;
@@ -22,7 +21,6 @@ export default function Indicadores({ api }) {
                 {data.por_semana.length === 0 ? <Empty>Sem cadastros no período.</Empty> : data.por_semana.map((w) => (
                     <div key={w.semana} className={m.bar_row}>
                         <span className={m.bar_label}>{w.semana.slice(8, 10)}/{w.semana.slice(5, 7)}</span>
-                        {/* A largura da barra depende do dado: fica inline */}
                         <div className={`${styles.bar} ${styles.flex_1}`}><div className={styles.bar_fill} style={{ width: `${(100 * w.cadastros) / max}%` }} /></div>
                         <span className={m.bar_value}>{w.cadastros} ({w.pagantes} pag.)</span>
                     </div>

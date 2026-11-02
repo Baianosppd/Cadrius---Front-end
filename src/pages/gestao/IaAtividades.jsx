@@ -20,7 +20,6 @@ export default function IaAtividades() {
     if (error) return <Banner tone="error">{error}</Banner>;
     if (!data) return <Loading />;
     const name = Object.fromEntries(data.provedores.map((p) => [p.chave, p.nome]));
-    // Lança o erro para o Editor mostrar dentro do modal
     const save = async (act, cadeia, usar_reservas) => {
         await iaApi.save(act, { cadeia, usar_reservas });
         toast.success('Cadeia salva.');

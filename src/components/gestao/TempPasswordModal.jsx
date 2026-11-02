@@ -4,8 +4,7 @@ import styles from '../ui/ui.module.css';
 import { Banner, Button, Modal, Row } from '../ui';
 import g from './Gestao.module.css';
 
-// Senha temporária (CAD-221): aparece UMA vez — só o "Entendi" fecha (nem Esc nem clique fora).
-// A TI repassa por canal seguro; a pessoa troca no próximo acesso.
+// Senha temporária (CAD-221): aparece UMA vez. A TI repassa por canal seguro; a pessoa troca no próximo acesso.
 export default function TempPasswordModal({ email, password, onClose }) {
     const [copied, setCopied] = useState(false);
     const copy = async () => {

@@ -51,7 +51,6 @@ const PlanCard = ({ currentPlan, otherPlans = [], onManage }) => {
                 </>
             )}
 
-            {/* Só aparece quando houver um portal de assinatura (ainda não existe no back) */}
             {onManage && (
                 <button type="button" className={styles.manage_button} onClick={onManage}>
                     Gerenciar Assinatura

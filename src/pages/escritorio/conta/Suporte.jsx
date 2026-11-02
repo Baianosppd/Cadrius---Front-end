@@ -115,7 +115,6 @@ export default function Suporte() {
                 <Table columns={['Chamado', 'Situação', 'Atualizado']} loading={!data}
                     empty={data?.length === 0 && <Empty title="Tudo certo por aqui">Nenhum chamado aberto. Quando precisar, a equipe Cadrius responde por aqui.</Empty>}>
                     {data?.map((t) => (
-                        // Chamados fechados aparecem esmaecidos
                         <tr key={t.id} className={`${styles.clickable} ${isActive(t.status) ? '' : styles.text_muted}`} tabIndex={0}
                             onClick={() => open(t.id)} onKeyDown={(e) => e.key === 'Enter' && open(t.id)}>
                             <td><strong>#{t.id} · {t.subject}</strong><div className={styles.muted}>{t.category_label}</div></td>

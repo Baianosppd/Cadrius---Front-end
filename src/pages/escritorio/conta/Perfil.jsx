@@ -126,7 +126,6 @@ function Perfil() {
             {!user ? <Loading /> : (
                 <>
                     {tab === 'dados' && <ProfileCover user={user} onUpload={uploadImage} onRemove={removeImage} onSaveCover={saveCover} />}
-                    {/* Campos vazios ficam vazios (antes vinham com "—", que era gravado ao salvar) */}
                     {tab === 'dados' && <ProfileInfo
                         key={user.id}
                         user={{

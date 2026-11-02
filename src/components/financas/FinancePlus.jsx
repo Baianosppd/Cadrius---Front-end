@@ -14,7 +14,6 @@ const AGING = { a_vencer: 'A vencer', '1_30': '1 a 30 dias', '31_60': '31 a 60 d
 const pct = (v, max) => Math.max(2, Math.round((100 * Math.abs(v)) / Math.max(1, max)));
 const monthLabel = (iso) => iso.split('-').reverse().join('/');
 
-// Barra dupla entradas × saídas (a largura depende do valor: fica inline)
 function BarRow({ label, inPct, outPct, inTitle, outTitle, children }) {
     return (
         <div className={styles.bar_row}>
@@ -82,7 +81,6 @@ export function Indicadores({ canEdit }) {
                     {g.meta_centavos ? (
                         <>
                             <div className={styles.card_value}>{g.pct}%</div>
-                            {/* A largura da barra depende do quanto da meta foi atingido */}
                             <div className={styles.bar_track}><div className={styles.bar_in} style={{ width: `${Math.min(100, g.pct)}%` }} /></div>
                             <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>Recebido {brl(g.recebido_centavos)} de {brl(g.meta_centavos)}. Ainda previsto no mês: {brl(g.previsto_restante_centavos)} (projeção {g.projecao_pct}%).</p>
                         </>

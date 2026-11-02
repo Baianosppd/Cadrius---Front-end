@@ -48,7 +48,6 @@ function Painel() {
                             {monthBars(data.por_mes).map((m) => (
                                 <div key={m.mes} className={styles.bar_row}>
                                     <span className={styles.bar_label}>{m.mes.split('-').reverse().join('/')}</span>
-                                    {/* A largura das barras depende dos valores: fica inline */}
                                     <div className={styles.bar_track}>
                                         <div className={styles.bar_in} style={{ width: `${m.recebidoPct}%` }} title={`Recebido ${brl(m.recebido)}`} />
                                         <div className={styles.bar_out} style={{ width: `${m.despesasPct}%` }} title={`Despesas ${brl(m.despesas)}`} />

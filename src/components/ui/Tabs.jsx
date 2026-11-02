@@ -1,6 +1,5 @@
 import styles from './ui.module.css';
 
-// Abas. tabs = [{ id, label, count? }]; setas ← → trocam de aba (padrão de acessibilidade de tablist).
 export default function Tabs({ tabs, value, onChange, className = '', ...rest }) {
     const move = (e, i) => {
         const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];

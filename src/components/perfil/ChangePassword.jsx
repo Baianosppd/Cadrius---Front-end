@@ -8,7 +8,6 @@ import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
 import { passwordChecks } from '../../services/passwordPolicy';
 
-// Trocar a senha no Perfil: mesmas regras e mesmo endpoint da troca obrigatória (ForcePasswordChange)
 const ChangePassword = () => {
     const { user } = useAuth();
     const [atual, setAtual] = useState('');

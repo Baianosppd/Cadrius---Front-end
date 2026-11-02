@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from '../ui/ui.module.css';
-import { Banner, Empty, Loading, StatusPill } from '../ui';
+import { Banner, Button, Chip, Empty, Field, FilterBar, FormModal, Input, Loading, MoneyInput, Row, Stack, StatusPill, Textarea } from '../ui';
 import { errorMessage, fmtDate, fmtDateTime } from '../../utils/format';
 import useLoader from '../../hooks/useLoader';
 import { STAFF_STAGE_NEXT, STAGES, brl, customizationApi } from '../../services/cad223';
@@ -15,32 +15,32 @@ export default function FilaParametrizacao({ onOpenTicket }) {
     if (!data) return <Loading />;
     return (
         <div className={styles.stack}>
-            <div className={styles.btn_row}>
-                <button type="button" className={`${styles.chip} ${!etapa ? styles.chip_active : ''}`} onClick={() => setEtapa('')}>Todos</button>
+            <Row gap={1} role="group" aria-label="Filtrar por etapa">
+                <Chip active={!etapa} onClick={() => setEtapa('')}>Todos</Chip>
                 {Object.entries(STAGES).map(([k, v]) => (
-                    <button key={k} type="button" className={`${styles.chip} ${etapa === k ? styles.chip_active : ''}`} onClick={() => setEtapa(k)}>
-                        {v.label} <span className={styles.count}>{data.por_etapa[k] || 0}</span></button>
+                    <Chip key={k} active={etapa === k} onClick={() => setEtapa(k)}>
+                        {v.label} <span className={styles.count}>{data.por_etapa[k] || 0}</span></Chip>
                 ))}
-            </div>
+            </Row>
             {data.resultados.length === 0 && <Empty>Nenhum pedido.</Empty>}
             {data.resultados.map((r) => (
-                <div key={r.id} className={styles.card}>
-                    <div className={styles.btn_row} style={{ justifyContent: 'space-between' }}>
+                <Stack key={r.id} gap={2} className={styles.card}>
+                    <Row justify="between">
                         <strong>{r.escritorio} · {r.area_label}</strong><StatusPill map={STAGES} value={r.etapa} />
-                    </div>
-                    <p style={{ whiteSpace: 'pre-wrap' }}>{r.objetivo}</p>
-                    {r.exemplo && <p className={styles.muted} style={{ whiteSpace: 'pre-wrap' }}>Exemplo: {r.exemplo}</p>}
+                    </Row>
+                    <p className={`${styles.pre_wrap} ${styles.mt_0} ${styles.mb_0}`}>{r.objetivo}</p>
+                    {r.exemplo && <p className={`${styles.muted} ${styles.pre_wrap} ${styles.mt_0} ${styles.mb_0}`}>Exemplo: {r.exemplo}</p>}
                     <div className={styles.muted}>{r.frequencia && `Frequência: ${r.frequencia} · `}{r.pessoas} pessoa(s){r.desejado_para ? ` · para ${fmtDate(r.desejado_para)}` : ''} · pedido {fmtDateTime(r.criado_em)}</div>
-                    {r.proposta && <p className={styles.muted}>Proposta: {r.proposta} ({r.prazo_dias || '—'} dia(s), {r.custo_centavos ? brl(r.custo_centavos) : 'sem custo'})</p>}
-                    <div className={styles.btn_row} style={{ marginTop: 8 }}>
-                        <button type="button" className={`${styles.btn} ${styles.btn_sm}`} onClick={() => onOpenTicket(r.chamado_id)}>Abrir conversa</button>
+                    {r.proposta && <p className={`${styles.muted} ${styles.mt_0} ${styles.mb_0}`}>Proposta: {r.proposta} ({r.prazo_dias || '—'} dia(s), {r.custo_centavos ? brl(r.custo_centavos) : 'sem custo'})</p>}
+                    <Row gap={1}>
+                        <Button size="sm" onClick={() => onOpenTicket(r.chamado_id)}>Abrir conversa</Button>
                         {(STAFF_STAGE_NEXT[r.etapa] || []).map((next) => (
-                            <button key={next} type="button" className={`${styles.btn} ${styles.btn_sm} ${next === 'recusado' ? styles.btn_ghost : ''}`}
+                            <Button key={next} size="sm" variant={next === 'recusado' ? 'ghost' : 'default'}
                                 onClick={() => setEditing({ r, next, proposta: r.proposta || '', prazo_dias: r.prazo_dias || '', custo: '', motivo: '' })}>
-                                → {STAGES[next].label}</button>
+                                → {STAGES[next].label}</Button>
                         ))}
-                    </div>
-                </div>
+                    </Row>
+                </Stack>
             ))}
             {editing && <MoveModal editing={editing} setEditing={setEditing} onDone={() => { setEditing(null); reload(); }} />}
         </div>
@@ -49,9 +49,12 @@ export default function FilaParametrizacao({ onOpenTicket }) {
 
 function MoveModal({ editing, setEditing, onDone }) {
     const [busy, setBusy] = useState(false);
+    const [error, setError] = useState('');
     const { r, next } = editing;
-    const save = async () => {
+    const save = async (e) => {
+        e.preventDefault();
         setBusy(true);
+        setError('');
         const body = { etapa: next };
         if (next === 'proposta') {
             body.proposta = editing.proposta;
@@ -59,26 +62,26 @@ function MoveModal({ editing, setEditing, onDone }) {
             body.custo_centavos = editing.custo ? Math.round(Number(String(editing.custo).replace(/\./g, '').replace(',', '.')) * 100) : '';
         }
         if (next === 'recusado') body.motivo = editing.motivo;
-        try { await customizationApi.staffUpdate(r.id, body); toast.success('Pedido atualizado.'); onDone(); } catch (e) { toast.error(errorMessage(e)); } finally { setBusy(false); }
+        try { await customizationApi.staffUpdate(r.id, body); toast.success('Pedido atualizado.'); onDone(); } catch (err) { setError(errorMessage(err)); } finally { setBusy(false); }
     };
     return (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Atualizar pedido">
-            <div className={styles.modal} style={{ maxWidth: 600 }}>
-                <div className={styles.modal_title}>{r.escritorio}: {STAGES[next].label}</div>
-                {next === 'proposta' && (<>
-                    <label className={styles.field}>O que será feito (o escritório lê e aprova)<textarea className={styles.textarea} value={editing.proposta} onChange={(e) => setEditing({ ...editing, proposta: e.target.value })} /></label>
-                    <div className={styles.filters}>
-                        <label className={styles.field}>Prazo (dias)<input className={styles.input} type="number" min={1} value={editing.prazo_dias} onChange={(e) => setEditing({ ...editing, prazo_dias: e.target.value })} /></label>
-                        <label className={styles.field}>Custo (R$, vazio = sem custo)<input className={styles.input} inputMode="decimal" value={editing.custo} onChange={(e) => setEditing({ ...editing, custo: e.target.value })} /></label>
-                    </div>
-                </>)}
-                {next === 'recusado' && <label className={styles.field}>Motivo (vai para o escritório)<textarea className={styles.textarea} value={editing.motivo} onChange={(e) => setEditing({ ...editing, motivo: e.target.value })} /></label>}
-                {['em_analise', 'em_execucao', 'entregue'].includes(next) && <p className={styles.muted}>Confirmar a mudança de etapa?</p>}
-                <div className={styles.btn_row} style={{ justifyContent: 'flex-end' }}>
-                    <button type="button" className={styles.btn} onClick={() => setEditing(null)}>Cancelar</button>
-                    <button type="button" className={`${styles.btn} ${styles.btn_primary}`} disabled={busy} onClick={save}>Confirmar</button>
-                </div>
-            </div>
-        </div>
+        <FormModal title={`${r.escritorio}: ${STAGES[next].label}`} onClose={() => setEditing(null)} onSubmit={save} busy={busy} error={error}
+            submitLabel="Confirmar" submitVariant={next === 'recusado' ? 'danger' : 'primary'}>
+            {next === 'proposta' && (<>
+                <Field label="O que será feito" hint="O escritório lê e aprova.">
+                    <Textarea value={editing.proposta} onChange={(e) => setEditing({ ...editing, proposta: e.target.value })} />
+                </Field>
+                <FilterBar>
+                    <Field label="Prazo (dias)"><Input type="number" min={1} value={editing.prazo_dias} onChange={(e) => setEditing({ ...editing, prazo_dias: e.target.value })} /></Field>
+                    <Field label="Custo (R$)" hint="Vazio = sem custo"><MoneyInput value={editing.custo} onChange={(custo) => setEditing({ ...editing, custo })} /></Field>
+                </FilterBar>
+            </>)}
+            {next === 'recusado' && (
+                <Field label="Motivo" hint="Vai para o escritório.">
+                    <Textarea value={editing.motivo} onChange={(e) => setEditing({ ...editing, motivo: e.target.value })} />
+                </Field>
+            )}
+            {['em_analise', 'em_execucao', 'entregue'].includes(next) && <p className={`${styles.muted} ${styles.mt_0}`}>Confirmar a mudança de etapa?</p>}
+        </FormModal>
     );
 }

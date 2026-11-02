@@ -32,7 +32,6 @@ function AddDevice({ info, onClose, onCreated }) {
     };
     const title = <><FiWatch aria-hidden="true" /> {created ? `${created.nome} pronto` : 'Adicionar aparelho'}</>;
 
-    // 1ª etapa: cadastro do aparelho
     if (!created) return (
         <FormModal title={title} size="lg" onClose={onClose} onSubmit={save} busy={busy} submitLabel="Gerar a chave do aparelho" busyLabel="Gerando…">
             <FilterBar>
@@ -54,7 +53,6 @@ function AddDevice({ info, onClose, onCreated }) {
         </FormModal>
     );
 
-    // 2ª etapa: o link aparece uma única vez — só o "Concluir" fecha (nem Esc nem clique fora)
     const guide = DEVICE_GUIDES[created.tipo || form.tipo];
     return (
         <Modal title={title} size="lg" onClose={onClose} closeOnOverlay={false} closeOnEsc={false}

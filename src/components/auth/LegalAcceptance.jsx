@@ -38,7 +38,6 @@ export default function LegalAcceptance({ formData, onChange }) {
             <legend className={s.legend}>Termos e privacidade</legend>
             {docs.map((d) => (
                 <div key={d.id} className={s.item}>
-                    {/* O botão "ler" fica fora do <label> para não marcar a caixa ao abrir o texto */}
                     <Row gap={2} align="start">
                         <Checkbox className={s.check} checked={legal[d.kind] === d.version} onChange={(e) => toggle(d, e.target.checked)}>
                             Li e aceito {LABEL[d.kind]} (v{d.version})
