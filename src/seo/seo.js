@@ -32,6 +32,16 @@ export const PUBLIC_PAGES = {
         description: 'Cadastre seu escritório no Cadrius: equipe com perfis de acesso, carteira de clientes, honorários, '
             + 'portal do cliente e auditoria conforme a LGPD.',
     },
+    '/politica-de-privacidade': {
+        title: 'Política de Privacidade — Cadrius',
+        description: 'Como o Cadrius trata dados pessoais e dados de contas Google: o que acessa, para quê, com quem '
+            + 'compartilha, como protege, por quanto tempo guarda e como pedir a exclusão.',
+    },
+    '/termos-de-uso': {
+        title: 'Termos de Uso — Cadrius',
+        description: 'Termos de Uso do Cadrius, a plataforma de gestão jurídica com IA para advogados e escritórios: '
+            + 'conta, uso aceitável, dados, IA, planos e pagamento.',
+    },
     '/esqueceu-a-senha': {
         title: 'Recuperar senha — Cadrius',
         description: 'Recupere o acesso à sua conta Cadrius: enviamos um link seguro para o seu e-mail.',

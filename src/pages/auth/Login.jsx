@@ -173,6 +173,9 @@ function Login() {
                         Não tem uma conta? <Link to="/criar-conta">Criar conta</Link>
                     </p>
                     <EnvSwitch email={username} />
+                    <p className={styles.legal_links}>
+                        <Link to="/politica-de-privacidade">Política de Privacidade</Link> · <Link to="/termos-de-uso">Termos de Uso</Link>
+                    </p>
                 </div>
             </div>
         </div>

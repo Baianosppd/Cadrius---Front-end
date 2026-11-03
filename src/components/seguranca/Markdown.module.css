@@ -6,6 +6,7 @@
 .h4 { font-size: .9rem; }
 .p { margin: 4px 0; }
 .ul { margin: 4px 0 4px 20px; }
+.table_wrap { overflow-x: auto; max-width: 100%; }
 .table { border-collapse: collapse; margin: 6px 0; width: 100%; font-size: var(--fs-sm); }
 .table th { text-align: left; border-bottom: 1px solid var(--c-border-2); padding: 4px 6px; }
 .table td { border-bottom: 1px solid var(--c-surface-3); padding: 4px 6px; vertical-align: top; }
