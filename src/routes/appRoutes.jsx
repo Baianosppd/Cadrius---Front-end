@@ -46,6 +46,7 @@ const DocumentDetail = lazy(() => import('../pages/escritorio/dia-a-dia/Document
 const CentralAprovacoes = lazy(() => import('../pages/escritorio/configuracoes/CentralAprovacoes'));
 const Financeiro = lazy(() => import('../pages/gestao/Financeiro'));
 const Privacidade = lazy(() => import('../pages/escritorio/seguranca/Privacidade'));
+const DocumentoLegal = lazy(() => import('../pages/publico/DocumentoLegal'));
 const Auditoria = lazy(() => import('../pages/escritorio/seguranca/Auditoria'));
 const IASegura = lazy(() => import('../pages/escritorio/seguranca/IASegura'));
 const CentroSeguranca = lazy(() => import('../pages/gestao/CentroSeguranca'));
@@ -109,6 +110,12 @@ export default function AppRoutes() {
         <Route path="/captacao/:token" element={<Captacao />} />
         <Route path="/whatsapp/:token" element={<WhatsAppPair />} />
         <Route path="/pesquisa/:token" element={<Pesquisa />} />
+
+        {/* Política de privacidade e termos: públicos, sem login (verificação do app OAuth no Google) */}
+        <Route path="/politica-de-privacidade" element={<DocumentoLegal kind="privacy" />} />
+        <Route path="/termos-de-uso" element={<DocumentoLegal kind="terms" />} />
+        {/* /privacidade: painel LGPD para quem está logado; para visitantes, a política (link antigo enviado ao Google) */}
+        {!(signed && !mustChange) && <Route path="/privacidade" element={<DocumentoLegal kind="privacy" />} />}
 
         {/* Rotas públicas */}
         <Route element={<AuthLayout />}>

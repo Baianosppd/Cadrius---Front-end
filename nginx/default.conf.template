@@ -9,7 +9,7 @@ map $host $seo_indexable_host {
 # Mesma lista de páginas públicas de src/seo/seo.js; telas logadas e links com token (/portal, /captacao...) = noindex.
 map "$seo_indexable_host$request_uri" $seo_robots {
     default "noindex, nofollow";
-    "~^1/(criar-conta|cadastro/individual|cadastro/empresa|esqueceu-a-senha)?/?(\?.*)?$" "";
+    "~^1/(criar-conta|cadastro/individual|cadastro/empresa|esqueceu-a-senha|politica-de-privacidade|termos-de-uso)?/?(\?.*)?$" "";
     "~^1/(assets/|[^/?]+\.(png|svg|ico|xml|txt|json|webmanifest)(\?|$))" "";
 }
 

@@ -20,4 +20,19 @@ describe('Markdown (documentos legais)', () => {
         expect(out).not.toContain('<img');
         expect(out).toContain('&lt;script&gt;');
     });
+
+    it('transforma links https e e-mails em links (javascript: nunca)', () => {
+        const out = html('Revogue em https://myaccount.google.com/permissions ou escreva para **privacidade@cadrius.ia.br**. (https://developers.google.com/terms/x), javascript:alert(1)');
+        expect(out).toContain('href="https://myaccount.google.com/permissions"');
+        expect(out).toContain('href="mailto:privacidade@cadrius.ia.br"');
+        expect(out).toContain('href="https://developers.google.com/terms/x"');
+        expect(out).not.toContain('href="javascript');
+    });
+
+    it('usa títulos de verdade na página pública', () => {
+        const out = renderToStaticMarkup(<Markdown text={'# Política\n\n## Seção'} semantic />);
+        expect(out).toContain('<h2');
+        expect(out).toContain('<h3');
+    });
 });
+

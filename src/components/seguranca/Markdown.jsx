@@ -1,17 +1,24 @@
 import { Fragment } from 'react';
 import s from './Markdown.module.css';
 
-// Renderizador mínimo de Markdown (títulos, listas, tabelas, **negrito**) para os documentos legais.
+// Renderizador mínimo de Markdown (títulos, listas, tabelas, **negrito**, links https e e-mails) para os documentos legais.
 // Gera elementos React (nunca HTML bruto), então o conteúdo vindo do servidor não executa scripts.
+const LINK = /(https:\/\/[^\s)]+[^\s).,;]|[\w.+-]+@[\w-]+\.[\w.-]*\w)/g;
+const links = (text, key) => text.split(LINK).map((part, i) => {
+    if (i % 2 === 0) return <Fragment key={`${key}-${i}`}>{part}</Fragment>;
+    const href = part.startsWith('https://') ? part : `mailto:${part}`;
+    return <a key={`${key}-${i}`} href={href} target={href.startsWith('https') ? '_blank' : undefined} rel="noopener noreferrer">{part}</a>;
+});
 const inline = (text) =>
     text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
-        part.startsWith('**') && part.endsWith('**') ? <strong key={i}>{part.slice(2, -2)}</strong> : <Fragment key={i}>{part}</Fragment>);
+        part.startsWith('**') && part.endsWith('**') ? <strong key={i}>{links(part.slice(2, -2), i)}</strong> : <Fragment key={i}>{links(part, i)}</Fragment>);
 
 const isTableRow = (l) => /^\s*\|.*\|\s*$/.test(l);
 const isSeparator = (l) => /^\s*\|[\s:|-]+\|\s*$/.test(l);
 const cells = (l) => l.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
 
-export default function Markdown({ text = '' }) {
+// semantic: títulos como <h2>…<h5> (página pública); sem ele, <div> estilizado (dentro de modais e cartões).
+export default function Markdown({ text = '', semantic = false }) {
     const lines = text.replace(/\r/g, '').split('\n');
     const out = [];
     let i = 0;
@@ -21,7 +28,8 @@ export default function Markdown({ text = '' }) {
 
         const h = line.match(/^(#{1,4})\s+(.*)$/);
         if (h) {
-            out.push(<div key={i} className={s[`h${h[1].length}`]}>{inline(h[2])}</div>);
+            const Tag = semantic ? `h${h[1].length + 1}` : 'div';
+            out.push(<Tag key={i} className={s[`h${h[1].length}`]}>{inline(h[2])}</Tag>);
             i += 1; continue;
         }
         if (isTableRow(line)) {
@@ -29,10 +37,10 @@ export default function Markdown({ text = '' }) {
             while (i < lines.length && isTableRow(lines[i])) { if (!isSeparator(lines[i])) rows.push(cells(lines[i])); i += 1; }
             const [head, ...body] = rows;
             out.push(
-                <table key={`t${i}`} className={s.table}>
+                <div key={`t${i}`} className={s.table_wrap}><table className={s.table}>
                     <thead><tr>{head.map((c, k) => <th key={k}>{inline(c)}</th>)}</tr></thead>
                     <tbody>{body.map((r, k) => <tr key={k}>{r.map((c, j) => <td key={j}>{inline(c)}</td>)}</tr>)}</tbody>
-                </table>,
+                </table></div>,
             );
             continue;
         }

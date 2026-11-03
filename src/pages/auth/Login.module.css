@@ -219,3 +219,7 @@
 
 .dark_art { margin-top: var(--sp-10); max-width: 420px; opacity: .9; }
 .dark_art svg { width: 100%; height: auto; display: block; }
+
+/* Links públicos exigidos pelo Google (página inicial do app OAuth precisa apontar a política) */
+.legal_links { margin-top: 16px; text-align: center; font-size: .8rem; color: var(--c-muted); }
+.legal_links a { color: var(--c-muted); }
